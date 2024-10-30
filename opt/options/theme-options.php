@@ -849,14 +849,6 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'custom_music_api',
-        'type' => 'text',
-        'title' => __('自定义歌单','sakurairo_csf'),
-        'dependency' => array( 'aplayer_server', '!=', 'off', '', 'true' ),
-        'desc' => __('使用自定义meting-api，也可以指向歌单文件，但只有填了歌单id才生效','sakurairo_csf'),
-      ),
-
-      array(
         'id' => 'aplayer_server_proxy',
         'type' => 'text',
         'title' => __('Footer Online Music Player Proxy','sakurairo_csf'),
