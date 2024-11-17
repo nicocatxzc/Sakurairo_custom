@@ -431,53 +431,18 @@ $prefix = 'iro_options';
         'type'       => 'image_select',
         'title'      => __('Nav Menu Style','sakurairo_csf'),
         'options'    => array(
-          'sakurairo' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_iro.webp',
-          'sakura' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_sakura.webp',
+          'center' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_iro.webp',
+          'space-between' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_sakura.webp',
         ),
-        'default'    => 'sakurairo'
+        'default'    => 'center'
       ),
 
       array(
-        'id'    => 'nav_menu_radius',
-        'type'  => 'slider',
-        'title' => __('Nav Menu Radius','sakurairo_csf'),
-        'dependency' => array( 'nav_menu_style', '==', 'sakurairo', '', 'true' ),
-        'desc'   => __('Slide to adjust, the recommended value is 15','sakurairo_csf'),
-        'unit'    => 'px',
-        'max'   => '50',
-        'default' => '15'
-      ),
-
-      array(
-        'id'         => 'nav_menu_display',
-        'type'       => 'radio',
-        'title'      => __('Nav Menu Content Display Method','sakurairo_csf'),
-        'desc'    => __('You can choose to unfold or fold the nav menu contents','sakurairo_csf'),
-        'options'    => array(
-          'unfold' => __('Unfold','sakurairo_csf'),
-          'fold' => __('Fold','sakurairo_csf'),
-        ),
-        'default'    => 'unfold'
-      ),
-
-      array(
-        'id'    => 'nav_menu_animation',
+        'id'    => 'nav_menu_stowed',
         'type'  => 'switcher',
-        'title' => __('Nav Menu Animation Effects','sakurairo_csf'),
-        'label'   => __('It is on by default. If it is off, the nav menu content will be displayed directly without effects','sakurairo_csf'),
+        'title' => __('Nav Menu Stowed Away','sakurairo_csf'),
+        'label'   => __('It is on by default. nav menu will be stowed at the top','sakurairo_csf'),
         'default' => true
-      ),
-
-      array(
-        'id'     => 'nav_menu_animation_time',
-        'type'   => 'slider',
-        'title'  => __('Nav Menu Animation Time','sakurairo_csf'),
-        'dependency' => array( 'nav_menu_animation', '==', 'true', '', 'true' ),
-        'desc'   => __('Slide to adjust, the recommended value range is 1-2','sakurairo_csf'),
-        'step'   => '0.01',
-        'unit'    => 's',
-        'max'   => '5',
-        'default' => '2'
       ),
 
       array(
@@ -486,24 +451,6 @@ $prefix = 'iro_options';
         'title' => __('Nav Menu Font','sakurairo_csf'),
         'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
         'default' => 'Noto Serif SC'
-      ),
-
-      array(
-        'id'    => 'nav_menu_search',
-        'type'  => 'switcher',
-        'title' => __('Nav Menu Search','sakurairo_csf'),
-        'label'   => __('It is on by default. Click to enter the search area','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
-        'id'    => 'search_area_background',
-        'type'  => 'upload',
-        'title' => __('Search Area Background Image','sakurairo_csf'),
-        'desc'   => __('Set the background image of your search area. Leave this option blank to display a white background','sakurairo_csf'),
-        'dependency' => array( 'nav_menu_search', '==', 'true', '', 'true' ),
-        'library'      => 'image',
-        'default'     => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/basic/iloli.gif'
       ),
 
       array(
@@ -529,64 +476,18 @@ $prefix = 'iro_options';
         'dependency' => array( 'nav_menu_user_avatar', '==', 'true', '', 'true' ),
         'desc'   => __('The best length-width ratio of is 1:1','sakurairo_csf'),
         'library'      => 'image',
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/basic/topavatar.png'
+        'default' => ''
       ),
 
       array(
-        'id'    => 'nav_menu_secondary_arrow',
-        'type'  => 'switcher',
-        'title' => __('Secondary Menu Prompt Arrow','sakurairo_csf'),
-        'label'   => __('After turning on, the menu prompt arrow will appear in the secondary menu of the navigation menu','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id'    => 'nav_menu_secondary_radius',
-        'type'  => 'slider',
-        'title' => __('Secondary Menu Radius','sakurairo_csf'),
-        'dependency' => array( 'nav_menu_style', '==', 'sakurairo', '', 'true' ),
-        'desc'   => __('Slide to adjust, the recommended value is 15','sakurairo_csf'),
-        'unit'    => 'px',
-        'max'   => '30',
-        'default' => '15'
-      ),
-
-      array(
-        'id'    => 'mashiro_logo_option',
-        'type'  => 'switcher',
-        'title' => __('Mashiro Logo Style','sakurairo_csf'),
-        'label'   => __('After turning on, the Mashiro Logo will appear and replace the navigation menu logo position','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id'     => 'mashiro_logo',
+        'id'     => 'nav_text_logo',
         'type'   => 'fieldset',
         'title'  => __('Nav Menu Text Logo Options','sakurairo_csf'),
         'fields' => array(
           array(
-            'id'    => 'text_a',
+            'id'    => 'text',
             'type'  => 'text',
-            'title' => __('Text A','sakurairo_csf'),
-          ),
-          array(
-            'id'    => 'text_b',
-            'type'  => 'text',
-            'title' => __('Text B','sakurairo_csf'),
-          ),
-          array(
-            'id'    => 'text_c',
-            'type'  => 'text',
-            'title' => __('Text C','sakurairo_csf'),
-          ),
-          array(
-            'id'    => 'text_secondary',
-            'type'  => 'text',
-            'title' => __('Secondary Text','sakurairo_csf'),
-            'dependency' => array(
-              array('text_b', '!=', '', '', 'true'),
-              array('mashiro_logo_option', '==', 'true', '', 'true')
-            ),
+            'title' => __('Text','sakurairo_csf'),
           ),
           array(
             'id'    => 'font_name',
@@ -595,10 +496,7 @@ $prefix = 'iro_options';
           ),
         ),
         'default'        => array(
-          'text_a'     => '',
-          'text_b'     => '',
-          'text_c'     => '',
-          'text_secondary' => '',
+          'text'     => '',
           'font_name'    => 'Noto Serif SC',
         ),
       ),
@@ -1072,6 +970,30 @@ $prefix = 'iro_options';
     'fields' => array(
 
       array(
+        'type' => 'submessage',
+        'style' => 'info',
+        'content' => __('You can click <a href="https://docs.fuukei.org/Sakurairo/Global/#%E7%AB%99%E5%86%85%E6%90%9C%E7%B4%A2%E8%AE%BE%E7%BD%AE">here</a> to learn how to set the options on this page','sakurairo_csf'),
+      ),
+
+      array(
+        'id'    => 'nav_menu_search',
+        'type'  => 'switcher',
+        'title' => __('Nav Menu Search','sakurairo_csf'),
+        'label'   => __('It is on by default. Click to enter the search area','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
+        'id'    => 'search_area_background',
+        'type'  => 'upload',
+        'title' => __('Search Area Background Image','sakurairo_csf'),
+        'desc'   => __('Set the background image of your search area. Leave this option blank to display a white background','sakurairo_csf'),
+        'dependency' => array( 'nav_menu_search', '==', 'true', '', 'true' ),
+        'library'      => 'image',
+        'default'     => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/basic/iloli.gif'
+      ),
+
+      array(
         'id' => 'enable_search_filter',
         'type' => 'switcher',
         'title' => __('Enable search filter','sakurairo_csf'),
@@ -1113,6 +1035,23 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('Exclude some content in search results','sakurairo_csf'),
         'desc' => __('Fill in the posts or pages IDs that need to be excluded, such as "12,34".Recommend to fill in the custom login page id,and you can get them from the edit page of those content.','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'live_search',
+        'type' => 'switcher',
+        'title' => __('Live Search','sakurairo_csf'),
+        'label' => __('After turning on the live search in the frontend, call Rest API to update the cache once an hour. You can set the cache time manually in api.php','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'live_search_comment',
+        'type' => 'switcher',
+        'title' => __('Live Search Comment Support','sakurairo_csf'),
+        'dependency' => array( 'live_search', '==', 'true', '', 'true' ),
+        'label' => __('Enable to search for comments in live search (not recommended if site has too many comments)','sakurairo_csf'),
+        'default' => false
       ),
 
     )
@@ -2642,17 +2581,6 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'page_style',
-        'type' => 'image_select',
-        'title' => __('Page Style','sakurairo_csf'),
-        'options' => array(
-          'sakurairo' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/page_style_iro.webp',
-          'sakura' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/page_style_sakura.webp',
-        ),
-        'default' => 'sakurairo'
-      ),
-
-      array(
         'id' => 'entry_content_style',
         'type' => 'radio',
         'title' => __('Page Layout Style','sakurairo_csf'),
@@ -3750,23 +3678,6 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'live_search',
-        'type' => 'switcher',
-        'title' => __('Live Search','sakurairo_csf'),
-        'label' => __('After turning on the live search in the frontend, call Rest API to update the cache once an hour. You can set the cache time manually in api.php','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'live_search_comment',
-        'type' => 'switcher',
-        'title' => __('Live Search Comment Support','sakurairo_csf'),
-        'dependency' => array( 'live_search', '==', 'true', '', 'true' ),
-        'label' => __('Enable to search for comments in live search (not recommended if site has too many comments)','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
         'id' => 'google_analytics_id',
         'type' => 'text',
         'title' => __('Google Analytics Id','sakurairo_csf'),
@@ -3836,7 +3747,6 @@ $prefix = 'iro_options';
         'dependency' => array(
                               array( 'fancybox', '==', 'false', '', 'true' ),
                               array( 'lightgallery', '==', 'false' ),
-
                         ),
         'default' => false
       ),
@@ -4217,6 +4127,5 @@ $prefix = 'iro_options';
 
     )
   ) );
-
 }
 

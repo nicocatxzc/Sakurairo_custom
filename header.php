@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly
 }
 
-$mashiro_logo = iro_opt('mashiro_logo');
+$nav_text_logo = iro_opt('nav_text_logo');
 $vision_resource_basepath = iro_opt('vision_resource_basepath');
 header('X-Frame-Options: SAMEORIGIN');
 ?>
@@ -74,11 +74,6 @@ header('X-Frame-Options: SAMEORIGIN');
 	<?php wp_head(); ?>
 	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
 	<link rel="stylesheet" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css?family=Noto+Serif+SC|Noto+Sans+SC|Dela+Gothic+One|Fira+Code<?= esc_attr(iro_opt('gfonts_add_name')); ?>&display=swap" media="all">
-	<script type="text/javascript">
-		if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
-			alert('朋友，IE浏览器未适配哦~\n如果是 360、QQ 等双核浏览器，请关闭 IE 模式！(Are you using IE? Some of the web elements might be broken, please use the latest browser to access！)');
-		}
-	</script>
 	<?php if (iro_opt('google_analytics_id')) : ?>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?= esc_attr(iro_opt('google_analytics_id')); ?>"></script>
@@ -91,11 +86,12 @@ header('X-Frame-Options: SAMEORIGIN');
 	<?php endif; ?>
 	<?= iro_opt("site_header_insert"); ?>
 
-	<?php if (iro_opt('poi_pjax')): ?>
+	<?php if (iro_opt('poi_pjax')){
+		$script_leep_loading_list = iro_opt("pjax_keep_loading");
+		if(strlen($script_leep_loading_list) > 0) :
+		?>
     <script>
-        const srcs = `
-            <?php echo iro_opt("pjax_keep_loading"); ?>
-        `;
+        const srcs = `<?php echo iro_opt("pjax_keep_loading"); ?>`;
         document.addEventListener("pjax:complete", () => {
             srcs.split(/[\n,]+/).forEach(path => {
                 path = path.trim();
@@ -111,10 +107,9 @@ header('X-Frame-Options: SAMEORIGIN');
                     style.href = path;
                     document.head.appendChild(style);
                 }
-            });
-        });
+		})});
     </script>
-    <?php endif; ?>
+    <?php endif;} ?>
 
 </head>
 
@@ -128,44 +123,55 @@ header('X-Frame-Options: SAMEORIGIN');
 	<?php endif; ?>
 	<div class="scrollbar" id="bar"></div>
 	<header class="site-header no-select" role="banner">
-		<div class="site-top">
+		<?php
+		// Logo Section - Only process if logo or text is configured
+		if (iro_opt('iro_logo') || !empty($nav_text_logo['text'])): ?>
 			<div class="site-branding">
-				<?php if (iro_opt('iro_logo') && !iro_opt('mashiro_logo_option', false)) { ?>
-					<div class="site-title">
-					<a href="<?php echo bloginfo('url'); ?>"><img alt="<?= esc_attr(get_option('blogname')); ?>" src="<?= esc_url(iro_opt('iro_logo')); ?>"></a>
-					</div>
-				<?php } else { ?>
-					<span class="site-title">
-						<span class="logolink moe-mashiro">
-						    <a href="<?= bloginfo('url'); ?>">
-								<ruby>
-									<span class="sakuraso"><?= esc_html($mashiro_logo['text_a'] ?? ""); ?></span>
-									<span class="no"><?= esc_html($mashiro_logo['text_b'] ?? ""); ?></span>
-									<span class="shironeko"><?= esc_html($mashiro_logo['text_c'] ?? ""); ?></span>
-									<rp></rp>
-									<rt class="chinese-font"><?= esc_html($mashiro_logo['text_secondary'] ?? ""); ?></rt>
-									<rp></rp>
-								</ruby>
-							</a>
-						</span>
-					</span>
-				<?php } ?>
-				<!-- logo end -->
-			</div><!-- .site-branding -->
-			<?php header_user_menu();
-			if (iro_opt('nav_menu_search') == '1') { ?>
-				<div class="searchbox js-toggle-search"><i class="fa-solid fa-magnifying-glass"></i></div>
-			<?php } ?>
-			<div class="lower"><?php if (iro_opt('nav_menu_display') == 'fold') { ?>
-					<div id="show-nav" class="showNav">
-						<div class="line line1"></div>
-						<div class="line line2"></div>
-						<div class="line line3"></div>
-					</div><?php } ?>
-				<nav><?php wp_nav_menu(['depth' => 2, 'theme_location' => 'primary', 'container' => false]); ?></nav><!-- #site-navigation -->
+				<a href="<?= home_url('/'); ?>">
+					<?php if (iro_opt('iro_logo')): ?>
+						<div class="site-title-logo">
+							<img alt="<?= esc_attr(get_bloginfo('name')); ?>" 
+								 src="<?php echo iro_opt('iro_logo'); ?>"
+								 loading="lazy">
+						</div>
+					<?php else: ?>
+						<div class="site-title">
+							<?= esc_html($nav_text_logo['text'] ?? ''); ?>
+						</div>
+					<?php endif; ?>
+				</a>
 			</div>
+		<?php endif;
+
+		// Cache commonly used options 
+		$show_search = iro_opt('nav_menu_search');
+		$show_user_avatar = iro_opt('nav_menu_user_avatar');
+		?>
+
+		<!-- Navigation and Search Section -->
+		<div class="nav-search-wrapper">
+			<nav>
+				<?php wp_nav_menu([
+					'depth' => 2,
+					'theme_location' => 'primary',
+					'container' => false
+				]); ?>
+			</nav>
+			<?php if ($show_search): ?>
+				<div class="nav-search-divider"></div>
+				<div class="searchbox js-toggle-search">
+					<i class="fa-solid fa-magnifying-glass"></i>
+				</div>
+			<?php endif; ?>
 		</div>
-	</header><!-- #masthead -->
+
+		<!-- User Menu Section -->
+		<?php if ($show_user_avatar): ?>
+			<div class="user-menu-wrapper">
+				<?php header_user_menu(); ?>
+			</div>
+		<?php endif; ?>
+	</header>
 	<div class="openNav no-select">
 		<div class="iconflat no-select" style="padding: 30px;">
 			<div class="icon"></div>
