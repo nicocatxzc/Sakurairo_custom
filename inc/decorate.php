@@ -247,7 +247,7 @@ body.dark .top-social img
 body.dark .top-social_v2 i
 {color:#ababab;transition: all 0.6s ease-in-out;}
 
-body.dark .top-social i,body.dark .bg-switch
+body.dark .top-social i
 {color:#ababab;background:rgba(51,51,51,<?=iro_opt('theme_darkmode_widget_transparency'); ?>);transition: all 0.6s ease-in-out;}
 
 body.dark .the-feature.from_left_and_right .info
@@ -529,7 +529,7 @@ border-radius: <?=iro_opt('avatar_radius'); ?>px;
 /*首页封面动画*/
 <?php if (iro_opt('cover_animation', 'true')): ?>
 h1.main-title, h1.fes-title,.the-feature.from_left_and_right .info,
-.header-info p,.header-info,.focusinfo .header-tou img,.top-social img,.top-social i,.bg-switch,.center-text{
+.header-info p,.header-info,.focusinfo .header-tou img,.top-social img,.top-social i,.center-text{
 	-moz-animation: homepage-load-animation  <?=iro_opt('cover_animation_time'); ?>s;
     -webkit-animation:homepage-load-animation  <?=iro_opt('cover_animation_time'); ?>s;
 	animation: homepage-load-animation  <?=iro_opt('cover_animation_time'); ?>s;
@@ -569,12 +569,6 @@ display:none;
 <?php if (!iro_opt('nav_menu_user_avatar', 'true')): ?>
 .header-user-avatar{
 display:none;
-}
-<?php endif; ?>
-
-<?php if (!iro_opt('nav_menu_stowed', 'false')): ?>
-.site-header.yya {
-  top: 0;
 }
 <?php endif; ?>
 
@@ -788,19 +782,33 @@ body.dark .post-title:hover{
 }
 <?php } ?>
 
-<?php if(iro_opt('nav_menu_style') == 'center'){ ?>
+<?php 
+// Menu style settings
+$nav_menu_style = iro_opt('nav_menu_style');
+$has_user_avatar = iro_opt('nav_menu_user_avatar');
+$has_logo = !empty(iro_opt('iro_logo')) || !empty($nav_text_logo['text']); 
+
+// Space between menu items when avatar and logo are enabled
+if($nav_menu_style == 'space-between' && ($has_user_avatar || $has_logo)){ ?> 
 .site-header {
-  justify-content: center;
+    justify-content: space-between; 
 }
 .header-user-menu {
-  right: -105%;
+    right: -5%;
 }
-<?php }if(iro_opt('nav_menu_style') == 'space-between'){ ?>
+.site-branding{
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+<?php } else { ?>
 .site-header {
-  justify-content: space-between;
+    justify-content: center;
 }
 .header-user-menu {
-  right: -5%;
+    right: -105%;
 }
 <?php } ?>
 

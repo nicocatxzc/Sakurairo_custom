@@ -438,45 +438,11 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id'    => 'nav_menu_stowed',
-        'type'  => 'switcher',
-        'title' => __('Nav Menu Stowed Away','sakurairo_csf'),
-        'label'   => __('It is on by default. nav menu will be stowed at the top','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
         'id' => 'nav_menu_font',
         'type' => 'text',
         'title' => __('Nav Menu Font','sakurairo_csf'),
         'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
         'default' => 'Noto Serif SC'
-      ),
-
-      array(
-        'id'    => 'nav_menu_user_avatar',
-        'type'  => 'switcher',
-        'title' => __('Nav Menu User Avatar','sakurairo_csf'),
-        'label'   => __('It is on by default. Click to enter the login interface','sakurairo_csf'),
-        'default' => true
-      ),
-      
-      array(
-        'id'    => 'mobile_menu_user_avatar',
-        'type'  => 'switcher',
-        'title' => __('Nav Menu User Avatar in Mobile','sakurairo_csf'),
-        'label'   => __('It is on by default. Click to enter the login interface','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
-        'id'     => 'unlisted_avatar',
-        'type'  => 'upload',
-        'title' => __('Nav Menu Unlisted User Avatar','sakurairo_csf'),
-        'dependency' => array( 'nav_menu_user_avatar', '==', 'true', '', 'true' ),
-        'desc'   => __('The best length-width ratio of is 1:1','sakurairo_csf'),
-        'library'      => 'image',
-        'default' => ''
       ),
 
       array(
@@ -499,6 +465,40 @@ $prefix = 'iro_options';
           'text'     => '',
           'font_name'    => 'Noto Serif SC',
         ),
+      ),
+
+      array(
+        'id' => 'cover_random_graphs_switch',
+        'type' => 'switcher',
+        'title' => __('Switch Button of Random Images','sakurairo_csf'),
+        'label' => __('Enabled by default, show cover random image toggle button','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
+        'id'    => 'nav_menu_user_avatar',
+        'type'  => 'switcher',
+        'title' => __('Nav Menu User Avatar','sakurairo_csf'),
+        'label'   => __('It is on by default. Click to enter the login interface','sakurairo_csf'),
+        'default' => true
+      ),
+  
+      array(
+        'id'     => 'unlisted_avatar',
+        'type'  => 'upload',
+        'title' => __('Nav Menu Unlisted User Avatar','sakurairo_csf'),
+        'dependency' => array( 'nav_menu_user_avatar', '==', 'true', '', 'true' ),
+        'desc'   => __('The best length-width ratio of is 1:1','sakurairo_csf'),
+        'library'      => 'image',
+        'default' => ''
+      ),
+
+      array(
+        'id'    => 'mobile_menu_user_avatar',
+        'type'  => 'switcher',
+        'title' => __('Nav Menu User Avatar in Mobile','sakurairo_csf'),
+        'label'   => __('It is on by default. Click to enter the login interface','sakurairo_csf'),
+        'default' => true
       ),
 
     )
@@ -1867,15 +1867,6 @@ $prefix = 'iro_options';
         'unit' => 'px',
         'max' => '30',
         'default' => '15'
-      ),
-
-      array(
-        'id' => 'cover_random_graphs_switch',
-        'type' => 'switcher',
-        'title' => __('Switch Button of Random Images','sakurairo_csf'),
-        'dependency' => array( 'social_area', '==', 'true', '', 'true' ),
-        'label' => __('Enabled by default, show cover random image toggle button','sakurairo_csf'),
-        'default' => true
       ),
 
       array(
@@ -3713,11 +3704,9 @@ $prefix = 'iro_options';
         'id' => 'gravatar_proxy',
         'type' => 'select',
         'title' => __('Gravatar Service Proxy','sakurairo_csf'),
-        'desc' => __('You can select multiple proxy as the Gravatar Service Proxy. By default, Tianli is used as the Gravatar Service Proxy.','sakurairo_csf'),
+        'desc' => __('You can select multiple proxy as the Gravatar Service Proxy. By default, Weavatar is used as the Gravatar Service Proxy.','sakurairo_csf'),
         'options'     => array(
           'weavatar.com/avatar'  => __('Weavatar Service','sakurairo_csf'),
-          'cravatar.cn/avatar'  => __('Cravatar Service','sakurairo_csf'),
-          'sdn.geekzu.org/avatar'  => __('Geekzu','sakurairo_csf'),
           'gravatar.loli.net/avatar'  => __('Loli Net','sakurairo_csf'),
           'gravatar.com/avatar'  => __('Official','sakurairo_csf'),
           'custom_proxy_address_of_gravatar' => __('Custom Proxy Address','sakurairo_csf'),
