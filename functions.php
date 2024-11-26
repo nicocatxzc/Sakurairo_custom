@@ -1285,6 +1285,11 @@ function get_custom_smilies_list()
     $custom_smilies_extension = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'avif', 'webp'];
     $custom_smilies_path = wp_get_upload_dir()['basedir'] . $custom_smilies_dir;
 
+    echo "<pre>调试信息：
+- 自定义表情目录是: $custom_smilies_dir
+- 解析后读取目录是: $custom_smilies_path
+</pre>";
+
     if (!is_dir($custom_smilies_path)) {
         return $custom_smilies_list;
     }
