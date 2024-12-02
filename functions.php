@@ -775,6 +775,35 @@ function visual_resource_updates($specified_version, $option_name, $new_value)
 
 visual_resource_updates('2.5.6', 'vision_resource_basepath', '2.7/');
 
+function unlisted_avatar_updates() {
+    $theme = wp_get_theme();
+    $current_version = $theme->get('Version');
+
+    // Check if the function has already been triggered
+    $function_triggered = get_transient('unlisted_avatar_updates_triggered19');
+    if ($function_triggered) {
+        return; // Function has already been triggered, do nothing
+    }
+
+    if (version_compare($current_version, '2.5.6', '>')) {
+        $option_value = iro_opt('unlisted_avatar');
+        $old_values = array(
+            'https://s.nmxc.ltd/sakurairo_vision/@2.7/basic/topavatar.png',
+            'https://s.nmxc.ltd/sakurairo_vision/@2.6/basic/topavatar.png',  
+            'https://s.nmxc.ltd/sakurairo_vision/@2.5/basic/topavatar.png'
+        );
+        
+        if (in_array($option_value, $old_values)) {
+            iro_opt_update('unlisted_avatar', '');
+        }
+
+        // Set transient to indicate that the function has been triggered
+        set_transient('unlisted_avatar_updates_triggered19', true);
+    }
+}
+
+unlisted_avatar_updates();
+
 function gfonts_updates($specified_version, $option_name)
 {
     $theme = wp_get_theme();
@@ -874,14 +903,6 @@ function wpjam_custom_upload_dir($uploads)
 {
     /*     $upload_path = '';
      */$upload_url_path = iro_opt('image_cdn');
-
-    /*     if (empty($upload_path) || 'wp-content/uploads' == $upload_path) {
-            $uploads['basedir'] = WP_CONTENT_DIR . '/uploads';
-        } elseif (0 !== strpos($upload_path, ABSPATH)) {
-            $uploads['basedir'] = path_join(ABSPATH, $upload_path);
-        } else {
-            $uploads['basedir'] = $upload_path;
-        } */
 
     $uploads['path'] = $uploads['basedir'] . $uploads['subdir'];
 
@@ -1073,15 +1094,11 @@ function smallenvelop_login_message($message)
 {
     return empty($message) ? '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>' : $message;
 }
-//add_filter( 'login_message', 'smallenvelop_login_message' );
 
 //Fix password reset bug </>
 function resetpassword_message_fix($message)
 {
     return str_replace(['>', '<'], '', $message);
-    // $message = str_replace('<', '', $message);
-    // $message = str_replace('>', '', $message);
-    // return $message;
 }
 add_filter('retrieve_password_message', 'resetpassword_message_fix');
 
@@ -1340,8 +1357,31 @@ function update_custom_smilies_list()
         delete_transient("custom_smilies_list");
         $custom_smilies_list = get_custom_smilies_list();
         $much = count($custom_smilies_list);
-        echo '自定义表情列表更新完成！总共有' . $much . '个表情。';
+        $custom_smilies_dir = iro_opt('smilies_dir');
+        $custom_smilies_path = wp_get_upload_dir()['basedir'] . $custom_smilies_dir;
+        echo '自定义表情列表更新完成！总共有' . $much . '个表情。<br>';
+        echo 'Custom smilies updated!Total' . $much . '.';
+        echo "<pre>调试信息：
+        - 表情目录设置为: $custom_smilies_dir
+        - 实际读取的路径为: $custom_smilies_path
+        Debug info:
+        - Smilies path set is: $custom_smilies_dir
+        - The directory actually read is: $custom_smilies_path
+        </pre>
+        <p>以下图片已被收录至自定义表情中（The following images have been included in the custom emoticons）：</p>";
     }
+    if (!empty($custom_smilies_list)) {
+            echo '<ul style="list-style: none; padding: 0; max-width: 600px;">';
+            foreach ($custom_smilies_list as $smiley) {
+                echo '<li style="margin-bottom: 10px; display: flex; align-items: center;">';
+                echo '<img src="' . esc_url($smiley['file_url']) . '" alt="' . esc_attr($smiley['base_name']) . '" style="height: 60px; margin-right: 10px;">';
+                echo '<span>' . esc_html($smiley['base_name']) . '</span>';
+                echo '</li>';
+            }
+            echo '</ul>';
+        } else {
+            echo '<p>没有任何图片被加入表情包中（No emoticons found）。</p>';
+        }
 }
 update_custom_smilies_list();
 
@@ -1746,15 +1786,6 @@ add_filter('the_excerpt', 'excerpt_length', 11);
 /*
  * 后台路径
  */
-/*
-add_filter('site_url',  'wpadmin_filter', 10, 3);
-function wpadmin_filter( $url, $path, $orig_scheme ) {
-$old  = array( "/(wp-admin)/");
-$admin_dir = WP_ADMIN_DIR;
-$new  = array($admin_dir);
-return preg_replace( $old, $new, $url, 1);
-}
- */
 
 function admin_ini()
 {
@@ -2098,7 +2129,6 @@ function html_tag_parser($content)
     return $content;
 }
 add_filter('the_content', 'html_tag_parser'); //替换文章关键词
-//add_filter( 'comment_text', 'html_tag_parser' );//替换评论关键词
 
 /*
  * QQ 评论
@@ -2404,19 +2434,17 @@ function register_shortcodes() {
     });
 
     add_shortcode('collapse', function($atts, $content = null) {
-        static $collapse_id = 0;
-        $collapse_id++;
         $atts = shortcode_atts(array("title" => ""), $atts);
         ob_start();
         ?>
-        <a href="javascript:void(0)" class="collapseButton" data-collapse="<?= $collapse_id ?>">
+        <a href="javascript:void(0)" class="collapseButton">
             <div class="collapse shortcodestyle">
                 <i class="fa-solid fa-angle-down"></i>
-                <span class="title"><?= $atts['title'] ?></span>
+                <span class="xTitle"><?= $atts['title'] ?></span>
                 <span class="ecbutton"><?php _e('Expand / Collapse', 'sakurairo'); ?></span>
             </div>
         </a>
-        <div class="xContent" data-collapse="<?= $collapse_id ?>" style="display: none;"><?= do_shortcode($content) ?></div>
+        <div class="xContent" style="display: none;"><?= do_shortcode($content) ?></div>
         <?php
         return ob_get_clean();
     });

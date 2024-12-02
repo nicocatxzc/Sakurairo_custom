@@ -125,7 +125,7 @@ $prefix = 'iro_options';
         'id'    => 'iro_logo',
         'type'  => 'upload',
         'title' => __('Navigation Menu Logo','sakurairo_csf'),
-        'desc'   => __('The best size is 40px, and the nav menu text logo will not be displayed after filling in','sakurairo_csf'),
+        'desc'   => __('The best size is 40px','sakurairo_csf'),
         'library'      => 'image',
       ),
 
@@ -431,10 +431,20 @@ $prefix = 'iro_options';
         'type'       => 'image_select',
         'title'      => __('Nav Menu Style','sakurairo_csf'),
         'options'    => array(
-          'center' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_iro.webp',
-          'space-between' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_sakura.webp',
+          'center' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_center.webp',
+          'space-between' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_space.webp',
         ),
         'default'    => 'center'
+      ),
+
+      array(
+        'id' => 'nav_menu_cover_radius',
+        'type' => 'slider',
+        'title' => __('Nav Menu Radius','sakurairo_csf'),
+        'desc' => __('Slide to adjust, the recommended value is 50','sakurairo_csf'),
+        'unit' => 'px',
+        'max' => '50',
+        'default' => '50'
       ),
 
       array(
@@ -471,7 +481,7 @@ $prefix = 'iro_options';
         'id' => 'cover_random_graphs_switch',
         'type' => 'switcher',
         'title' => __('Switch Button of Random Images','sakurairo_csf'),
-        'label' => __('Enabled by default, show cover random image toggle button','sakurairo_csf'),
+        'label' => __('Enabled by default, only show cover random image toggle button when cover is on','sakurairo_csf'),
         'default' => true
       ),
 
@@ -891,9 +901,8 @@ $prefix = 'iro_options';
         'type' => 'content',
         'dependency' => array( 'footer_yiyan', '==', 'true', '', 'true' ),
         'content' => __('<h4>Hitokoto API Setup Instructions</h4>'
-        .' <p>Fill in as the example:<code> ["https://api.nmxc.ltd/yiyan/", "https://v1.hitokoto.cn/"]</code>, where the first API will be used first and the next ones will be the backup. </p>'
-        .' <p><strong>Official API:</strong> See the <a href="https://developer.hitokoto.cn/sentence/"> documentation</a> for how to use it, and the parameter "return code" should not be anything except JSON. <a href="https://v1.hitokoto.cn/">https://v1.hitokoto.cn/</a></p>'
-        .' <p><strong>Maho API:</strong> An reverse proxy mirror of the official API. <a href="https://api.nmxc.ltd/yiyan/">https://api.nmxc.ltd/yiyan/</a></p>','sakurairo_csf'),
+        .' <p>Fill in as the example:<code> ["https://v1.hitokoto.cn/", "https://v1.hitokoto.cn/"]</code>, where the first API will be used first and the next ones will be the backup. </p>'
+        .' <p><strong>Official API:</strong> See the <a href="https://developer.hitokoto.cn/sentence/"> documentation</a> for how to use it, and the parameter "return code" should not be anything except JSON. <a href="https://v1.hitokoto.cn/">https://v1.hitokoto.cn/</a></p>','sakurairo_csf'),
       ),
 
       array(
@@ -902,62 +911,7 @@ $prefix = 'iro_options';
         'title' => __('Hitokoto API address','sakurairo_csf'),
         'dependency' => array( 'footer_yiyan', '==', 'true', '', 'true' ),
         'desc' => __('Fill in the address in JavaScript array format','sakurairo_csf'),
-        'default' => '["https://v1.hitokoto.cn/","https://api.nmxc.ltd/yiyan/"]'
-      ),
-
-    )
-  ) );
-
-  Sakurairo_CSF::createSection( $prefix, array(
-    'parent' => 'global', 
-    'title' => __('Cursor Options','sakurairo_csf'),
-    'icon' => 'fa fa-i-cursor',
-    'fields' => array(
-
-      array(
-        'type' => 'submessage',
-        'style' => 'info',
-        'content' => __('You can click <a href="https://docs.fuukei.org/Sakurairo/Global/#%E5%85%89%E6%A0%87%E8%AE%BE%E7%BD%AE">here</a> to learn how to set the options on this page','sakurairo_csf'),
-      ),
-
-      array(
-        'id' => 'cursor_nor',
-        'type' => 'text',
-        'title' => __('Standard Cursor Style','sakurairo_csf'),
-        'desc' => __('Apply to global, fill in ".cur" mouse file link','sakurairo_csf'),
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/cursor/normal.cur'
-      ),
-
-      array(
-        'id' => 'cursor_no',
-        'type' => 'text',
-        'title' => __('Selected Cursor Style','sakurairo_csf'),
-        'desc' => __('Apply to multiple styles, fill in ".cur" file link','sakurairo_csf'),
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/cursor/No_Disponible.cur'
-      ),
-
-      array(
-        'id' => 'cursor_ayu',
-        'type' => 'text',
-        'title' => __('Selected Control Unit Cursor Style','sakurairo_csf'),
-        'desc' => __('Apply to selected control unit, fill in ".cur" file link','sakurairo_csf'),
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/cursor/ayuda.cur'
-      ),
-
-      array(
-        'id' => 'cursor_text',
-        'type' => 'text',
-        'title' => __('Selected Text Cursor Style','sakurairo_csf'),
-        'desc' => __('Apply to selected text, fill in ".cur" file link','sakurairo_csf'),
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/cursor/texto.cur'
-      ),
-
-      array(
-        'id' => 'cursor_work',
-        'type' => 'text',
-        'title' => __('Work Status Cursor Style','sakurairo_csf'),
-        'desc' => __('Apply to load control unit, fill in ".cur" file link','sakurairo_csf'),
-        'default' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/cursor/work.cur'
+        'default' => '["https://v1.hitokoto.cn/","https://v1.hitokoto.cn/"]'
       ),
 
     )
@@ -994,24 +948,18 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'enable_search_filter',
+        'id' => 'search_filter',
         'type' => 'switcher',
-        'title' => __('Enable search filter','sakurairo_csf'),
-        'desc' => __('Allow users to use site search filters','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
-        'id' => 'sticky_pinned_content',
-        'type' => 'switcher',
-        'title' => __('Pinned contents will show at the top of the search results','sakurairo_csf'),
-        'default' => true
+        'title' => __('Search Filter','sakurairo_csf'),
+        'label' => __('When turned on, users can search using the search filter','sakurairo_csf'),
+        'default' => false
       ),
 
       array(
         'id' => 'search_for_shuoshuo',
         'type' => 'switcher',
         'title' => __('Show shuoshuo in search results','sakurairo_csf'),
+        'dependency' => array( 'search_filter', '==', 'true', '', 'true' ),
         'default' => true
       ),
 
@@ -1019,6 +967,7 @@ $prefix = 'iro_options';
         'id' => 'search_for_pages',
         'type' => 'switcher',
         'title' => __('Show pages in search results','sakurairo_csf'),
+        'dependency' => array( 'search_filter', '==', 'true', '', 'true' ),
         'default' => true
       ),
 
@@ -1026,7 +975,18 @@ $prefix = 'iro_options';
         'id' => 'only_admin_can_search_pages',
         'type' => 'switcher',
         'title' => __('Only administrators can search pages','sakurairo_csf'),
-        'dependency' => array( 'search_for_pages', '==', 'true', '', 'true' ),
+        'dependency' => array(
+          array( 'search_filter', '==', 'true', '', 'true' ),
+          array( 'search_for_pages', '==', 'true', '', 'true' ),
+        ),
+        'default' => true
+      ),
+
+      array(
+        'id' => 'sticky_pinned_content',
+        'type' => 'switcher',
+        'title' => __('Pinned contents will show at the top of the search results','sakurairo_csf'),
+        'dependency' => array( 'search_filter', '==', 'true', '', 'true' ),
         'default' => true
       ),
 
@@ -1035,6 +995,7 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('Exclude some content in search results','sakurairo_csf'),
         'desc' => __('Fill in the posts or pages IDs that need to be excluded, such as "12,34".Recommend to fill in the custom login page id,and you can get them from the edit page of those content.','sakurairo_csf'),
+        'dependency' => array( 'search_filter', '==', 'true', '', 'true' ),
       ),
 
       array(
@@ -1433,17 +1394,6 @@ $prefix = 'iro_options';
                               array( 'cover_full_screen', '==', 'false' ),
                         ),
         'default' => false
-      ),
-
-      array(
-        'id' => 'cover_radius',
-        'type' => 'slider',
-        'title' => __('Cover Radius','sakurairo_csf'),
-        'desc' => __('Slide to adjust, the recommended value range is 15-20','sakurairo_csf'),
-        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
-        'unit' => 'px',
-        'max' => '60',
-        'default' => '15'
       ),
 
       array(
@@ -3113,26 +3063,6 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'location_server',
-        'type' => 'select',
-        'title' => __('API To Parse Geographical Location','sakurairo_csf'),
-        'options' => array(
-          'sakurairo' => __('Theme Official','sakurairo_csf'),
-          'ip-api' => __('IP—API','sakurairo_csf'),
-          'all' => __('All','sakurairo_csf'),
-        ),
-        'default' => 'all'
-      ),
-
-      array(
-        'type'    => 'content',
-        'content' => __(
-         '<p><strong>Theme Official:</strong>Official API of the theme</p>'
-        .'<p><strong>IP-API:</strong>Provided by <a target="_blank" href="https://ip-api.com/">ip-api.com</a></p>'
-        .'<p><strong>All:</strong>Priority is given to Theme Official, IP—API for fallback</p>','sakurairo_csf'),
-      ),
-
-      array(
         'id' => 'comment_private_message',
         'type' => 'switcher',
         'title' => __('Private Comment Function','sakurairo_csf'),
@@ -4093,8 +4023,7 @@ $prefix = 'iro_options';
       array(
         'type'    => 'content',
         'content' => __('<p>Fluent Design Icon Referenced by Paradox Fluent Icon Pack</p>
-        <p>MUH2 Design Icon Referenced by 缄默 <a href="https://www.coolapk.com/apk/com.muh2.icon">MUH2 Icon Pack</a></p>
-        <p>Mashiro Style Logo References the Original Theme Author Mashiro, As Provided and Referenced by Hyacm</p>','sakurairo_csf'),
+        <p>MUH2 Design Icon Referenced by 缄默 <a href="https://www.coolapk.com/apk/com.muh2.icon">MUH2 Icon Pack</a></p>','sakurairo_csf'),
       ),
 
       array(
