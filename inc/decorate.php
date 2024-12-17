@@ -258,6 +258,7 @@ body.dark .headertop-down svg path
 {fill: <?=iro_opt('drop_down_arrow_dark_color'); ?> !important;transition: all 0.6s ease-in-out;}
 
 body.dark img,
+body.dark .centerbg,
 body.dark .highlight-wrap,
 body.dark iframe,
 body.dark .entry-content .aplayer,
@@ -725,6 +726,13 @@ if($nav_menu_style == 'space-between' && ($has_user_avatar || $has_logo)){ ?>
     right: -5%;
 }
 .site-branding{
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+body.dark .site-branding{
   background: none;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
