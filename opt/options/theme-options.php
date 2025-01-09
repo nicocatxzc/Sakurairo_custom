@@ -2770,6 +2770,7 @@ $prefix = 'iro_options';
 		'options' => array(
 			'bilibili' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/bangumi_tep_bili.webp',
 			'myanimelist' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/bangumi_tep_mal.webp',
+      'bangumi' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/bangumi_tep_bangumi.webp'
 		),
 		'default' => 'bilibili'
 	  ),
@@ -2813,6 +2814,46 @@ $prefix = 'iro_options';
         'dependency' => array( 'bangumi_source', '==', 'bilibili', '', 'true' ),
         'default' => 'LIVE_BUVID='
       ),
+
+      array(
+        'id' => 'bangumi_id',
+        'type' => 'text',
+        'title' => __('Bangumi Account UID','sakurairo_csf'),
+        'desc' => __('Fill in your Bangumi account ID, e.g. https://bangumi.tv/user/944883, just the number part "944883"','sakurairo_csf'),
+        'dependency' => array( 'bangumi_source', '==', 'bangumi', '', 'true' ),
+        'default' => '944883'
+      ),
+
+      array(
+        'id' => 'bangumi_cache',
+        'type' => 'switcher',
+        'title' => __('Use cached or pre-set responses','sakurairo_csf'),
+        'desc' => __('If the following content is empty, it will be automatically updated on first visit.','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'bangumi_cache_content',
+        'type' => 'code_editor',
+        'title' => __('Bangumi cache content','sakurairo_csf'),
+        'desc' => __('Please clear the content when changing the source.','sakurairo_csf'),
+      ),
+
+      array(
+        'type'    => 'content',
+        'content' => __('<strong>Attention: In case of poor network conditions, you can enable the caching feature.</strong>'
+        .'<br/><strong>Visit the animelist page</strong> to allow the system to try fetching the content.'
+        .'<br/> Alternatively, you can manually construct the URL using the following format and replace the necessary parameters: '
+        .'<br/><strong>For example:</strong><br/> "https://myanimelist.net/animelist/$my_anime_list_username/load.json?$sort"'
+        .'<br/><strong>Sort options:</strong>'
+        .'<br/> Case 1: Status and Last Updated: order=16&order2=5&status=7'
+        .'<br/> Case 2: Last Updated: order=5&status=7'
+        .'<br/> Case 3: Status: order=16&status=7'
+        .'<br/><strong>For Bangumi, use the following API:</strong>'
+        .'<br/> "https://api.bgm.tv/v0/users/$bangumi_id/collections"'
+        .'<br/> After obtaining the content, copy and paste it into the cache area, and then save.',
+        'sakurairo_csf'),
+    ),
 
       array(
         'type' => 'subheading',
@@ -3596,6 +3637,14 @@ $prefix = 'iro_options';
         'desc' => __('Enter your Gravatar proxy address without starting with "http(s)://" and ending with "/". Example: gravatar.com/avatar.','sakurairo_csf'),
         'dependency' => array( 'gravatar_proxy', '==', 'custom_proxy_address_of_gravatar', '', 'true' ),
         'default'     => 'gravatar.com/avatar'
+      ),
+
+      array(
+        'id' => 'ghcard_proxy',
+        'type' => 'switcher',
+        'title' => __('GitHub repository card proxy','sakurairo_csf'),
+        'desc' => __('Use your server proxy to get the github repository card image so that Chinese users who cannot access vercel.app can see it','sakurairo_csf'),
+        'default' => false
       ),
 
       array(
