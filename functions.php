@@ -2227,6 +2227,11 @@ function DEFAULT_FEATURE_IMAGE(string $size = 'source'): string
     if (iro_opt('post_cover_options') == 'type_2') {
         return get_random_url(iro_opt('post_cover'));
     }
+    //新的
+    if (iro_opt('random_graphs_options') == 'gallery') {
+        return rest_url('sakura/v1/gallery') . '?img=w';
+    }
+    //旧的
     if (iro_opt('random_graphs_options') == 'external_api') {
         return get_random_url(iro_opt('random_graphs_link'));
     }
@@ -2742,3 +2747,61 @@ function iterator_to_string(Iterator $iterator): string
     }
     return $content;
 }
+
+/*GET参数操作*/
+function iro_action_operator()
+{
+    if (!isset($_GET['iro_act']) || empty($_GET['iro_act'])) {
+        return;
+    }
+
+    if (!is_admin() || !current_user_can('manage_options')) {
+        echo 'Access denied';
+        return;
+    }
+
+    $direct_info = sanitize_key($_GET['iro_act']);
+
+    switch($direct_info){
+        case 'bangumi' :
+            $direct_url = 'https://api.bgm.tv/v0/users/' . (iro_opt('bangumi_id') ?: '944883') . '/collections';
+            header("Location: $direct_url", true, 302);
+            break;
+
+        case 'mal' :
+            switch (iro_opt('my_anime_list_sort')) {
+                case 1: // Status and Last Updated
+                    $sort = 'order=16&order2=5&status=7';
+                    break;
+                case 2: // Last Updated
+                    $sort = 'order=5&status=7';
+                    break;
+                case 3: // Status
+                    $sort = 'order=16&status=7';
+                    break;
+            }
+            $direct_url = 'https://myanimelist.net/animelist/' . (iro_opt('my_anime_list_username') ?: 'username') . '/load.json?' . $sort;
+            header("Location: $direct_url", true, 302);
+            break;
+
+        case 'playlist' :
+            $direct_url = rest_url('sakura/v1/meting/aplayer') . '?_wpnonce=' . wp_create_nonce('wp_rest') . '&server=' . (iro_opt('aplayer_server') ?: 'netease') . '&type=playlist&id=' . (iro_opt('aplayer_playlistid') ?: '5380675133');
+            header("Location: $direct_url", true, 302);
+            break;
+
+        case 'gallery_init':
+            include_once('inc/classes/gallery.php');
+            $gallery = new Sakura\API\gallery();
+            echo $gallery->init();
+            echo 'Done!';
+            break;
+
+        case 'gallery_webp':
+            include_once('inc/classes/gallery.php');
+            $gallery = new Sakura\API\gallery();
+            echo $gallery->webp();
+            echo 'Done!';
+            break;
+    }
+}
+iro_action_operator();
