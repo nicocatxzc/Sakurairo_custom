@@ -149,6 +149,12 @@ header('X-Frame-Options: SAMEORIGIN');
         </div>
     <?php endif; ?>
     <div class="scrollbar" id="bar"></div>
+
+    <!-- 导航菜单 -->
+     <?php if(iro_opt('nav_menu_style') == 'sakura'){
+        get_template_part('layouts/' . 'sakura');
+     } else {
+    ?>
     <header class="site-header no-select" role="banner">
         <?php
         // Logo Section - Only process if logo or text is configured
@@ -223,6 +229,11 @@ header('X-Frame-Options: SAMEORIGIN');
             </div>
         <?php endif; ?>
     </header>
+    <!-- 导航菜单结束 -->
+     <?php
+     }
+     ?>
+     
     <div class="openNav no-select">
         <div class="iconflat no-select" style="padding: 30px;">
             <div class="icon"></div>

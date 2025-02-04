@@ -433,6 +433,7 @@ $prefix = 'iro_options';
         'options'    => array(
           'center' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_center.webp',
           'space-between' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/nav_menu_style_space.webp',
+          'sakura' => 'https://s.nmxc.ltd/sakurairo_vision/@2.7/options/sakura.webp',
         ),
         'default'    => 'center'
       ),
@@ -445,6 +446,45 @@ $prefix = 'iro_options';
         'unit' => 'px',
         'max' => '50',
         'default' => '50'
+       ),
+
+      array(
+        'id'         => 'nav_menu_distribution',
+        'type'       => 'select',
+        'title'      => __('Nav Menu Options Display Method','sakurairo_csf'),
+        'desc'    => __('Distribution method of menu options','sakurairo_csf'),
+        'options'    => array(
+          'left' => __('Keep to the left','sakurairo_csf'),
+          'right' => __('Keep to the right','sakurairo_csf'),
+          'center' => __('Always centered','sakurairo_csf'),
+          'space-between'  => __('Even distribution','sakurairo_csf'),
+        ),
+        'dependency' => array( 'nav_menu_style', '==', 'sakura', '', 'true' ),
+        'default'    => 'right'
+      ),
+
+      array(
+        'id' => 'menu_option_spacing',
+        'type' => 'slider',
+        'title' => __('Menu option left and right spacing','sakurairo_csf'),
+        'desc'    => __('You can manually adjust the option spacing to achieve more distribution effects, the default is 14','sakurairo_csf'),
+        'step' => '1',
+        'unit' => 'px',
+        'min' => '1',
+        'max' => '150',
+        'default' => '14'
+      ),
+
+      array(
+        'id'         => 'nav_menu_display',
+        'type'       => 'radio',
+        'title'      => __('Nav Menu Content Display Method','sakurairo_csf'),
+        'desc'    => __('You can choose to unfold or fold the nav menu contents','sakurairo_csf'),
+        'options'    => array(
+          'unfold' => __('Unfold','sakurairo_csf'),
+          'fold' => __('Fold','sakurairo_csf'),
+        ),
+        'default'    => 'unfold'
       ),
 
       array(
