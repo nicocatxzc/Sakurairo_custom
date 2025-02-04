@@ -152,6 +152,9 @@ header('X-Frame-Options: SAMEORIGIN');
 
     <!-- 导航菜单 -->
      <?php if(iro_opt('nav_menu_style') == 'sakura'){
+        ?>
+        <link rel="stylesheet" href="<?php echo get_template_directory_uri() . '/css/sakura_header.css'; ?>">
+        <?php
         get_template_part('layouts/' . 'sakura_header');
      } else {
     ?>
