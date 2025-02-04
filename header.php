@@ -152,7 +152,7 @@ header('X-Frame-Options: SAMEORIGIN');
 
     <!-- 导航菜单 -->
      <?php if(iro_opt('nav_menu_style') == 'sakura'){
-        get_template_part('layouts/' . 'sakura');
+        get_template_part('layouts/' . 'sakura_header');
      } else {
     ?>
     <header class="site-header no-select" role="banner">

@@ -1,6 +1,9 @@
 // 导航栏长度限制
     function initNavWidth() {
         const nav = document.querySelector('nav');
+        if (nav.classList.contains('sakura_nav')) {
+            return;
+        }
         const checkWidth = () => {
             if (nav.offsetWidth > 1200) {
                 nav.style.overflowX = 'hidden';
