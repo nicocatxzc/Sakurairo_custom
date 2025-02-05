@@ -15,7 +15,10 @@
         };
         checkWidth();
         window.addEventListener('resize', checkWidth);
+        init_iro_nav()
     }
+
+function init_iro_nav(){ //init start
 
     document.addEventListener('DOMContentLoaded', initNavWidth);
     document.addEventListener('pjax:complete', initNavWidth);
@@ -982,3 +985,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+} //init end
