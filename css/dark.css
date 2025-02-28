@@ -620,6 +620,7 @@ body.dark .header-user-menu {
 @media (min-width: 861px) {
   body.dark .site-branding{
     background: rgba(0, 0, 0, var(--theme-dm-background_transparency, 0.65)) !important;
+    border: 1px solid #222222;
   }
 }
 
