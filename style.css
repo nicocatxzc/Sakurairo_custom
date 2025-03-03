@@ -6720,12 +6720,3 @@ a.toc-link {
 .bangumi-next i {
   color: var(--theme-skin, #505050);
 }
-
-#main-container {
-  z-index: 1;
-  position: relative;
-}
-
-#particles-js {
-  z-index: 0!important;
-}
