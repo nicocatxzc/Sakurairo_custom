@@ -259,17 +259,8 @@ header('X-Frame-Options: SAMEORIGIN');
                 </div>
             <?php endif; ?>
 
-
-            <?php
-            $bgdisplay = "display:none";
-            if (is_singular()) {
-                $bgdisplay = "display:none";
-            } elseif (is_home()) {
-                $bgdisplay = "display:block";
-            }
-            ?>
             <?php if ($enable_random_graphs): ?>
-                <div class="bg-switch" id="bg-next" style=<?php echo $bgdisplay ?>>
+                <div class="bg-switch" id="bg-next">
                     <i class="fa-solid fa-dice" aria-hidden="true"></i>
                     <span class="screen-reader-text">
                         <?php esc_html_e('Random Background', 'sakurairo'); ?>

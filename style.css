@@ -695,6 +695,7 @@ blockquote:after {
   
 .site-header:not(:hover) .nav-search-wrapper:not(:hover)[data-scrollswap] .nav-article-title {
   transform:translateY(0);
+  opacity:1;
 }
 
 .nav-search-wrapper nav {
@@ -799,7 +800,6 @@ nav .menu > li .sub-menu a {
   padding-right: 10px;
   box-sizing: border-box;
   opacity: 0;
-  transition-property: transform, margin;
 }
 
 /* 搜索分隔线和搜索框 */
@@ -834,6 +834,29 @@ nav .menu > li .sub-menu a {
   background-color: var(--theme-skin-matching);
 }
 
+/* 导航栏动画部分 */
+.site-header .searchbox.js-toggle-search,
+.site-header .bg-switch {
+  max-width: 50px;
+  opacity: 1;
+  transition: all .4s ease-in-out,max-width .6s linear(0 0%, 0.02 5%, 0.1 10%, 0.28 20%, 0.55 30%, 0.85 40%, 1.05 50%, 
+  0.92 60%, 0.85 70%, 0.9 80%, 0.97 90%, 1 100%);
+}
+
+.site-header .hide-width {
+  max-width: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  transition:all .4s ease-in-out, max-width .6s linear(0 0%, 0.02 5%, 0.1 10%, 0.28 20%, 0.55 30%, 0.85 40%, 1.05 50%, 
+  0.92 60%, 0.85 70%, 0.9 80%, 0.97 90%, 1 100%);
+}
+
+.site-header .hide-height {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  transition: all .6s ease-in-out;
+}
 /* 用户菜单区域 */
 .user-menu-wrapper {
   width: fit-content;
@@ -6696,4 +6719,13 @@ a.toc-link {
 
 .bangumi-next i {
   color: var(--theme-skin, #505050);
+}
+
+#main-container {
+  z-index: 1;
+  position: relative;
+}
+
+#particles-js {
+  z-index: 0!important;
 }
