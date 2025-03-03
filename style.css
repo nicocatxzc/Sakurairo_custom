@@ -851,12 +851,6 @@ nav .menu > li .sub-menu a {
   0.92 60%, 0.85 70%, 0.9 80%, 0.97 90%, 1 100%);
 }
 
-.site-header .hide-height {
-  max-height: 0 !important;
-  overflow: hidden !important;
-  opacity: 0;
-  transition: all .6s ease-in-out;
-}
 /* 用户菜单区域 */
 .user-menu-wrapper {
   width: fit-content;

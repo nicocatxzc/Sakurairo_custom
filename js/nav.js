@@ -25,7 +25,6 @@ function init_iro_nav() {
     let siteHeader = document.querySelector('.site-header');
     let navWrapper = siteHeader.querySelector('.nav-search-wrapper');
     let siteNav = siteHeader.querySelector('nav');
-    let navSearch = siteHeader.querySelector('.searchbox.js-toggle-search');
     let bgNext = siteHeader.querySelector('.bg-switch');
     let articleTitle = document.querySelector('#main-container .entry-title');
     let navArticleTitle = document.querySelector('.nav-article-title');
@@ -76,7 +75,6 @@ function init_iro_nav() {
         articleTitle = document.querySelector('#main-container .entry-title');
 
         if (!articleTitle) {
-            console.log('destory')
             if (navArticleTitle) {
                 navArticleTitle.remove();
             }
@@ -111,11 +109,9 @@ function init_iro_nav() {
         if (articleTitle) {
             if (getScrollProgress() > 1 ) {
                 navWrapper.dataset.scrollswap = "true";
-                siteNav.style.width = titleWidth;
                 hideSubMenu();
             } else {
                 hideTitle();
-                siteNav.style.removeProperty('width');
                 hideSubMenu();
             }
         } else {
