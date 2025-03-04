@@ -95,6 +95,9 @@ function init_iro_nav() {
     }
 
     function resizeNav () {
+        if (!navArticleTitle) {
+            return;
+        }
         titleWidth = navArticleTitle.getBoundingClientRect().width;
         navWidth = siteNav.getBoundingClientRect().width;
         dw = titleWidth - navWidth;
