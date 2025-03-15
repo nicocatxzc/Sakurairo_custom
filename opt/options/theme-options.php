@@ -2956,19 +2956,11 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'friend_link_title_matching_color',
-        'type' => 'color',
-        'title' => __('Friend Link Template Unit Matching Color','sakurairo_csf'),
-        'desc' => __('Customize the colors, suggest using a corresponding color with the background color','sakurairo_csf'),
-        'default' => '#ac354b'
-      ),  
-
-      array(
-        'id' => 'friend_link_shadow_color',
-        'type' => 'color',
-        'title' => __('Friend Link Template Unit Border Shadow Color','sakurairo_csf'),
-        'desc' => __('Customize the colors, suggest using a corresponding color with the background color','sakurairo_csf'),
-        'default' => '#e8e8e8'
+        'id' => 'friend_link_form',
+        'type' => 'switcher',
+        'title' => __('Friend Link Apply Form','sakurairo_csf'),
+        'label' => __('Add a apply form on the friend link page','sakurairo_csf'),
+        'default' => true,
       ),
 
       array(
@@ -3042,19 +3034,6 @@ $prefix = 'iro_options';
           'steamdb'  => __('SteamDB','sakurairo_csf'),
         ),
         'default'     => 'steam'
-      ),
-
-      array(
-        'type' => 'subheading',
-        'content' => __('Login Template Settings','sakurairo_csf'),
-      ),
-
-      array(
-        'id' => 'ex_register_open',
-        'type' => 'switcher',
-        'title' => __('Login Template Registration Function','sakurairo_csf'),
-        'label' => __('Login template will allow registration when enabled','sakurairo_csf'),
-        'default' => false
       ),
 
     )

@@ -163,6 +163,9 @@ if (!function_exists('akina_setup')) {
             )
         );
 
+        // 注册小工具支持
+        add_theme_support('widgets');
+
         /**
          * 废弃过时的wp_title
          * @seealso https://make.wordpress.org/core/2015/10/20/document-title-in-4-4/
@@ -802,8 +805,17 @@ function get_the_link_items($id = null)
             if (empty($bookmark->link_image)) {
                 $bookmark->link_image = 'https://s.nmxc.ltd/sakurairo_vision/@2.7/basic/friendlink.jpg';
             }
+            
+            // 获取链接状态
+            $link_status = get_post_meta($bookmark->link_id, '_link_check_status', true);
+            $status_class = '';
+            if ($link_status === 'success') {
+                $status_class = 'link-status-success';
+            } elseif ($link_status === 'failure') {
+                $status_class = 'link-status-failure';
+            }
 
-            $output .= '<li class="link-item"><a class="link-item-inner effect-apollo" href="' . $bookmark->link_url . '" title="' . $bookmark->link_description . '" target="_blank" rel="friend"><img alt="friend_avator" class="lazyload" onerror="imgError(this,1)" data-src="' . $bookmark->link_image . '" src="' . iro_opt('load_in_svg') . '"></br><span class="sitename" style="' . $bookmark->link_notes . '">' . $bookmark->link_name . '</span><div class="linkdes">' . $bookmark->link_description . '</div></a></li>';
+            $output .= '<li class="link-item ' . $status_class . '"><a class="link-item-inner effect-apollo" href="' . $bookmark->link_url . '" title="' . $bookmark->link_description . '" target="_blank" rel="friend"><div class="link-avatar-wrapper"><img alt="friend_avator" class="lazyload" onerror="imgError(this,1)" data-src="' . $bookmark->link_image . '" src="' . iro_opt('load_in_svg') . '"></div><span class="sitename" style="' . $bookmark->link_notes . '">' . $bookmark->link_name . '</span><div class="linkdes">' . $bookmark->link_description . '</div></a></li>';
         }
         $output .= '</ul>';
     }
@@ -816,11 +828,21 @@ function get_link_items()
     $result = null;
     if (empty($linkcats))
         return get_the_link_items();  // 友链无分类，直接返回全部列表  
+    
+    $pending_cat_name = __('Pending Links', 'sakurairo'); // 未审核链接分类名称
     $link_category_need_display = get_post_meta(get_queried_object_id(), 'link_category_need_display', false);
+    
     foreach ($linkcats as $linkcat) {
+        // 跳过未审核链接分类
+        if ($linkcat->name === $pending_cat_name) {
+            continue;
+        }
+        
+        // 检查是否需要显示该分类
         if (!empty($link_category_need_display) && !in_array($linkcat->name, $link_category_need_display, true)) {
             continue;
         }
+        
         $result .= '<h3 class="link-title"><span class="link-fix">' . $linkcat->name . '</span></h3>';
         if ($linkcat->description) {
             $result .= '<div class="link-description">' . $linkcat->description . '</div>';
@@ -1163,7 +1185,7 @@ function comment_mail_notify($comment_id)
       -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.12);
       box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.18);">
         <header style="overflow: hidden;">
-            <img style="width:100%;z-index: 666;" src="' . iro_opt('mail_img') . '">
+            <img style="width:100%;z-index: 99;" src="' . iro_opt('mail_img') . '">
         </header>
         <div style="padding: 5px 20px;">
         <p style="position: relative;
@@ -2667,7 +2689,214 @@ function register_shortcodes() {
         return $iframes;
      });
 
+     add_shortcode('steamuser', function ($atts, $content = null) {
+        $key = iro_opt('steam_key');
+        if (empty($key)) {
+            // 多语言支持
+            $lang = get_user_locale();
+            if ($lang == 'zh_TW') {
+                return '<div class="steam-error">需在Steam模板設置填寫Steam API KEY</div>';
+            } elseif ($lang == 'ja') {
+                return '<div class="steam-error">SteamテンプレートでSteam API KEYを設定してください</div>';
+            } elseif ($lang == 'en_US') {
+                return '<div class="steam-error">Please fill in Steam API KEY in Steam template settings</div>';
+            } else {
+                return '<div class="steam-error">需在Steam模板设置填写Steam API KEY</div>';
+            }
+        }
+        preg_match_all('/\b7656\d{13}\b/', $content, $matches);
+        $output = '<div class="steam-user-card">';
+        foreach ($matches[0] as $steamid) {
+            $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' . $key . '&steamids=' . $steamid;
+            $response = get_transient('steam_stat_'.$steamid);
+            if (!$response) {
+                $response = wp_remote_get($url);
+                set_transient('steam_stat_'.$steamid, $response, 180);
+            }
+            $data = json_decode($response["body"], true);
+            $player = $data['response']['players'][0] ?? [];
+            
+            // 多语言支持
+            $lang = get_user_locale();
+            $status_text = [
+                'offline' => [
+                    'zh_CN' => '离线',
+                    'zh_TW' => '離線',
+                    'ja' => 'オフライン',
+                    'en_US' => 'Offline'
+                ],
+                'online' => [
+                    'zh_CN' => '在线',
+                    'zh_TW' => '在線',
+                    'ja' => 'オンライン',
+                    'en_US' => 'Online'
+                ],
+                'away' => [
+                    'zh_CN' => '离开',
+                    'zh_TW' => '離開',
+                    'ja' => '退席中',
+                    'en_US' => 'Away'
+                ],
+                'unknown' => [
+                    'zh_CN' => '未知状态，请提交issue',
+                    'zh_TW' => '未知狀態，請提交issue',
+                    'ja' => '不明なステータス、issueを提出してください',
+                    'en_US' => 'Unknown status, please submit an issue'
+                ],
+                'playing' => [
+                    'zh_CN' => '正在玩',
+                    'zh_TW' => '正在玩',
+                    'ja' => 'プレイ中',
+                    'en_US' => 'Playing'
+                ],
+                'last_online' => [
+                    'zh_CN' => '上次在线',
+                    'zh_TW' => '上次在線',
+                    'ja' => '最終オンライン',
+                    'en_US' => 'Last online'
+                ],
+                'error' => [
+                    'zh_CN' => 'ID填写错误，请检验',
+                    'zh_TW' => 'ID填寫錯誤，請檢驗',
+                    'ja' => 'IDが間違っています、確認してください',
+                    'en_US' => 'ID error, please check'
+                ]
+            ];
+            
+            $status = match($player['personastate'] ?? 0) {
+                0 => $status_text['offline'][$lang] ?? $status_text['offline']['zh_CN'],
+                1 => $status_text['online'][$lang] ?? $status_text['online']['zh_CN'],
+                3 => $status_text['away'][$lang] ?? $status_text['away']['zh_CN'],
+                default => $status_text['unknown'][$lang] ?? $status_text['unknown']['zh_CN']
+            };
+            
+            if (empty($data['response']['players'][0])) {
+                $output .= '<div class="steam-error">' . ($status_text['error'][$lang] ?? $status_text['error']['zh_CN']) . '</div>';
+            } else {
+                $avatar = esc_attr(substr($player['avatar'], 0, strrpos($player['avatar'], '.')) . '_full' . substr($player['avatar'], strrpos($player['avatar'], '.')));
+                $output .= '<div class="steam-profile">';
+                $output .= '<div class="steam-profile-header">';
+                $output .= '<img class="steam-avatar" src="' . $avatar . '" alt="Steam Avatar">';
+                $output .= '<div class="steam-profile-info">';
+                $output .= '<a href="' . esc_attr($player['profileurl']) . '" target="_blank" class="steam-username"><i class="fa-brands fa-steam"></i> ' . esc_attr($player['personaname']) . '</a>';
+                $output .= '<div class="steam-status status-' . strtolower(str_replace(' ', '-', $status)) . '">' . $status . '</div>';
+                $output .= '</div>'; // .steam-profile-info
+                $output .= '</div>'; // .steam-profile-header
 
+                if(!empty($player['gameextrainfo'])) {
+                    $output .= '<div class="steam-game-info">';
+                    $output .= '<a href="https://store.steampowered.com/app/' . esc_attr($player['gameid']) . '/" target="_blank" class="steam-game-name"><i class="fa-solid fa-gamepad"></i> ' . 
+                        ($status_text['playing'][$lang] ?? $status_text['playing']['zh_CN']) . ': ' . esc_attr($player['gameextrainfo']) . '</a>';
+                    $output .= '<img class="steam-game-banner" src="https://shared.cdn.steamchina.queniuam.com/store_item_assets/steam/apps/' . esc_attr($player['gameid']) . '/header.jpg" alt="Game Banner">';
+                    $output .= '</div>'; // .steam-game-info
+                }
+                
+                if (($player['personastate'] ?? 0) === 0 && isset($player['lastlogoff'])) {
+                    $last_online = date('Y-m-d H:i', $player['lastlogoff']);
+                    $output .= '<div class="steam-last-online"><i class="fa-regular fa-clock"></i> ' . 
+                        ($status_text['last_online'][$lang] ?? $status_text['last_online']['zh_CN']) . '：' . esc_attr($last_online) . '</div>';
+                }
+                
+                $output .= '</div>'; // .steam-profile
+            }
+        }
+        $output .= '</div>'; // .steam-user-card
+        return $output;
+    });
+
+    // 添加Steam个人资料响应式样式的JavaScript
+    add_action('wp_footer', function() {
+        ?>
+        <script>
+        (function() {
+            // 存储原始样式值
+            const defaultStyles = {
+                profile: {
+                    display: 'block'
+                },
+                header: {
+                    minWidth: '',
+                    margin: '',
+                    background: '',
+                    borderBottom: '1px solid rgba(232, 232, 232, 0.8)',
+                    padding: '16px'
+                },
+                username: {
+                    fontSize: '18px'
+                },
+                avatar: {
+                    width: '64px',
+                    height: '64px'
+                }
+            };
+
+            // 应用Steam个人资料样式的函数
+            function applySteamProfileStyles() {
+                const steamProfiles = document.querySelectorAll('.steam-profile');
+                
+                steamProfiles.forEach(profile => {
+                    // 获取所有需要操作的元素
+                    const gameInfo = profile.querySelector('.steam-game-info');
+                    const profileHeader = profile.querySelector('.steam-profile-header');
+                    const username = profile.querySelector('.steam-username');
+                    
+                    // 检查是否满足应用样式的条件
+                    const shouldApplyStyles = profile.offsetWidth > 700 && gameInfo;
+                    
+                    if (shouldApplyStyles) {
+                        // 应用增强样式
+                        profile.style.display = 'flex';
+                        
+                        if (profileHeader) {
+                            profileHeader.style.minWidth = '50%';
+                            profileHeader.style.margin = '0 auto';
+                            profileHeader.style.background = 'none';
+                            profileHeader.style.borderBottom = 'unset';
+                            profileHeader.style.padding = '24px';
+                        }
+
+                        if (username) {
+                            username.style.fontSize = '30px';
+                        }
+                    } else {
+                        // 重置为默认样式
+                        profile.style.display = defaultStyles.profile.display;
+                        
+                        if (profileHeader) {
+                            profileHeader.style.minWidth = defaultStyles.header.minWidth;
+                            profileHeader.style.margin = defaultStyles.header.margin;
+                            profileHeader.style.background = defaultStyles.header.background;
+                            profileHeader.style.borderBottom = defaultStyles.header.borderBottom;
+                            profileHeader.style.padding = defaultStyles.header.padding;
+                        }
+
+                        if (username) {
+                            username.style.fontSize = defaultStyles.username.fontSize;
+                        }
+
+                    }
+                });
+            }
+            
+            // 页面加载时应用样式
+            document.addEventListener('DOMContentLoaded', applySteamProfileStyles);
+            
+            // 监听pjax事件
+            document.addEventListener('pjax:complete', applySteamProfileStyles);
+            
+            // 监听窗口大小变化，使用防抖
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(applySteamProfileStyles, 250);
+            });
+
+            // 监听游戏状态变化（如果有相关事件）
+            document.addEventListener('steamStatusUpdate', applySteamProfileStyles);
+        })();
+        </script>
+        <?php
+    });
 }
 add_action('init', 'register_shortcodes');
 //code end
@@ -2946,12 +3175,6 @@ function sakurairo_link_submission_handler() {
         // 验证Referer，防止跨站请求
         check_ajax_referer('link_submission_nonce', 'link_submission_nonce');
 
-        // 验证nonce
-        if (!isset($_POST['link_submission_nonce']) || !wp_verify_nonce($_POST['link_submission_nonce'], 'link_submission_nonce')) {
-            wp_send_json_error(array('message' => __('Security verification failed.', 'sakurairo')));
-            return; 
-        }
-
         // 限制提交频率，防止滥用
         $ip = get_the_user_ip();
         $transient_key = 'link_submit_' . md5($ip);
@@ -2959,42 +3182,11 @@ function sakurairo_link_submission_handler() {
             wp_send_json_error(array('message' => __('You are submitting too frequently. Please try again later.', 'sakurairo')));
             return;
         }
-        
-        // 设置提交频率限制（1分钟）
-        set_transient($transient_key, 1, 60);
 
-        // 检查是否达到草稿链接上限 (20个)
-        // 首先确保分类存在
-        $pending_cat_id = 0;
-        $pending_cat_name = '待审核链接';
-        $link_categories = get_terms('link_category', array('hide_empty' => false));
-        
-        foreach ($link_categories as $category) {
-            if ($category->name === $pending_cat_name) {
-                $pending_cat_id = $category->term_id;
-                break;
-            }
-        }
-        
-        // 如果分类不存在，创建它
-        if ($pending_cat_id === 0) {
-            $new_cat = wp_insert_term($pending_cat_name, 'link_category');
-            if (!is_wp_error($new_cat)) {
-                $pending_cat_id = $new_cat['term_id'];
-            }
-        }
-        
-        // 获取该分类下的链接数量
-        $pending_links_count = 0;
-        if ($pending_cat_id > 0) {
-            $pending_links = get_bookmarks(array('category' => $pending_cat_id));
-            $pending_links_count = count($pending_links);
-        }
-        
-        // 检查是否达到上限
-        if ($pending_links_count >= 20) {
-            wp_send_json_error(array('message' => __('Sorry, we are not accepting new link submissions at this time due to backlog. Please try again later.', 'sakurairo')));
-            return;
+        // 验证nonce
+        if (!isset($_POST['link_submission_nonce']) || !wp_verify_nonce($_POST['link_submission_nonce'], 'link_submission_nonce')) {
+            wp_send_json_error(array('message' => __('Security verification failed.', 'sakurairo')));
+            return; 
         }
 
         // 验证必填字段
@@ -3017,6 +3209,36 @@ function sakurairo_link_submission_handler() {
         
         if ($captcha_check['code'] != 5) {
             wp_send_json_error(array('message' => $captcha_check['msg']));
+            return;
+        }
+        
+        // 设置提交频率限制（10分钟）
+        set_transient($transient_key, 1, 600);
+
+        // 检查是否达到草稿链接上限 (20个)
+        // 首先确保分类存在
+        $pending_cat_id = 0;
+        $pending_cat_name = __('Pending Links', 'sakurairo');
+        $link_categories = get_terms('link_category', array('hide_empty' => false));
+        
+        foreach ($link_categories as $category) {
+            if ($category->name === $pending_cat_name) {
+                $pending_cat_id = $category->term_id;
+                break;
+            }
+        }
+        
+        // 如果分类不存在，创建它
+        if ($pending_cat_id === 0) {
+            $new_cat = wp_insert_term($pending_cat_name, 'link_category');
+            if (!is_wp_error($new_cat)) {
+                $pending_cat_id = $new_cat['term_id'];
+            }
+        }
+        
+        // 检查是否达到待审核链接上限
+        if (sakurairo_check_pending_links_limit()) {
+            wp_send_json_error(array('message' => __('Sorry, we are not accepting new link submissions at this time due to backlog. Please try again later.', 'sakurairo')));
             return;
         }
 
@@ -3189,7 +3411,7 @@ add_action('wp_ajax_nopriv_link_submission', 'sakurairo_link_submission_handler'
 function sakurairo_check_pending_links_limit() {
     // 获取待审核链接分类
     $pending_cat_id = 0;
-    $pending_cat_name = '待审核链接';
+    $pending_cat_name = __('Pending Links', 'sakurairo');
     $link_categories = get_terms('link_category', array('hide_empty' => false));
     
     foreach ($link_categories as $category) {
@@ -3205,12 +3427,201 @@ function sakurairo_check_pending_links_limit() {
     }
     
     // 获取该分类下的链接数量
-    $pending_links = get_bookmarks(array('category' => $pending_cat_id));
+    $pending_links = get_bookmarks(array(
+        'category' => $pending_cat_id,
+        'hide_invisible' => false // 确保获取所有链接，包括不可见的链接
+    ));
     $pending_links_count = count($pending_links);
     
     // 检查是否达到上限
     return $pending_links_count >= 20;
 }
+
+/**
+ * 检测已审核通过的友情链接状态
+ * 使用稳健的方法，每周一次，分批进行检测
+ */
+function sakurairo_check_approved_links_status() {
+    // 获取上次检查的批次
+    $last_batch = get_option('sakurairo_link_check_last_batch', 0);
+    $batch_size = 5; // 每次检查5个链接
+    
+    // 获取所有可见的友情链接（已审核通过的）
+    $approved_links = get_bookmarks(array(
+        'hide_invisible' => true, // 只获取可见的链接
+    ));
+    
+    // 如果没有链接，直接返回
+    if (empty($approved_links)) {
+        return;
+    }
+    
+    // 计算总批次数
+    $total_batches = ceil(count($approved_links) / $batch_size);
+    
+    // 确定当前批次
+    $current_batch = ($last_batch + 1) % $total_batches;
+    
+    // 计算当前批次的起始和结束索引
+    $start_index = $current_batch * $batch_size;
+    $end_index = min($start_index + $batch_size, count($approved_links));
+    
+    // 获取当前批次的链接
+    $current_batch_links = array_slice($approved_links, $start_index, $end_index - $start_index);
+    
+    // 检查每个链接的状态
+    foreach ($current_batch_links as $link) {
+        sakurairo_check_single_link_status($link);
+    }
+    
+    // 更新最后检查的批次
+    update_option('sakurairo_link_check_last_batch', $current_batch);
+    
+    // 记录检查时间
+    update_option('sakurairo_link_check_last_time', current_time('mysql'));
+}
+
+/**
+ * 检查单个友情链接的状态
+ * 
+ * @param object $link 友情链接对象
+ */
+function sakurairo_check_single_link_status($link) {
+    // 如果链接不存在或URL为空，直接返回
+    if (!$link || empty($link->link_url)) {
+        return;
+    }
+    
+    $link_id = $link->link_id;
+    $link_url = $link->link_url;
+    
+    // 获取上次检查状态
+    $last_check_status = get_post_meta($link_id, '_link_check_status', true);
+    $last_check_time = get_post_meta($link_id, '_link_check_time', true);
+    $failure_count = intval(get_post_meta($link_id, '_link_failure_count', true));
+    
+    // 使用 wp_safe_remote_head 进行安全的HTTP请求检查
+    // 设置较短的超时时间和用户代理，避免长时间等待
+    $args = array(
+        'timeout' => 10, // 10秒超时
+        'redirection' => 5, // 最多允许5次重定向
+        'user-agent' => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url'),
+        'sslverify' => false, // 不验证SSL证书，提高兼容性
+    );
+    
+    $response = wp_safe_remote_head($link_url, $args);
+    
+    // 检查响应
+    $is_success = false;
+    $status_code = 0;
+    $error_message = '';
+    
+    if (is_wp_error($response)) {
+        // 请求出错
+        $is_success = false;
+        $error_message = $response->get_error_message();
+    } else {
+        // 获取HTTP状态码
+        $status_code = wp_remote_retrieve_response_code($response);
+        
+        // 2xx 和 3xx 状态码视为成功
+        $is_success = ($status_code >= 200 && $status_code < 400);
+    }
+    
+    // 更新检查状态
+    if ($is_success) {
+        // 链接正常
+        update_post_meta($link_id, '_link_check_status', 'success');
+        update_post_meta($link_id, '_link_failure_count', 0); // 重置失败计数
+    } else {
+        // 链接异常
+        update_post_meta($link_id, '_link_check_status', 'failure');
+        update_post_meta($link_id, '_link_status_code', $status_code);
+        update_post_meta($link_id, '_link_error_message', $error_message);
+        
+        // 增加失败计数
+        $failure_count++;
+        update_post_meta($link_id, '_link_failure_count', $failure_count);
+        
+        // 如果连续失败3次以上，发送通知邮件给管理员
+        if ($failure_count == 3) { // Only notify once when the failure count reaches 3
+            sakurairo_send_link_failure_notification($link);
+        }
+    }
+    
+    // 更新检查时间
+    update_post_meta($link_id, '_link_check_time', current_time('mysql'));
+}
+
+/**
+ * 发送友情链接失败通知
+ * 
+ * @param object $link 友情链接对象
+ */
+function sakurairo_send_link_failure_notification($link) {
+    // 获取管理员邮箱
+    $admin_email = get_option('admin_email');
+    if (empty($admin_email)) {
+        return;
+    }
+    
+    $blog_name = get_bloginfo('name');
+    $link_name = $link->link_name;
+    $link_url = $link->link_url;
+    $failure_count = intval(get_post_meta($link->link_id, '_link_failure_count', true));
+    $status_code = get_post_meta($link->link_id, '_link_status_code', true);
+    $error_message = get_post_meta($link->link_id, '_link_error_message', true);
+    
+    // 邮件主题
+    $subject = sprintf(__('[%s] Friend Link Check Failure: %s', 'sakurairo'), $blog_name, $link_name);
+    
+    // 邮件内容
+    $message = sprintf(__("The friend link '%s' has failed our status check %d times.\n\n", 'sakurairo'), $link_name, $failure_count);
+    $message .= sprintf(__("Link URL: %s\n", 'sakurairo'), $link_url);
+    
+    if ($status_code) {
+        $message .= sprintf(__("HTTP Status Code: %s\n", 'sakurairo'), $status_code);
+    }
+    
+    if ($error_message) {
+        $message .= sprintf(__("Error Message: %s\n", 'sakurairo'), $error_message);
+    }
+    
+    $message .= sprintf(__("\nLast Check Time: %s\n\n", 'sakurairo'), current_time('mysql'));
+    $message .= __("You may want to check this link and consider removing it if it remains unavailable.\n", 'sakurairo');
+    $message .= admin_url('link-manager.php');
+    
+    // 发送邮件
+    wp_mail($admin_email, $subject, $message);
+}
+
+/**
+ * 注册每周一次的友情链接检查计划任务
+ */
+function sakurairo_register_link_check_cron() {
+    if (!wp_next_scheduled('sakurairo_weekly_link_check')) {
+        wp_schedule_event(time(), 'weekly', 'sakurairo_weekly_link_check');
+    }
+}
+add_action('wp', 'sakurairo_register_link_check_cron');
+
+/**
+ * 执行友情链接检查的钩子
+ */
+add_action('sakurairo_weekly_link_check', 'sakurairo_check_approved_links_status');
+
+/**
+ * 在主题停用时清除计划任务
+ */
+function sakurairo_deactivate_link_check_cron() {
+    $timestamp = wp_next_scheduled('sakurairo_weekly_link_check');
+    if ($timestamp) {
+        wp_unschedule_event($timestamp, 'sakurairo_weekly_link_check');
+    }
+}
+register_deactivation_hook(__FILE__, 'sakurairo_deactivate_link_check_cron');
+
+require_once(get_theme_file_path() . '/inc/link-status.php'); // 友情链接状态检测
 
 /**
  * 返回是否应当显示文章标题。
@@ -3346,7 +3757,7 @@ function iro_action_operator()
         case 'del_exist_theme':
             $current_theme_folder = basename(get_template_directory());
             if ($current_theme_folder != 'Sakurairo') {
-                if (!WP_Filesystem()) {
+                if (!function_exists('WP_Filesystem')) {
                     require_once ABSPATH . 'wp-admin/includes/file.php';
                 }
                 WP_Filesystem();

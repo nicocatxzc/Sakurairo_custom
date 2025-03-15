@@ -11,14 +11,13 @@ if (iro_opt('theme_skin')) { ?>
     --style_menu_selection_radius:<?=iro_opt('style_menu_selection_radius', ''); ?>px;
     --load_nextpage_svg:url("<?=iro_opt('load_nextpage_svg'); ?>");
     --style_menu_radius:<?=iro_opt('style_menu_radius', ''); ?>px;
-    --friend-link-shadow: <?=iro_opt('friend_link_shadow_color'); ?>;
-    --friend-link-title: <?=iro_opt('friend_link_title_matching_color'); ?>;
     --inline_code_background_color:<?=iro_opt('inline_code_background_color');?>;
     --theme-skin-dark:  <?=iro_opt('theme_skin_dark'); ?>;
     --global-font-weight:<?=iro_opt('global_font_weight');?>;
     --theme-dm-background_transparency:<?=iro_opt('theme_darkmode_background_transparency')?>;
     --exhibition_area_matching_color:<?=iro_opt('exhibition_area_matching_color');?>;
     --inline_code_background_color_in_dark_mode:<?=iro_opt('inline_code_background_color_in_dark_mode');?>;
+    --front_background-transparency:<?=iro_opt('reception_background_transparency'); ?>;
 }
 
 /* 纪念模式 */
@@ -87,7 +86,7 @@ echo iro_opt('site_bg_as_cover',false)? 'background:#0000;':'';
     top: 0;
     left: 0;
     background: #ffffff;
-    z-index: 99999;
+    z-index: 999;
 }
 
 #preload li.active {
@@ -354,15 +353,11 @@ background-image: url(<?=iro_opt('search_area_background'); ?>);
 }
 
 .site-footer {
-background-color: rgba(255, 255, 255,<?=iro_opt('reception_background_transparency'); ?>);
-<?php if (iro_opt('reception_background_blur', 'false')): ?> backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
-<?php if (iro_opt('reception_background_blur', 'false')): ?> -webkit-backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
+background-color: rgba(255, 255, 255,var(--front_background-transparency,<?=iro_opt('reception_background_transparency'); ?>));
 }
 
 .wrapper {
-background-color: rgba(255, 255, 255,<?=iro_opt('reception_background_transparency'); ?>);
-<?php if (iro_opt('reception_background_blur', 'false')): ?> backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
-<?php if (iro_opt('reception_background_blur', 'false')): ?> -webkit-backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
+background-color: rgba(255, 255, 255,var(--front_background-transparency,<?=iro_opt('reception_background_transparency'); ?>));
 }
 
 /*首页圆角设置*/
@@ -538,34 +533,6 @@ animation: slow-rotate 10s linear infinite;
     display: none;
 }
 <?php endif; ?>
-
-<?php if(iro_opt('friend_link_align') == 'right'){ ?>
-
-span.sitename {
-   margin-bottom: 0px;
-   margin-top: 8px;
-}
-li.link-item {
-    text-align: right;
-}
-.links ul li img{
-	float:none;
-}
-
-<?php }else if(iro_opt('friend_link_align') == 'center'){ ?>
-
-span.sitename {
-   margin-bottom: 0px;
-   margin-top: 8px;
-}
-li.link-item {
-    text-align: center;
-}
-.links ul li img{
-	float:none;
-}
-
-<?php } ?>
 
 <?php if(iro_opt('post_list_design') == 'ticket'){ ?>
 @media (min-width:768px) {
@@ -882,7 +849,7 @@ if(iro_opt('cover_half_screen_curve',true)){
     content: '';
     width: 150%;
     height: 4.375rem;
-    background-color: rgba(255, 255, 255,<?=iro_opt('reception_background_transparency'); ?>);
+    background-color: rgba(255, 255, 255,var(--front_background-transparency,<?=iro_opt('reception_background_transparency'); ?>));
 <?php if (iro_opt('reception_background_blur', 'false')): ?> backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
 <?php if (iro_opt('reception_background_blur', 'false')): ?> -webkit-backdrop-filter: saturate(180%) blur(10px); <?php endif; ?>
     left: -25%;
