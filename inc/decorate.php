@@ -257,12 +257,13 @@ body.dark .headertop-down svg path
 {fill: <?=iro_opt('drop_down_arrow_dark_color'); ?> !important;transition: all 0.6s ease-in-out;}
 
 body.dark img,
-body.dark .centerbg,
 body.dark .highlight-wrap,
 body.dark iframe,
 body.dark .entry-content .aplayer,
 body.dark .post-thumb video
 {filter:brightness(<?=iro_opt('theme_darkmode_img_bright'); ?>);}
+
+body.dark #centerbg{backdrop-filter:brightness(<?=iro_opt('theme_darkmode_img_bright'); ?>);}
 
 /*字体*/
 
@@ -305,6 +306,14 @@ font-family: '<?php echo $nav_text_logo['font_name']; ?>';
 }
 
 <?php } ?>
+
+<?php if(iro_opt('footer_direction','columns') == 'center'): ?>
+.footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+<?php endif; ?>
 
 .site-info,.site-info a{
 font-family:<?=iro_opt('footer_text_font'); ?> !important;

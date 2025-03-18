@@ -27,6 +27,7 @@ function font_end_js_control()
         }
         return get_the_author_meta('display_name', 1);
     };
+
     $vision_resource_basepath = iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@2.7/');
     $movies = iro_opt('cover_video') ?
         array(
@@ -43,6 +44,7 @@ function font_end_js_control()
         $gravatar_url = iro_opt('gravatar_proxy') ?: 'secure.gravatar.com/avatar';
     }
     $lightbox = iro_opt('lightbox');
+    $annotations = get_post_meta(get_the_ID(), 'iro_chatgpt_annotations', true);
     $iro_opt = [
         // Poi
         'pjax' => check(iro_opt('poi_pjax')),
@@ -73,6 +75,10 @@ function font_end_js_control()
         'site_url' => site_url(),
         'qq_api_url' => rest_url('sakura/v1/qqinfo/json'),
         'land_at_home' => check(is_home()),
+        'have_annotation' => check(get_post_meta(get_the_ID(), 'iro_chatgpt_annotations', true)), // 检查是否有注释
+        'extract_article_highlight' => iro_opt('extract_article_highlight_from_feature', false)?true:false, // 首页卡片是否计算
+        'post_theme_color' => var_post_theme_color(),
+        'page_annotation' => json_encode($annotations) ?? [],
         'live_search' => check(iro_opt('live_search')),
         'loading_ph' => iro_opt('load_in_svg'),
         'clipboardRef' => iro_opt('clipboard_ref') == '0' ? false : true,

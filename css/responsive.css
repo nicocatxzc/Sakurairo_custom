@@ -460,6 +460,24 @@
   }
 }
 
+@media (max-width: 860px) {
+  .emotion-box {
+    position: relative;
+    box-shadow: none;
+    max-height: 0px;
+    left: 0!important;
+    top: 0!important;
+    width: 100%;
+    transition: all 0.3s ease-in-out !important;
+  }
+  .emotion-box.open {
+    max-height: 200px;
+  }
+  .emotion-header {
+    display: none;
+  }
+}
+
 /* 860px 断点适配 */
 @media (max-width: 860px) {
   /* Pattern Center 相关 */
@@ -566,6 +584,20 @@
   .loadvideo {
     display: none;
   }
+
+  /* Footer */
+  .site-footer{
+    padding: 15px 0;
+  }
+
+  .site-info {
+    padding: 0 15px;
+  }
+
+  .comment-respond input[type=submit] {
+    width: 40%;
+    max-width: 140px;
+  }
 }
 
 /* 较小屏幕适配 */
@@ -640,6 +672,19 @@
   .comment .info .useragent-info-m {
     display: inline;
   }
+  .steam-profile-header {
+    flex-direction: column;
+    text-align: center;
+}
+
+.steam-avatar {
+    margin-right: 0;
+    margin-bottom: 12px;
+}
+
+.steam-game-name {
+    text-align: center;
+}
 }
 
 @media (min-width: 768px) {

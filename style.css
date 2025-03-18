@@ -6,7 +6,7 @@ Theme URI: https://github.com/mirai-mamori/Sakurairo
 Author: Created by Fuukei
 Author URI: https://docs.fuukei.org/
 Description: A colorful, Easy-to-use, Perfect Experience, and Powerful Customizable WordPress Theme (Based on Theme Sakura)
-Version: 2.8.70
+Version: 2.9.83
 Tested up to: 6.8
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -84,8 +84,9 @@ sub, sup {
   font-weight: var(--global-font-weight);
 }
 
-sub { bottom: -.25em; }
-sup { top: -.5em; }
+sub { 
+  bottom: -.25em; 
+}
 
 /* Links */
 a {
@@ -138,7 +139,6 @@ a:hover {
 .comments {
   animation: main .6s;
   clear: both;
-  overflow: hidden;
   width: 100%;
   padding: 0 10px;
   list-style: none;
@@ -230,19 +230,14 @@ input[type="week"],
 input[type="time"],
 input[type="datetime"],
 input[type="datetime-local"],
-input[type="color"] {
-  color: #666;
-  border: 1px solid var(--theme-skin, #505050);
-  border-radius: 10px;
-  padding: 3px;
-}
-
+input[type="color"],
 textarea {
-  color: #A5A5A5;
-  border: 1px solid var(--theme-skin, #505050);
+  padding: 8px;
+  box-shadow: 0 1px 30px -4px #e8e8e8;
+  color: #505050;
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
-  padding-left: 3px;
-  width: 100%;
+  border: 1px solid #FFFFFF;
 }
 
 button,
@@ -252,14 +247,11 @@ input[type="submit"] {
   color: rgba(0, 0, 0, .8);
   font-size: .75rem;
   line-height: 1;
-  padding: .6em 1em .4em;
-  border: 1px solid;
-  border-color: #ccc #ccc #bbb;
-  border-radius: 3px;
-  background: #e6e6e6;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5),
-              inset 0 15px 17px rgba(255, 255, 255, .5),
-              inset 0 -5px 12px rgba(0, 0, 0, .05);
+  padding: 4px 8px;
+  border: 1px solid #FFFFFF;
+  box-shadow: 0 1px 30px -4px #e8e8e8;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
   cursor: pointer;
 }
 
@@ -289,6 +281,7 @@ blockquote {
 .wp-block-quote blockquote{
   padding: 15px 30px;
 }
+
 .comments blockquote{
   padding: 30px 60px;
 }
@@ -322,8 +315,6 @@ blockquote:after {
   animation: blur .8s;
   -webkit-animation: blur .8s;
   background-color: rgba(255, 255, 255, .8);
-  transform: translateZ(0); 
-  will-change: transform; 
 }
 
 .site.wrapper {
@@ -333,7 +324,6 @@ blockquote:after {
   width: 100%;
   display: flex;
   flex-direction: column;
-  contain: layout; 
 }
 
 #bgvideo {
@@ -610,7 +600,7 @@ blockquote:after {
   left: 0;
   width: 100%;
   height: 70px; 
-  z-index: 3;
+  z-index: 999;
   padding: 0 20px;
   gap: 20px;
   transition: all 0.4s ease-in-out;
@@ -1646,7 +1636,7 @@ h3#comments-list-title::after {
   left: 15%;
 	width: 70%;
 	height: 0.7em;
-	background-color: var(--theme-skin-matching);
+	background-color: var(--article-theme-highlight,var(--theme-skin-matching)) !important;
 	opacity: 0.4;
 	z-index: 0;
 	border-radius: 30px;
@@ -1808,7 +1798,6 @@ nav#comments-navi {
 }
 
 .comments .comments-main {
-  overflow: hidden;
   -webkit-transition: height 0s ease-out;
   transition: height 0s ease-out;
   padding-bottom: 20px;
@@ -1865,7 +1854,7 @@ nav#comments-navi {
 }
 
 .comment .comment-reply-link {
-  font-size: 12px;
+  font-size: 13px;
   display: block;
   margin-left: 10px;
   float: right;
@@ -1873,18 +1862,16 @@ nav#comments-navi {
   color: #FFF;
   background-color: var(--article-theme-highlight,var(--theme-skin-matching));
   line-height: 20px;
-  padding: 0 6px;
-  border-radius: 3px;
+  padding: 1px 7px;
+  border-radius: 6px;
   opacity: 0;
   font-weight: var(--global-font-weight);
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
+  border: 1px solid var(--article-theme-highlight);
 }
 
 .comment .comment-reply-link:hover {
-  background-color: #7D7D7D;
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
+  background-color: #fff;
+  color: var(--article-theme-highlight,var(--theme-skin-matching));
 }
 
 .comment .info {
@@ -1930,7 +1917,7 @@ nav#comments-navi {
 .comment h4 img {
   display: none;
   border-radius: 3px;
-  margin-right: 5px;
+  margin: 0 5px;
   vertical-align: -4px;
 }
 
@@ -3162,7 +3149,8 @@ iframe {
   text-align: center;
   font-size: 12px;
   color: var(--article-theme-highlight,var(--theme-skin-matching));
-  border-radius: 3px;
+  border-radius: 6px;
+  padding: 1px 3px;
   font-weight: var(--global-font-weight, 400);
 }
 
@@ -3296,7 +3284,10 @@ iframe {
 }
 
 .emotion-box {
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
   width: 300px;
   height: 300px;
   background: #fff;
@@ -3329,7 +3320,7 @@ iframe {
 }
 
 .motion-container {
-  height: 225px;
+  height: 100%;
   overflow: scroll;
   margin-bottom: 5px;
   border-radius: 5px;
@@ -3525,8 +3516,7 @@ iframe {
 }
 
 input#upload-img-file {
-  z-index: 99;
-  opacity: 0;
+  display: none;
 }
 
 .insert-image-button {
@@ -5666,7 +5656,7 @@ a.toc-link {
 }
 
 .is-active-link::before {
-  background-color: var(--theme-skin-matching, #505050);
+  background-color: var(--article-theme-highlight,var(--theme-skin-matching));
 }
 
 #footer-sponsor {
@@ -6175,88 +6165,46 @@ a.toc-link {
     font-size: 14px;
 }
 
-/* Dark mode styles */
-body.dark .steam-profile {
-    background: var(--dark-bg-secondary);
-    border: 1px solid var(--dark-border-color);
-    box-shadow: var(--dark-shadow-normal);
+/* 页面注释 */
+.iro-term-annotation {
+  color: var(--article-theme-highlight,var(--theme-skin-matching));
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 2px;
+  vertical-align: super;
 }
 
-body.dark .steam-profile:hover {
-    box-shadow: var(--dark-shadow-hover);
+.iro-annotation-popup {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
+  will-change: backdrop-filter;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 99;
+  max-width: 300px;
+  display: none;
 }
 
-body.dark .steam-profile-header {
-    background: rgba(30, 30, 30, 0.6);
-    border-bottom: 1px solid var(--dark-border-color);
+.iro-annotation-popup .close {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
 }
 
-body.dark .steam-avatar {
-    border-color: var(--dark-border-color);
+.iro-annotation-popup .term {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
 }
 
-body.dark .steam-username {
-    color: #e0e0e0;
-}
-
-body.dark .steam-username:hover {
-    color: var(--dark-theme-skin-matching, var(--theme-skin-matching));
-}
-
-body.dark .steam-status {
-    background: rgba(50, 50, 50, 0.6);
-    color: #aaa;
-}
-
-body.dark .steam-status.status-在线,
-body.dark .steam-status.status-online,
-body.dark .steam-status.status-在線,
-body.dark .steam-status.status-オンライン {
-    background: rgba(66, 186, 150, 0.15);
-    color: #5ecfad;
-}
-
-body.dark .steam-status.status-离开,
-body.dark .steam-status.status-away,
-body.dark .steam-status.status-離開,
-body.dark .steam-status.status-退席中 {
-    background: rgba(255, 193, 7, 0.15);
-    color: #ffd54f;
-}
-
-body.dark .steam-game-name {
-    color: #e0e0e0;
-}
-
-body.dark .steam-game-name:hover {
-    color: var(--dark-theme-skin-matching, var(--theme-skin-matching));
-}
-
-body.dark .steam-last-online {
-    color: #aaa;
-    border-top: 1px solid var(--dark-border-color);
-    background: rgba(30, 30, 30, 0.4);
-}
-
-body.dark .steam-error {
-    background: rgba(255, 193, 7, 0.05);
-    color: #ffd54f;
-    border-left: 4px solid #ffc107;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .steam-profile-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .steam-avatar {
-        margin-right: 0;
-        margin-bottom: 12px;
-    }
-    
-    .steam-game-name {
-        text-align: center;
-    }
+.iro-annotation-popup .explanation {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
 }
