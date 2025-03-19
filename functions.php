@@ -613,6 +613,8 @@ function update_customize_to_iro_options() { //从key映射表中重组并保存
             } else {
                 $theme_mod_options[ $iro_key ] = $preview_value;
             }
+            // 移除已保存的值，确保下次还能同步
+            remove_theme_mod( $setting_id );
         }
     }
 	$theme_mod_options = array_merge($iro_options,$theme_mod_options);
@@ -2720,6 +2722,13 @@ function register_shortcodes() {
                 $response = wp_remote_get($url);
                 set_transient('steam_stat_'.$steamid, $response, 180);
             }
+            
+            // 添加错误检查，防止WP_Error被当作数组使用
+            if (is_wp_error($response)) {
+                $output .= '<div class="steam-error">API错误: ' . $response->get_error_message() . '</div>';
+                continue;
+            }
+            
             $data = json_decode($response["body"], true);
             $player = $data['response']['players'][0] ?? [];
             
@@ -2809,100 +2818,6 @@ function register_shortcodes() {
         }
         $output .= '</div>'; // .steam-user-card
         return $output;
-    });
-
-    // 添加Steam个人资料响应式样式的JavaScript
-    add_action('wp_footer', function() {
-        ?>
-        <script>
-        (function() {
-            // 存储原始样式值
-            const defaultStyles = {
-                profile: {
-                    display: 'block'
-                },
-                header: {
-                    minWidth: '',
-                    margin: '',
-                    background: '',
-                    borderBottom: '1px solid rgba(232, 232, 232, 0.8)',
-                    padding: '16px'
-                },
-                username: {
-                    fontSize: '18px'
-                },
-                avatar: {
-                    width: '64px',
-                    height: '64px'
-                }
-            };
-
-            // 应用Steam个人资料样式的函数
-            function applySteamProfileStyles() {
-                const steamProfiles = document.querySelectorAll('.steam-profile');
-                
-                steamProfiles.forEach(profile => {
-                    // 获取所有需要操作的元素
-                    const gameInfo = profile.querySelector('.steam-game-info');
-                    const profileHeader = profile.querySelector('.steam-profile-header');
-                    const username = profile.querySelector('.steam-username');
-                    
-                    // 检查是否满足应用样式的条件
-                    const shouldApplyStyles = profile.offsetWidth > 700 && gameInfo;
-                    
-                    if (shouldApplyStyles) {
-                        // 应用增强样式
-                        profile.style.display = 'flex';
-                        
-                        if (profileHeader) {
-                            profileHeader.style.minWidth = '50%';
-                            profileHeader.style.margin = '0 auto';
-                            profileHeader.style.background = 'none';
-                            profileHeader.style.borderBottom = 'unset';
-                            profileHeader.style.padding = '24px';
-                        }
-
-                        if (username) {
-                            username.style.fontSize = '30px';
-                        }
-                    } else {
-                        // 重置为默认样式
-                        profile.style.display = defaultStyles.profile.display;
-                        
-                        if (profileHeader) {
-                            profileHeader.style.minWidth = defaultStyles.header.minWidth;
-                            profileHeader.style.margin = defaultStyles.header.margin;
-                            profileHeader.style.background = defaultStyles.header.background;
-                            profileHeader.style.borderBottom = defaultStyles.header.borderBottom;
-                            profileHeader.style.padding = defaultStyles.header.padding;
-                        }
-
-                        if (username) {
-                            username.style.fontSize = defaultStyles.username.fontSize;
-                        }
-
-                    }
-                });
-            }
-            
-            // 页面加载时应用样式
-            document.addEventListener('DOMContentLoaded', applySteamProfileStyles);
-            
-            // 监听pjax事件
-            document.addEventListener('pjax:complete', applySteamProfileStyles);
-            
-            // 监听窗口大小变化，使用防抖
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(applySteamProfileStyles, 250);
-            });
-
-            // 监听游戏状态变化（如果有相关事件）
-            document.addEventListener('steamStatusUpdate', applySteamProfileStyles);
-        })();
-        </script>
-        <?php
     });
 }
 add_action('init', 'register_shortcodes');
@@ -3628,7 +3543,7 @@ function sakurairo_deactivate_link_check_cron() {
 }
 register_deactivation_hook(__FILE__, 'sakurairo_deactivate_link_check_cron');
 
-require_once(get_theme_file_path() . '/inc/link-status.php'); // 友情链接状态检测
+require_once(get_template_directory() . '/inc/link-status.php'); // 友情链接状态检测
 
 /**
  * 返回是否应当显示文章标题。

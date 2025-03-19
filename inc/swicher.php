@@ -78,6 +78,8 @@ function font_end_js_control()
         'have_annotation' => check(get_post_meta(get_the_ID(), 'iro_chatgpt_annotations', true)), // 检查是否有注释
         'extract_article_highlight' => iro_opt('extract_article_highlight_from_feature', false)?true:false, // 首页卡片是否计算
         'post_theme_color' => var_post_theme_color(),
+        'post_cover_as_bg' => check(iro_opt('post_cover_as_bg',false)),
+        'post_feature_img' => ( !is_home() && get_post_thumbnail_id(get_the_ID()) ) ? wp_get_attachment_url(get_post_thumbnail_id(get_the_ID())) : '',
         'page_annotation' => json_encode($annotations) ?? [],
         'live_search' => check(iro_opt('live_search')),
         'loading_ph' => iro_opt('load_in_svg'),
@@ -89,11 +91,12 @@ function font_end_js_control()
         'cache_cover' => check(iro_opt('cache_cover')),
         'site_bg_as_cover' => check(iro_opt('site_bg_as_cover')),
         'yiyan_api' => empty(iro_opt('yiyan_api')) ? ["https://v1.hitokoto.cn/", "https://api.nmxc.ltd/yiyan/"] : json_decode(iro_opt('yiyan_api')),
-        'skin_bg0' => '',
         'skin_bg1' => $vision_resource_basepath . 'background/foreground/bg1.png',
         'skin_bg2' => $vision_resource_basepath . 'background/foreground/bg2.png',
         'skin_bg3' => $vision_resource_basepath . 'background/foreground/bg3.png',
         'skin_bg4' => $vision_resource_basepath . 'background/foreground/bg4.png',
+        'missing_avatars' => iro_opt("missing_avatars_default",""),
+        'missing_images' => iro_opt("missing_images_default",""),
     ];
     $reception_background = iro_opt('reception_background');
     // 判空 empty 如果变量不存在也会返回true

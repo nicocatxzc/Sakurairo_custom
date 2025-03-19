@@ -1020,7 +1020,7 @@ $prefix = 'iro_options';
         'desc'   => __('Set the background image of your search area. Leave this option blank to display a white background','sakurairo_csf'),
         'dependency' => array( 'nav_menu_search', '==', 'true', '', 'true' ),
         'library'      => 'image',
-        'default'     => $vision_resource_basepath . 'basic/iloli.gif'
+        'default' => ''
       ),
 
       array(
@@ -1365,6 +1365,20 @@ $prefix = 'iro_options';
         'default' => $vision_resource_basepath . 'load_svg/ball.svg'
       ),
 
+      array(
+        'id' => 'missing_avatars_default',
+        'type' => 'upload',
+        'title' => __('Missing Avatars Placeholder','sakurairo_csf'),
+        'library' => 'image',
+      ),
+
+      array(
+        'id' => 'missing_images_default',
+        'type' => 'upload',
+        'title' => __('Missing Images Placeholder','sakurairo_csf'),
+        'library' => 'image',
+      ),
+
     )
   ) );
 
@@ -1670,6 +1684,15 @@ $prefix = 'iro_options';
         'title' => __('Cover and Frontend Background Integration','sakurairo_csf'),
         'label' => __('When enabled, the background of the cover will be set to transparent, while the frontend background will use the cover\'s random image API','sakurairo_csf'),
         'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'post_cover_as_bg',
+        'type' => 'switcher',
+        'title' => __('Post Cover As Background','sakurairo_csf'),
+        'label' => __('Use post feature image as background in post pages','sakurairo_csf'),
+        'dependency' => array( 'site_bg_as_cover', '==', 'true', '', 'true' ),
         'default' => false
       ),
 
@@ -3093,7 +3116,8 @@ $prefix = 'iro_options';
       array(
         'id' => 'comment_submit_button_text',
         'type' => 'text',
-        'title' => __('Submit✈️','sakurairo_csf')
+        'title' => __('Custom Submit Button Content','sakurairo_csf'),
+        'default' => __('Submit✈️','sakurairo_csf')
       ),
 
       array(
@@ -3296,23 +3320,6 @@ $prefix = 'iro_options';
       array(
         'type' => 'subheading',
         'content' => __('Comment Email Notification','sakurairo_csf'),
-      ),
-
-      array(
-        'id' => 'mail_img',
-        'type' => 'upload',
-        'title' => __('Mail Template Featured Image','sakurairo_csf'),
-        'desc' => __('Set the background image of your reply email','sakurairo_csf'),
-        'library' => 'image',
-        'default' => $vision_resource_basepath . 'series/mail_head.webp'
-      ),
-
-      array(
-        'id' => 'mail_user_name',
-        'type' => 'text',
-        'title' => __('Mail Template Sending Address Prefix','sakurairo_csf'),
-        'desc' => __('Used to send system mail. The sender address will be displayed in the user\'s mailbox, don\'t use Non-English Characters. The default system mail address is bibi@your domain','sakurairo_csf'),
-        'default' => 'bibi'
       ),
 
       array(
