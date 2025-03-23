@@ -57,10 +57,18 @@ header('X-Frame-Options: SAMEORIGIN');
 <html <?php language_attributes(); ?>>
 
 <head>
-    <meta name="theme-color">
+    <meta name="theme-color"  content="<?php echo iro_opt('theme_skin'); ?>">
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+
+    <!-- 优化资源加载 -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <link rel="preconnect" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>">
+    <link rel="preconnect" href="https://s4.zstatic.net" crossorigin>
+
+    <link rel="preload" href="<?php echo (iro_opt('fontawesome_source','https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css')?>" as="style">
     <link rel="stylesheet" href="<?php echo (iro_opt('fontawesome_source','https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css')?>" type="text/css" media="all" />
+    
     <?php
     if (iro_opt('iro_meta')) {
         $keywords = iro_opt('iro_meta_keywords');
@@ -86,18 +94,11 @@ header('X-Frame-Options: SAMEORIGIN');
         <meta name="keywords" content="<?= esc_attr($keywords); ?>" />
     <?php } ?>
     <link rel="shortcut icon" href="<?= esc_url(iro_opt('favicon_link', '')); ?>" />
-    <meta http-equiv="x-dns-prefetch-control" content="on">
-    <?php
-    if (is_home()) {
-        global $core_lib_basepath;
-    ?>
-        <link id="entry-content-css" rel="prefetch" as="style" href="<?= esc_url($core_lib_basepath . '/css/content-style/' . (iro_opt('entry_content_style') == 'sakurairo' ? 'sakura' : 'github') . '.css?ver=' . IRO_VERSION) ?>" />
-        <link rel="prefetch" as="script" href="<?= esc_url($core_lib_basepath . '/js/page.js?ver=' . IRO_VERSION) ?>" />
-    <?php
-    }
-    ?>
+    
     <?php wp_head(); ?>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
+    
+    <link rel="preload" as="style" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css?family=Noto+Serif+SC|Noto+Sans+SC|Dela+Gothic+One|Fira+Code<?= esc_attr(iro_opt('gfonts_add_name')); ?>&display=swap">
     <link rel="stylesheet" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css?family=Noto+Serif+SC|Noto+Sans+SC|Dela+Gothic+One|Fira+Code<?= esc_attr(iro_opt('gfonts_add_name')); ?>&display=swap" media="all">
     <?php if (iro_opt('google_analytics_id')) : ?>
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -142,7 +143,7 @@ header('X-Frame-Options: SAMEORIGIN');
     } ?>
 
     <!--WordPress 脚注仅在本页内跳转-->
-    <script  type="text/javascript">
+    <script  type="text/javascript" defer>
     document.addEventListener('DOMContentLoaded', function () {
         // Ensure all footnote links jump within the same page
         document.querySelectorAll('a[href^="#"]').forEach(function (link) {
@@ -175,9 +176,6 @@ header('X-Frame-Options: SAMEORIGIN');
 
     <!-- 导航菜单 -->
      <?php if(iro_opt('choice_of_nav_style') == 'sakura'){
-        ?>
-        <link rel="stylesheet" href="<?php echo get_template_directory_uri() . '/css/sakura_header.css'; ?>">
-        <?php
         get_template_part('layouts/' . 'sakura_header');
      } else {
     ?>
@@ -213,9 +211,9 @@ header('X-Frame-Options: SAMEORIGIN');
                             <img alt="<?= esc_attr(get_bloginfo('name')); ?>"
                                 src="<?= esc_url(iro_opt('iro_logo')); ?>"
                                 width="auto" height="auto"
-                                loading="lazy"
+                                loading="eager"
                                 decoding="async"
-                                style="object-fit: contain;">
+                                fetchpriority="high">
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($nav_text_logo['text'])): ?>

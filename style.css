@@ -5,15 +5,15 @@ Theme Name: Sakurairo
 Theme URI: https://github.com/mirai-mamori/Sakurairo
 Author: Created by Fuukei
 Author URI: https://docs.fuukei.org/
-Description: A colorful, Easy-to-use, Perfect Experience, and Powerful Customizable WordPress Theme (Based on Theme Sakura)
-Version: 2.9.83
+Description: A WordPress theme that is built with AI-assisted reading features, colorful, user-friendly, well-rounded, and rich in functionalities. (Based on Theme Sakura)
+Version: 3.0.0
 Tested up to: 6.8
 Requires at least: 6.0
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: sakurairo
-Tags: 多彩、轻松上手、体验完善、高自定义度
+Tags: AI-assisted reading, Colorful, User-friendly, Well-rounded, Feature-rich
 */
 
 /* Base HTML Element Styles */
@@ -529,7 +529,7 @@ blockquote:after {
 }
 
 #moblieGoTop:hover,#changskin:hover {
-  color: var(--theme-skin-matching);
+  color: var(--article-theme-highlight, var(--theme-skin-matching));
   box-shadow: 0 1px 20px 10px #e8e8e8;
   background: rgba(255, 255, 255, 0.85);
 }
@@ -1380,6 +1380,7 @@ h1.page-title {
 .post-license:hover {
   box-shadow: 0 1px 20px 10px #e8e8e8;
   background: rgba(255, 255, 255, 0.8);
+  color: var(--article-theme-highlight,var(--theme-skin-matching));
 }
 
 .post-tags {
@@ -1427,6 +1428,7 @@ h1.page-title {
   margin: 0 auto;
   position: relative;
   border-radius: 15px;
+  z-index: 1;
 }
 
 .post-squares .background {
@@ -2958,6 +2960,7 @@ h1.main-title {
   background: rgba(255, 255, 255, 0.5);
   font-weight: var(--global-font-weight);
   border: 1px solid #FFFFFF;
+  cursor: pointer;
 }
 
 .reward-open:hover {
@@ -2967,15 +2970,19 @@ h1.main-title {
 
 .reward-main {
   position: absolute;
-  top: 90px;
+  top: 80px;
   left: -1%;
   margin: 0;
-  padding: 15px 0 0;
   width: 400px;
   background: 0 0;
   display: none;
   z-index: 99;
   animation: main .4s;
+}
+
+.reward-main ul,
+.reward-main li {
+  cursor: auto;
 }
 
 .reward-row {
@@ -3397,7 +3404,7 @@ iframe {
 }
 
 .markdown-toggle:has(input:checked) {
-  outline: 1px solid var(--theme-skin-matching);
+  outline: 1px solid var(--article-theme-highlight, var(--theme-skin-matching));
 }
 
 .markdown-toggle input {
