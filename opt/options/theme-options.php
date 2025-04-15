@@ -44,12 +44,17 @@ $prefix = 'iro_options';
 
       array(
         'type'    => 'heading',
-        'content' => __('News+','sakurairo_csf'),
+        'content' => __('Thank you to everyone who supports us!','sakurairo_csf'),
       ),
 
       array(
         'type'    => 'content',
-        'content' => __('<img src="https://news.maho.cc/sakurairo.php"  alt="News_Plus" width="100%" height="100%" />','sakurairo_csf'),
+        'content' => __('<a href="https://afdian.com/a/mamori"><img alt="afdian" height="50" src="https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/afdian.webp"></a><a href="https://liberapay.com/furina/donate"><img alt="liberapay" height="50" src="https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/liberapay.webp"></a><a href="https://app.unifans.io/c/somekawahitomi"><img alt="unifans" height="50" src="https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/unifans.webp"></a>','sakurairo_csf'),
+      ),
+
+      array(
+        'type'    => 'content',
+        'content' => __('<img src="https://api.fuukei.org/info/afdian_sponsors.svg"  alt="Sponsor" width="100%" height="100%" />','sakurairo_csf'),
       ),
 
     )
@@ -1649,7 +1654,7 @@ $prefix = 'iro_options';
                               array( 'cover_switch', '==', 'true', '', 'true' ),
                               array( 'random_graphs_options', '!=', 'local', '', 'true' ),
                         ),
-        'default' => 'https://api.maho.cc/random-img/pc.php',
+        'default' => 'https://api.fuukei.org/random-img/default/pc.php',
         'sanitize' => false,
         'validate' => 'csf_validate_url',
       ),
@@ -1664,7 +1669,7 @@ $prefix = 'iro_options';
                               array( 'random_graphs_options', '!=', 'local', '', 'true' ),
                         ),
         'desc' => __('Fill in an URL','sakurairo_csf'),
-        'default' => 'https://api.maho.cc/random-img/mobile.php',
+        'default' => 'https://api.fuukei.org/random-img/default/mobile.php',
         'sanitize' => false,
         'validate' => 'csf_validate_url',
       ),
@@ -3493,7 +3498,7 @@ $prefix = 'iro_options';
         'type' => 'color',
         'title' => __('Dashboard Primary Menu Color','sakurairo_csf'),
         'desc' => __('Customize the colors','sakurairo_csf'),
-        'default' => '#3c5571'
+        'default' => '#081018'
       ),  
 
       array(
@@ -3501,7 +3506,7 @@ $prefix = 'iro_options';
         'type' => 'color',
         'title' => __('Dashboard Secondary Menu Color','sakurairo_csf'),
         'desc' => __('Customize the colors','sakurairo_csf'),
-        'default' => '#4e739d'
+        'default' => '#111111'
       ),  
 
       array(
@@ -3509,7 +3514,7 @@ $prefix = 'iro_options';
         'type' => 'color',
         'title' => __('Dashboard Emphasis Color','sakurairo_csf'),
         'desc' => __('Customize the colors','sakurairo_csf'),
-        'default' => '#cfc3af'
+        'default' => '#debd9c'
       ),  
 
       array(
@@ -4078,7 +4083,7 @@ $prefix = 'iro_options';
         'title' => __('Theme Update Source','sakurairo_csf'),
         'options'     => array(
           'github'  => $vision_resource_basepath . 'options/update_source_github.webp',
-          'upyun'  => $vision_resource_basepath . 'options/update_source_upyun.webp',
+          'upyun'  => $vision_resource_basepath . 'options/update_source_wafpro.webp',
           'official_building'  => $vision_resource_basepath . 'options/update_source_iro.webp',
         ),
         'desc' => __('If you are using a server set up in mainland China, please use the Upyun source or the official theme source as your theme update source','sakurairo_csf'),
@@ -4143,7 +4148,7 @@ $prefix = 'iro_options';
         'title' => __('Public CDN Basepath','sakurairo_csf'),
         'label' => __('Control the basepath of Frontend Resource.','sakurairo_csf'),
         'options'     => array(
-          'https://s.nmxc.ltd/sakurairo/@'  => $vision_resource_basepath . 'options/update_source_upyun.webp',
+          'https://s.nmxc.ltd/sakurairo/@'  => $vision_resource_basepath . 'options/update_source_wafpro.webp',
           'https://fastly.jsdelivr.net/gh/mirai-mamori/Sakurairo@'  => $vision_resource_basepath . 'options/update_source_jsd.webp',
         ),
         'default'     => 'https://s.nmxc.ltd/sakurairo/@'
@@ -4167,22 +4172,12 @@ $prefix = 'iro_options';
 
       array(
         'type' => 'subheading',
-        'content' => __('Theme Sponsors','sakurairo_csf'),
-      ),
-
-      array(
-        'type'    => 'content',
-        'content' => __('<img src="https://news.maho.cc/sponsors.php"  alt="sponsors" width="65%" height="65%" />','sakurairo_csf'),
-      ),
-
-      array(
-        'type' => 'subheading',
         'content' => __('Theme Contributors','sakurairo_csf'),
       ),
 
       array(
         'type'    => 'content',
-        'content' => __('<img src="https://opencollective.com/fuukei/contributors.svg" alt="Theme Contributors" width="100%" height="100%" />','sakurairo_csf'),
+        'content' => __('<img src="https://api.fuukei.org/info/contributors.svg" alt="Theme Contributors" width="100%" height="100%" />','sakurairo_csf'),
       ),
 
       array(

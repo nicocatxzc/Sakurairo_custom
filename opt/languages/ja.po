@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Codestar Framework Modified by Fuukei\n"
-"POT-Creation-Date: 2025-03-23 21:00+0800\n"
-"PO-Revision-Date: 2025-03-23 21:02+0800\n"
+"POT-Creation-Date: 2025-04-14 15:31+0900\n"
+"PO-Revision-Date: 2025-04-14 15:32+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: option-framework.php\n"
@@ -31,19 +31,19 @@ msgstr "設定をインポートしました。"
 
 #: classes/admin-options.class.php:241 classes/admin-options.class.php:257
 msgid "Default settings restored."
-msgstr "既定の設定に復帰されました。"
+msgstr "初期設定に戻しました。"
 
 #: classes/admin-options.class.php:328
 msgid "Settings saved."
-msgstr "設定保存"
+msgstr "設定が保存されました。"
 
 #: classes/admin-options.class.php:509
 msgid "You have unsaved changes, save your changes!"
-msgstr "変更されている設定がありますので、忘れずに保存してください"
+msgstr "保存されていない変更があります。忘れずに保存してください！"
 
 #: classes/admin-options.class.php:511
 msgid "show all settings"
-msgstr "カスタム設定"
+msgstr "設定をすべて表示"
 
 #: classes/admin-options.class.php:513 fields/icon/icon.php:57
 #: fields/map/map.php:23
@@ -60,7 +60,7 @@ msgstr "保存中…"
 
 #: classes/admin-options.class.php:517 classes/admin-options.class.php:640
 msgid "Reset Section"
-msgstr "セクションをリセット"
+msgstr "セクションをリセットする"
 
 #: classes/admin-options.class.php:517 classes/admin-options.class.php:640
 msgid "Are you sure to reset this section options?"
@@ -92,7 +92,7 @@ msgstr "本当に実行しますか ?"
 #: classes/setup.class.php:590
 #, php-format
 msgid "Please enter %s or more characters"
-msgstr "%s 文字以上入力してください"
+msgstr "%s 文字以上を入力してください"
 
 #: classes/setup.class.php:591
 msgid "Searching..."
@@ -104,7 +104,7 @@ msgstr "見つかりませんでした。"
 
 #: classes/setup.class.php:693
 msgid "Oops! Not allowed."
-msgstr "許可されていません。"
+msgstr "おっと！許可されていません。"
 
 #: classes/setup.class.php:761 classes/setup.class.php:765
 msgid "Field not found!"
@@ -112,7 +112,7 @@ msgstr "フィールドが見つかりません!"
 
 #: fields/background/background.php:36 fields/media/media.php:59
 msgid "Not selected"
-msgstr "選択した画像はありません。"
+msgstr "画像が選択されていません"
 
 #: fields/background/background.php:72 fields/date/date.php:31
 #: fields/datetime/datetime.php:36
@@ -646,7 +646,7 @@ msgstr "エラー: これを行う権限がありません。"
 
 #: functions/validate.php:14 functions/validate.php:86
 msgid "Please enter a valid email address."
-msgstr "有効なメールアドレスを入力してください"
+msgstr "有効なメールアドレスを入力してください。"
 
 #: functions/validate.php:32 functions/validate.php:106
 msgid "Please enter a valid number."
@@ -705,13 +705,13 @@ msgid "Hello!"
 msgstr "こんにちは!"
 
 #: options/theme-options.php:47
-msgid "News+"
-msgstr "ニュース+"
+msgid "Thank you to everyone who supports us!"
+msgstr "応援してくださる皆さん、ありがとうございます！"
 
 #: options/theme-options.php:52
 msgid ""
-"<img src=\"https://news.maho.cc/sakurairo.php\"  alt=\"News_Plus\" "
-"width=\"100%\" height=\"100%\" />"
+"<img src=\"https://api.fuukei.org/info/sponsor.php?action=view\"  "
+"alt=\"Sponsor\" width=\"100%\" height=\"100%\" />"
 msgstr ""
 
 #: options/theme-options.php:60
@@ -723,8 +723,8 @@ msgid ""
 "You can click <a href=\"https://docs.fuukei.org/Sakurairo/Preliminary/"
 "\">here</a> to learn how to set the options on this page"
 msgstr ""
-"このページのオプションを設定する方法については、 <a href=\"https://docs."
-"fuukei.org/Sakurairo/Preliminary/\">ここをクリックしてください</a> 。"
+"このページの設定オプションについては、 <a href=\"https://docs.fuukei.org/"
+"Sakurairo/Preliminary/\">こちら</a> をご覧ください"
 
 #: options/theme-options.php:73
 msgid "Personal Avatar"
@@ -744,9 +744,7 @@ msgstr "マシロ特殊効果テキスト"
 msgid ""
 "After turned on, the personal avatar will be replaced by the text as the "
 "home page display content"
-msgstr ""
-"オンにすると、個人アバターはホームページの表示コンテンツとしてテキストに置き"
-"換えられます。"
+msgstr "オンにすると、ホームページ上の個人アバターはテキスト表示に変わります"
 
 #: options/theme-options.php:89
 msgid "Mashiro Special Effects Text Options"
@@ -975,7 +973,7 @@ msgstr "記念モード"
 #: options/theme-options.php:308
 msgid ""
 "After turning on, a black and white filter will be added to the global theme"
-msgstr "オンにすると、グローバルテーマに白黒フィルタが追加されます。"
+msgstr "オンにすると、グローバルテーマは白黒表示になります"
 
 #: options/theme-options.php:315
 msgid "Occupying SVG while Loading Control Units"
@@ -2463,8 +2461,8 @@ msgid ""
 "name@domain.com fo name, the full address can be known only when there is a "
 "js runtime in the frontend, you can fill in with confidence"
 msgstr ""
-"fo 名 name@domain.com、完全なアドレスはフロントエンドに js ランタイムがある場"
-"合にのみ知ることができます。"
+"name@domain.comの「name」部分は、フロントエンドが JavaScript の実行環境を持つ"
+"場合にのみ完全なアドレスを取得できます。安心してご記入ください"
 
 #: options/theme-options.php:2106
 msgid "Email Domain"
@@ -2596,10 +2594,10 @@ msgid ""
 "#%E5%85%AC%E5%91%8A%E6%A0%8F%E5%92%8C%E5%8C%BA%E5%9F%9F%E6%A0%87%E9%A2%98%E8%AE%BE%E7%BD%AE\">here</"
 "a> to learn how to set the options on this page"
 msgstr ""
-"このページのオプションを設定する方法については、 <a href=\"https://docs."
-"fuukei.org/Sakurairo/Homepage/"
+"このページの設定オプションについては、 <a href=\"https://docs.fuukei.org/"
+"Sakurairo/Homepage/"
 "#%E5%85%AC%E5%91%8A%E6%A0%8F%E5%92%8C%E5%8C%BA%E5%9F%9F%E6%A0%87%E9%A2%98%E8%AE%BE%E7%BD%AE\">"
-"ここをクリックしてください</a> 。"
+"こちら</a>をご覧ください"
 
 #: options/theme-options.php:2247
 msgid ""
@@ -4575,30 +4573,20 @@ msgstr ""
 "るイメージソースはデフォルトで採用されています。"
 
 #: options/theme-options.php:4170
-msgid "Theme Sponsors"
-msgstr "テーマスポンサー"
-
-#: options/theme-options.php:4175
-msgid ""
-"<img src=\"https://news.maho.cc/sponsors.php\"  alt=\"sponsors\" width=\"65%"
-"\" height=\"65%\" />"
-msgstr ""
-
-#: options/theme-options.php:4180
 msgid "Theme Contributors"
 msgstr "貢献者"
 
-#: options/theme-options.php:4185
+#: options/theme-options.php:4175
 msgid ""
-"<img src=\"https://opencollective.com/fuukei/contributors.svg\" alt=\"Theme "
-"Contributors\" width=\"100%\" height=\"100%\" />"
+"<img src=\"https://api.fuukei.org/info/contributors.php?action=view\" "
+"alt=\"Theme Contributors\" width=\"100%\" height=\"100%\" />"
 msgstr ""
 
-#: options/theme-options.php:4190
+#: options/theme-options.php:4180
 msgid "Privacy information"
 msgstr "プライバシー情報"
 
-#: options/theme-options.php:4195
+#: options/theme-options.php:4185
 msgid ""
 "<p>The theme respects your privacy</p>\n"
 "        <p>However, when you use a service provider pre-populated by the "
@@ -4616,11 +4604,11 @@ msgstr ""
 "カライズすることで、サードパーティに送信される情報を減らすことができます。</"
 "p>"
 
-#: options/theme-options.php:4203
+#: options/theme-options.php:4193
 msgid "Send Theme Version to Fuukei"
 msgstr "テーマバージョンをFuukeiに送る"
 
-#: options/theme-options.php:4204
+#: options/theme-options.php:4194
 msgid ""
 "The theme will only send time and version information to Fuukei officials "
 "and the data will be cleaned regularly and used only to count version "
@@ -4629,11 +4617,11 @@ msgstr ""
 "テーマは時間とバージョンの情報をFuukei Officialにのみ送信し、データは定期的に"
 "クリーンアップされ、バージョンの更新をカウントするためにのみ使用されます。"
 
-#: options/theme-options.php:4210
+#: options/theme-options.php:4200
 msgid "Reference Information"
 msgstr "参照情報"
 
-#: options/theme-options.php:4215
+#: options/theme-options.php:4205
 msgid ""
 "<p>Fluent Design Icon Referenced by Paradox Fluent Icon Pack</p>\n"
 "        <p>MUH2 Design Icon Referenced by 缄默 <a href=\"https://www.coolapk."
@@ -4643,11 +4631,11 @@ msgstr ""
 "p>\n"
 "        <p>MUH2 デザインアイコン 参照元 缄默 MUH2 アイコンパック</p>"
 
-#: options/theme-options.php:4221
+#: options/theme-options.php:4211
 msgid "Dependency Information"
 msgstr "依存情報"
 
-#: options/theme-options.php:4226
+#: options/theme-options.php:4216
 msgid ""
 "<p>Options Framework Relies on the Codestar Open Source <a href=\"https://"
 "github.com/Codestar/codestar-framework\">Codestar Framework</a> Project</p>\n"
@@ -4662,7 +4650,7 @@ msgstr ""
 "YahnisElsts/plugin-update-checker\">プラグイン更新チェッカー</a> プロジェクト"
 "に依存しています</p>"
 
-#: options/theme-options.php:4232
+#: options/theme-options.php:4222
 msgid ""
 "<img src=\"https://img.shields.io/github/v/release/mirai-mamori/Sakurairo."
 "svg?style=flat-square\"  alt=\"Theme latest version\" style=\"border-radius: "
@@ -4692,36 +4680,3 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://github.com/Fuukei"
 msgstr ""
-
-#~ msgid "Article Page Appreciation Function (Alipay QR Code)"
-#~ msgstr "記事ページ鑑賞機能(アリペイQRコード)"
-
-#~ msgid "Upload Alipay Receipt QR Code Image"
-#~ msgstr "アップロード アリペイレシート QR コードイメージ"
-
-#~ msgid "Article Page Appreciation Function (Wechat QR Code)"
-#~ msgstr "記事ページ鑑賞機能(微信QRコード)"
-
-#~ msgid "Upload WeChat Receipt QR Code Image"
-#~ msgstr "WeChatの領収書QRコード画像をアップロード"
-
-#~ msgid "Mail Template Featured Image"
-#~ msgstr "メール テンプレートの注目画像"
-
-#~ msgid "Set the background image of your reply email"
-#~ msgstr "返信メールの背景画像を設定する"
-
-#~ msgid "Mail Template Sending Address Prefix"
-#~ msgstr "メール テンプレート送信アドレス プレフィックス"
-
-#~ msgid ""
-#~ "Used to send system mail. The sender address will be displayed in the "
-#~ "user's mailbox, don't use Non-English Characters. The default system mail "
-#~ "address is bibi@your domain"
-#~ msgstr ""
-#~ "システム メールの送信に使用します。送信者のアドレスは、使用しているメール"
-#~ "ボックスに表示され、英語以外の文字は使用されません。デフォルトのシステム"
-#~ "メールアドレスはドメインbibi@your"
-
-#~ msgid "发送✈️"
-#~ msgstr "送信"
