@@ -251,7 +251,14 @@ namespace IROChatGPT {
             $result = json_decode($response, true);
             if (isset($result['choices'][0]['message']['content'])) {
                 $json_str = $result['choices'][0]['message']['content'];
+            } else if (isset($result['data']['choices'][0]['message']['content'])) {
+                $json_str = $result['data']['choices'][0]['message']['content'];
+            }
+            if ($json_str) {
                 error_log('IROChatGPT: 提取的JSON: ' . $json_str);
+                if (preg_match('/```json\s*(\{.*?\})\s*```/s', $json_str, $matches)){
+                    $json_str = $matches[1];
+                }
                 if (preg_match('/\{.*\}/s', $json_str, $matches)) {
                     $segment_annotations = json_decode($matches[0], true);
                 }
