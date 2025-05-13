@@ -13,23 +13,35 @@ namespace IROChatGPT {
     {
         if (iro_opt('chatgpt_article_summarize')) {
             $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
+            
             add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
-                if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
-                    try {
-                        error_log('开始生成简介');
-                        $excerpt = summon_article_excerpt($post);
-                        update_post_meta($post_id, POST_METADATA_KEY, $excerpt);
-                    } catch (\Throwable $th) {
-                        error_log('ChatGPT-excerpt-err:' . $th);
-                    }
+                if (wp_is_post_autosave($post_id) || has_excerpt($post_id) || in_array($post_id, explode(",", $exclude_ids), false)) {
+                    return;
                 }
+                wp_schedule_single_event(time() + 3, 'generate_excerpt', array($post_id));
             }, 10, 3);
+
+            add_action('generate_excerpt', function ($post_id) {
+                try {
+                    error_log('开始生成简介');
+                    $post = get_post($post_id);
+                    if (!$post || has_excerpt($post_id)) {
+                        return;
+                    }
+                    $excerpt = summon_article_excerpt($post);
+                    update_post_meta($post_id, POST_METADATA_KEY, $excerpt);
+                } catch (\Throwable $th) {
+                    error_log('ChatGPT-excerpt-error: ' . $th);
+                }
+            });
+
+            // 优先使用AI生成的摘要内容
             add_filter('the_excerpt', function (string $post_excerpt) {
                 global $post;
                 if (has_excerpt($post)) {
                     return $post_excerpt;
                 } else {
-                    $ai_excerpt =  get_post_meta($post->ID, POST_METADATA_KEY, true);
+                    $ai_excerpt = get_post_meta($post->ID, POST_METADATA_KEY, true);
                     return $ai_excerpt ? $ai_excerpt : $post_excerpt;
                 }
             });
