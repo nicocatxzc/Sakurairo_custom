@@ -16,6 +16,7 @@ namespace IROChatGPT {
             add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
                 if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
                     try {
+                        error_log('开始生成简介');
                         $excerpt = summon_article_excerpt($post);
                         update_post_meta($post_id, POST_METADATA_KEY, $excerpt);
                     } catch (\Throwable $th) {
@@ -110,7 +111,15 @@ namespace IROChatGPT {
             throw new Exception("ChatGPT error: " . json_encode($decoded_chat));
         }
 
-        return $decoded_chat->choices[0]->message->content;
+        if (isset($decoded_chat->choices[0]->message->content)) {
+            $content = $decoded_chat->choices[0]->message->content;
+        } else if (isset($decoded_chat->data->choices[0]->message->content)) {
+            $content = $decoded_chat->data->choices[0]->message->content;
+        } else {
+            $content = null;
+        }
+
+        return $content;
     }
 
     add_filter('the_content', __NAMESPACE__ . '\display_term_annotations', 9);
