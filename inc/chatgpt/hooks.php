@@ -33,6 +33,19 @@ namespace IROChatGPT {
                 }
             });
         }
+        if(iro_opt('annotations_auto_generate',false)){
+            add_action('save_post_post',function($post_id){
+                if(wp_is_post_autosave($post_id)){
+                    return;
+                }
+                if(!in_array($post_id, explode(",", iro_opt('annotations_exclude_ids','')), false)){
+                    wp_schedule_single_event(time()+3,'generate_annotation',array($post_id));
+                }
+            });
+            add_action('generate_annotation',function($post_id){
+                generate_post_annotations($post_id);
+            });
+        }
     }
 
     function summon_article_excerpt(WP_Post $post)
@@ -105,9 +118,10 @@ namespace IROChatGPT {
     /**
      * 生成文章的复杂名词注释
      */
-    function generate_post_annotations($post) {
+    function generate_post_annotations($post_id) {
+        $post = get_post($post_id);
         // 获取API密钥
-        $api_key = get_option('iro_chatgpt_api_key', '');
+        $api_key = iro_opt('chatgpt_access_token', '');
         if (empty($api_key)) {
             error_log('IRO ChatGPT: API密钥未设置');
             return false;

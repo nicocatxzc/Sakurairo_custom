@@ -3560,6 +3560,25 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'annotations_auto_generate',
+        'type' => 'switcher',
+        'title' => __('Annotations auto generate','sakurairo_csf'),
+        'label' => __('After turning on, annotations will auto generate when post published or edited.','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'annotations_exclude_ids',
+        'type' => 'text',
+        'title' => __('Post IDs that do not require annotations','sakurairo_csf'),
+        'desc' => __('Those articles will not auto generate annotations. Split each id with a ",".','sakurairo_csf'),
+        'dependency' => array(
+          array( 'annotations_auto_generate', '==', 'true', '', 'true' ),
+        ),
+        'default'     => ''
+      ),
+
+      array(
         'id' => 'chatgpt_annotations_prompt',
         'type' => 'textarea',
         'title' => __('ChatGPT Article Annotations Init Prompt','sakurairo_csf'),
