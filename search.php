@@ -19,7 +19,7 @@ get_header(); ?>
     $show_pages_filter = true;
 
     // 默认勾选的选项
-    $default_checked = array('post');
+    $default_checked = array('post','product');
     if (iro_opt('search_for_shuoshuo')) $default_checked[] = 'shuoshuo';
     if (iro_opt('search_for_pages')) {
         if (iro_opt('only_admin_can_search_pages')) {

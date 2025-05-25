@@ -461,7 +461,7 @@ function customize_query_functions($query) {
 
         // 在搜索页面中排除分类页和特定类别
         if ($query->is_search) {
-            $post_types = array('post', 'link','shuoshuo','page');
+            $post_types = array('post', 'link' ,'shuoshuo' ,'page', 'product');
             $query->set('post_type', $post_types);
             $tax_query = array(
                 array(
@@ -760,17 +760,19 @@ function get_author_class($comment_author_email, $user_id)
 function restyle_text($input)
 {
     // 类型修复
+    $number = 0.0;
     if (is_numeric($input)) {
         $number = (float)$input;
-    } elseif (is_string($input)) {
-        if (preg_match('/[-+]?[0-9]*\.?[0-9]+/', $input, $matches)) {
-            $number = (float)$matches[0];
-        } else {
-            $number = 0;
-        }
-    } else {
-        $number = 0;
-    }
+    } 
+    // elseif (is_string($input)) {
+    //     if (preg_match('/[-+]?[0-9]*\.?[0-9]+/', $input, $matches)) {
+    //         $number = (float)$matches[0];
+    //     } else {
+    //         $number = 0;
+    //     }
+    // } else {
+    //     $number = 0;
+    // }
 
     switch (iro_opt('statistics_format')) {
         case "type_2": //23,333 次访问
