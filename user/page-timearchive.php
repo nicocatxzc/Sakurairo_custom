@@ -1,9 +1,11 @@
 <?php 
-/**
- * Template Name: Timearchive Template
- */
+/*
+  Template Name: Timearchive Template
+*/
 get_header();
 ?>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
 <style>
     /* 基础布局 */
     .site-content {
@@ -89,8 +91,9 @@ get_header();
     }
     .timeline-year-number {
         font-size: 1.5rem;
-        font-family: serif;
-        font-weight: 900;
+        font-family: 'Noto Serif SC';
+        font-weight: 900; 
+        font-variation-settings: 'wght' 900; /* 添加变量字体控制 */
         color: var(--theme-skin, #222);
         line-height: 1;
         flex-shrink: 0;
@@ -230,9 +233,10 @@ get_header();
         color: #222;
     }
     .timeline-modal-title {
+        font-family: 'Noto Serif SC';
         font-size: 1.6rem;
         font-weight: 900;
-        font-family: serif;
+        font-variation-settings: 'wght' 900; /* 添加变量字体控制 */
         letter-spacing: 0.04em;
         color: var(--theme-skin, #222);
         border-radius: 1.1rem 1.1rem 0 0;
@@ -547,7 +551,7 @@ get_header();
     body.dark .timeline-year-calendar-month.active {
         background: var(--theme-skin-matching, #fff);
         color: #222;
-        box-shadow: 0 2px 8px 0 rgba(255,255,255,0.10);
+        box-shadow: 0 2px 20px -10px var(--theme-skin-matching, #fff);
         opacity: 1;
         filter: brightness(1.12) drop-shadow(0 2px 6px rgba(255,255,255,0.05));
         border: 1.5px solid var(--theme-skin-matching, #fff);
@@ -570,11 +574,18 @@ get_header();
         .timeline-root {
             grid-template-columns: 1fr;
         }
-        .timeline-modal-stats-grid{
+        .timeline-modal-stats-grid {
             grid-template-columns: repeat(2, 1fr);
         }
         .timeline-modal {
-            max-height: 85vh !important;
+            max-height: 82.5vh !important;
+        }
+        .timeline-year-calendar{
+           grid-template-columns: repeat(6, 1fr);
+           grid-template-rows: repeat(2, 1fr);
+        }
+        .timeline-year-number{
+           font-size: 1.6rem;
         }
     }
 
@@ -595,6 +606,7 @@ get_header();
 $years = get_transient('time_archive');
 if (!$years) {
     $years = get_archive_info();
+    set_transient('time_archive',$years,86400);
 }
 foreach ($years as $year => $months) {
     $postCount = array_sum(array_map('count', $months));
@@ -619,5 +631,5 @@ foreach ($years as $year => $months) {
 }
 ?>
 <dialog id="timeline-modal-mask" class="timeline-modal-mask"><div class="timeline-modal"><span class="timeline-modal-close" id="timeline-modal-close">×</span><div id="timeline-modal-content" data-archiveapi=<?php echo rest_url('sakura/v1/archive_info');?>></div></div></dialog>
-<script src="<?php echo get_template_directory_uri(); ?>/js/timeline.js"></script>
+</div>
 <?php get_footer(); ?>
