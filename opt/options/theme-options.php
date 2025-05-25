@@ -1459,6 +1459,11 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'type' => 'subheading',
+        'content' => __('Infos','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'infor_bar',
         'type' => 'switcher',
         'title' => __('Cover Info Bar','sakurairo_csf'),
@@ -1769,6 +1774,11 @@ $prefix = 'iro_options';
         'desc' => __('Customize the colors, dark colors are recommended','sakurairo_csf'),
         'default' => 'rgba(51,51,51,0.8)'
       ),  
+
+      array(
+        'type' => 'subheading',
+        'content' => __('Cover Video','sakurairo_csf'),
+      ),
 
       array(
         'id' => 'cover_video',
