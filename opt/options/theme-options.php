@@ -1459,6 +1459,60 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'wave_effects',
+        'type' => 'switcher',
+        'title' => __('Cover Wave Effects','sakurairo_csf'),
+        'label' => __('Wave effect will appear at the bottom of the cover of the home page after turning on, and it will be forced off in the dark mode','sakurairo_csf'),
+        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'drop_down_arrow',
+        'type' => 'switcher',
+        'title' => __('Cover Dropdown Arrow','sakurairo_csf'),
+        'label' => __('Enabled by default, show a dropdown arrow at bottom of home cover','sakurairo_csf'),
+        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
+        'default' => true
+      ),
+
+      array(
+        'id' => 'drop_down_arrow_mobile',
+        'type' => 'switcher',
+        'title' => __('Cover Dropdown Arrow Display on Mobile Devices','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'label' => __('Drop down arrow will appear at the bottom of the mobile devices\' home cover after turning it on','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'drop_down_arrow_color',
+        'type' => 'color',
+        'title' => __('Cover Dropdown Arrow Color','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'desc' => __('Customize the colors, light colors are recommended','sakurairo_csf'),
+        'default' => 'rgba(255,255,255,0.8)'
+      ),  
+
+      array(
+        'id' => 'drop_down_arrow_dark_color',
+        'type' => 'color',
+        'title' => __('Cover Dropdown Arrow Color (Dark Mode)','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'desc' => __('Customize the colors, dark colors are recommended','sakurairo_csf'),
+        'default' => 'rgba(51,51,51,0.8)'
+      ),  
+
+      array(
         'type' => 'subheading',
         'content' => __('Infos','sakurairo_csf'),
       ),
@@ -1619,6 +1673,11 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'type' => 'subheading',
+        'content' => __('Cover Random Image','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'random_graphs_options',
         'type' => 'select',
         'title' => __('Cover Random Image Options','sakurairo_csf'),
@@ -1720,60 +1779,6 @@ $prefix = 'iro_options';
         'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
         'default' => 'filter-nothing'
       ),
-
-      array(
-        'id' => 'wave_effects',
-        'type' => 'switcher',
-        'title' => __('Cover Wave Effects','sakurairo_csf'),
-        'label' => __('Wave effect will appear at the bottom of the cover of the home page after turning on, and it will be forced off in the dark mode','sakurairo_csf'),
-        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'drop_down_arrow',
-        'type' => 'switcher',
-        'title' => __('Cover Dropdown Arrow','sakurairo_csf'),
-        'label' => __('Enabled by default, show a dropdown arrow at bottom of home cover','sakurairo_csf'),
-        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
-        'default' => true
-      ),
-
-      array(
-        'id' => 'drop_down_arrow_mobile',
-        'type' => 'switcher',
-        'title' => __('Cover Dropdown Arrow Display on Mobile Devices','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'label' => __('Drop down arrow will appear at the bottom of the mobile devices\' home cover after turning it on','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'drop_down_arrow_color',
-        'type' => 'color',
-        'title' => __('Cover Dropdown Arrow Color','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'desc' => __('Customize the colors, light colors are recommended','sakurairo_csf'),
-        'default' => 'rgba(255,255,255,0.8)'
-      ),  
-
-      array(
-        'id' => 'drop_down_arrow_dark_color',
-        'type' => 'color',
-        'title' => __('Cover Dropdown Arrow Color (Dark Mode)','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'desc' => __('Customize the colors, dark colors are recommended','sakurairo_csf'),
-        'default' => 'rgba(51,51,51,0.8)'
-      ),  
 
       array(
         'type' => 'subheading',
