@@ -815,6 +815,70 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'footer_sakura',
+        'type' => 'switcher',
+        'title' => __('Footer Sakura Icon','sakurairo_csf'),
+        'label' => __('Enabled by default, sakura icon will appear on the footer','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
+        'id'    => 'footer_direction',
+        'type'  => 'select',
+        'title' => __('Footer Content Distribution','sakurairo_csf'),
+        'options'     => array(
+          'center'  => __('Center','sakurairo_csf'),
+          'columns'  => __('Two Columns','sakurairo_csf'),
+        ),
+        "default"=> "columns",
+      ),
+
+      array(
+        'id' => 'footer_info',
+        'type' => 'textarea',
+        'title' => __('Footer Info','sakurairo_csf'),
+        'desc' => __('Footer description text, supports HTML code','sakurairo_csf'),
+        'default' => 'Copyright &copy; by FUUKEI All Rights Reserved.'
+      ),
+
+      array(
+        'id' => 'footer_text_font',
+        'type' => 'text',
+        'title' => __('Footer Text Font','sakurairo_csf'),
+        'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
+        'default' => 'Noto Serif SC'
+      ),
+
+      array(
+        'id' => 'footer_load_occupancy',
+        'type' => 'switcher',
+        'title' => __('Footer Load Occupancy Query','sakurairo_csf'),
+        'label' => __('Load occupancy information will appear at the end of the page after turning it on. Not recommended in production environment.','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'footer_upyun',
+        'type' => 'switcher',
+        'title' => __('Footer Upyun League Logo','sakurairo_csf'),
+        'label' => __('Upyun Logo will appear at the end of the page after turning it on','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id'=>'footer_addition',
+        'type'     => 'code_editor',
+        'sanitize' => false,
+        'title' => __('Footer Addition','sakurairo_csf'),
+        'desc' => __('Add HTML code at the end of the page. Useful for adding customize JavaScript.','sakurairo_csf'),
+      ),
+
+      array(
+        'type' => 'subheading',
+        'content' => __('Music Player','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'aplayer_server',
         'type' => 'select',
         'title' => __('Footer Online Music Player','sakurairo_csf'),
@@ -904,65 +968,6 @@ $prefix = 'iro_options';
         'title' => __('Netease Cloud Music Cookies','sakurairo_csf'),
         'dependency' => array( 'aplayer_server', '==', 'netease', '', 'true' ),
         'desc' => __('If you want to play VIP music on Netease Cloud Music Platform, please fill in your account cookies in this option.','sakurairo_csf'),
-      ),
-
-      array(
-        'id' => 'footer_sakura',
-        'type' => 'switcher',
-        'title' => __('Footer Sakura Icon','sakurairo_csf'),
-        'label' => __('Enabled by default, sakura icon will appear on the footer','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
-        'id'    => 'footer_direction',
-        'type'  => 'select',
-        'title' => __('Footer Content Distribution','sakurairo_csf'),
-        'options'     => array(
-          'center'  => __('Center','sakurairo_csf'),
-          'columns'  => __('Two Columns','sakurairo_csf'),
-        ),
-        "default"=> "columns",
-      ),
-
-      array(
-        'id' => 'footer_info',
-        'type' => 'textarea',
-        'title' => __('Footer Info','sakurairo_csf'),
-        'desc' => __('Footer description text, supports HTML code','sakurairo_csf'),
-        'default' => 'Copyright &copy; by FUUKEI All Rights Reserved.'
-      ),
-
-      array(
-        'id' => 'footer_text_font',
-        'type' => 'text',
-        'title' => __('Footer Text Font','sakurairo_csf'),
-        'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
-        'default' => 'Noto Serif SC'
-      ),
-
-      array(
-        'id' => 'footer_load_occupancy',
-        'type' => 'switcher',
-        'title' => __('Footer Load Occupancy Query','sakurairo_csf'),
-        'label' => __('Load occupancy information will appear at the end of the page after turning it on. Not recommended in production environment.','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'footer_upyun',
-        'type' => 'switcher',
-        'title' => __('Footer Upyun League Logo','sakurairo_csf'),
-        'label' => __('Upyun Logo will appear at the end of the page after turning it on','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id'=>'footer_addition',
-        'type'     => 'code_editor',
-        'sanitize' => false,
-        'title' => __('Footer Addition','sakurairo_csf'),
-        'desc' => __('Add HTML code at the end of the page. Useful for adding customize JavaScript.','sakurairo_csf'),
       ),
 
       array(
