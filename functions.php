@@ -1159,14 +1159,16 @@ add_filter('wp_new_user_notification_email', 'new_user_message_fix');
  */
 function comment_mail_notify($comment_id)
 {
-    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'poi';
+    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'no-reply';
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ?: '';
-    $spam_confirmed = $comment->comment_approved;
+    
+    // 获取评论的审核状态，如果评论无需审核则直接发送
+    $comment_approved = $comment->comment_approved;
     $mail_notify = iro_opt('mail_notify') ? get_comment_meta($parent_id, 'mail_notify', false) : false;
     $admin_notify = iro_opt('admin_notify') ? '1' : ((isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0');
     
-    if (($parent_id != '') && ($spam_confirmed != 'spam') && ($admin_notify != '0') && (!$mail_notify)) {
+    if (($parent_id != '') &&($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0') && (!$mail_notify)) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
         $to = trim(get_comment($parent_id)->comment_author_email);
         
@@ -1297,6 +1299,17 @@ function comment_mail_notify($comment_id)
     }
 }
 add_action('comment_post', 'comment_mail_notify');
+
+/*
+ * 评论通过审核时发送通知
+ */
+add_action('wp_set_comment_status', 'comment_status_changed_notify', 10, 2);
+
+function comment_status_changed_notify($comment_id, $comment_status) {
+    if ($comment_status === 'approve') {
+        comment_mail_notify($comment_id);
+    }
+}
 
 /*
  * 链接新窗口打开
