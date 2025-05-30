@@ -3166,6 +3166,17 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'img_upload_max_size',
+        'type' => 'slider',
+        'title' => __('Maximum image upload size', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '1',
+        'max' => '10',
+        'unit' => 'MB',
+        'default' => '5'
+      ),
+
+      array(
         'id' => 'imgur_client_id',
         'type' => 'text',
         'title' => __('Imgur Client ID','sakurairo_csf'),
