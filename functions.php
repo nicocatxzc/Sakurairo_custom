@@ -2387,27 +2387,71 @@ if (iro_opt('sakura_widget')) {
     }
 }
 
-// 评论Markdown解析
+
+/**
+ * 安全地解析 WordPress 评论中的 Markdown 内容。
+ * 此函数应挂载到 `preprocess_comment` 过滤器。
+ *
+ * @param array $incoming_comment 评论数据数组。
+ * @return array 修改后的评论数据数组。
+ */
 function markdown_parser($incoming_comment)
 {
     global $wpdb, $comment_markdown_content;
     global $allowedtags;
 
-    $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
+    /** 
+     * 检查是否启用了 Markdown（假设前端评论表单中有 enable_markdown 字段）
+     * Check if Markdown is enabled (assuming there is an enable_markdown field in the frontend comment form)
+     */ 
 
-    if ($enable_markdown) {
-        $may_script = array(
-            '/<script.*?>.*?<\/script>/is', //<script>标签
-            '/on\w+\s*=\s*(["\']).*?\1/is',
-            '/on\w+\s*=\s*[^\s>]+/is'//on属性
-        );
+    $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
+    /**
+     * 初步安全检查
+     * Initial security checks
+     */
     
-        foreach ($may_script as $pattern) {
-            if (preg_match($pattern, $incoming_comment['comment_content'])) {
-                siren_ajax_comment_err(__("Please do not try to use Javascript in your comments!")); //恶意内容警告
-                return ($incoming_comment);
-            }
+    $may_script = array(
+        /**  '/<script.*?>.*?<\/script>/is', //<script>标签
+         * '/on\w+\s*=\s*(["\']).*?\1/is',
+         * '/on\w+\s*=\s*[^\s>]+/is'//on属性
+         */
+        '/<script.*?>.*?<\/script>/is', // 阻止 <script> 标签
+        '/\s(?:on(?:click|load|error|mouseover|mouseout|keydown|keyup|keypress|change|submit|reset|focus|blur|abort|resize|scroll)\s*=\s*(["\']).*?\1)/is', // 阻止带引号的 on-event 属性
+        '/\s(?:on(?:click|load|error|mouseover|mouseout|keydown|keyup|keypress|change|submit|reset|focus|blur|abort|resize|scroll)\s*=\s*[^\s>]+)/is', // 阻止不带引号的 on-event 属性
+        '/\s(?:href|src)\s*=\s*(["\'])(?:javascript|data):.*?\1/is', // 阻止 javascript: 或 data: 协议的 href/src 属性
+        '/\s(?:href|src)\s*=\s*(?:javascript|data):[^\s>]+/is' // 阻止不带引号的 javascript: 或 data: 协议的 href/src 属性
+    );
+    
+    foreach ($may_script as $pattern) {
+        if (preg_match($pattern, $incoming_comment['comment_content'])) {
+            siren_ajax_comment_err(__("Please do not try to use Javascript in your comments!")); //恶意内容警告
+            return ($incoming_comment);
         }
+    }
+
+    /**
+     * 启用 Markdown（如果启用）
+     * Enable Markdown (if enabled)
+     * 这里使用 wp_kses 来过滤 HTML 标签，允许的标签在 $allowedtags 中定义。
+     * Here, we use wp_kses to filter HTML tags, and the allowed tags are defined in $allowedtags.
+     */
+    if ($enable_markdown) {
+        include 'inc/Parsedown.php';
+        $Parsedown = new Parsedown();
+        // 核心安全
+        // Set safe mode to true to prevent unsafe HTML tags
+        $Parsedown->setSafeMode(true);
+
+        $incoming_comment['comment_content'] = $Parsedown->text($incoming_comment['comment_content']);
+        /**
+         * 使用 wp_kses 过滤 HTML 标签
+         * Use wp_kses to filter HTML tags
+         * 使用全局的 $allowedtags 变量来定义允许的 HTML 标签。
+         * Use the global $allowedtags variable to define allowed HTML tags.
+         */
+        // kses 过滤
+        // Use wp_kses to filter the comment content
         $incoming_comment['comment_content'] = wp_kses($incoming_comment['comment_content'], $allowedtags); // 自行调用kses
     } else {
         $incoming_comment['comment_content'] = htmlspecialchars($incoming_comment['comment_content'], ENT_QUOTES, 'UTF-8'); //未启用markdown直接转义
@@ -2421,12 +2465,12 @@ function markdown_parser($incoming_comment)
     // }
     $comment_markdown_content = $incoming_comment['comment_content'];
 
-    if ($enable_markdown) { //未启用markdown不做解析
-        include 'inc/Parsedown.php';
-        $Parsedown = new Parsedown();
-        $Parsedown->setSafeMode(false);
-        $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
-    }
+    // if ($enable_markdown) { //未启用markdown不做解析
+    //     include 'inc/Parsedown.php';
+    //     $Parsedown = new Parsedown();
+    //     $Parsedown->setSafeMode(false);
+    //     $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
+    // }
     return $incoming_comment;
 }
 add_filter('preprocess_comment', 'markdown_parser');
