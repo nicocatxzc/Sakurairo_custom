@@ -2443,6 +2443,10 @@ function markdown_parser($incoming_comment)
         // Set safe mode to true to prevent unsafe HTML tags
         $Parsedown->setSafeMode(true);
 
+        // 禁用自动链接
+        // Disable automatic linking of URLs
+        $Parsedown->setUrlsLinked(false); 
+
         $incoming_comment['comment_content'] = $Parsedown->text($incoming_comment['comment_content']);
         /**
          * 使用 wp_kses 过滤 HTML 标签
@@ -2465,12 +2469,6 @@ function markdown_parser($incoming_comment)
     // }
     $comment_markdown_content = $incoming_comment['comment_content'];
 
-    // if ($enable_markdown) { //未启用markdown不做解析
-    //     include 'inc/Parsedown.php';
-    //     $Parsedown = new Parsedown();
-    //     $Parsedown->setSafeMode(false);
-    //     $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
-    // }
     return $incoming_comment;
 }
 add_filter('preprocess_comment', 'markdown_parser');
