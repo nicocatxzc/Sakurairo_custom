@@ -2389,7 +2389,7 @@ if (iro_opt('sakura_widget')) {
 
 
 /**
- * 安全地解析 WordPress 评论中的 Markdown 内容。
+ * 安全解析 WordPress 评论中的 Markdown 内容。
  * 此函数应挂载到 `preprocess_comment` 过滤器。
  *
  * @param array $incoming_comment 评论数据数组。
@@ -2404,32 +2404,25 @@ function markdown_parser($incoming_comment)
      * 检查是否启用了 Markdown（假设前端评论表单中有 enable_markdown 字段）
      * Check if Markdown is enabled (assuming there is an enable_markdown field in the frontend comment form)
      */ 
-
     $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
+    
     /**
      * 初步安全检查
      * Initial security checks
      */
-    
     $may_script = array(
-        /**  '/<script.*?>.*?<\/script>/is', //<script>标签
-         * '/on\w+\s*=\s*(["\']).*?\1/is',
-         * '/on\w+\s*=\s*[^\s>]+/is'//on属性
-         */
-        '/<script.*?>.*?<\/script>/is', // 阻止 <script> 标签
-        '/\s(?:on(?:click|load|error|mouseover|mouseout|keydown|keyup|keypress|change|submit|reset|focus|blur|abort|resize|scroll)\s*=\s*(["\']).*?\1)/is', // 阻止带引号的 on-event 属性
-        '/\s(?:on(?:click|load|error|mouseover|mouseout|keydown|keyup|keypress|change|submit|reset|focus|blur|abort|resize|scroll)\s*=\s*[^\s>]+)/is', // 阻止不带引号的 on-event 属性
-        '/\s(?:href|src)\s*=\s*(["\'])(?:javascript|data):.*?\1/is', // 阻止 javascript: 或 data: 协议的 href/src 属性
-        '/\s(?:href|src)\s*=\s*(?:javascript|data):[^\s>]+/is' // 阻止不带引号的 javascript: 或 data: 协议的 href/src 属性
+        '/<script\b[^>]*>(.*?)<\/script>/is', // 阻止 <script> 标签
+        '/<[^>]+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/is', // 阻止 HTML 属性中的 onxxx 事件
+        '/\s(?:href|src)\s*=\s*(?:"(?:javascript|data):[^"]*"|\'(?:javascript|data):[^\']*\'|(?:javascript|data):[^\s>]+)/is', // 阻止带引号的 javascript: 或 data: 协议的 href/src 属性
     );
     
     foreach ($may_script as $pattern) {
         if (preg_match($pattern, $incoming_comment['comment_content'])) {
-            siren_ajax_comment_err(__("Please do not try to use Javascript in your comments!")); //恶意内容警告
+            siren_ajax_comment_err(__("For security reasons, JavaScript is not allowed in comments.")); //恶意内容警告
             return ($incoming_comment);
         }
     }
-
+    
     /**
      * 启用 Markdown（如果启用）
      * Enable Markdown (if enabled)
