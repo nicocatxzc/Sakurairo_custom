@@ -794,7 +794,7 @@ nav .menu > li .sub-menu a {
 
 /* 用户菜单区域 */
 .user-menu-wrapper {
-  width: fit-content;
+  /* width: fit-content; */
   white-space: nowrap;
   align-items: stretch;
 }
