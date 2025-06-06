@@ -93,6 +93,11 @@ namespace IROChatGPT {
         error_log("GPT error: " . $chat);
 
         $decoded_chat = json_decode($chat);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("JSON decode error: " . json_last_error_msg());
+        }
+
         if (is_null($decoded_chat) || isset($decoded_chat->error)) {
             throw new Exception("ChatGPT error: " . json_encode($decoded_chat));
         }
