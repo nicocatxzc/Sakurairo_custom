@@ -3039,8 +3039,8 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
     function turnstile_init() {
         $site_key = iro_opt('turnstile_site_key');
         echo '<div class="cf-turnstile" data-sitekey="' . esc_attr($site_key) . '" data-theme="' . (iro_opt('turnstile_theme') ?: 'light') . '"></div>';
-        echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
-        echo '<style>.cf-turnstile {margin: 10px 0 20px;}</style>';
+        echo '<script class="cf-turnstile" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
+        echo '<style>.cf-turnstile {margin: 0 0 0 -15px;}</style>';
     }
     add_action('login_form', 'turnstile_init');
     add_action('register_form', 'turnstile_init');
@@ -3053,7 +3053,7 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         }
         
         if (empty($_POST['cf-turnstile-response'])) {
-            return new WP_Error('invalid_turnstile', __('<strong>错误</strong>: 请完成人机验证', 'sakurairo'));
+            return new WP_Error('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
         }
 
         $secret_key = iro_opt('turnstile_secret_key');
@@ -3069,13 +3069,13 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         ]);
 
         if (is_wp_error($response)) {
-            return new WP_Error('turnstile_error', __('<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo'));
+            return new WP_Error('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
         
         if (!$body['success']) {
-            return new WP_Error('invalid_turnstile', __('<strong>错误</strong>: 人机验证失败', 'sakurairo'));
+            return new WP_Error('invalid_turnstile','<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
         return $user;
@@ -3084,7 +3084,7 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     function turnstile_lostpassword_check($errors) {
         if (empty($_POST['cf-turnstile-response'])) {
-            $errors->add('invalid_turnstile', __('<strong>错误</strong>: 请完成人机验证', 'sakurairo'));
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
             return $errors;
         }
 
@@ -3101,14 +3101,14 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         ]);
 
         if (is_wp_error($response)) {
-            $errors->add('turnstile_error', __('<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo'));
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
             return $errors;
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
         
         if (!$body['success']) {
-            $errors->add('invalid_turnstile', __('<strong>错误</strong>: 人机验证失败', 'sakurairo'));
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
         return $errors;
@@ -3117,7 +3117,7 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     function turnstile_registration_check($errors, $sanitized_user_login, $user_email) {
         if (empty($_POST['cf-turnstile-response'])) {
-            $errors->add('invalid_turnstile', __('<strong>错误</strong>: 请完成人机验证', 'sakurairo'));
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
             return $errors;
         }
 
@@ -3134,14 +3134,14 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         ]);
 
         if (is_wp_error($response)) {
-            $errors->add('turnstile_error', __('<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo'));
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
             return $errors;
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
         
         if (!$body['success']) {
-            $errors->add('invalid_turnstile', __('<strong>错误</strong>: 人机验证失败', 'sakurairo'));
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
         return $errors;
