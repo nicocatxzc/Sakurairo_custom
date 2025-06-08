@@ -3303,7 +3303,8 @@ $prefix = 'iro_options';
         'options' => array(
           'off' => __('Off','sakurairo_csf'),
           'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
-          'vaptcha' => __('Vaptcha','sakurairo_csf')
+          'vaptcha' => __('Vaptcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
         ),
         'default' => 'off',
       ),
@@ -3338,6 +3339,35 @@ $prefix = 'iro_options';
           '6' => __(6,'sakurairo_csf'),
         ),
         'default' => 1,
+      ),
+
+      array(
+        'id' => 'turnstile_site_key',
+        'type' => 'text',
+        'title' => __('Turnstile Site Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Site Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_secret_key',
+        'type' => 'text',
+        'title' => __('Turnstile Secret Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Secret Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_theme',
+        'type' => 'select',
+        'title' => 'Turnstile Theme',
+        'options' => array(
+            'light' => 'Light',
+            'dark' => 'Dark',
+            'auto' => 'Auto',
+        ),
+        'default' => 'light',
+        'dependency' => array('captcha_select', '==', 'turnstile'),
       ),
 
       array(
