@@ -2043,7 +2043,7 @@ function update_theme_option()
 add_action('wp_ajax_update_theme_admin_notice_meta', 'update_theme_admin_notice_meta');
 function update_theme_admin_notice_meta()
 {
-    if (!isset($_POST['option']) || !isset($_POST['value'])) {
+    if (!isset($_POST['user_id']) || !isset($_POST['meta_key']) || !isset($_POST['meta_value'])) {
         wp_die('Missing required parameters');
     }
 
