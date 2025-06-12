@@ -23,7 +23,6 @@ namespace IROChatGPT {
 
             add_action('generate_excerpt', function ($post_id) {
                 try {
-                    error_log('开始生成简介');
                     $post = get_post($post_id);
                     if (!$post || has_excerpt($post_id)) {
                         return;
