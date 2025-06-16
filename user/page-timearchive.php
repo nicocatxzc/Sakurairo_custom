@@ -753,6 +753,7 @@ get_header();
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 2.5rem;
         margin: 2rem 0;
+        padding: 0 1rem;
     }
 
 </style>
