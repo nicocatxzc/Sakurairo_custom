@@ -3800,19 +3800,19 @@ msgstr "Vaptchaシーン"
 
 #: options/theme-options.php:3347
 msgid "Turnstile Site Key"
-msgstr "Turnstile Site Keyを入力する"
+msgstr "Turnstile Site Key"
 
 #: options/theme-options.php:3349
 msgid "Fill in your Turnstile Site Key"
-msgstr ""
+msgstr "Turnstile Site Keyを入力する"
 
 #: options/theme-options.php:3355
 msgid "Turnstile Secret Key"
-msgstr "Turnstile Secret Keyを入力する"
+msgstr "Turnstile Secret Key"
 
 #: options/theme-options.php:3357
 msgid "Fill in your Turnstile Secret Key"
-msgstr ""
+msgstr "Turnstile Secret Keyを入力する"
 
 #: options/theme-options.php:3376
 msgid "Jump after login"
