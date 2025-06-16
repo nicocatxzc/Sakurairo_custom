@@ -670,7 +670,6 @@ get_header();
         color: rgba(255,255,255,0.6);
     }
     .category-posts {
-        margin-top: auto;
         padding-top: 0.8rem;
         border-top: 1px dashed #e0e0e0;
     }
@@ -814,7 +813,7 @@ foreach ($categories as $category) {
         'order' => 'DESC'
     ));
     
-    echo '<section class="category-card" data-category-id="' . $category->term_id . '">';
+    echo '<section class="category-card" data-categoryId="' . $category->term_id . '">';
     echo '<div class="category-header">';
     echo '<h3 class="category-name">' . $category->name . '</h3>';
     echo '<span class="category-count">' . $category->count . ' ' . __('article', 'sakurairo') . '</span>';

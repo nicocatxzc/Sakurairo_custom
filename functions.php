@@ -3309,11 +3309,9 @@ function get_archive_info($get_page = false) {
         // 判断页面类型
         if ($post->post_type == 'post') {
             $post_type = 'article';
-        }
-        if ($post->post_type == 'shuoshuo') {
+        } elseif ($post->post_type == 'shuoshuo') {
             $post_type = 'shuoshuo';
-        }
-        if ($post->post_type == 'page') {
+        } else {
             $post_type = 'page';
         }
         
@@ -3333,6 +3331,9 @@ function get_archive_info($get_page = false) {
         if ($post->post_password != ''){
             $post->post_title = __("It's a secret",'sakurairo'); // 隐藏受密码保护文章的标题
         }
+
+        $category_ids = wp_get_post_categories($post->ID) ?: [];
+
         $post = [ //仅保存需要的数据（归档、展示区）
             'post_title'    => $post->post_title,
             'post_author'     => $post->post_author,
@@ -3340,6 +3341,7 @@ function get_archive_info($get_page = false) {
             'post_modified'     => $post->post_modified,
             'comment_count' => $comments,
             'guid'          => $post->guid,
+            'categories'    => $category_ids,
             'meta' => [
                 'views' => $views,
                 'words' => $words,
