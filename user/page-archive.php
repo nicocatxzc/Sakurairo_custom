@@ -670,7 +670,6 @@ get_header();
         color: rgba(255,255,255,0.6);
     }
     .category-posts {
-        margin-top: auto;
         padding-top: 0.8rem;
         border-top: 1px dashed #e0e0e0;
     }
