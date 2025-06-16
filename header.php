@@ -296,7 +296,7 @@ header('X-Frame-Options: SAMEORIGIN');
             $filter = iro_opt('random_graphs_filter');
             $cover_height = (iro_opt('cover_full_screen',true)&&is_home()) ? '' : 'headertop-bar';
         ?>
-            <div class="headertop <?= esc_attr($filter . $cover_height); ?>">
+            <div class="headertop <?= esc_attr($filter .' '. $cover_height); ?>">
                 <?php get_template_part('layouts/imgbox'); ?>
             </div>
         <?php } ?>
