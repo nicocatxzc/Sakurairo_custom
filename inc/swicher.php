@@ -85,6 +85,7 @@ function font_end_js_control()
         'random_graphs_mts' => check(iro_opt('random_graphs_mts')),
         'code_highlight' => iro_opt('code_highlight_method', 'hljs'),
         'comment_upload_img' => iro_opt('img_upload_api') == 'off' ? false : true,
+        'img_upload_max_size' => iro_opt('img_upload_max_size',5),
         'cache_cover' => check(iro_opt('cache_cover')),
         'site_bg_as_cover' => check(iro_opt('site_bg_as_cover')),
         'yiyan_api' => empty(iro_opt('yiyan_api')) ? ["https://v1.hitokoto.cn/", "https://api.nmxc.ltd/yiyan/"] : json_decode(iro_opt('yiyan_api')),
