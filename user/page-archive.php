@@ -630,7 +630,6 @@ get_header();
     }
     .category-header {
         display: flex;
-        align-items: flex-start;
         justify-content: space-between;
         width: 100%;
         margin-bottom: 0.5rem;
@@ -641,7 +640,8 @@ get_header();
         font-size: 1.4rem;
         font-weight: 700;
         color: var(--theme-skin, #222);
-        line-height: 1.3;
+        line-height: 0;
+        transform: translateY(0.2rem);
     }
     body.dark .category-name {
         color: rgba(255,255,255,0.9);
@@ -660,7 +660,6 @@ get_header();
     .category-description {
         font-size: 0.95rem;
         color: #666;
-        line-height: 1.6;
         margin-bottom: 1.2rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
