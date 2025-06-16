@@ -16,13 +16,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: Fuukei/Sakurairo_Scripts
           path: ./script
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5  
+        uses: actions/setup-node@v4  
         
       - name: Cache node modules
         uses: actions/cache@v4
@@ -48,7 +48,7 @@ jobs:
           npm run build
         
       - name: Checkout self
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: ./theme
         
@@ -64,18 +64,15 @@ jobs:
           # for easier access. Using 'echo' and then 'cat' is fine too, but this is a direct approach.
           COMMIT_MSG=$(git show -s --format=format:"last commit: %h by %aN,%n%B | %ci")
           echo "::set-output name=message::${COMMIT_MSG}" # Set as an output for the step
-              
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           
       - name: Commit and Push changes
-        uses: zwaldowski/git-commit-action@v1
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           # Use the output from the previous step as the commit message
           commit_message: ${{ steps.generate_commit_message.outputs.message }}
-          working_directory: ./theme
+          branch: preview
+          repository: ./theme
           # The 'push' input defaults to true, so explicit setting is not strictly needed,
           # but it's good for clarity if you want to be explicit.
-          push: true
+          commit_user_name: GitHub Actions Bot
+          commit_user_email: github-actions[bot]@users.noreply.github.com
