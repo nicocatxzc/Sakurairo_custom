@@ -3035,12 +3035,12 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     }
     add_filter('authenticate', 'checkVaptchaAction', 20, 3);
-}else if ((iro_opt('captcha_select') === 'turnstile') && (!empty(iro_opt("turnstile_site_key")) && !empty(iro_opt("turnstile_secret_key")))) {
+} else if ((iro_opt('captcha_select') === 'turnstile') && (!empty(iro_opt("turnstile_site_key")) && !empty(iro_opt("turnstile_secret_key")))) {
     function turnstile_init() {
-        $site_key = iro_opt('turnstile_site_key');
-        echo '<div class="cf-turnstile" data-sitekey="' . esc_attr($site_key) . '" data-theme="' . (iro_opt('turnstile_theme') ?: 'light') . '"></div>';
-        echo '<script class="cf-turnstile" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
-        echo '<style>.cf-turnstile {margin: 0 0 0 -15px;}</style>';
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        echo $turnstile->html();
+        echo $turnstile->script();
     }
     add_action('login_form', 'turnstile_init');
     add_action('register_form', 'turnstile_init');
@@ -3048,6 +3048,9 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     function verify_turnstile($user, $username = '', $password = '') {
         // Skip captcha check if it's a passwordless login
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $user;
+        }
         if (isset($_POST['skip_captcha_check']) && $_POST['skip_captcha_check'] == '1') {
             return $user;
         }
@@ -3059,22 +3062,15 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         $secret_key = iro_opt('turnstile_secret_key');
         $token = sanitize_text_field($_POST['cf-turnstile-response']);
         $ip = get_the_user_ip();
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
 
-        $response = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'body' => [
-                'secret' => $secret_key,
-                'response' => $token,
-                'remoteip' => $ip,
-            ],
-        ]);
-
-        if (is_wp_error($response)) {
+        $response = $turnstile->verify($token, $ip);
+        if ($response['success'] === false) {
             return new WP_Error('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
         }
 
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        
-        if (!$body['success']) {
+        if (!$response['success']) {
             return new WP_Error('invalid_turnstile','<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
@@ -3083,6 +3079,9 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
     add_filter('authenticate', 'verify_turnstile', 20, 3);
 
     function turnstile_lostpassword_check($errors) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
         if (empty($_POST['cf-turnstile-response'])) {
             $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
             return $errors;
@@ -3092,22 +3091,16 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
         $token = sanitize_text_field($_POST['cf-turnstile-response']);
         $ip = get_the_user_ip();
 
-        $response = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'body' => [
-                'secret' => $secret_key,
-                'response' => $token,
-                'remoteip' => $ip,
-            ],
-        ]);
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $response = $turnstile->verify($token, $ip);
 
-        if (is_wp_error($response)) {
+        if ($response['success'] === false) {
             $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
             return $errors;
         }
 
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        
-        if (!$body['success']) {
+        if (!$response['success']) {
             $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
@@ -3116,31 +3109,28 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
     add_action('lostpassword_post', 'turnstile_lostpassword_check');
 
     function turnstile_registration_check($errors, $sanitized_user_login, $user_email) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
         if (empty($_POST['cf-turnstile-response'])) {
             $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
             return $errors;
         }
 
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
         $secret_key = iro_opt('turnstile_secret_key');
         $token = sanitize_text_field($_POST['cf-turnstile-response']);
         $ip = get_the_user_ip();
 
-        $response = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'body' => [
-                'secret' => $secret_key,
-                'response' => $token,
-                'remoteip' => $ip,
-            ],
-        ]);
+        $response = $turnstile->verify($token, $ip);
 
-        if (is_wp_error($response)) {
+        if ($response['success'] === false) {
             $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
             return $errors;
         }
 
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        
-        if (!$body['success']) {
+        if (!$response['success']) {
             $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
         }
 
