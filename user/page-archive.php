@@ -807,7 +807,7 @@ $categories = get_categories(array(
 
 foreach ($categories as $category) {
     $recent_posts = get_posts(array(
-        'category' => $category->term_id,
+        'category__in' => $category->term_id,
         'numberposts' => 5,       // 最新5篇文章? 以后添加单独设置项
         'orderby' => 'date',
         'order' => 'DESC'
