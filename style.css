@@ -635,6 +635,7 @@ blockquote:after {
 .nav-search-wrapper {
   gap: 3px;
   width: auto;
+  height: 45px;
   max-width: calc(100% - 400px);
   position: relative;
   overflow: hidden;
@@ -773,6 +774,8 @@ nav .menu > li .sub-menu a {
 
 /* 搜索分隔线和搜索框 */
 .nav-search-divider {
+  margin-left: 4px;
+  margin-right: 4px;
   width: 1px;
   height: 24px;
   background-color: rgba(0, 0, 0, 0.1);
@@ -784,17 +787,23 @@ nav .menu > li .sub-menu a {
   display: flex;
   align-items: center;
   transition: all .4s ease-in-out;
+  height: 100%;
 }
 
 .searchbox.js-toggle-search i,.bg-switch i{
   color: var(--theme-skin, #505050);
   cursor: pointer;
   transition: all .4s ease-in-out;
-  height: auto;
+  height: 100%;
   font-size: 16px;
-  width: auto;
+  width: fit-content;
+  min-width: 33px;
+  aspect-ratio: 1 / 1;
   border-radius: 50px;
-  padding: 11px 12px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .searchbox.js-toggle-search i:hover,.bg-switch i:hover {
@@ -805,7 +814,7 @@ nav .menu > li .sub-menu a {
 
 /* 用户菜单区域 */
 .user-menu-wrapper {
-  /* width: fit-content; */
+  width: 45px;
   white-space: nowrap;
   align-items: stretch;
 }
@@ -816,6 +825,7 @@ nav .menu > li .sub-menu a {
   max-height: 35px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .header-user-avatar a{
