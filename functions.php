@@ -12,7 +12,7 @@ include_once('inc/classes/IpLocation.php');
 
 define('IRO_VERSION', wp_get_theme()->get('Version'));
 define('BUILD_VERSION', '3');
-define('INT_VERSION', '20.0.4');
+define('INT_VERSION', '20.0.5');
 define('SSU_URL', 'https://api.fuukei.org/update/ssu.json');
 
 function check_php_version($preset_version)
@@ -61,11 +61,11 @@ $core_lib_basepath = iro_opt('core_library_basepath') ? get_template_directory_u
 if (iro_opt('php_notice_filter') != 'inner') {
 
     if (iro_opt('php_notice_filter','normal') == 'normal') { //仅显示严重错误
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+        error_reporting(E_ALL & ~E_DEPRECATED);
         ini_set('display_errors', '1');
     }
     if (iro_opt('php_notice_filter') == 'all') { //屏蔽大部分错误
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
         ini_set('display_errors', '0');
     }
 }
@@ -757,8 +757,21 @@ function get_author_class($comment_author_email, $user_id)
 /**
  * post views
  */
-function restyle_text($number)
+function restyle_text($input)
 {
+    // 类型修复
+    if (is_numeric($input)) {
+        $number = (float)$input;
+    } elseif (is_string($input)) {
+        if (preg_match('/[-+]?[0-9]*\.?[0-9]+/', $input, $matches)) {
+            $number = (float)$matches[0];
+        } else {
+            $number = 0;
+        }
+    } else {
+        $number = 0;
+    }
+
     switch (iro_opt('statistics_format')) {
         case "type_2": //23,333 次访问
             return number_format($number);
@@ -801,13 +814,15 @@ function get_post_views($post_id)
     if ((function_exists('wp_statistics_pages')) && (iro_opt('statistics_api') == 'wp_statistics')) {
         // 使用 WP-Statistics 插件获取浏览量
         $views = wp_statistics_pages('total', 'uri', $post_id);
-        return empty($views) ? 0 : $views;
+        return empty($views) ? 0 : intval($views);
     } else {
         // 使用文章自定义字段获取浏览量
         $views = get_post_meta($post_id, 'views', true);
+        if(empty($views)){
+            return 0;
+        }
         // 格式化浏览量
-        $views = restyle_text($views);
-        return empty($views) ? 0 : $views;
+        return restyle_text(intval($views));
     }
 }
 
@@ -1159,14 +1174,16 @@ add_filter('wp_new_user_notification_email', 'new_user_message_fix');
  */
 function comment_mail_notify($comment_id)
 {
-    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'poi';
+    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'no-reply';
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ?: '';
-    $spam_confirmed = $comment->comment_approved;
+    
+    // 获取评论的审核状态，如果评论无需审核则直接发送
+    $comment_approved = $comment->comment_approved;
     $mail_notify = iro_opt('mail_notify') ? get_comment_meta($parent_id, 'mail_notify', false) : false;
     $admin_notify = iro_opt('admin_notify') ? '1' : ((isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0');
     
-    if (($parent_id != '') && ($spam_confirmed != 'spam') && ($admin_notify != '0') && (!$mail_notify)) {
+    if (($parent_id != '') &&($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0') && (!$mail_notify)) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
         $to = trim(get_comment($parent_id)->comment_author_email);
         
@@ -1297,6 +1314,17 @@ function comment_mail_notify($comment_id)
     }
 }
 add_action('comment_post', 'comment_mail_notify');
+
+/*
+ * 评论通过审核时发送通知
+ */
+add_action('wp_set_comment_status', 'comment_status_changed_notify', 10, 2);
+
+function comment_status_changed_notify($comment_id, $comment_status) {
+    if ($comment_status === 'approve') {
+        comment_mail_notify($comment_id);
+    }
+}
 
 /*
  * 链接新窗口打开
@@ -2361,27 +2389,68 @@ if (iro_opt('sakura_widget')) {
     }
 }
 
-// 评论Markdown解析
+
+/**
+ * 安全解析 WordPress 评论中的 Markdown 内容。
+ * 此函数应挂载到 `preprocess_comment` 过滤器。
+ *
+ * @param array $incoming_comment 评论数据数组。
+ * @return array 修改后的评论数据数组。
+ */
 function markdown_parser($incoming_comment)
 {
     global $wpdb, $comment_markdown_content;
     global $allowedtags;
 
+    /** 
+     * 检查是否启用了 Markdown（假设前端评论表单中有 enable_markdown 字段）
+     * Check if Markdown is enabled (assuming there is an enable_markdown field in the frontend comment form)
+     */ 
     $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
-
-    if ($enable_markdown) {
-        $may_script = array(
-            '/<script.*?>.*?<\/script>/is', //<script>标签
-            '/on\w+\s*=\s*(["\']).*?\1/is',
-            '/on\w+\s*=\s*[^\s>]+/is'//on属性
-        );
     
-        foreach ($may_script as $pattern) {
-            if (preg_match($pattern, $incoming_comment['comment_content'])) {
-                siren_ajax_comment_err(__("Please do not try to use Javascript in your comments!")); //恶意内容警告
-                return ($incoming_comment);
-            }
+    /**
+     * 初步安全检查
+     * Initial security checks
+     */
+    $may_script = array(
+        '/<script\b[^>]*>(.*?)<\/script>/is', // 阻止 <script> 标签
+        '/<[^>]+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/is', // 阻止 HTML 属性中的 onxxx 事件
+        '/\s(?:href|src)\s*=\s*(?:"(?:javascript|data):[^"]*"|\'(?:javascript|data):[^\']*\'|(?:javascript|data):[^\s>]+)/is', // 阻止带引号的 javascript: 或 data: 协议的 href/src 属性
+    );
+    
+    foreach ($may_script as $pattern) {
+        if (preg_match($pattern, $incoming_comment['comment_content'])) {
+            siren_ajax_comment_err(__("For security reasons, JavaScript is not allowed in comments.")); //恶意内容警告
+            return ($incoming_comment);
         }
+    }
+    
+    /**
+     * 启用 Markdown（如果启用）
+     * Enable Markdown (if enabled)
+     * 这里使用 wp_kses 来过滤 HTML 标签，允许的标签在 $allowedtags 中定义。
+     * Here, we use wp_kses to filter HTML tags, and the allowed tags are defined in $allowedtags.
+     */
+    if ($enable_markdown) {
+        include 'inc/Parsedown.php';
+        $Parsedown = new Parsedown();
+        // 核心安全
+        // Set safe mode to true to prevent unsafe HTML tags
+        $Parsedown->setSafeMode(true);
+
+        // 禁用自动链接
+        // Disable automatic linking of URLs
+        $Parsedown->setUrlsLinked(false); 
+
+        $incoming_comment['comment_content'] = $Parsedown->text($incoming_comment['comment_content']);
+        /**
+         * 使用 wp_kses 过滤 HTML 标签
+         * Use wp_kses to filter HTML tags
+         * 使用全局的 $allowedtags 变量来定义允许的 HTML 标签。
+         * Use the global $allowedtags variable to define allowed HTML tags.
+         */
+        // kses 过滤
+        // Use wp_kses to filter the comment content
         $incoming_comment['comment_content'] = wp_kses($incoming_comment['comment_content'], $allowedtags); // 自行调用kses
     } else {
         $incoming_comment['comment_content'] = htmlspecialchars($incoming_comment['comment_content'], ENT_QUOTES, 'UTF-8'); //未启用markdown直接转义
@@ -2395,12 +2464,6 @@ function markdown_parser($incoming_comment)
     // }
     $comment_markdown_content = $incoming_comment['comment_content'];
 
-    if ($enable_markdown) { //未启用markdown不做解析
-        include 'inc/Parsedown.php';
-        $Parsedown = new Parsedown();
-        $Parsedown->setSafeMode(false);
-        $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
-    }
     return $incoming_comment;
 }
 add_filter('preprocess_comment', 'markdown_parser');
