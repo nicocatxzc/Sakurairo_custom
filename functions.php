@@ -2057,6 +2057,10 @@ add_action('admin_init', 'theme_folder_check_on_admin_init');
 add_action('wp_ajax_update_theme_option', 'update_theme_option');
 function update_theme_option()
 {
+    if (!isset($_POST['option']) || !isset($_POST['value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $option = $_POST['option'];
     $value = sanitize_text_field($_POST['value']);
     iro_opt_update($option, $value);
@@ -2067,6 +2071,10 @@ function update_theme_option()
 add_action('wp_ajax_update_theme_admin_notice_meta', 'update_theme_admin_notice_meta');
 function update_theme_admin_notice_meta()
 {
+    if (!isset($_POST['user_id']) || !isset($_POST['meta_key']) || !isset($_POST['meta_value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $user_id = $_POST['user_id'];
     $meta_key = $_POST['meta_key'];
     $meta_value = sanitize_text_field($_POST['meta_value']);
