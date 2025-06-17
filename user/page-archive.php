@@ -813,7 +813,7 @@ foreach ($categories as $category) {
         'order' => 'DESC'
     ));
     
-    echo '<section class="category-card" data-categoryId="' . $category->term_id . '">';
+    echo '<section class="category-card" data-categoryid="' . $category->term_id . '">';
     echo '<div class="category-header">';
     echo '<h3 class="category-name">' . $category->name . '</h3>';
     echo '<span class="category-count">' . $category->count . ' ' . __('article', 'sakurairo') . '</span>';
