@@ -11,8 +11,6 @@ class Turnstile
     return <<<JS
         <script>
             function _turnstileOnLoad() {
-                console.debug('Turnstile called');
-
                 turnstile.render('.cf-turnstile', {
                     sitekey: `{$site_key}`,
                     theme: `{$theme}`,
