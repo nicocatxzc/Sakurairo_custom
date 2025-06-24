@@ -86,7 +86,7 @@ export default function conversationBlock() {
                             onClick={toggleDirection}
                         />
                     </ToolbarGroup>
-                    
+
                 </BlockControls>
                 <div
                     {...blockProps}
@@ -116,7 +116,7 @@ export default function conversationBlock() {
 
     registerBlockType("sakurairo/conversations-block", {
         title: lang.blockTitle,
-        icon: "format-status",
+        icon: createElement('i', { className: 'fa-brands fa-comments' }),
         category: "common",
         attributes: {
             avatar: {
