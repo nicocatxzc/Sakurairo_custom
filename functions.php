@@ -445,6 +445,10 @@ function save_custom_meta_box($post_id) {
 }
 add_action('save_post', 'save_custom_meta_box');
 
+
+// 载入区块编辑器修改
+include_once('inc/blocks/iro_blocks.php');
+
 //主查询逻辑，类型只能多不能少，主查询通过后模版页查询才能干扰拓展
 function customize_query_functions($query) {
     //只影响前端
