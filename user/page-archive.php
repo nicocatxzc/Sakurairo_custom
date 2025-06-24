@@ -5,7 +5,6 @@
 get_header();
 ?>
 
-<link href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css?family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
 <style>
     /* 基础布局 */
     .site-content {
