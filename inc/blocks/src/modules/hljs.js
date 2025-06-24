@@ -1,12 +1,12 @@
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import {useBlockProps,BlockControls,PlainText,} from '@wordpress/block-editor';
+import {ToolbarGroup,ToolbarDropdownMenu,} from '@wordpress/components';
 import { Fragment } from '@wordpress/element';
 
 let lang = {}
 
-switch (iroBlockEditor.language || window.navigator.language || "zh-CN") {
+switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replace("_", "-")) {
     case "zh-CN":
     case "zh-Hans":
         lang = {
@@ -43,6 +43,7 @@ switch (iroBlockEditor.language || window.navigator.language || "zh-CN") {
 			hljsAuto: "Auto Detect"
         };
 }
+console.log()
 
 const languages = [
 	{ label: lang.hljsAuto || "Auto Detect", value: '' },
@@ -75,40 +76,45 @@ const languages = [
 	{ label: 'Markdown', value: 'markdown' },
 ];
 
-export default function hljsSupport () {
-	function CodeEdit ( { attributes, setAttributes } ) {
+export default function hljsSupport() {
+	function CodeEdit({ attributes, setAttributes }) {
 		const { content, language } = attributes;
 		const blockProps = useBlockProps();
-	
+
 		return (
 			<Fragment>
-				<InspectorControls>
-					<PanelBody title={ lang.hljsTitle }>
-						<SelectControl
-							label={ lang.hljsLabel }
-							value={ language }
-							options={ languages }
-							onChange={ ( lang ) => setAttributes( { language: lang } ) }
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarDropdownMenu
+							label={lang.hljsTitle}
+							controls={languages.map(({ value, label }) => ({
+								title: label,
+								icon: false,
+								onClick: () => setAttributes({ language: value }),
+								isActive: language === value,
+							}))}
 						/>
-					</PanelBody>
-				</InspectorControls>
-				<pre { ...blockProps }>
-					<RichText
-						tagName="code"
-						value={ content }
-						onChange={ ( newContent ) => setAttributes( { content: newContent } ) }
-						placeholder={ lang.hljsPlaceholder }
-					/>
+					</ToolbarGroup>
+				</BlockControls>
+
+				<pre {...blockProps}>
+					<code className={language ? `language-${language}` : ''}>
+						<PlainText
+							value={content}
+							onChange={(newContent) => setAttributes({ content: newContent })}
+							placeholder={lang.hljsPlaceholder}
+						/>
+					</code>
 				</pre>
 			</Fragment>
 		);
 	}
-	
-	const extendCoreCodeBlock = ( settings ) => {
-		if ( settings.name !== 'core/code' ) {
+
+	const extendCoreCodeBlock = (settings) => {
+		if (settings.name !== 'core/code') {
 			return settings;
 		}
-	
+
 		return {
 			...settings,
 			attributes: {
@@ -118,10 +124,10 @@ export default function hljsSupport () {
 					default: '',
 				},
 			},
-			edit:CodeEdit
+			edit: CodeEdit,
 		};
 	};
-	
+
 	addFilter(
 		'blocks.registerBlockType',
 		'sakurairo/code-language-support',
