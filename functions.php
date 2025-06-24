@@ -2057,6 +2057,10 @@ add_action('admin_init', 'theme_folder_check_on_admin_init');
 add_action('wp_ajax_update_theme_option', 'update_theme_option');
 function update_theme_option()
 {
+    if (!isset($_POST['option']) || !isset($_POST['value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $option = $_POST['option'];
     $value = sanitize_text_field($_POST['value']);
     iro_opt_update($option, $value);
@@ -2067,6 +2071,10 @@ function update_theme_option()
 add_action('wp_ajax_update_theme_admin_notice_meta', 'update_theme_admin_notice_meta');
 function update_theme_admin_notice_meta()
 {
+    if (!isset($_POST['user_id']) || !isset($_POST['meta_key']) || !isset($_POST['meta_value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $user_id = $_POST['user_id'];
     $meta_key = $_POST['meta_key'];
     $meta_value = sanitize_text_field($_POST['meta_value']);
@@ -3301,6 +3309,189 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     }
     add_filter('authenticate', 'checkVaptchaAction', 20, 3);
+} else if ((iro_opt('captcha_select') === 'turnstile') && (!empty(iro_opt("turnstile_site_key")) && !empty(iro_opt("turnstile_secret_key")))) {
+    function turnstile_init() {
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        echo $turnstile->html();
+        echo $turnstile->script();
+    }
+    add_action('login_form', 'turnstile_init');
+    add_action('register_form', 'turnstile_init');
+    add_action('lostpassword_form', 'turnstile_init');
+
+    function verify_turnstile($user, $username = '', $password = '') {
+        // Skip captcha check if it's a passwordless login
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $user;
+        }
+        if (isset($_POST['skip_captcha_check']) && $_POST['skip_captcha_check'] == '1') {
+            return $user;
+        }
+        
+        if (empty($_POST['cf-turnstile-response'])) {
+            return new WP_Error('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+
+        $response = $turnstile->verify($token, $ip);
+        if ($response['success'] === false) {
+            return new WP_Error('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+        }
+
+        if (!$response['success']) {
+            return new WP_Error('invalid_turnstile','<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $user;
+    }
+    add_filter('authenticate', 'verify_turnstile', 20, 3);
+
+    function turnstile_lostpassword_check($errors) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_action('lostpassword_post', 'turnstile_lostpassword_check');
+
+    function turnstile_registration_check($errors, $sanitized_user_login, $user_email) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_filter('registration_errors', 'turnstile_registration_check', 10, 3);
+
+    function add_captcha_check_script() {
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var loginForm = document.getElementById('loginform');
+        if (!loginForm) return;
+        
+        // Add hidden field for skipping captcha check
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'skip_captcha_check';
+        hiddenField.id = 'skip_captcha_check';
+        hiddenField.value = '0';
+        loginForm.appendChild(hiddenField);
+        
+        // Get elements once at initialization
+        var passwordField = document.getElementById('user_pass');
+        var captchaImg = document.getElementById('captchaimg');
+        var yzmField = document.getElementById('yzm');
+        var turnstileWidget = document.querySelector('.cf-turnstile');
+        
+        // Find the captcha container (the parent element that contains the captcha)
+        var captchaContainer = null;
+        if (yzmField) {
+            // Try to find the parent paragraph or label
+            captchaContainer = yzmField.closest('p') || yzmField.closest('label');
+            if (!captchaContainer && yzmField.parentNode) {
+                captchaContainer = yzmField.parentNode;
+            }
+        } else if (turnstileWidget) {
+            captchaContainer = turnstileWidget.parentNode;
+        }
+        
+        function checkPasswordField() {
+            // Check if password field is hidden or not present
+            var isPasswordVisible = passwordField && 
+                                    passwordField.style.display !== 'none' && 
+                                    passwordField.offsetParent !== null;
+            
+            if (!isPasswordVisible) {
+                // Hide captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = 'none';
+                }
+                
+                hiddenField.value = '1';
+            } else {
+                // Show captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = '';
+                }
+                
+                hiddenField.value = '0';
+            }
+        }
+        
+        // Initial check
+        checkPasswordField();
+        
+        // Set up a less frequent interval to reduce performance impact
+        var checkInterval = setInterval(checkPasswordField, 500);
+        
+        // Use MutationObserver for efficiency
+        if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(checkPasswordField);
+            
+            observer.observe(loginForm, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class', 'display']
+            });
+        }
+        
+        // Add event listener for form submission
+        loginForm.addEventListener('submit', checkPasswordField);
+    });
+    </script>
+    <?php
+}
 }
 
 // 获取访客 IP
@@ -3372,11 +3563,9 @@ function get_archive_info($get_page = false) {
         // 判断页面类型
         if ($post->post_type == 'post') {
             $post_type = 'article';
-        }
-        if ($post->post_type == 'shuoshuo') {
+        } elseif ($post->post_type == 'shuoshuo') {
             $post_type = 'shuoshuo';
-        }
-        if ($post->post_type == 'page') {
+        } else {
             $post_type = 'page';
         }
         
@@ -3396,6 +3585,9 @@ function get_archive_info($get_page = false) {
         if ($post->post_password != ''){
             $post->post_title = __("It's a secret",'sakurairo'); // 隐藏受密码保护文章的标题
         }
+
+        $category_ids = wp_get_post_categories($post->ID) ?: [];
+
         $post = [ //仅保存需要的数据（归档、展示区）
             'post_title'    => $post->post_title,
             'post_author'     => $post->post_author,
@@ -3403,6 +3595,7 @@ function get_archive_info($get_page = false) {
             'post_modified'     => $post->post_modified,
             'comment_count' => $comments,
             'guid'          => $post->guid,
+            'categories'    => $category_ids,
             'meta' => [
                 'views' => $views,
                 'words' => $words,

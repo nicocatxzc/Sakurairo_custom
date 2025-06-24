@@ -83,15 +83,15 @@ namespace IROChatGPT {
                 [
                     "role"    => "user",
                     "content" => "Title：" . $post->post_title . "\n\n" .
-                                 "Content：" . mb_substr(
-                                     preg_replace(
-                                         "/(\\s)\\s{2,}/",
-                                         "$1",
-                                         wp_strip_all_tags(apply_filters('the_content', $post->post_content))
-                                     ),
-                                     0,
-                                     iro_opt("chatgpt_max_tokens",7000)
-                                 ),
+                        "Content：" . mb_substr(
+                            preg_replace(
+                                "/(\\s)\\s{2,}/",
+                                "$1",
+                                wp_strip_all_tags(apply_filters('the_content', $post->post_content))
+                            ),
+                            0,
+                            iro_opt("chatgpt_max_tokens", 7000)
+                        ),
                 ],
             ],
         ];
@@ -118,6 +118,11 @@ namespace IROChatGPT {
         error_log("GPT error: " . $chat);
 
         $decoded_chat = json_decode($chat);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("JSON decode error: " . json_last_error_msg());
+        }
+
         if (is_null($decoded_chat) || isset($decoded_chat->error)) {
             throw new Exception("ChatGPT error: " . json_encode($decoded_chat));
         }
@@ -138,25 +143,25 @@ namespace IROChatGPT {
     /**
      * 生成文章的复杂名词注释
      */
-    function generate_post_annotations($post_id) {
-        $post = get_post($post_id);
+    function generate_post_annotations($post)
+    {
         // 获取API密钥
         $api_key = iro_opt('chatgpt_access_token', '');
         if (empty($api_key)) {
             error_log('IRO ChatGPT: API密钥未设置');
             return false;
         }
-        
+
         // 处理文章内容
         $content = wp_strip_all_tags($post->post_content);
         if (strlen($content) < 100) {
             error_log('IRO ChatGPT: 文章内容太短，跳过注释生成');
             return false;
         }
-        
+
         // 调用ChatGPT API生成注释
         $annotations = call_chatgpt_for_annotations($content);
-        
+
         // 保存注释到文章自定义字段
         if (!empty($annotations)) {
             error_log('IRO ChatGPT: 为文章 ' . $post->ID . ' 生成了 ' . count($annotations) . ' 个注释');
@@ -171,20 +176,21 @@ namespace IROChatGPT {
     /**
      * 调用ChatGPT API生成复杂名词注释
      */
-    function call_chatgpt_for_annotations($content) {
+    function call_chatgpt_for_annotations($content)
+    {
         // 使用正确的选项名获取API配置
         $api_endpoint = iro_opt('chatgpt_endpoint', 'https://api.openai.com/v1/chat/completions');
         $api_key = iro_opt('chatgpt_access_token', '');
         $model = iro_opt('chatgpt_model', 'gpt-4o-mini');
-        
+
         // 如果找不到API密钥，返回空数组
         if (empty($api_key)) {
             error_log('IROChatGPT: No API key found');
             return [];
         }
-        
-        $max_length = iro_opt("chatgpt_max_tokens",7000);
-        
+
+        $max_length = iro_opt("chatgpt_max_tokens", 7000);
+
         // 截取内容
         $paragraphs = preg_split('/\n\s*\n/', $content);
         $segments = [];
@@ -222,7 +228,7 @@ namespace IROChatGPT {
                 'model' => $model,
                 'messages' => [
                     [
-                        'role' => 'system', 
+                        'role' => 'system',
                         'content' => '你是一个专业的文章分析助手，擅长识别文章中专业术语、复杂概念、事件、社会热点、网络黑话烂梗热词、晦涩难懂等内容并提供简明解释。'
                     ],
                     [
@@ -305,7 +311,8 @@ namespace IROChatGPT {
     /**
      * 在前端显示文章中的复杂名词注释
      */
-    function display_term_annotations($original_content) { // Rename param for clarity
+    function display_term_annotations($original_content)
+    { // Rename param for clarity
         global $post;
         // === 修复：防止 $post 为 null ===
         if (empty($post) || !isset($post->ID)) {
@@ -322,7 +329,7 @@ namespace IROChatGPT {
 
         // Shortcode handling: Replace shortcodes with placeholders
         $shortcode_placeholders = [];
-        $content_with_placeholders = preg_replace_callback('/(\\[\\/?[^\\]]+\\])/', function($matches) use (&$shortcode_placeholders) {
+        $content_with_placeholders = preg_replace_callback('/(\\[\\/?[^\\]]+\\])/', function ($matches) use (&$shortcode_placeholders) {
             $token = '###SHORTCODE_' . count($shortcode_placeholders) . '###';
             $shortcode_placeholders[$token] = $matches[1];
             return $token;
@@ -330,7 +337,7 @@ namespace IROChatGPT {
 
         $terms = array_keys($annotations);
         // Sort terms by length descending *for replacement ordering later*
-        usort($terms, function($a, $b) {
+        usort($terms, function ($a, $b) {
             return mb_strlen($b) - mb_strlen($a);
         });
 
@@ -387,7 +394,7 @@ namespace IROChatGPT {
                 }
 
                 // Sort matches found in this node purely by position
-                usort($matchesInNode, function($a, $b) {
+                usort($matchesInNode, function ($a, $b) {
                     return $a['pos'] <=> $b['pos'];
                 });
 
@@ -459,7 +466,7 @@ namespace IROChatGPT {
                                 $termEscaped = htmlspecialchars($term, ENT_QUOTES);
                                 // Use locale-specific brackets
                                 $supHtml = '<sup class="iro-term-annotation" data-term="' . $termEscaped . '" data-id="' . $annotationIndex . '">' . $opening_bracket . $annotationIndex . $closing_bracket . '</sup>';
-                                
+
                                 // Store replacement info, keyed by position
                                 $nodeReplacements[$pos] = [
                                     'len' => $termLen,
@@ -486,8 +493,8 @@ namespace IROChatGPT {
                             $appliedHtmlPlaceholders[$placeholder] = $rData['html'];
 
                             $currentText = mb_substr($currentText, 0, $pos) .
-                                           $placeholder .
-                                           mb_substr($currentText, $pos + $rData['len']);
+                                $placeholder .
+                                mb_substr($currentText, $pos + $rData['len']);
 
                             $appliedTerms[] = $term; // Mark as globally applied now
                             $modified = true;
@@ -498,7 +505,7 @@ namespace IROChatGPT {
                         // Replace placeholders with actual HTML using DOM fragment
                         $fragment = $dom->createDocumentFragment();
                         $parts = preg_split('/({#HTML_REPLACEMENT_\\d+#})/u', $currentText, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                        
+
                         foreach ($parts as $part) {
                             if (isset($appliedHtmlPlaceholders[$part])) {
                                 // It's a placeholder, append the corresponding HTML fragment
@@ -526,17 +533,17 @@ namespace IROChatGPT {
                 // Fallback: try to get content from body if wrapper is missing
                 $body = $dom->getElementsByTagName('body')->item(0);
                 if ($body) {
-                     foreach ($body->childNodes as $child) {
+                    foreach ($body->childNodes as $child) {
                         $newContent .= $dom->saveHTML($child);
-                     }
+                    }
                 } else {
-                     // Absolute fallback: save entire document (might include unwanted tags)
-                     $newContent = $dom->saveHTML();
-                     // Attempt cleanup
-                     $newContent = preg_replace('/^<!DOCTYPE.*?<html>.*?<body>/is', '', $newContent);
-                     $newContent = preg_replace('/<\/body><\\/html>$/is', '', $newContent);
-                     $newContent = preg_replace('/^<div id="iro-chatgpt-wrapper">/i', '', $newContent);
-                     $newContent = preg_replace('/<\/div>$/i', '', $newContent);
+                    // Absolute fallback: save entire document (might include unwanted tags)
+                    $newContent = $dom->saveHTML();
+                    // Attempt cleanup
+                    $newContent = preg_replace('/^<!DOCTYPE.*?<html>.*?<body>/is', '', $newContent);
+                    $newContent = preg_replace('/<\/body><\\/html>$/is', '', $newContent);
+                    $newContent = preg_replace('/^<div id="iro-chatgpt-wrapper">/i', '', $newContent);
+                    $newContent = preg_replace('/<\/div>$/i', '', $newContent);
                 }
             }
 
@@ -546,7 +553,6 @@ namespace IROChatGPT {
             }
 
             return $newContent;
-
         } catch (Exception $e) { // Removed leading \
             error_log("IROChatGPT 错误: " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine());
             return $original_content; // Return original on error
