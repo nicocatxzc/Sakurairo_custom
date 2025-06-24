@@ -43,7 +43,6 @@ switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replac
 			hljsAuto: "Auto Detect"
         };
 }
-console.log()
 
 const languages = [
 	{ label: lang.hljsAuto || "Auto Detect", value: '' },
