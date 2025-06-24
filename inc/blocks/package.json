@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "build": "wp-scripts build src/index.js"
+  },
+  "dependencies": {
+    "@wordpress/block-editor": "^14.20.0",
+    "@wordpress/blocks": "^14.14.0",
+    "@wordpress/components": "^29.11.0",
+    "@wordpress/element": "^6.25.0",
+    "@wordpress/hooks": "^4.25.0",
+    "@wordpress/i18n": "^5.25.0",
+    "@wordpress/scripts": "^30.18.0",
+    "lodash": "^4.17.21"
+  },
+  "name": "iro_blocks",
+  "version": "1.0.0",
+  "description": "Sakurairo主题古腾堡编辑器支持",
+  "main": "index.js",
+  "author": "nicocatxzc",
+  "license": "GPL-2.0-or-later"
+}
