@@ -85,6 +85,7 @@ export default function bilibiliBlock(){
                                     sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"
                                     allowFullScreen
                                     style={{
+                                        pointerEvents: "none",
                                         position: "absolute",
                                         width: "100%",
                                         height: "100%",
