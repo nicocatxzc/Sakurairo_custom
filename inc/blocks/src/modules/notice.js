@@ -1,11 +1,10 @@
 import { __ } from '@wordpress/i18n';
-import { registerBlockType } from '@wordpress/blocks';
+import { registerBlockType,createBlock } from '@wordpress/blocks';
 import {useBlockProps,BlockControls,RichText,} from '@wordpress/block-editor';
 import {ToolbarGroup,ToolbarDropdownMenu,} from '@wordpress/components';
-import { Fragment } from '@wordpress/element';
+import { Fragment,RawHTML } from '@wordpress/element';
 
-let lang = {}
-
+let lang = {};
 switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replace("_", "-")) {
     case "zh-CN":
     case "zh-Hans":
@@ -13,7 +12,11 @@ switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replac
             blockTitle: "提示块",
             typeTitle: "提示类型",
             typeLabel: "类型",
-            placeholder: "此处输入内容..."
+            placeholder: "此处输入内容...",
+            taskLabel: "任务提示",
+            warningLabel: "警告提示",
+            nowayLabel: "禁止提示",
+            buyLabel: "允许提示",
         };
         break;
     case "zh-TW":
@@ -23,7 +26,11 @@ switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replac
             blockTitle: "提示區塊",
             typeTitle: "提示類型",
             typeLabel: "類型",
-            placeholder: "此處輸入內容..."
+            placeholder: "此處輸入內容...",
+            taskLabel: "任務提示",
+            warningLabel: "警告提示",
+            nowayLabel: "禁止提示",
+            buyLabel: "允許提示",
         };
         break;
     case "ja":
@@ -32,7 +39,11 @@ switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replac
             blockTitle: "ヒントブロック",
             typeTitle: "ヒントタイプ",
             typeLabel: "タイプ",
-            placeholder: "ここに内容を入力..."
+            placeholder: "ここに内容を入力...",
+            taskLabel: "タスク",
+            warningLabel: "警告",
+            nowayLabel: "禁止",
+            buyLabel: "許可",
         };
         break;
     default:
@@ -40,28 +51,32 @@ switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replac
             blockTitle: "Callout Block",
             typeTitle: "Callout Type",
             typeLabel: "Type",
-            placeholder: "Enter content here..."
+            placeholder: "Enter content here...",
+            taskLabel: "Task",
+            warningLabel: "Warning",
+            nowayLabel: "Forbidden",
+            buyLabel: "Allowed",
         };
 }
 
 const TYPES = {
 	task: {
-		label: '任务提示',
+		label: lang.taskLabel,
 		icon: '<i class="fa-solid fa-clipboard-list"></i>',
 		className: 'task',
 	},
 	warning: {
-		label: '警告提示',
+		label: lang.warningLabel,
 		icon: '<i class="fa-solid fa-triangle-exclamation"></i>',
 		className: 'warning',
 	},
 	noway: {
-		label: '禁止提示',
+		label: lang.nowayLabel,
 		icon: '<i class="fa-solid fa-square-xmark"></i>',
 		className: 'noway',
 	},
 	buy: {
-		label: '允许提示',
+		label: lang.buyLabel,
 		icon: '<i class="fa-solid fa-square-check"></i>',
 		className: 'buy',
 	},
@@ -90,7 +105,7 @@ function edit({ attributes, setAttributes }) {
 			</BlockControls>
 
 			<div {...blockProps} className={`shortcodestyle ${typeInfo.className}`}>
-				<span dangerouslySetInnerHTML={{ __html: typeInfo.icon }} />
+				<RawHTML>{typeInfo.icon}</RawHTML>
 				<RichText
 					tagName="span"
 					value={content}
@@ -102,7 +117,7 @@ function edit({ attributes, setAttributes }) {
 	);
 }
 
-export default function noticeBlock(){
+export default function noticeBlock() {
 	registerBlockType('sakurairo/notice-block', {
 		title: lang.blockTitle,
 		description: '',
@@ -111,7 +126,8 @@ export default function noticeBlock(){
 		attributes: {
 			content: {
 				type: 'string',
-				source: 'text',
+				source: 'html',
+				selector: 'span',
 			},
 			type: {
 				type: 'string',
@@ -121,7 +137,13 @@ export default function noticeBlock(){
 		edit,
 		save({ attributes }) {
 			const { content, type } = attributes;
-			return `[${type}]${content}[/${type}]`;
+			const { icon, className } = TYPES[type];
+			return (
+				<div className={`shortcodestyle ${className}`}>
+					<RawHTML>{icon}</RawHTML>
+					<RichText.Content tagName="span" value={content} />
+				</div>
+			);
 		},
 	});
 }
