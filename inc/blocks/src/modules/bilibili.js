@@ -2,7 +2,7 @@ import { __ } from "@wordpress/i18n";
 import { registerBlockType } from "@wordpress/blocks";
 import { useBlockProps,RichText,BlockControls,InspectorControls} from "@wordpress/block-editor";
 import { PanelBody,TextControl} from "@wordpress/components";
-import { Fragment } from "@wordpress/element";
+import { Fragment,createElement } from "@wordpress/element";
 
 let lang = {};
 switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replace("_","-")) {
@@ -111,20 +111,48 @@ export default function bilibiliBlock(){
     registerBlockType("sakurairo/vbilibili", {
         title: lang.blockTitle,
         icon: createElement('i', { className: 'fa-brands fa-bilibili' }),
-        category: "embed",
+        category: "sakurairo",
         supports: {
             html: false,
         },
         attributes: {
             videoId: {
                 type: "string",
-                source: "text",
             },
         },
         edit,
         save({ attributes }) {
-            const id = attributes.videoId?.trim() || "";
-            return `[vbilibili]${id}[/vbilibili]`;
-        },
+			const id = attributes.videoId?.trim();
+			if (!id) return null;
+
+			let src = "";
+			if (/^av\d+$/i.test(id)) {
+				const avid = id.replace(/^av/i, "");
+				src = `https://player.bilibili.com/player.html?avid=${avid}&page=1&autoplay=0&danmaku=0`;
+			} else if (/^BV[a-zA-Z0-9]+$/.test(id)) {
+				src = `https://player.bilibili.com/player.html?bvid=${id}&page=1&autoplay=0&danmaku=0`;
+			}
+
+			if (!src) return null;
+
+			return (
+				<div style={{ position: "relative", padding: "30% 45%" }}>
+					<iframe
+						src={src}
+						sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"
+						allowFullScreen
+						style={{
+							position: "absolute",
+							width: "100%",
+							height: "100%",
+							left: 0,
+							top: 0,
+							border: "none",
+							overflow: "hidden",
+						}}
+					></iframe>
+				</div>
+			);
+		},
     });
 }

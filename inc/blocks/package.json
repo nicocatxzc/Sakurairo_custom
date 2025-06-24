@@ -6,6 +6,7 @@
     "@wordpress/block-editor": "^14.20.0",
     "@wordpress/blocks": "^14.14.0",
     "@wordpress/components": "^29.11.0",
+    "@wordpress/dom-ready": "^4.25.0",
     "@wordpress/element": "^6.25.0",
     "@wordpress/hooks": "^4.25.0",
     "@wordpress/i18n": "^5.25.0",

@@ -122,7 +122,7 @@ export default function noticeBlock() {
 		title: lang.blockTitle,
 		description: '',
 		icon: 'format-status',
-		category: 'common',
+		category: 'sakurairo',
 		attributes: {
 			content: {
 				type: 'string',
