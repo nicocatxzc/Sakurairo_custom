@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps,BlockControls,RichText,MediaUpload,MediaUploadCheck,} from '@wordpress/block-editor';
 import { ToolbarGroup,ToolbarButton,TextControl,} from '@wordpress/components';
-import { Fragment } from '@wordpress/element';
+import { Fragment,createElement } from '@wordpress/element';
 
 let lang = {};
 switch ((iroBlockEditor.language || window.navigator.language || "zh-CN").replace("_","-")) {
@@ -116,8 +116,8 @@ export default function conversationBlock() {
 
     registerBlockType("sakurairo/conversations-block", {
         title: lang.blockTitle,
-        icon: createElement('i', { className: 'fa-brands fa-comments' }),
-        category: "common",
+        icon: createElement('i', { className: 'fa-regular fa-comments' }),
+        category: "sakurairo",
         attributes: {
             avatar: {
                 type: "string",

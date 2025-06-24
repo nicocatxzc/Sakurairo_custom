@@ -165,7 +165,7 @@ export default function showcardBlock() {
 	registerBlockType('sakurairo/showcard-block', {
 		title: lang.blockTitle,
 		icon: 'id-alt',
-		category: 'common',
+		category: 'sakurairo',
 		attributes: {
 			icon: {
 				type: 'string',
