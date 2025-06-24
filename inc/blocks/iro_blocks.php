@@ -19,7 +19,7 @@ function iro_editor_vars( $hook ) {
         'user' => wp_get_current_user()->user_login,
     ];
 
-    // 注入 var 变量
+    // 传递变量
     wp_add_inline_script(
         'wp-blocks',
         'window.iroBlockEditor = ' . json_encode( $data ) . ';',
