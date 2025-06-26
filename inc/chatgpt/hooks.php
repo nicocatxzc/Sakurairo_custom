@@ -9,7 +9,7 @@ namespace IROChatGPT {
     define("DEFAULT_MODEL", "gpt-4o-mini");
     define('POST_METADATA_KEY', "ai_summon_excerpt");
 
-    function apply_chatgpt_hook()
+    function generate_post_summary(WP_Post $post)
     {
         if (iro_opt('chatgpt_article_summarize')) {
             $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
@@ -104,6 +104,7 @@ namespace IROChatGPT {
 
         return $decoded_chat->choices[0]->message->content;
     }
+
 
     add_filter('the_content', __NAMESPACE__ . '\display_term_annotations', 9);
 
