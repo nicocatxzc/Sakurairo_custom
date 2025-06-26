@@ -7,7 +7,6 @@ namespace IROChatGPT {
 
     define("DEFAULT_INIT_PROMPT", "请以作者的身份，以激发好奇吸引阅读为目的，结合文章核心观点来提取的文章中最吸引人的内容，为以下文章编写一个用词精炼简短、90字以内、与文章语言一致的引言。");
     define("DEFAULT_MODEL", "gpt-4o-mini");
-    define('POST_METADATA_KEY', "ai_summon_excerpt");
 
     function generate_post_summary(WP_Post $post)
     {
@@ -18,11 +17,37 @@ namespace IROChatGPT {
 
         try {
             $excerpt = summon_article_excerpt($post);
-            update_post_meta($post->ID, POST_METADATA_KEY, $excerpt);
             return $excerpt;
         } catch (\Throwable $th) {
             error_log('ChatGPT-excerpt-err:' . $th);
             return false;
+        }
+    }
+
+
+    function apply_chatgpt_hook()
+    {
+        if (iro_opt('chatgpt_article_summarize')) {
+            $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
+            add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
+                if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
+                    try {
+                        $excerpt = generate_post_summary($post);
+                        update_post_meta($post_id, "ai_summon_excerpt", $excerpt);
+                    } catch (\Throwable $th) {
+                        error_log('ChatGPT-excerpt-err:' . $th);
+                    }
+                }
+            }, 10, 3);
+            add_filter('the_excerpt', function (string $post_excerpt) {
+                global $post;
+                if (has_excerpt($post)) {
+                    return $post_excerpt;
+                } else {
+                    $ai_excerpt =  get_post_meta($post->ID, "ai_summon_excerpt", true);
+                    return $ai_excerpt ? $ai_excerpt : $post_excerpt;
+                }
+            });
         }
     }
 
