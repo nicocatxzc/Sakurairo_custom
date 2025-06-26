@@ -604,7 +604,7 @@ function render_summary_admin_page() {
     if (isset($_POST['generate_summary']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
         $post_id = intval($_POST['post_id']);
         $result = generate_post_summary(get_post($post_id));
-        remove_action('save_post', 'generate_post_summary'); // 防止无限循环
+        remove_action('save_post_post', 'generate_post_summary'); // 防止无限循环
         update_post_meta($post_id, "ai_summon_excerpt", $result);
         apply_chatgpt_hook(); // 恢复钩
         if ($result) {
