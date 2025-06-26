@@ -37,7 +37,7 @@ function sakurairo_editor_styles() {
 function iro_load_editor_block() {
     // 加载编辑器脚本
     wp_enqueue_script(
-        'mytheme-gutenberg-editor',
+        'iroBlockEditor',
         get_theme_file_uri( '/inc/blocks/build/index.js' ),
         [
             'wp-hooks',
