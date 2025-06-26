@@ -11,27 +11,18 @@ namespace IROChatGPT {
 
     function generate_post_summary(WP_Post $post)
     {
-        if (iro_opt('chatgpt_article_summarize')) {
-            $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
-            add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
-                if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
-                    try {
-                        $excerpt = summon_article_excerpt($post);
-                        update_post_meta($post_id, POST_METADATA_KEY, $excerpt);
-                    } catch (\Throwable $th) {
-                        error_log('ChatGPT-excerpt-err:' . $th);
-                    }
-                }
-            }, 10, 3);
-            add_filter('the_excerpt', function (string $post_excerpt) {
-                global $post;
-                if (has_excerpt($post)) {
-                    return $post_excerpt;
-                } else {
-                    $ai_excerpt =  get_post_meta($post->ID, POST_METADATA_KEY, true);
-                    return $ai_excerpt ? $ai_excerpt : $post_excerpt;
-                }
-            });
+        $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
+        if (in_array($post->ID, explode(",", $exclude_ids), false)) {
+            return;
+        }
+
+        try {
+            $excerpt = summon_article_excerpt($post);
+            update_post_meta($post->ID, POST_METADATA_KEY, $excerpt);
+            return $excerpt;
+        } catch (\Throwable $th) {
+            error_log('ChatGPT-excerpt-err:' . $th);
+            return false;
         }
     }
 
