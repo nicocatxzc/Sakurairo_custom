@@ -575,6 +575,9 @@ function render_annotations_meta_box($post) {
 }
 
 
+
+
+
 /**
  * 注册文章总结管理页面
  */
@@ -600,13 +603,13 @@ function render_summary_admin_page() {
     
     if (isset($_POST['generate_summary']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
         $post_id = intval($_POST['post_id']);
-        $result = generate_post_summary($post_id);
+        $result = generate_post_summary(get_post($post_id));
         
         if ($result) {
             $message = __('Successfully generated summary for the post!', 'sakurairo');
             $message_type = 'success';
         } else {
-            $message = __('Failed to generate summary. Please check API settings or view error logs.', 'sakurairo');
+            $message = __('Failed to generate summary. Please check API settings or view error logs.', 'sakurairo') . $result;
             $message_type = 'error';
         }
     } elseif (isset($_POST['delete_summary']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
