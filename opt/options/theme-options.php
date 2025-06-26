@@ -815,6 +815,70 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'footer_sakura',
+        'type' => 'switcher',
+        'title' => __('Footer Sakura Icon','sakurairo_csf'),
+        'label' => __('Enabled by default, sakura icon will appear on the footer','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
+        'id'    => 'footer_direction',
+        'type'  => 'select',
+        'title' => __('Footer Content Distribution','sakurairo_csf'),
+        'options'     => array(
+          'center'  => __('Center','sakurairo_csf'),
+          'columns'  => __('Two Columns','sakurairo_csf'),
+        ),
+        "default"=> "columns",
+      ),
+
+      array(
+        'id' => 'footer_info',
+        'type' => 'textarea',
+        'title' => __('Footer Info','sakurairo_csf'),
+        'desc' => __('Footer description text, supports HTML code','sakurairo_csf'),
+        'default' => 'Copyright &copy; by FUUKEI All Rights Reserved.'
+      ),
+
+      array(
+        'id' => 'footer_text_font',
+        'type' => 'text',
+        'title' => __('Footer Text Font','sakurairo_csf'),
+        'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
+        'default' => 'Noto Serif SC'
+      ),
+
+      array(
+        'id' => 'footer_load_occupancy',
+        'type' => 'switcher',
+        'title' => __('Footer Load Occupancy Query','sakurairo_csf'),
+        'label' => __('Load occupancy information will appear at the end of the page after turning it on. Not recommended in production environment.','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'footer_upyun',
+        'type' => 'switcher',
+        'title' => __('Footer Upyun League Logo','sakurairo_csf'),
+        'label' => __('Upyun Logo will appear at the end of the page after turning it on','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id'=>'footer_addition',
+        'type'     => 'code_editor',
+        'sanitize' => false,
+        'title' => __('Footer Addition','sakurairo_csf'),
+        'desc' => __('Add HTML code at the end of the page. Useful for adding customize JavaScript.','sakurairo_csf'),
+      ),
+
+      array(
+        'type' => 'subheading',
+        'content' => __('Music Player','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'aplayer_server',
         'type' => 'select',
         'title' => __('Footer Online Music Player','sakurairo_csf'),
@@ -904,65 +968,6 @@ $prefix = 'iro_options';
         'title' => __('Netease Cloud Music Cookies','sakurairo_csf'),
         'dependency' => array( 'aplayer_server', '==', 'netease', '', 'true' ),
         'desc' => __('If you want to play VIP music on Netease Cloud Music Platform, please fill in your account cookies in this option.','sakurairo_csf'),
-      ),
-
-      array(
-        'id' => 'footer_sakura',
-        'type' => 'switcher',
-        'title' => __('Footer Sakura Icon','sakurairo_csf'),
-        'label' => __('Enabled by default, sakura icon will appear on the footer','sakurairo_csf'),
-        'default' => true
-      ),
-
-      array(
-        'id'    => 'footer_direction',
-        'type'  => 'select',
-        'title' => __('Footer Content Distribution','sakurairo_csf'),
-        'options'     => array(
-          'center'  => __('Center','sakurairo_csf'),
-          'columns'  => __('Two Columns','sakurairo_csf'),
-        ),
-        "default"=> "columns",
-      ),
-
-      array(
-        'id' => 'footer_info',
-        'type' => 'textarea',
-        'title' => __('Footer Info','sakurairo_csf'),
-        'desc' => __('Footer description text, supports HTML code','sakurairo_csf'),
-        'default' => 'Copyright &copy; by FUUKEI All Rights Reserved.'
-      ),
-
-      array(
-        'id' => 'footer_text_font',
-        'type' => 'text',
-        'title' => __('Footer Text Font','sakurairo_csf'),
-        'desc' => __('Fill in the font name. For example: Noto Serif SC','sakurairo_csf'),
-        'default' => 'Noto Serif SC'
-      ),
-
-      array(
-        'id' => 'footer_load_occupancy',
-        'type' => 'switcher',
-        'title' => __('Footer Load Occupancy Query','sakurairo_csf'),
-        'label' => __('Load occupancy information will appear at the end of the page after turning it on. Not recommended in production environment.','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'footer_upyun',
-        'type' => 'switcher',
-        'title' => __('Footer Upyun League Logo','sakurairo_csf'),
-        'label' => __('Upyun Logo will appear at the end of the page after turning it on','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id'=>'footer_addition',
-        'type'     => 'code_editor',
-        'sanitize' => false,
-        'title' => __('Footer Addition','sakurairo_csf'),
-        'desc' => __('Add HTML code at the end of the page. Useful for adding customize JavaScript.','sakurairo_csf'),
       ),
 
       array(
@@ -1459,6 +1464,65 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'wave_effects',
+        'type' => 'switcher',
+        'title' => __('Cover Wave Effects','sakurairo_csf'),
+        'label' => __('Wave effect will appear at the bottom of the cover of the home page after turning on, and it will be forced off in the dark mode','sakurairo_csf'),
+        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'drop_down_arrow',
+        'type' => 'switcher',
+        'title' => __('Cover Dropdown Arrow','sakurairo_csf'),
+        'label' => __('Enabled by default, show a dropdown arrow at bottom of home cover','sakurairo_csf'),
+        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
+        'default' => true
+      ),
+
+      array(
+        'id' => 'drop_down_arrow_mobile',
+        'type' => 'switcher',
+        'title' => __('Cover Dropdown Arrow Display on Mobile Devices','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'label' => __('Drop down arrow will appear at the bottom of the mobile devices\' home cover after turning it on','sakurairo_csf'),
+        'default' => false
+      ),
+
+      array(
+        'id' => 'drop_down_arrow_color',
+        'type' => 'color',
+        'title' => __('Cover Dropdown Arrow Color','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'desc' => __('Customize the colors, light colors are recommended','sakurairo_csf'),
+        'default' => 'rgba(255,255,255,0.8)'
+      ),  
+
+      array(
+        'id' => 'drop_down_arrow_dark_color',
+        'type' => 'color',
+        'title' => __('Cover Dropdown Arrow Color (Dark Mode)','sakurairo_csf'),
+        'dependency' => array(
+                              array( 'drop_down_arrow', '==', 'true' ),
+                              array( 'cover_switch', '==', 'true', '', 'true' ),
+                        ),
+        'desc' => __('Customize the colors, dark colors are recommended','sakurairo_csf'),
+        'default' => 'rgba(51,51,51,0.8)'
+      ),  
+
+      array(
+        'type' => 'subheading',
+        'content' => __('Infos','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'infor_bar',
         'type' => 'switcher',
         'title' => __('Cover Info Bar','sakurairo_csf'),
@@ -1614,6 +1678,11 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'type' => 'subheading',
+        'content' => __('Cover Random Image','sakurairo_csf'),
+      ),
+
+      array(
         'id' => 'random_graphs_options',
         'type' => 'select',
         'title' => __('Cover Random Image Options','sakurairo_csf'),
@@ -1652,7 +1721,7 @@ $prefix = 'iro_options';
         'desc' => __('Fill in an URL','sakurairo_csf'),
         'dependency' => array( 
                               array( 'cover_switch', '==', 'true', '', 'true' ),
-                              array( 'random_graphs_options', '!=', 'local', '', 'true' ),
+                              array( 'random_graphs_options', '!=', 'gallery', '', 'true' ),
                         ),
         'default' => 'https://api.fuukei.org/random-img/default/pc.php',
         'sanitize' => false,
@@ -1666,7 +1735,7 @@ $prefix = 'iro_options';
         'dependency' => array( 
                               array( 'random_graphs_mts', '==', 'true' ),
                               array( 'cover_switch', '==', 'true', '', 'true' ),
-                              array( 'random_graphs_options', '!=', 'local', '', 'true' ),
+                              array( 'random_graphs_options', '!=', 'gallery', '', 'true' ),
                         ),
         'desc' => __('Fill in an URL','sakurairo_csf'),
         'default' => 'https://api.fuukei.org/random-img/default/mobile.php',
@@ -1717,58 +1786,9 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'wave_effects',
-        'type' => 'switcher',
-        'title' => __('Cover Wave Effects','sakurairo_csf'),
-        'label' => __('Wave effect will appear at the bottom of the cover of the home page after turning on, and it will be forced off in the dark mode','sakurairo_csf'),
-        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
-        'default' => false
+        'type' => 'subheading',
+        'content' => __('Cover Video','sakurairo_csf'),
       ),
-
-      array(
-        'id' => 'drop_down_arrow',
-        'type' => 'switcher',
-        'title' => __('Cover Dropdown Arrow','sakurairo_csf'),
-        'label' => __('Enabled by default, show a dropdown arrow at bottom of home cover','sakurairo_csf'),
-        'dependency' => array( 'cover_switch', '==', 'true', '', 'true' ),
-        'default' => true
-      ),
-
-      array(
-        'id' => 'drop_down_arrow_mobile',
-        'type' => 'switcher',
-        'title' => __('Cover Dropdown Arrow Display on Mobile Devices','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'label' => __('Drop down arrow will appear at the bottom of the mobile devices\' home cover after turning it on','sakurairo_csf'),
-        'default' => false
-      ),
-
-      array(
-        'id' => 'drop_down_arrow_color',
-        'type' => 'color',
-        'title' => __('Cover Dropdown Arrow Color','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'desc' => __('Customize the colors, light colors are recommended','sakurairo_csf'),
-        'default' => 'rgba(255,255,255,0.8)'
-      ),  
-
-      array(
-        'id' => 'drop_down_arrow_dark_color',
-        'type' => 'color',
-        'title' => __('Cover Dropdown Arrow Color (Dark Mode)','sakurairo_csf'),
-        'dependency' => array(
-                              array( 'drop_down_arrow', '==', 'true' ),
-                              array( 'cover_switch', '==', 'true', '', 'true' ),
-                        ),
-        'desc' => __('Customize the colors, dark colors are recommended','sakurairo_csf'),
-        'default' => 'rgba(51,51,51,0.8)'
-      ),  
 
       array(
         'id' => 'cover_video',
@@ -3166,6 +3186,17 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'img_upload_max_size',
+        'type' => 'slider',
+        'title' => __('Maximum image upload size', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '1',
+        'max' => '10',
+        'unit' => 'MB',
+        'default' => '5'
+      ),
+
+      array(
         'id' => 'imgur_client_id',
         'type' => 'text',
         'title' => __('Imgur Client ID','sakurairo_csf'),
@@ -3303,7 +3334,8 @@ $prefix = 'iro_options';
         'options' => array(
           'off' => __('Off','sakurairo_csf'),
           'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
-          'vaptcha' => __('Vaptcha','sakurairo_csf')
+          'vaptcha' => __('Vaptcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
         ),
         'default' => 'off',
       ),
@@ -3338,6 +3370,35 @@ $prefix = 'iro_options';
           '6' => __(6,'sakurairo_csf'),
         ),
         'default' => 1,
+      ),
+
+      array(
+        'id' => 'turnstile_site_key',
+        'type' => 'text',
+        'title' => __('Turnstile Site Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Site Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_secret_key',
+        'type' => 'text',
+        'title' => __('Turnstile Secret Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Secret Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_theme',
+        'type' => 'select',
+        'title' => 'Turnstile Theme',
+        'options' => array(
+            'light' => 'Light',
+            'dark' => 'Dark',
+            'auto' => 'Auto',
+        ),
+        'default' => 'light',
+        'dependency' => array('captcha_select', '==', 'turnstile'),
       ),
 
       array(
