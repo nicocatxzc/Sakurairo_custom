@@ -4108,7 +4108,7 @@ h6::before {
   margin: 10px;
 }
 
-.showcard-button.hover {
+.showcard .img:hover .showcard-button {
   font-size: 32px;
   width: 60px;
   height: 60px;
