@@ -3151,11 +3151,17 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'pca_captcha',
-        'type' => 'switcher',
+        'id' => 'comment_captcha_select',
+        'type' => 'select',
         'title' => __('Page Comment Area Captcha','sakurairo_csf'),
         'label' => __('Enabled by default, comments posted without logging in need to be verified by CAPTCHA','sakurairo_csf'),
-        'default' => true
+        'options' => array(
+          'off' => __('Off','sakurairo_csf'),
+          'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
+        ),
+        'default' => 'iro_captcha',
+        'dependency' => array( 'pca_captcha', '==', 'true', '', 'true' ),
       ),
 
       array(
