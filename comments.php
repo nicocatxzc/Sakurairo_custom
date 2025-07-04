@@ -141,8 +141,8 @@ function get_smilies_panel() {
 					</label>';
 			} else if($captcha_option == "turnstile") {
                 include_once('inc/classes/Turnstile.php');
-                $turnstile = new Sakura\API\Turnstile;
-				$comment_captcha = $turnstile->html() . $turnstile->script();
+				$comment_captcha = '<div id="cfturnstile" class="cfturnstile" data-key="'.iro_opt('turnstile_site_key','').'"></div>
+                                    <input type="hidden" class="cf-turnstile-response" name="cf-turnstile-response" value="">';
 			} else {
                 $comment_captcha = "";
             }
