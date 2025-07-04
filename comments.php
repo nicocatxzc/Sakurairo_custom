@@ -122,7 +122,8 @@ function get_smilies_panel() {
 
         <?php
         if (comments_open()) {
-			if (iro_opt('pca_captcha')) {
+            $captcha_option = iro_opt('comment_captcha_select',"off");
+			if ($captcha_option == 'iro_captcha') {
 				include_once('inc/classes/Captcha.php');
 				$img = new Sakura\API\Captcha;
 				$test = $img->create_captcha_img();
@@ -138,9 +139,13 @@ function get_smilies_panel() {
 						<input type="hidden" name="timestamp" value="' . htmlspecialchars($test['time'], ENT_QUOTES, 'UTF-8') . '">
 						<input type="hidden" name="id" value="' . htmlspecialchars($test['id'], ENT_QUOTES, 'UTF-8') . '">
 					</label>';
+			} else if($captcha_option == "turnstile") {
+                include_once('inc/classes/Turnstile.php');
+                $turnstile = new Sakura\API\Turnstile;
+				$comment_captcha = $turnstile->html() . $turnstile->script();
 			} else {
-				$robot_comments = null;
-			}
+                $comment_captcha = "";
+            }
             $private_ms = iro_opt('comment_private_message')
                 ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="is-private"><span class="siren-is-private-checkbox siren-checkbox-radioInput"></span>' . __('Comment in private', 'sakurairo') . '</label>'
                 : '';

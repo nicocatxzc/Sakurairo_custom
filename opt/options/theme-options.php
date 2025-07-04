@@ -3161,7 +3161,6 @@ $prefix = 'iro_options';
           'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
         ),
         'default' => 'iro_captcha',
-        'dependency' => array( 'pca_captcha', '==', 'true', '', 'true' ),
       ),
 
       array(
