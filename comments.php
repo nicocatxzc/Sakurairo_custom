@@ -122,7 +122,8 @@ function get_smilies_panel() {
 
         <?php
         if (comments_open()) {
-			if (iro_opt('pca_captcha')) {
+            $captcha_option = iro_opt('comment_captcha_select',"off");
+			if ($captcha_option == 'iro_captcha') {
 				include_once('inc/classes/Captcha.php');
 				$img = new Sakura\API\Captcha;
 				$test = $img->create_captcha_img();
@@ -133,48 +134,18 @@ function get_smilies_panel() {
 			
 				$comment_captcha = '
 					<label for="captcha" class="comment-captcha">
-						<img id="captchaimg" alt="captcha" onclick="refreshCaptcha()" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . htmlspecialchars($test['data'], ENT_QUOTES, 'UTF-8') . '">
-						<input type="text" onfocus="showCaptcha();" onblur="hideCaptcha()" name="captcha" id="captcha" class="input" value="" size="20" tabindex="4" placeholder="' . $captcha_placeholder . '">
+						<img id="captchaimg" alt="captcha" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . htmlspecialchars($test['data'], ENT_QUOTES, 'UTF-8') . '">
+						<input type="text" name="captcha" id="captcha" class="input" value="" size="20" tabindex="4" placeholder="' . $captcha_placeholder . '" data-placeholder="'.$captcha_placeholder.'">
 						<input type="hidden" name="timestamp" value="' . htmlspecialchars($test['time'], ENT_QUOTES, 'UTF-8') . '">
 						<input type="hidden" name="id" value="' . htmlspecialchars($test['id'], ENT_QUOTES, 'UTF-8') . '">
-					</label>
-				<script>
-                    let captchaHideTimeout = null;
-                    let captchaField = document.getElementById("captcha");
-                    let captchaImg = document.getElementById("captchaimg");
-
-                    function showCaptcha() {
-                        captchaField.setAttribute("placeholder", "");
-                        if (captchaHideTimeout) {
-                            clearTimeout(captchaHideTimeout);
-                            captchaHideTimeout = null;
-                        }
-                        captchaImg.style.width = "120px";
-                        captchaImg.style.marginRight = "10px";
-                    }
-
-                    function hideCaptcha() {
-                        captchaHideTimeout = setTimeout(function() {
-                            captchaImg.style.width = "0";
-                            captchaImg.style.marginRight = "0";
-                            captchaField.setAttribute("placeholder", "'. $captcha_placeholder .'");
-                        }, 5000);
-                    }
-                        
-	                function refreshCaptcha() {
-                        fetch(_iro.captcha_endpoint)
-                            .then(resp => resp.json())
-                            .then(json => {
-                                captchaImg.src = json["data"];
-                                document.querySelector("input[name=\'timestamp\']").value = json["time"];
-                                document.querySelector("input[name=\'id\']").value = json["id"];
-                            })
-                            .catch(error => console.error("获取验证码失败:", error));
-                    };
-				</script>';
+					</label>';
+			} else if($captcha_option == "turnstile") {
+                include_once('inc/classes/Turnstile.php');
+				$comment_captcha = '<div id="cfturnstile" class="cfturnstile" data-key="'.iro_opt('turnstile_site_key','').'"></div>
+                                    <input type="hidden" class="cf-turnstile-response" name="cf-turnstile-response" value="">';
 			} else {
-				$robot_comments = null;
-			}
+                $comment_captcha = "";
+            }
             $private_ms = iro_opt('comment_private_message')
                 ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="is-private"><span class="siren-is-private-checkbox siren-checkbox-radioInput"></span>' . __('Comment in private', 'sakurairo') . '</label>'
                 : '';

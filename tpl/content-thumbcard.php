@@ -10,33 +10,29 @@ if (!function_exists('render_article_meta')) {
     function render_article_meta() {
         $article_meta_display_options = iro_opt("article_meta_displays", array("post_views", "comment_count", "category"));
         if (is_array($article_meta_display_options)) {
+            $post_id = get_the_ID();
             foreach ($article_meta_display_options as $key) {
                 switch ($key) {
                     case "author":
-                        require_once get_template_directory() . '/tpl/meta-author.php';
                         render_author_meta();
                         break;
                     case "category":
-                        require_once get_template_directory() . '/tpl/meta-category.php';
-                        echo get_meta_category_html();
+                        echo get_meta_category_html($post_id);
                         break;
                     case "comment_count":
-                        require_once get_template_directory() . '/tpl/meta-comments.php';
                         render_meta_comments();
                         break;
                     case "post_views":
                         render_meta_views();
                         break;
                     case "post_words_count":
-                        require_once get_template_directory() . '/tpl/meta-words-count.php';
-                        $str = get_meta_words_count();
+                        $str = get_meta_words_count($post_id);
                         if ($str) {
                             ?><span><i class="fa-regular fa-pen-to-square"></i><?= esc_html($str) ?></span><?php
                         }
                         break;
                     case "reading_time":
-                        require_once get_template_directory() . '/tpl/meta-ert.php';
-                        $str = get_meta_estimate_reading_time();
+                        $str = get_meta_estimate_reading_time($post_id);
                         if ($str) {
                             ?><span title="<?= esc_attr(__("Estimate Reading Time", "sakurairo")) ?>"><i class="fa-solid fa-hourglass"></i><?= esc_html($str) ?></span><?php
                         }
@@ -156,7 +152,7 @@ if (!function_exists('get_post_cover_html')) {
             $cover_html = get_post_cover_html();
 
             // 摘要字数限制
-            $ai_excerpt = get_post_meta($post->ID, POST_METADATA_KEY, true);
+            $ai_excerpt = get_post_meta($post->ID, "ai_summon_excerpt", true);
             $excerpt = has_excerpt();
             ?>
             <article class="post post-list-thumb" style ="<?php echo var_post_theme_color(get_the_ID()) != 'false' ? "--article-theme-highlight: " . var_post_theme_color(get_the_ID()) : ""; ?>" itemscope="" itemtype="http://schema.org/BlogPosting">

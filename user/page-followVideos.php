@@ -1,11 +1,11 @@
 <?php
-/**
- Template Name: Bilibili FollowVideos Template
- */
+/*
+  Template Name: Bilibili FollowVideos Template
+*/
 get_header();
-
 ?>
-<meta name="referrer" content="same-origin">
+
+<meta name="referrer" content="">
 <style>
 .site-content {
     max-width: 1280px;
@@ -18,10 +18,6 @@ span.linkss-title {
     margin: 6.5% 0 7.5%;
     letter-spacing: 2px;
     font-weight: var(--global-font-weight);
-}
-
-.comments {
-    display: none
 }
 
 .bangumi {

@@ -7,7 +7,7 @@
  * @package Sakurairo
  */
 $post_id = get_the_ID();
-$ai_excerpt = get_post_meta($post_id, POST_METADATA_KEY, true); 
+$ai_excerpt = get_post_meta($post_id, "ai_summon_excerpt", true); 
 ?>
 
 <?php

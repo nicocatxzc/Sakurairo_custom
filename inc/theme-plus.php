@@ -159,24 +159,52 @@ function comment_captcha(){
   if (empty($_POST)) {
     return siren_ajax_comment_err(__('You may post nothing','sakurairo'));
   }
+  if (iro_opt('comment_captcha_select') == "off") {
+    return true;
+  }
   if (is_user_logged_in()) { //登录后不需要验证
     return true;
   }
-  if (!(isset($_POST['captcha']) && !empty(trim($_POST['captcha'])))) {
-      return siren_ajax_comment_err(__('Please fill in the captcha answer','sakurairo'));
-  }
-  if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !preg_match('/^[\w$.\/]+$/', $_POST['id']) || !ctype_digit($_POST['timestamp'])) {
+  if (iro_opt('comment_captcha_select') == "iro_captcha") {
+      if (!(isset($_POST['captcha']) && !empty(trim($_POST['captcha'])))) {
+          return siren_ajax_comment_err(__('Please fill in the captcha answer','sakurairo'));
+      }
+      if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !preg_match('/^[\w$.\/]+$/', $_POST['id']) || !ctype_digit($_POST['timestamp'])) {
+          return siren_ajax_comment_err(__('Have you modified the captcha code data? Or refresh the captcha and try again?','sakurairo'));
+      }
+      include_once( get_template_directory() . '/inc/classes/Captcha.php');
+      $img = new Sakura\API\Captcha;
+      $check = $img->check_captcha($_POST['captcha'], $_POST['timestamp'], $_POST['id']);
+      if ($check['code'] == 5) {
+          return true;
+      }
+      return siren_ajax_comment_err(__('Please fill in the correct captcha answer','sakurairo'));
+  } else if (iro_opt('comment_captcha_select') == "turnstile") {
+      if (!(isset($_POST['cf-turnstile-response']) && !empty(trim($_POST['cf-turnstile-response'])))) {
+          return siren_ajax_comment_err(__('Please wait for cloudflare turnstile checking...','sakurairo'));
+      }
+
+      $token = sanitize_text_field($_POST['cf-turnstile-response']);
+      $ip = get_the_user_ip();
+
+      include_once( get_template_directory() . '/inc/classes/Turnstile.php');
+      $turnstile = new Sakura\API\Turnstile;
+      $response = $turnstile->verify($token, $ip);
+
+      if ($response['success'] === false) {
+          return siren_ajax_comment_err(__('Captcha verification failed', 'sakurairo'));
+      }
+
+      if (!$response['success']) {
+          return siren_ajax_comment_err(__('Captcha verification failed', 'sakurairo'));
+      }
+
+      return true;
+  } else {
       return siren_ajax_comment_err(__('Have you modified the captcha code data? Or refresh the captcha and try again?','sakurairo'));
   }
-  include_once( get_template_directory() . '/inc/classes/Captcha.php');
-  $img = new Sakura\API\Captcha;
-  $check = $img->check_captcha($_POST['captcha'], $_POST['timestamp'], $_POST['id']);
-  if ($check['code'] == 5) {
-      return true;
-  }
-  return siren_ajax_comment_err(__('Please fill in the correct captcha answer','sakurairo'));
 }
-if(iro_opt('pca_captcha')) add_action('pre_comment_on_post', 'comment_captcha');
+add_action('pre_comment_on_post', 'comment_captcha');
 
 // 评论提交
 if(!function_exists('siren_ajax_comment_callback')) {
@@ -760,20 +788,16 @@ function siren_get_os(string $ua):array{
     elseif(count(explode(8,$matches[1]))>1) $matches[1] = 'Mountain Lion '.$matches[1];
     $title= $matches[0];
     $icon = "android";
-  }elseif (strpos($ua, 'Mac OS') && preg_match('/Mac OS X.([\d. _]+)/i', $ua, $matches)) {
-    $mac_ver =  intval(explode('_',$matches[1])[1]);
-    $mac_code_name = '';
-    $has_x = $mac_ver <12;
-    $mac_code_list = ['Cheetah','Puma','Jaguar','Panther','Tiger','Leopard','Snow Leopard','Lion','Mountain Lion','Mavericks','Yosemite','El Capitan','Sierra','High Sierra','Mojave','Catalina or Higher'];    // 总16个,后续请在最后添加并且修改该条注释.
-    if (isset($mac_code_list[$mac_ver])) {
-      $mac_code_name = $mac_code_list[$mac_ver];
-    }
-    $matches[1] = $mac_code_name.' '.$matches[1];
-    $title = 'macOS '.($has_x?'X':''.' ').str_replace('_','.',$matches[1]);
-    $icon = "apple";
+  }elseif (strpos($ua,'Mac OS') && preg_match('/Mac OS X[ _]?([0-9]+(?:[._][0-9]+)?)/i',$ua,$m)) {
+    $ver=str_replace('_','.',$m[1]);
+    list($M,$mnr)=array_map('intval',array_pad(explode('.',$ver),2,0));
+    $map=['11'=>'Big Sur','12'=>'Monterey','13'=>'Ventura','14'=>'Sonoma','15'=>'Sequoia'];
+    $key="$M.$mnr"; $maj=(string)$M;
+    $code=$M<10||($M===10&&$mnr<15)?'Catalina or Older':($M===10&&$mnr===15?'Catalina':($map[$key]??$map[$maj]??($M>15?'Sequoia or Higher':'')));
+    $title='macOS '.($M===10?'X ':'')."$code $ver"; $icon='apple';
   }elseif (strpos($ua, 'Macintosh')) {
-    $title = "macOS";
-    $icon = "apple";
+    $title = 'macOS';
+    $icon  = 'apple';
   }elseif (strpos($ua, 'Linux')) {
     $title = 'Linux';
     $icon = 'linux';

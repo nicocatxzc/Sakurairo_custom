@@ -30,6 +30,10 @@ const DOM = {
     divider: document.querySelector(".nav-search-divider"),
 };
 
+if (!DOM.bgNext) {
+    DOM.bgNext = document.createElement('div'); // 给一个虚拟的元素，后面不再一个个判断元素是否存在
+}
+
 // 定义动画参数
 const ANIMATION = {
     easing: "cubic-bezier(0.34, 1.56, 0.64, 1)",
@@ -130,7 +134,6 @@ const initElementStates = (isEntering, bgNextWidth, initialWidth, isFirstLoad = 
     resetElement(DOM.navSearchWrapper, `
         width: ${initialWidth}px;
     `);
-
     // 初始化 bg-next 元素
     resetElement(DOM.bgNext, `
         display: block;
@@ -201,7 +204,7 @@ const animateElements = (isEntering, bgNextWidth, initialWidth) => {
         DOM.bgNext.style.willChange = 'transform, opacity';
         DOM.bgNext.style.pointerEvents = 'auto';
         DOM.bgNext.style.zIndex = '1';
-        
+
         if (DOM.searchbox) DOM.searchbox.style.willChange = 'transform';
         if (DOM.divider) DOM.divider.style.willChange = 'transform, opacity';
 
@@ -213,7 +216,9 @@ const animateElements = (isEntering, bgNextWidth, initialWidth) => {
         const elements = [
             [DOM.bgNext, {
                 opacity: isEntering ? "1" : "0",
-                transform: `translateX(${isEntering ? "0" : "20px"})`
+                transform: `translateX(${isEntering ? "0" : "20px"})`,
+                width: `${DOM.bgNext.offsetWidth}px`,
+                height: `${DOM.bgNext.offsetWidth}px`,
             }],
             [DOM.navSearchWrapper, {
                 width: `${initialWidth + (isEntering ? bgNextWidth : -bgNextWidth)}px`
@@ -509,7 +514,6 @@ const showBgNext = async () => {
                 DOM.bgNext.style.opacity = '0';
                 DOM.bgNext.style.transform = 'translateX(20px)';
                 DOM.bgNext.style.display = 'block';
-                
                 requestAnimationFrame(() => {
                     setTransitions();
                     animateElements(true, widths.bgNextWidth, widths.wrapperWidth);
@@ -1074,12 +1078,18 @@ document.addEventListener("DOMContentLoaded", () => {
         TocButtonStat ();
 
         function TocButtonStat () {
-            let haveToc = document.querySelector("#main-container .toc-container .toc");
-            if (haveToc && haveToc.hasChildNodes()) { // 下方用户栏和目录二选一，此处是没有用户栏还没有目录的情况
-                moTocButton.style.transform = 'translateY(0)';
-            } else {
-                moTocButton.style.transform = 'translateY(-100%)';
-            }
+            document.addEventListener("tocEvent",function(event){ // page/index.js 目录生成事件
+                
+                let haveToc = document.querySelector("#main-container .toc-container .toc");
+                let haveContent = event.detail;
+
+                if (haveToc && haveContent) { // 下方用户栏和目录二选一，此处是没有用户栏还没有目录的情况
+                    moTocButton.style.transform = 'translateY(0)';
+                } else {
+                    moTocButton.style.transform = 'translateY(-100%)';
+                }
+
+            })
         }
 
         document.addEventListener('pjax:complete', function() {

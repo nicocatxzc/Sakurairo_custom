@@ -11,8 +11,9 @@
 include_once('inc/classes/IpLocation.php');
 
 define('IRO_VERSION', wp_get_theme()->get('Version'));
-define('INT_VERSION', '20.0.1');
 define('BUILD_VERSION', '3');
+define('INT_VERSION', '20.0.5');
+define('SSU_URL', 'https://api.fuukei.org/update/ssu.json');
 
 function check_php_version($preset_version)
 {
@@ -60,11 +61,11 @@ $core_lib_basepath = iro_opt('core_library_basepath') ? get_template_directory_u
 if (iro_opt('php_notice_filter') != 'inner') {
 
     if (iro_opt('php_notice_filter','normal') == 'normal') { //仅显示严重错误
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+        error_reporting(E_ALL & ~E_DEPRECATED);
         ini_set('display_errors', '1');
     }
     if (iro_opt('php_notice_filter') == 'all') { //屏蔽大部分错误
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
         ini_set('display_errors', '0');
     }
 }
@@ -236,11 +237,6 @@ function i18n_templates_name ($translated_name, $original_name) {
     $lang = get_user_locale();
 
     $template_names = array(
-        'Archive Template' => array(
-            'zh_CN' => '归档页模板',
-            'zh_TW' => '歸檔頁模板',
-            'ja'    => 'アーカイブテンプレート',
-        ),
         'Friendly Links Template' => array(
             'zh_CN' => '友情链接模板',
             'zh_TW' => '友情連結模板',
@@ -266,10 +262,10 @@ function i18n_templates_name ($translated_name, $original_name) {
             'zh_TW' => 'Steam 庫模板',
             'ja'    => 'Steamライブラリテンプレート',
         ),
-        'Timeline Template' => array(
-            'zh_CN' => '时光轴模板',
-            'zh_TW' => '時光軸模板',
-            'ja'    => 'タイムラインテンプレート',
+        'Archive Template' => array(
+            'zh_CN' => '归档模板',
+            'zh_TW' => '歸檔模板',
+            'ja'    => 'アーカイブページテンプレート',
         ),
     );
     
@@ -525,8 +521,7 @@ function sakura_scripts()
             echo '<link rel="preload" href="' .$iro_css. '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
             echo '<link rel="stylesheet" href="' . $iro_css . '">';
         }, 9);
-    } else {
-        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
+    } else {        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
         wp_enqueue_style('iro-dark', $core_lib_basepath . '/css/dark.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-responsive', $core_lib_basepath . '/css/responsive.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-animation', $core_lib_basepath . '/css/animation.css', array('iro-css'), IRO_VERSION);
@@ -619,6 +614,15 @@ require get_template_directory() . '/inc/api.php';
  */
 require get_template_directory() . '/inc/template-tags.php';
 
+/**
+ * 初始化Bilibili收藏夹缓存定时任务
+ */
+add_action('init', function() {
+    if (class_exists('Sakura\API\BilibiliFavListCron')) {
+        Sakura\API\BilibiliFavListCron::init();
+    }
+});
+
 // 加载缓存设置页
 
 require get_template_directory() . '/inc/cache_settings.php';
@@ -628,10 +632,10 @@ require get_template_directory() . '/inc/cache_settings.php';
  * 仅在Customizer预览框架中和Customizer编辑器载入时加载
  */
 add_action( 'customize_register', function () {
-    require get_template_directory() . '/inc/customizer.php';
+    require_once get_template_directory() . '/inc/customizer.php';
 } );
 if ( is_customize_preview() ) {
-    require get_template_directory() . '/inc/customizer.php';
+    require_once get_template_directory() . '/inc/customizer.php';
 }
 function update_customize_to_iro_options() { //从key映射表中重组并保存设置项至iro_options中
     $theme_mod_options = get_theme_mod( 'iro_options', [] );
@@ -753,8 +757,21 @@ function get_author_class($comment_author_email, $user_id)
 /**
  * post views
  */
-function restyle_text($number)
+function restyle_text($input)
 {
+    // 类型修复
+    if (is_numeric($input)) {
+        $number = (float)$input;
+    } elseif (is_string($input)) {
+        if (preg_match('/[-+]?[0-9]*\.?[0-9]+/', $input, $matches)) {
+            $number = (float)$matches[0];
+        } else {
+            $number = 0;
+        }
+    } else {
+        $number = 0;
+    }
+
     switch (iro_opt('statistics_format')) {
         case "type_2": //23,333 次访问
             return number_format($number);
@@ -797,15 +814,20 @@ function get_post_views($post_id)
     if ((function_exists('wp_statistics_pages')) && (iro_opt('statistics_api') == 'wp_statistics')) {
         // 使用 WP-Statistics 插件获取浏览量
         $views = wp_statistics_pages('total', 'uri', $post_id);
-        return empty($views) ? 0 : $views;
+        return empty($views) ? 0 : intval($views);
     } else {
         // 使用文章自定义字段获取浏览量
         $views = get_post_meta($post_id, 'views', true);
+        if(empty($views)){
+            return 0;
+        }
         // 格式化浏览量
-        $views = restyle_text($views);
-        return empty($views) ? 0 : $views;
+        return restyle_text(intval($views));
     }
 }
+
+// 引入post_metas方法
+require_once get_template_directory() . "/inc/post_metas.php";
 
 function is_webp(): bool
 {
@@ -858,24 +880,26 @@ function get_the_link_items($id = null)
     return $output;
 }
 
-function get_link_items()
-{
-    $linkcats = get_terms('link_category');
+function get_link_items() {
+    // 获取链接分类并按优先级降序排列
+    $linkcats = get_terms(array(
+        'taxonomy'   => 'link_category',
+        'meta_key'   => 'term_priority', // 优先级字段
+        'orderby'    => 'meta_value_num', 
+        'order'      => 'DESC', 
+        'hide_empty' => false
+    ));
+
     $result = null;
-    if (empty($linkcats))
-        return get_the_link_items();  // 友链无分类，直接返回全部列表  
+    if (empty($linkcats)) {
+        return get_the_link_items(); // 友链无分类，直接返回全部列表  
+    }
     
     $pending_cat_name = __('Pending Links', 'sakurairo'); // 未审核链接分类名称
-    $link_category_need_display = get_post_meta(get_queried_object_id(), 'link_category_need_display', false);
     
     foreach ($linkcats as $linkcat) {
         // 跳过未审核链接分类
         if ($linkcat->name === $pending_cat_name) {
-            continue;
-        }
-        
-        // 检查是否需要显示该分类
-        if (!empty($link_category_need_display) && !in_array($linkcat->name, $link_category_need_display, true)) {
             continue;
         }
         
@@ -1102,7 +1126,7 @@ if ($custom_login_switch) {
     // Add custom login styles
     function custom_login() {
         ?>
-        <style type="text/css">body.login{background-image:url('<?php echo DEFAULT_FEATURE_IMAGE(); ?>');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;}.login h1 a{background-image:url('<?php echo iro_opt('login_logo_img') ?: get_site_icon_url(); ?>') !important;background-size:contain;width:100%;max-height:100px;}.login form{box-shadow:0 1px 30px -4px #e8e8e880;border:1px solid #FFFFFF;background:rgba(255,255,255,0.8);-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);border-radius:10px;}.login form input[type=checkbox],.login input[type=password],.login input[type=text],.login input[type=email]{background:rgba(255,255,255,0.7);box-shadow:0 1px 30px -4px #e8e8e880;border:1px solid #FFFFFF;-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);font-size:15px;padding:0.6rem;border-radius:8px;}.wp-core-ui .button-primary,#wp-webauthn{background:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;border-color:transparent;border-radius:6px;padding:1px 18px !important;transition:all 0.3s ease;}.wp-core-ui .button-primary:hover,#wp-webauthn:hover{background:<?php echo iro_opt('theme_skin_matching') ?: '#FF69B4'; ?>;border-color:transparent;transition:all 0.3s ease;}.vaptchaContainer{margin:5px 0 20px;}.login form .forgetmenot{margin-top: 6px;}.login .button.wp-hide-pw .dashicons{color:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;}#language-switcher{color:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;backdrop-filter:none;-webkit-backdrop-filter:none;}.login #nav{font-size:12px;padding:8px 12px;background:rgba(255,255,255,0.7);box-shadow:0 1px 30px -4px #e8e8e8;border:1px solid #FFFFFF;-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);width:fit-content;border-radius:8px;margin:auto;margin-top:-18px;}.login #backtoblog{display:none;}.captcha{display:flex !important;align-items:center;margin-bottom:20px !important;margin-top:10px;gap:10px;}.login form input[name=yzm]{margin:0;}.login label{margin-bottom:5px;}.wp-webauthn-notice{height: 40px !important;margin-bottom: 15px;}#wp-webauthn span{color:#fff;}.vp-dark-btn.vp-basic-btn{border-radius: 8px !important;}</style>
+        <style type="text/css">body.login{background-image:url('<?php echo DEFAULT_FEATURE_IMAGE(); ?>');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;}.login h1 a{background-image:url('<?php echo iro_opt('login_logo_img') ?: get_site_icon_url(); ?>') !important;background-size:contain;width:100%;max-height:100px;}.login form{box-shadow:0 1px 30px -4px #e8e8e880;border:1px solid #FFFFFF;background:rgba(255,255,255,0.8);-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);border-radius:10px;}.login form input[type=checkbox],.login input[type=password],.login input[type=text],.login input[type=email]{background:rgba(255,255,255,0.7);box-shadow:0 1px 30px -4px #e8e8e880;border:1px solid #FFFFFF;-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);font-size:15px;padding:0.6rem;border-radius:8px;}.wp-core-ui .button-primary,#wp-webauthn{background:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;border-color:transparent;border-radius:6px;padding:1px 18px !important;transition:all 0.3s ease;}.wp-core-ui .button-primary:hover,#wp-webauthn:hover{background:<?php echo iro_opt('theme_skin_matching') ?: '#FF69B4'; ?>;border-color:transparent;transition:all 0.3s ease;}.vaptchaContainer{margin:5px 0 20px;}.login form .forgetmenot{margin-top: 6px;}.login .button.wp-hide-pw .dashicons{color:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;}#language-switcher{color:<?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;backdrop-filter:none;-webkit-backdrop-filter:none;}.login #nav{font-size:12px;padding:8px 12px;background:rgba(255,255,255,0.7);box-shadow:0 1px 30px -4px #e8e8e8;border:1px solid #FFFFFF;-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);width:fit-content;border-radius:8px;margin:auto;margin-top:-13%;}.login #backtoblog{display:none;}.captcha{display:flex !important;align-items:center;margin-bottom:20px !important;margin-top:10px;gap:10px;}.login form input[name=yzm]{margin:0;}.login label{margin-bottom:5px;}.wp-webauthn-notice{height: 40px !important;margin-bottom: 15px;}#wp-webauthn span{color:#fff;}.vp-dark-btn.vp-basic-btn{border-radius: 8px !important;}</style>
         <?php
     }
     add_action('login_head', 'custom_login');
@@ -1150,14 +1174,16 @@ add_filter('wp_new_user_notification_email', 'new_user_message_fix');
  */
 function comment_mail_notify($comment_id)
 {
-    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'poi';
+    $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'no-reply';
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ?: '';
-    $spam_confirmed = $comment->comment_approved;
+    
+    // 获取评论的审核状态，如果评论无需审核则直接发送
+    $comment_approved = $comment->comment_approved;
     $mail_notify = iro_opt('mail_notify') ? get_comment_meta($parent_id, 'mail_notify', false) : false;
     $admin_notify = iro_opt('admin_notify') ? '1' : ((isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0');
     
-    if (($parent_id != '') && ($spam_confirmed != 'spam') && ($admin_notify != '0') && (!$mail_notify)) {
+    if (($parent_id != '') &&($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0') && (!$mail_notify)) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
         $to = trim(get_comment($parent_id)->comment_author_email);
         
@@ -1288,6 +1314,17 @@ function comment_mail_notify($comment_id)
     }
 }
 add_action('comment_post', 'comment_mail_notify');
+
+/*
+ * 评论通过审核时发送通知
+ */
+add_action('wp_set_comment_status', 'comment_status_changed_notify', 10, 2);
+
+function comment_status_changed_notify($comment_id, $comment_status) {
+    if ($comment_status === 'approve') {
+        comment_mail_notify($comment_id);
+    }
+}
 
 /*
  * 链接新窗口打开
@@ -1475,10 +1512,6 @@ update_custom_smilies_list();
 
 
 $custom_smiliestrans = array();
-/**
- * 输出表情列表
- *
- */
 function push_custom_smilies()
 {
 
@@ -1660,73 +1693,6 @@ function siren_private()
     die;
 }
 
-//时间序列
-function memory_archives_list()
-{
-    // 尝试从缓存中获取结果
-    $cache_key = 'memory_archives_list_' . get_user_locale();
-    $output = get_transient($cache_key);
-
-    if ($output !== false) {
-        echo $output;
-        return;
-    }
-    $output = '<div id="archives"><p style="text-align:right;">[<span id="al_expand_collapse">' . __("All expand/collapse", "sakurairo") /*全部展开/收缩*/. '</span>]<!-- (注: 点击月份可以展开)--></p>';
-    $posts = get_posts(
-        array(
-            'posts_per_page' => -1,
-            'ignore_sticky_posts' => true,
-            'post_type' => 'post'
-        )
-    );
-
-    $posts_sorted_by_time = [];
-    foreach ($posts as $post) {
-        $post_id = $post->ID;
-        $post_time = get_post_time('U', false, $post_id);
-        $posts_sorted_by_time[$post_time] = $post;
-    }
-    krsort($posts_sorted_by_time); // 按时间倒序排列
-
-    $year = 0;
-    $mon = 0;
-    foreach ($posts_sorted_by_time as $post) {
-        setup_postdata($post);
-        $year_tmp = get_post_time('Y', false, $post);
-        $mon_tmp = get_post_time('m', false, $post);
-        $post_id = $post->ID;
-        $post_views = get_post_views($post_id);
-        if (($year != $year_tmp && $year > 0) || ($mon != $mon_tmp && $mon > 0)) {
-            $output .= '</ul></li>';
-        }
-
-        if ($year != $year_tmp && $year > 0) {
-            $output .= '</ul>';
-        }
-
-        if ($year != $year_tmp) {
-            $output .= '<h3 class="al_year">' . $year_tmp . __(" year", "sakurairo") . /*年*/' </h3><ul class="al_mon_list">'; //输出年份
-        }
-        if ($year != $year_tmp || $mon != $mon_tmp) {
-            $output .= '<li class="al_li"><span class="al_mon"><span style="color:' . iro_opt('theme_skin') . ';">' . get_post_time('M', false, $post) . '</span> (<span id="post-num"></span>' . __(" post(s)", "sakurairo") /*篇文章*/. ')</span><ul class="al_post_list">'; //输出月份
-        }
-        $year = $year_tmp;
-        $mon = $mon_tmp;
-        $output .= '<li>' . '<a href="' . get_permalink($post) . '"><span style="color:' . iro_opt('theme_skin') . ';">' /*get_post_time('d'.__(" ","sakurairo"), false, $post) 日*/. '</span>' . get_the_title($post) . ' <span>(' . $post_views . ' <span class="fa-solid fa-chess-queen" aria-hidden="true"></span> / ' . get_comments_number($post) . ' <span class="fa-regular fa-comment-dots" aria-hidden="true"></span>)</span></a></li>';
-    }
-    wp_reset_postdata();
-    $output .= '</ul></li></ul> <!--<ul class="al_mon_list"><li><ul class="al_post_list" style="display: block;"><li>博客已经萌萌哒运行了<span id="monitorday"></span>天</li></ul></li></ul>--></div>';
-    set_transient($cache_key, $output, 3600);
-    echo $output;
-}
-
-// 在保存文章后清空缓存
-function clear_memory_archives_list_cache($post_id)
-{
-    delete_transient('memory_archives_list_' . get_user_locale());
-}
-add_action('save_post', 'clear_memory_archives_list_cache');
-
 require_once __DIR__ . '/inc/word-stat.php';
 /**
  * 字数、词数统计
@@ -1734,7 +1700,7 @@ require_once __DIR__ . '/inc/word-stat.php';
 function count_post_words($post_ID)
 {
     $post = get_post($post_ID);
-    if ($post->post_type !== "post") {
+    if (!in_array($post->post_type, ['post', 'shuoshuo'])) {
         return;
     }
     $content = $post->post_content;
@@ -1878,6 +1844,7 @@ function theme_admin_notice_callback()
             break;
 
         case 'ja':
+        case 'ja_JP':
             $thankyou = 'ご使用いただきありがとうございます！以下は、あなたの許可が必要なコンテンツです。';
             $dislike = 'いいえ、結構です';
             $allow_send = '統計目的のためにあなたのテーマバージョンを送信することを許可する';
@@ -2090,6 +2057,10 @@ add_action('admin_init', 'theme_folder_check_on_admin_init');
 add_action('wp_ajax_update_theme_option', 'update_theme_option');
 function update_theme_option()
 {
+    if (!isset($_POST['option']) || !isset($_POST['value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $option = $_POST['option'];
     $value = sanitize_text_field($_POST['value']);
     iro_opt_update($option, $value);
@@ -2100,6 +2071,10 @@ function update_theme_option()
 add_action('wp_ajax_update_theme_admin_notice_meta', 'update_theme_admin_notice_meta');
 function update_theme_admin_notice_meta()
 {
+    if (!isset($_POST['user_id']) || !isset($_POST['meta_key']) || !isset($_POST['meta_value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $user_id = $_POST['user_id'];
     $meta_key = $_POST['meta_key'];
     $meta_value = sanitize_text_field($_POST['meta_value']);
@@ -2422,90 +2397,118 @@ if (iro_opt('sakura_widget')) {
     }
 }
 
-// 评论Markdown解析
+
+/**
+ * 安全解析 WordPress 评论中的 Markdown 内容。
+ * 此函数应挂载到 `preprocess_comment` 过滤器。
+ *
+ * @param array $incoming_comment 评论数据数组。
+ * @return array 修改后的评论数据数组。
+ */
 function markdown_parser($incoming_comment)
 {
     global $wpdb, $comment_markdown_content;
+    global $allowedtags;
 
+    /** 
+     * 检查是否启用了 Markdown（假设前端评论表单中有 enable_markdown 字段）
+     * Check if Markdown is enabled (assuming there is an enable_markdown field in the frontend comment form)
+     */ 
     $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
-
+    
+    /**
+     * 初步安全检查
+     * Initial security checks
+     */
+    $may_script = array(
+        '/<script\b[^>]*>(.*?)<\/script>/is', // 阻止 <script> 标签
+        '/<[^>]+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/is', // 阻止 HTML 属性中的 onxxx 事件
+        '/\s(?:href|src)\s*=\s*(?:"(?:javascript|data):[^"]*"|\'(?:javascript|data):[^\']*\'|(?:javascript|data):[^\s>]+)/is', // 阻止带引号的 javascript: 或 data: 协议的 href/src 属性
+    );
+    
+    foreach ($may_script as $pattern) {
+        if (preg_match($pattern, $incoming_comment['comment_content'])) {
+            siren_ajax_comment_err(__("For security reasons, JavaScript is not allowed in comments.")); //恶意内容警告
+            return ($incoming_comment);
+        }
+    }
+    
+    /**
+     * 启用 Markdown（如果启用）
+     * Enable Markdown (if enabled)
+     * 这里使用 wp_kses 来过滤 HTML 标签，允许的标签在 $allowedtags 中定义。
+     * Here, we use wp_kses to filter HTML tags, and the allowed tags are defined in $allowedtags.
+     */
     if ($enable_markdown) {
-        $may_script = array(
-            '/<script.*?>.*?<\/script>/is', //<script>标签
-            '/onclick\s*=\s*["\'].*?["\']/is',//onlick属性
-        );
-    
-        foreach ($may_script as $pattern) {
-            if (preg_match($pattern, $incoming_comment['comment_content'])) {
-                siren_ajax_comment_err(__("Please do not try to use Javascript in your comments!")); //恶意内容警告
-                return ($incoming_comment);
-            }
-        }
-    
-        $re = '/<[^>]*>/';
-        $allowed_html_content = array(
-            'a' => array(
-                'href' => array(),
-                'title' => array(),
-                'target' => array('_blank'),
-            ),
-            'b' => array(),
-            'br' => array(),
-            'img' => array(
-                'src' => array(),
-                'alt' => array(),
-                'width' => array(),
-                'height' => array(),
-            ),
-            'code' => array(),
-            'blockquote' => array(),
-            'ul' => array(),
-            'ol' => array(),
-            'li' => array(),
-            'p' => array(),
-            'div' => array(),
-            'span' => array(),
-        );
-        if (preg_match($re, $incoming_comment['comment_content'])) {
-            $incoming_comment['comment_content'] = wp_kses($incoming_comment['comment_content'], $allowed_html_content);//移除所有不允许的标签
-        }
+        include 'inc/Parsedown.php';
+        $Parsedown = new Parsedown();
+        // 核心安全
+        // Set safe mode to true to prevent unsafe HTML tags
+        $Parsedown->setSafeMode(true);
+
+        // 禁用自动链接
+        // Disable automatic linking of URLs
+        $Parsedown->setUrlsLinked(false); 
+
+        $incoming_comment['comment_content'] = $Parsedown->text($incoming_comment['comment_content']);
+        /**
+         * 使用 wp_kses 过滤 HTML 标签
+         * Use wp_kses to filter HTML tags
+         * 使用全局的 $allowedtags 变量来定义允许的 HTML 标签。
+         * Use the global $allowedtags variable to define allowed HTML tags.
+         */
+        // kses 过滤
+        // Use wp_kses to filter the comment content
+        $incoming_comment['comment_content'] = wp_kses($incoming_comment['comment_content'], $allowedtags); // 自行调用kses
     } else {
         $incoming_comment['comment_content'] = htmlspecialchars($incoming_comment['comment_content'], ENT_QUOTES, 'UTF-8'); //未启用markdown直接转义
     }
 
-    $column_names = $wpdb->get_row("SELECT * FROM information_schema.columns where 
-    table_name='$wpdb->comments' and column_name = 'comment_markdown' LIMIT 1");
-    //Add column if not present.
-    if (!isset($column_names)) {
-        $wpdb->query("ALTER TABLE $wpdb->comments ADD comment_markdown text");
-    }
+    // $column_names = $wpdb->get_row("SELECT * FROM information_schema.columns where 
+    // table_name='$wpdb->comments' and column_name = 'comment_markdown' LIMIT 1");
+    // //Add column if not present.
+    // if (!isset($column_names)) {
+    //     $wpdb->query("ALTER TABLE $wpdb->comments ADD comment_markdown text");
+    // }
     $comment_markdown_content = $incoming_comment['comment_content'];
 
-    if ($enable_markdown) { //未启用markdown不做解析
-        include 'inc/Parsedown.php';
-        $Parsedown = new Parsedown();
-        $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
-    }
     return $incoming_comment;
 }
 add_filter('preprocess_comment', 'markdown_parser');
 remove_filter('comment_text', 'make_clickable', 9);
 
-//保存Markdown评论
-function save_markdown_comment($comment_ID, $comment_approved)
-{
-    global $wpdb, $comment_markdown_content;
-    $comment = get_comment($comment_ID);
-    $comment_content = $comment_markdown_content;
-    //store markdow content
-    $wpdb->query("UPDATE $wpdb->comments SET comment_markdown='" . $comment_content . "' WHERE comment_ID='" . $comment_ID . "';");
-}
-add_action('comment_post', 'save_markdown_comment', 10, 2);
+// //保存Markdown评论
+// function save_markdown_comment($comment_ID, $comment_approved)
+// {
+//     global $wpdb, $comment_markdown_content;
+//     $comment = get_comment($comment_ID);
+//     $comment_content = $comment_markdown_content;
+//     //store markdow content
+//     $wpdb->query("UPDATE $wpdb->comments SET comment_markdown='" . $comment_content . "' WHERE comment_ID='" . $comment_ID . "';");
+// }
+// add_action('comment_post', 'save_markdown_comment', 10, 2);
 
 //打开评论HTML标签限制
 function allow_more_tag_in_comment()
 {
     global $allowedtags;
+    $allowedtags['img'] = [
+        'src' => [],
+        'alt' => [],
+        'width' => [],
+        'height' => [],
+        'title' => [],
+    ];
+    $allowedtags['a'] = [
+        'href' => [],
+        'title' => [],
+        'target' => [],
+        'rel' => [],
+    ];
+    $allowedtags['b'] = array('class' => array());
+    $allowedtags['br'] = array('class' => array());
+    $allowedtags['blockquote'] = array('class' => array());
+    $allowedtags['p'] = array('class' => array());
     $allowedtags['pre'] = array('class' => array());
     $allowedtags['code'] = array('class' => array());
     $allowedtags['h1'] = array('class' => array());
@@ -2524,7 +2527,10 @@ function allow_more_tag_in_comment()
     $allowedtags['tbody'] = array('class' => array());
     $allowedtags['span'] = array('class' => array());
 }
-add_action('pre_comment_on_post', 'allow_more_tag_in_comment');
+add_action('init', 'allow_more_tag_in_comment');
+// 移除wp核心内置的两阶段评论过滤
+remove_filter('pre_comment_content', 'wp_filter_kses');
+remove_filter('comment_save_pre', 'wp_filter_kses');
 
 /**
  * 检查数据库是否支持MyISAM引擎
@@ -2617,11 +2623,12 @@ function register_shortcodes() {
         list($username, $repo) = explode('/', $path, 2);
     
         //构造卡片内容
+        /*
         $card_content = '';
     
         if (iro_opt('ghcard_proxy')) {
             
-            $svg_url = 'https://github-readme-stats.vercel.app/api/pin/?username=' . esc_attr($username) . '&repo=' . esc_attr($repo);
+            $svg_url = 'https://github-readme-stats.vercel.app/api/pin/?hide_border=true&username=' . esc_attr($username) . '&repo=' . esc_attr($repo);
             $response = wp_remote_get($svg_url);
     
             if (!is_wp_error($response)) {
@@ -2638,7 +2645,7 @@ function register_shortcodes() {
     
         //获取失败或未启用代理
         if (empty($card_content)) {
-            $card_content = '<img decoding="async" src="https://github-readme-stats.vercel.app/api/pin/?username=' . esc_attr($username) . '&repo=' . esc_attr($repo) . '" alt="Github-Card">';
+            $card_content = '<img decoding="async" src="https://github-readme-stats.vercel.app/api/pin/?hide_border=true&username=' . esc_attr($username) . '&repo=' . esc_attr($repo) . '" alt="Github-Card">';
         }
     
         //输出内容
@@ -2649,6 +2656,61 @@ function register_shortcodes() {
         $ghcard .= '</div>';
     
         return $ghcard;
+        */
+        $api_url = sprintf('https://api.github.com/repos/%s/%s', $username, $repo);
+        $response = wp_remote_get($api_url, array(
+            'headers' => array(
+                'User-Agent' => 'WordPress-GitHubCard-Shortcode'
+            )
+        ));
+
+        if (is_wp_error($response)) {
+            return sprintf('<p>Failed to fetch GitHub repository data: %s</p>', esc_html($response->get_error_message()));
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (!is_array($data) || isset($data['message'])) {
+            return sprintf('<p>Unable to fetch GitHub data for: %s</p>', esc_html($path));
+        }
+
+        // 获取数据
+        $full_name = $data['full_name'];
+        $description = $data['description'];
+        $language = $data['language'];
+        $stars = $data['stargazers_count'];
+        $html_url = $data['html_url'];
+
+        // 仓库图标 + 默认颜色点
+        $lang_color = "green"; // 可拓展为语言颜色映射
+        $description = esc_html($description);
+        $language = esc_html($language);
+        return sprintf(
+            '<div class="ghcard" style="border:1px solid #ddd; border-radius:10px; padding:16px; max-width:300px; box-shadow:0 2px 6px rgba(0,0,0,0.1); background:#fff;">
+                <div style="display:flex; align-items:center; margin-bottom:10px;">
+                    <i class="fas fa-book" style="margin-right:8px; color:#555;"></i>
+                    <a href="%s" target="_blank" style="color:#1a73e8; font-weight:bold; text-decoration:none;">%s</a>
+                </div>
+                <div style="font-size:14px; color:#444; margin-bottom:12px;">%s</div>
+                <div style="display:flex; align-items:center; gap:16px; font-size:14px; color:#666;">
+                    <div style="display:flex; align-items:center;">
+                        <span style="width:10px; height:10px; background-color:%s; border-radius:50%%; display:inline-block; margin-right:6px;"></span>
+                        %s
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <i class="far fa-star" style="margin-right:4px;"></i>
+                        %d
+                    </div>
+                </div>
+            </div>',
+            esc_url($html_url),
+            esc_html($full_name),
+            $description,
+            $lang_color,
+            $language,
+            intval($stars)
+        );
     });
 
     add_shortcode('showcard', function($attr, $content = '') {
@@ -2736,7 +2798,7 @@ function register_shortcodes() {
         return $iframes;
      });
 
-     add_shortcode('steamuser', function ($atts, $content = null) {
+    add_shortcode('steamuser', function ($atts, $content = null) {
         $key = iro_opt('steam_key');
         if (empty($key)) {
             // 多语言支持
@@ -2857,6 +2919,153 @@ function register_shortcodes() {
         $output .= '</div>'; // .steam-user-card
         return $output;
     });
+
+    add_shortcode('checkbox', function ($attr, $content = null) {
+        $attr = shortcode_atts(array("checked" => "", "inline" => ""), $attr);
+        return sprintf('
+        <div class="checkbox-code %s">
+            <input type="checkbox" %s>
+			<span> %s </span>
+        </div>
+        ',
+        $attr['inline'] == 'true' ? "inline" : "shortcodestyle",
+        $attr['checked'] == 'true' ? 'checked' : '',
+        $content
+        );
+    });
+    add_shortcode('label', function ($attr, $content = null) {
+        $attr = shortcode_atts(array("color" => "", "shape" => ""), $attr);
+        $color = $attr['color'];
+        switch($color){
+            case 'warning':
+                $color = 'badge-warning';
+                break;
+            case 'severe':
+                $color = 'badge-severe';
+                break;
+            default:
+                $color = 'badge-info';
+                break;
+        }
+        
+        return sprintf('
+        <span class="badge %s %s"> %s </span>
+        ',
+        $color,
+        $attr['shape'] == 'round' ? 'bagde-round' : '',
+        $content
+        );
+    });
+    add_shortcode('progressbar',function ($attr,$content=null){
+        $attr = shortcode_atts(array("color" => "", "progress" => ""), $attr);
+        $progress = $attr['progress'];
+        $color = $attr['color'];
+        if($progress==''){
+            $progress=100;
+        }
+        if($color==''){
+            $color='bg-default';
+        }
+        $color = isset($attr['color']) ? $attr['color'] : 'indigo';
+
+        switch ($color) {
+            case 'red':
+                $color = 'bg-danger';
+                break;
+            case 'orange':
+                $color = 'bg-warning';
+                break;
+            case 'green':
+                $color = 'bg-info';
+                break;
+            default:
+                $color = 'bg-default';
+            break;
+        }
+
+        return sprintf(
+            "<div class='progress-wrapper'>
+                <div class='progress-info'>%s
+                    <div class='progress-percentage'><span>%d%%</span></div>
+                </div>
+                <div class='progress'>
+                    <div class='progress-bar %s' style='width: %d%%;'></div>
+                </div>
+            </div>",
+            $content != "" ? sprintf("<div class='progress-label'><span>%s</span></div>", $content) : "",
+            $progress,
+            $color,
+            $progress
+        );
+    });
+    /*add_shortcode('timeline',function ($attr,$content=null){
+        $content = trim(strip_tags($content));
+        $entries = explode("\n", $content);
+
+        $out = "<div class='timeline-code'>";
+        foreach ($entries as $entry) {
+            $parts = explode("|", $entry);
+            $time = str_replace("/", "</br>", $parts[0]);
+            $title = isset($parts[1]) ? $parts[1] : '';
+            
+            $content_html = "";
+            for ($i = 2; $i < count($parts); $i++) {
+                $content_html .= ($i > 2 ? "</br>" : "") . $parts[$i];
+            }
+
+            $out .= sprintf(
+                "<div class='timeline-node'>
+                    <div class='timeline-time'>%s</div>
+                    <div class='timeline-card card bg-gradient-secondary shadow-sm'>
+                        %s
+                        <div class='timeline-content'>%s</div>
+                    </div>
+                </div>",
+                $time,
+                $title !== '' ? sprintf("<div class='timeline-title'>%s</div>", $title) : '',
+                $content_html
+            );
+        }
+        $out .= "</div>";
+        return $out;
+    });*/
+    add_shortcode('hidden',function ($attr, $content = null) {
+        $attr = shortcode_atts(array("tip" => "", "type" => ""), $attr);
+        $tip=''; $type='blur';
+        if($attr['tip']!=""){
+            $tip=$attr['tip'];
+        }
+        if($attr['type']!=""){
+            $type = $attr['type'];
+        }
+    
+        $class = ($type == 'background') ? 'hidden-text-background' : 'hidden-text-blur';
+    
+        return sprintf(
+            "<span class='hidden-text %s'%s>%s</span>",
+            $class,
+            $tip !== '' ? sprintf(" title='%s'", $tip) : '',
+            $content
+        );
+    });
+
+    add_shortcode('post_time',function ($attr,$content=null){
+        $attr = shortcode_atts(array("format" => ""), $attr);
+        $format = ( $attr['format'] !='') ? $attr['format'] : 'Y-n-d G:i:s';
+        return get_the_time($format);
+    });
+
+    add_shortcode('post_modified_time',function ($attr,$content=null){
+        $attr = shortcode_atts(array("format" => ""), $attr);
+        $format = ( $attr['format'] !='') ? $attr['format'] : 'Y-n-d G:i:s';
+        return get_the_modified_time($format);
+    });
+
+    add_shortcode('noshortcode',function ($attr,$content=null){
+        return $content;
+    });
+
+    
 }
 add_action('init', 'register_shortcodes');
 //code end
@@ -3100,6 +3309,189 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     }
     add_filter('authenticate', 'checkVaptchaAction', 20, 3);
+} else if ((iro_opt('captcha_select') === 'turnstile') && (!empty(iro_opt("turnstile_site_key")) && !empty(iro_opt("turnstile_secret_key")))) {
+    function turnstile_init() {
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        echo $turnstile->html();
+        echo $turnstile->script();
+    }
+    add_action('login_form', 'turnstile_init');
+    add_action('register_form', 'turnstile_init');
+    add_action('lostpassword_form', 'turnstile_init');
+
+    function verify_turnstile($user, $username = '', $password = '') {
+        // Skip captcha check if it's a passwordless login
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $user;
+        }
+        if (isset($_POST['skip_captcha_check']) && $_POST['skip_captcha_check'] == '1') {
+            return $user;
+        }
+        
+        if (empty($_POST['cf-turnstile-response'])) {
+            return new WP_Error('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+
+        $response = $turnstile->verify($token, $ip);
+        if ($response['success'] === false) {
+            return new WP_Error('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+        }
+
+        if (!$response['success']) {
+            return new WP_Error('invalid_turnstile','<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $user;
+    }
+    add_filter('authenticate', 'verify_turnstile', 20, 3);
+
+    function turnstile_lostpassword_check($errors) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_action('lostpassword_post', 'turnstile_lostpassword_check');
+
+    function turnstile_registration_check($errors, $sanitized_user_login, $user_email) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_filter('registration_errors', 'turnstile_registration_check', 10, 3);
+
+    function add_captcha_check_script() {
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var loginForm = document.getElementById('loginform');
+        if (!loginForm) return;
+        
+        // Add hidden field for skipping captcha check
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'skip_captcha_check';
+        hiddenField.id = 'skip_captcha_check';
+        hiddenField.value = '0';
+        loginForm.appendChild(hiddenField);
+        
+        // Get elements once at initialization
+        var passwordField = document.getElementById('user_pass');
+        var captchaImg = document.getElementById('captchaimg');
+        var yzmField = document.getElementById('yzm');
+        var turnstileWidget = document.querySelector('.cf-turnstile');
+        
+        // Find the captcha container (the parent element that contains the captcha)
+        var captchaContainer = null;
+        if (yzmField) {
+            // Try to find the parent paragraph or label
+            captchaContainer = yzmField.closest('p') || yzmField.closest('label');
+            if (!captchaContainer && yzmField.parentNode) {
+                captchaContainer = yzmField.parentNode;
+            }
+        } else if (turnstileWidget) {
+            captchaContainer = turnstileWidget.parentNode;
+        }
+        
+        function checkPasswordField() {
+            // Check if password field is hidden or not present
+            var isPasswordVisible = passwordField && 
+                                    passwordField.style.display !== 'none' && 
+                                    passwordField.offsetParent !== null;
+            
+            if (!isPasswordVisible) {
+                // Hide captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = 'none';
+                }
+                
+                hiddenField.value = '1';
+            } else {
+                // Show captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = '';
+                }
+                
+                hiddenField.value = '0';
+            }
+        }
+        
+        // Initial check
+        checkPasswordField();
+        
+        // Set up a less frequent interval to reduce performance impact
+        var checkInterval = setInterval(checkPasswordField, 500);
+        
+        // Use MutationObserver for efficiency
+        if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(checkPasswordField);
+            
+            observer.observe(loginForm, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class', 'display']
+            });
+        }
+        
+        // Add event listener for form submission
+        loginForm.addEventListener('submit', checkPasswordField);
+    });
+    </script>
+    <?php
+}
 }
 
 // 获取访客 IP
@@ -3119,6 +3511,110 @@ function get_the_user_ip()
     $ip = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
     return apply_filters('wpb_get_ip', $ip);
 }
+
+//归档页信息缓存
+function get_archive_info($get_page = false) {
+    // 获取所有文章和说说
+    $args = [
+        'posts_per_page' => -1,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'post_type' => array('post', 'shuoshuo'),
+        'post_status'    => 'publish',
+        'suppress_filters' => false // 同时获取文章和说说
+    ];
+    if ($get_page){
+        $args['post_type'] = array('post', 'shuoshuo', 'page');
+    }
+    $posts = get_posts($args);
+    // 统计
+    $years = [];
+    $stats = [
+        'total' => [
+            'posts' => 0,
+            'views' => 0,
+            'words' => 0,
+            'comments' => 0
+        ],
+        'shuoshuo' => [
+            'posts' => 0,
+            'views' => 0,
+            'words' => 0,
+            'comments' => 0
+        ],
+        'article' => [
+            'posts' => 0,
+            'views' => 0,
+            'words' => 0,
+            'comments' => 0
+        ],
+        'page' => [
+            'posts' => 0,
+            'views' => 0,
+            'words' => 0,
+            'comments' => 0
+        ]
+    ];
+    foreach ($posts as $post) {
+        $views = get_post_views($post->ID);
+        $words = get_meta_words_count($post->ID);
+        $comments = get_comments_number($post->ID);
+        
+        // 判断页面类型
+        if ($post->post_type == 'post') {
+            $post_type = 'article';
+        } elseif ($post->post_type == 'shuoshuo') {
+            $post_type = 'shuoshuo';
+        } else {
+            $post_type = 'page';
+        }
+        
+        // 更新统计数据
+        $stats[$post_type]['posts']++;
+        $stats[$post_type]['views'] += intval($views);
+        $stats[$post_type]['words'] += intval($words);
+        $stats[$post_type]['comments'] += intval($comments);
+        
+        $stats['total']['posts']++;
+        $stats['total']['views'] += intval($views);
+        $stats['total']['words'] += intval($words);
+        $stats['total']['comments'] += intval($comments);
+        
+        $year = date('Y', strtotime($post->post_date));
+        $month = date('n', strtotime($post->post_date));
+        if ($post->post_password != ''){
+            $post->post_title = __("It's a secret",'sakurairo'); // 隐藏受密码保护文章的标题
+        }
+
+        $category_ids = wp_get_post_categories($post->ID) ?: [];
+
+        $post = [ //仅保存需要的数据（归档、展示区）
+            'post_title'    => $post->post_title,
+            'post_author'     => $post->post_author,
+            'post_date'     => $post->post_date,
+            'post_modified'     => $post->post_modified,
+            'comment_count' => $comments,
+            'guid'          => $post->guid,
+            'categories'    => $category_ids,
+            'meta' => [
+                'views' => $views,
+                'words' => $words,
+                'type' => $post_type
+            ]
+        ];
+        
+        if (!isset($years[$year])) $years[$year] = [];
+        if (!isset($years[$year][$month])) $years[$year][$month] = [];
+        $years[$year][$month][] = $post;
+    }
+
+    return $years;
+}
+
+//更新文章后更新缓存
+add_action('save_post', function(){
+    get_archive_info();
+});
 
 /*
  * 友情链接提交功能
@@ -3594,6 +4090,179 @@ function should_show_title(): bool
     return !iro_opt('patternimg')
         || !get_post_thumbnail_id($id)
         && $use_as_thumb != 'true' && !get_post_meta($id, 'video_cover', true);
+}
+
+// 管理员访问任何页面更新最后在线时间
+function sakurairo_record_admin_login() {
+    if (is_user_logged_in()) {
+        $user = wp_get_current_user();
+        if (in_array('administrator', (array) $user->roles)) {
+            update_user_meta($user->ID, 'last_online', current_time('mysql'));
+        }
+    }
+}
+add_action('wp_loaded', 'sakurairo_record_admin_login');
+
+// 添加钩子，在发布/更新文章或者评论时刷新缓存
+function sakurairo_refresh_stats_on_action() {
+    if (current_user_can('edit_post')) {
+        delete_transient('sakurairo_site_stats');
+    }
+}
+add_action('wp_insert_post', 'sakurairo_refresh_stats_on_action');
+add_action('edit_post', 'sakurairo_refresh_stats_on_action');
+add_action('wp_insert_comment', 'sakurairo_refresh_stats_on_action');
+
+// 格式化时间差函数 - 将分钟转换为友好的文本格式
+function format_time_diff($minutes) {
+    if ($minutes < 1) {
+        return __('Just now', 'sakurairo');
+    } elseif ($minutes < 60) {
+        return sprintf(_n('%d minute ago', '%d minutes ago', $minutes, 'sakurairo'), $minutes);
+    } elseif ($minutes < 1440) { // 小于一天
+        $hours = floor($minutes / 60);
+        return sprintf(_n('%d hour ago', '%d hours ago', $hours, 'sakurairo'), $hours);
+    } elseif ($minutes < 10080) { // 小于一周
+        $days = floor($minutes / 1440);
+        return sprintf(_n('%d day ago', '%d days ago', $days, 'sakurairo'), $days);
+    } elseif ($minutes < 43200) { // 小于一个月
+        $weeks = floor($minutes / 10080);
+        return sprintf(_n('%d week ago', '%d weeks ago', $weeks, 'sakurairo'), $weeks);
+    } else {
+        $months = floor($minutes / 43200);
+        return sprintf(_n('%d month ago', '%d months ago', $months, 'sakurairo'), $months);
+    }
+}
+
+// 获取站点统计信息
+function get_site_stats() {
+    // 尝试从缓存获取数据
+    $cached_stats = get_transient('sakurairo_site_stats');
+    if ($cached_stats !== false) {
+        return $cached_stats;
+    }
+
+    $posts_stat = get_archive_info(true);
+    
+    $total_posts = 0;
+    $total_words = 0;
+    $total_authors = 0;
+    $total_comments =0;
+    $total_views = 0;
+    $first_post_date = null;
+
+    foreach ($posts_stat as $year => $months) {
+        foreach ($months as $month => $posts) {
+            foreach ($posts as $post) {
+                if ($post['meta']['type'] != "page"){
+                    $total_posts++;
+    
+                    // 字数
+                    if (isset($post['meta']['words'])) {
+                        preg_match('/\d+/', $post['meta']['words'], $matches);
+                        $total_words += isset($matches[0]) ? intval($matches[0]) : 0;
+                    }
+                }
+    
+                // 作者
+                $authors[$post['post_author']] = true;
+    
+                // 评论数
+                $total_comments += intval($post['comment_count']);
+    
+                // 浏览数
+                if (isset($post['meta']['views'])) {
+                    $total_views += intval($post['meta']['views']);
+                }
+    
+                // 最早发表时间
+                $post_time = strtotime($post['post_date']);
+                if ($first_post_date === null || $post_time < $first_post_date) {
+                    $first_post_date = $post_time;
+                }
+            }
+        }
+    }
+
+    $total_authors = count($authors);
+    // 第一篇文章的发布日期
+    $first_post_date = date('Y-m-d H:i:s', $first_post_date);
+    
+    // 友情链接数量
+    $link_count = count(get_bookmarks(['hide_invisible' => true]));
+    
+    // 随机友情链接
+    $random_link = get_bookmarks([
+        'hide_invisible' => true,
+        'orderby' => 'rand',
+        'limit' => 1
+    ]);
+    $random_link_data = !empty($random_link) ? $random_link[0] : null;
+    
+    // 计算从第一篇文章发布到现在的天数
+    $blog_days = 0;
+    if ($first_post_date) {
+        $first_post_datetime = new DateTime($first_post_date);
+        $now = new DateTime();
+        $interval = $now->diff($first_post_datetime);
+        $blog_days = $interval->days;
+    }
+
+    function get_latest_admin_online_time() {
+        $admins = get_users(['role' => 'administrator']);
+        $latest_time = 0;
+        $latest_admin = null;
+    
+        foreach ($admins as $admin) {
+            $last_online = get_user_meta($admin->ID, 'last_online', true);
+            if ($last_online) {
+                $timestamp = strtotime($last_online);
+                if ($timestamp > $latest_time) {
+                    $latest_time = $timestamp;
+                    $latest_admin = [
+                        'user' => $admin,
+                        'time' => $last_online
+                    ];
+                }
+            }
+        }
+    
+        return $latest_admin;
+    }
+    
+    $latest_admin_info = get_latest_admin_online_time();
+    
+    if (!empty($latest_admin_info)) {
+        $admin_last_online = $latest_admin_info['time'];
+        $last_online_timestamp = strtotime($admin_last_online);
+        $current_timestamp = current_time('timestamp');
+    
+        // 计算以分钟为单位的时间差
+        $admin_last_online_diff = max(0, floor(($current_timestamp - $last_online_timestamp) / 60));
+    } else {
+        // 没有记录，使用当前时间
+        $admin_last_online = current_time('mysql');
+        $admin_last_online_diff = 0;
+    }
+    
+    $stats = [
+        'post_count' => $total_posts,
+        'comment_count' => $total_comments,
+        'visitor_count' => $total_views,
+        'link_count' => $link_count,
+        'random_link' => $random_link_data,
+        'first_post_date' => $first_post_date,
+        'blog_days' => $blog_days,
+        'admin_last_online' => $admin_last_online,
+        'admin_last_online_diff' => $admin_last_online_diff,
+        'author_count' => $total_authors,
+        'total_words' => $total_words,
+    ];
+    
+    // 缓存数据1小时
+    set_transient('sakurairo_site_stats', $stats, 3600);
+    
+    return $stats;
 }
 
 /**

@@ -44,7 +44,16 @@ class Images
         );
 
         $response = wp_remote_post($upload_url, $args);
+        if (is_wp_error($response)) {
+            error_log("Images upload failed: " . $response->get_error_message());
+            return false;
+        }
+
         $reply = json_decode($response['body']);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log("Images JSON decode failed: " . json_last_error_msg());
+            return false;
+        }
 
         if ($reply->status == true) {
             $status = 200;
