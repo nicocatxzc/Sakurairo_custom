@@ -31,7 +31,6 @@ class Turnstile
                 <div class="cf-turnstile"></div>
             </div>
         </div>
-        <style>.cf-turnstile {margin: 0 0 0 -15px;}</style>
     HTML;
   }
 
