@@ -262,10 +262,10 @@ function i18n_templates_name ($translated_name, $original_name) {
             'zh_TW' => 'Steam 庫模板',
             'ja'    => 'Steamライブラリテンプレート',
         ),
-        'Timearchive Template' => array(
-            'zh_CN' => '时光归档模板',
-            'zh_TW' => '時光歸檔模板',
-            'ja'    => 'タイムアーカイブテンプレート',
+        'Archive Template' => array(
+            'zh_CN' => '归档模板',
+            'zh_TW' => '歸檔模板',
+            'ja'    => 'アーカイブページテンプレート',
         ),
     );
     
