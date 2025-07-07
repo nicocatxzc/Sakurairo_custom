@@ -6,6 +6,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+function get_chatgpt_api_info(){?>
+            <!-- 调试信息 -->
+        <div class="card" style="max-width:800px; margin-bottom:20px; padding:10px 20px; background-color:#f7f7f7;">
+            <h2><?php _e('System Information', 'sakurairo'); ?></h2>
+            <p><strong><?php _e('ChatGPT API Settings Status', 'sakurairo'); ?></strong></p>
+            <pre style="background:#eee; padding:10px; overflow:auto;">
+<?php _e('API Endpoint: ', 'sakurairo'); ?><?php echo iro_opt('chatgpt_endpoint', __('Not set', 'sakurairo')); ?>
+<?php _e('API Key: ', 'sakurairo'); ?><?php echo empty(iro_opt('chatgpt_access_token')) ? __('Not set', 'sakurairo') : __('Set (Length: ', 'sakurairo') . strlen(iro_opt('chatgpt_access_token')) . ')'; ?>
+<?php _e('Model: ', 'sakurairo'); ?><?php echo iro_opt('chatgpt_model', __('Not set', 'sakurairo')); ?>
+            </pre>
+        </div>
+        <?php
+}
+
 /**
  * 注册管理页面
  */
@@ -96,18 +110,10 @@ function render_annotations_admin_page() {
             <div class="notice notice-<?php echo $message_type; ?> is-dismissible">
                 <p><?php echo $message; ?></p>
             </div>
-        <?php endif; ?>
+        <?php endif; 
+        get_chatgpt_api_info();
+        ?>
         
-        <!-- 调试信息 -->
-        <div class="card" style="max-width:800px; margin-bottom:20px; padding:10px 20px; background-color:#f7f7f7;">
-            <h2><?php _e('System Information', 'sakurairo'); ?></h2>
-            <p><strong><?php _e('ChatGPT API Settings Status', 'sakurairo'); ?></strong></p>
-            <pre style="background:#eee; padding:10px; overflow:auto;">
-<?php _e('API Endpoint: ', 'sakurairo'); ?><?php echo iro_opt('chatgpt_endpoint', __('Not set', 'sakurairo')); ?>
-<?php _e('API Key: ', 'sakurairo'); ?><?php echo empty(iro_opt('chatgpt_access_token')) ? __('Not set', 'sakurairo') : __('Set (Length: ', 'sakurairo') . strlen(iro_opt('chatgpt_access_token')) . ')'; ?>
-<?php _e('Model: ', 'sakurairo'); ?><?php echo iro_opt('chatgpt_model', __('Not set', 'sakurairo')); ?>
-            </pre>
-        </div>
         
         <div class="card" style="max-width:800px; margin-bottom:20px; padding:10px 20px;">
             <h2><?php _e('About Article Annotations', 'sakurairo'); ?></h2>
@@ -566,4 +572,392 @@ function render_annotations_meta_box($post) {
     echo '</tbody></table>';
     echo '<p><a href="' . admin_url('tools.php?page=iro-term-annotations') . '" class="button">' . __('Edit in Annotations Management Page', 'sakurairo') . '</a></p>';
     echo '</div>';
+}
+
+
+
+
+
+/**
+ * 注册文章总结管理页面
+ */
+function register_summary_admin_page() {
+    add_submenu_page(
+        'edit.php',                  // 父菜单slug
+        __('Article Summary Management', 'sakurairo'),  // 页面标题
+        __('Article Summary Management', 'sakurairo'),  // 菜单标题
+        'manage_options',            // 所需权限
+        'iro-post-summary',          // 菜单slug
+        __NAMESPACE__ . '\render_summary_admin_page' // 回调函数
+    );
+}
+add_action('admin_menu', __NAMESPACE__ . '\register_summary_admin_page');
+
+/**
+ * 渲染文章总结管理页面
+ */
+function render_summary_admin_page() {
+    // 处理表单提交
+    $message = '';
+    $message_type = '';
+    
+    if (isset($_POST['generate_summary']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
+        $post_id = intval($_POST['post_id']);
+        $result = generate_post_summary(get_post($post_id));
+        remove_action('save_post_post', 'generate_post_summary'); // 防止无限循环
+        update_post_meta($post_id, "ai_summon_excerpt", $result);
+        apply_chatgpt_hook(); // 恢复钩
+        if ($result) {
+            $message = __('Successfully generated summary for the post!', 'sakurairo');
+            $message_type = 'success';
+        } else {
+            $message = __('Failed to generate summary. Please check API settings or view error logs.', 'sakurairo') . $result;
+            $message_type = 'error';
+        }
+    } elseif (isset($_POST['delete_summary']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
+        $post_id = intval($_POST['post_id']);
+        delete_post_meta($post_id, 'ai_summon_excerpt');
+        $message = __('Summary for the post has been deleted.', 'sakurairo');
+        $message_type = 'warning';
+    } elseif (isset($_POST['test_save']) && isset($_POST['post_id']) && check_admin_referer('iro_generate_summary')) {
+        $post_id = intval($_POST['post_id']);
+        $test_data = __('This is a test summary content.', 'sakurairo');
+        
+        $save_result = update_post_meta($post_id, 'ai_summon_excerpt', $test_data);
+        
+        if ($save_result === false) {
+            $message = __('Test save failed!', 'sakurairo');
+            $message_type = 'error';
+        } else {
+            $message = __('Test data saved successfully!', 'sakurairo');
+            $message_type = 'success';
+        }
+    }
+    
+    // 查询带有总结的文章
+    $summarized_posts = get_posts_with_summary();
+    
+    // 查询所有文章和页面
+    $query_args = [
+        'post_type' => ['post'],
+        'posts_per_page' => -1,
+        'orderby' => 'date',
+        'order' => 'DESC'
+    ];
+    $all_posts = get_posts($query_args);
+    
+    // 渲染页面
+    ?>
+    <div class="wrap">
+        <h1><?php _e('Article Summary Management', 'sakurairo'); ?></h1>
+        
+        <?php if (!empty($message)): ?>
+            <div class="notice notice-<?php echo $message_type; ?> is-dismissible">
+                <p><?php echo $message; ?></p>
+            </div>
+        <?php endif; 
+        get_chatgpt_api_info();
+        ?>
+        
+        <div class="card" style="max-width:800px; margin-bottom:20px; padding:10px 20px;">
+            <h2><?php _e('About Article Summaries', 'sakurairo'); ?></h2>
+            <p><?php _e('This feature uses ChatGPT to generate concise summaries of your articles. The summaries are stored separately and can be used to display article excerpts.', 'sakurairo'); ?></p>
+            <p><strong><?php _e('Note:', 'sakurairo'); ?></strong> <?php _e('This feature requires a valid OpenAI API key.', 'sakurairo'); ?></p>
+            <?php 
+            // 检查API设置
+            $api_key = iro_opt('chatgpt_access_token', '');
+            
+            if (empty($api_key)) {
+                echo '<p style="color:red;">' . __('API key not set, please configure the ChatGPT API key in the theme settings first.', 'sakurairo') . '</p>';
+            }
+            ?>
+        </div>
+        
+        <!-- 为文章生成总结 -->
+        <div class="postbox" style="max-width:800px; margin-bottom:20px; padding:10px 20px;">
+            <h2><?php _e('Generate Summary for Post', 'sakurairo'); ?></h2>
+            <form method="post">
+                <?php wp_nonce_field('iro_generate_summary'); ?>
+                <table class="form-table">
+                    <tr>
+                        <th><label for="post_id"><?php _e('Select Post', 'sakurairo'); ?></label></th>
+                        <td>
+                            <select name="post_id" id="post_id" required>
+                                <option value=""><?php _e('-- Select Post --', 'sakurairo'); ?></option>
+                                <?php foreach ($all_posts as $p): ?>
+                                    <option value="<?php echo $p->ID; ?>"><?php echo $p->post_title; ?> (ID: <?php echo $p->ID; ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <p class="submit">
+                    <input type="submit" name="generate_summary" class="button button-primary" value="<?php _e('Generate Summary', 'sakurairo'); ?>">
+                    <input type="submit" name="delete_summary" class="button" value="<?php _e('Delete Summary', 'sakurairo'); ?>" onclick="return confirm('<?php _e('Are you sure you want to delete the summary for this post?', 'sakurairo'); ?>');">
+                    <input type="submit" name="test_save" class="button" value="<?php _e('Save Test Data', 'sakurairo'); ?>">
+                </p>
+            </form>
+        </div>
+        
+        <!-- 已生成总结的文章列表 -->
+        <div class="postbox" style="max-width:800px; padding:10px 20px;">
+            <h2><?php _e('Posts with Generated Summaries', 'sakurairo'); ?></h2>
+            <?php if (empty($summarized_posts)): ?>
+                <p><?php _e('Currently, no posts contain summary data.', 'sakurairo'); ?></p>
+            <?php else: ?>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th><?php _e('Post Title', 'sakurairo'); ?></th>
+                            <th><?php _e('Summary Preview', 'sakurairo'); ?></th>
+                            <th><?php _e('Actions', 'sakurairo'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($summarized_posts as $post): ?>
+                            <?php 
+                            $summary = get_post_meta($post->ID, 'ai_summon_excerpt', true);
+                            $preview = mb_substr(strip_tags($summary), 0, 100) . (mb_strlen($summary) > 100 ? '...' : '');
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo get_permalink($post->ID); ?>" target="_blank">
+                                        <?php echo $post->post_title; ?>
+                                    </a>
+                                </td>
+                                <td><?php echo esc_html($preview); ?></td>
+                                <td>
+                                    <a href="#" class="view-summary" data-post-id="<?php echo $post->ID; ?>"><?php _e('View/Edit Summary', 'sakurairo'); ?></a> | 
+                                    <a href="<?php echo get_edit_post_link($post->ID); ?>" target="_blank"><?php _e('Edit Post', 'sakurairo'); ?></a> | 
+                                    <form method="post" style="display:inline;">
+                                        <?php wp_nonce_field('iro_generate_summary'); ?>
+                                        <input type="hidden" name="post_id" value="<?php echo $post->ID; ?>">
+                                        <button type="submit" name="delete_summary" class="button-link" onclick="return confirm('<?php _e('Are you sure you want to delete this summary?', 'sakurairo'); ?>');">
+                                            <?php _e('Delete', 'sakurairo'); ?>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+        
+        <!-- 总结编辑模态框 -->
+        <div id="summary-modal" style="display:none; position:fixed; z-index:100000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+            <div style="background-color:#fefefe; margin:10% auto; padding:20px; border:1px solid #888; width:60%; max-width:800px;">
+                <span style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;" id="close-summary-modal">&times;</span>
+                <h2 id="summary-modal-title"><?php _e('Post Summary: ', 'sakurairo'); ?></h2>
+                <form id="summary-form">
+                    <input type="hidden" name="post_id" id="summary-post-id" value="">
+                    <textarea id="summary-content" name="summary_content" style="width:100%; height:300px; padding:10px;"></textarea>
+                    <p style="margin-top:15px;">
+                        <button type="submit" id="save-summary" class="button button-primary"><?php _e('Save Summary', 'sakurairo'); ?></button>
+                        <span id="summary-message" style="margin-left:10px;"></span>
+                    </p>
+                </form>
+            </div>
+        </div>
+        
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 查看/编辑总结
+            document.querySelectorAll('.view-summary').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.dataset.postId;
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', ajaxurl + '?action=get_post_summary&post_id=' + postId);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.success) {
+                                    document.getElementById('summary-modal-title').textContent = 
+                                        <?php echo json_encode(__('Post Summary: ', 'sakurairo')); ?> + response.data.title;
+                                    document.getElementById('summary-post-id').value = postId;
+                                    document.getElementById('summary-content').value = response.data.summary;
+                                    document.getElementById('summary-modal').style.display = 'block';
+                                }
+                            } catch (e) {
+                                console.error('Parsing response failed', e);
+                            }
+                        }
+                    };
+                    xhr.send();
+                });
+            });
+
+            // 保存总结
+            document.getElementById('summary-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const postId = document.getElementById('summary-post-id').value;
+                const summary = document.getElementById('summary-content').value;
+                const messageEl = document.getElementById('summary-message');
+                
+                messageEl.textContent = '<?php _e('Saving...', 'sakurairo'); ?>';
+                messageEl.style.color = '#555';
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', ajaxurl + '?action=update_post_summary');
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                messageEl.textContent = '<?php _e('Summary saved successfully!', 'sakurairo'); ?>';
+                                messageEl.style.color = 'green';
+                                setTimeout(function() {
+                                    messageEl.textContent = '';
+                                }, 3000);
+                            } else {
+                                messageEl.textContent = response.data || '<?php _e('Save failed', 'sakurairo'); ?>';
+                                messageEl.style.color = 'red';
+                            }
+                        } catch (e) {
+                            messageEl.textContent = '<?php _e('Error parsing response', 'sakurairo'); ?>';
+                            messageEl.style.color = 'red';
+                            console.error('Parsing response failed', e);
+                        }
+                    } else {
+                        messageEl.textContent = '<?php _e('Request failed', 'sakurairo'); ?>: ' + xhr.status;
+                        messageEl.style.color = 'red';
+                    }
+                };
+                
+                const params = `post_id=${postId}&summary_content=${encodeURIComponent(summary)}&_wpnonce=<?php echo wp_create_nonce('update_post_summary_nonce'); ?>`;
+                xhr.send(params);
+            });
+
+            // 关闭模态框
+            document.getElementById('close-summary-modal').addEventListener('click', function() {
+                document.getElementById('summary-modal').style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('summary-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        </script>
+    </div>
+    <?php
+}
+
+/**
+ * 获取所有带有总结的文章
+ */
+function get_posts_with_summary() {
+    global $wpdb;
+    
+    $query = "
+        SELECT p.* 
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+        WHERE pm.meta_key = 'ai_summon_excerpt'
+        AND p.post_status = 'publish'
+        GROUP BY p.ID
+        ORDER BY p.post_date DESC
+    ";
+    
+    return $wpdb->get_results($query);
+}
+
+/**
+ * AJAX处理函数：获取文章总结
+ */
+function ajax_get_post_summary() {
+    $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+    
+    if (!$post_id) {
+        wp_send_json_error(__('Invalid post ID', 'sakurairo'));
+    }
+    
+    $post = get_post($post_id);
+    if (!$post) {
+        wp_send_json_error(__('Post not found', 'sakurairo'));
+    }
+    
+    $summary = get_post_meta($post_id, 'ai_summon_excerpt', true);
+    
+    if (empty($summary)) {
+        wp_send_json_error(__('This post does not have a summary', 'sakurairo'));
+    }
+    
+    wp_send_json_success([
+        'title' => $post->post_title,
+        'summary' => $summary
+    ]);
+}
+add_action('wp_ajax_get_post_summary', __NAMESPACE__ . '\ajax_get_post_summary');
+
+/**
+ * AJAX处理函数：更新文章总结
+ */
+function ajax_update_post_summary() {
+    // 权限和 nonce 检查
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(__('Access denied', 'sakurairo'));
+    }
+    if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update_post_summary_nonce')) {
+        wp_send_json_error(__('Access denied', 'sakurairo'));
+    }
+
+    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    if (!$post_id) {
+        wp_send_json_error(__('Invalid post ID', 'sakurairo'));
+    }
+    
+    $summary = isset($_POST['summary_content']) ? sanitize_textarea_field($_POST['summary_content']) : '';
+    if (empty($summary)) {
+        wp_send_json_error(__('Summary cannot be empty', 'sakurairo'));
+    }
+    
+    // 更新文章总结
+    $result = update_post_meta($post_id, 'ai_summon_excerpt', $summary);
+    if ($result === false) {
+        wp_send_json_error(__('Failed to update summary', 'sakurairo'));
+    }
+    
+    wp_send_json_success(__('Summary updated successfully', 'sakurairo'));
+}
+add_action('wp_ajax_update_post_summary', __NAMESPACE__ . '\ajax_update_post_summary');
+
+
+/**
+ * 在文章编辑页面添加元框，显示总结数据
+ */
+function add_summary_meta_box() {
+    add_meta_box(
+        'iro_summary_meta_box',       // 元框ID
+        __('Article Summary', 'sakurairo'),  // 标题
+        __NAMESPACE__ . '\render_summary_meta_box', // 回调函数
+        ['post'],             // 显示在文章和页面类型
+        'normal',                     // 显示位置
+        'default'                     // 优先级
+    );
+}
+add_action('add_meta_boxes', __NAMESPACE__ . '\add_summary_meta_box');
+
+/**
+ * 渲染总结数据元框内容
+ */
+function render_summary_meta_box($post) {
+    $summary = get_post_meta($post->ID, 'ai_summon_excerpt', true);
+    
+    if (empty($summary)) {
+        echo '<p>' . sprintf(__('This post currently does not have a summary. You can generate one on the <a href="%s">Article Summary Management</a> page.', 'sakurairo'), admin_url('edit.php?page=iro-post-summary')) . '</p>';
+        return;
+    }
+    
+    echo '<div style="padding:10px; background:#f9f9f9; border:1px solid #ddd; margin-bottom:10px;">';
+    echo '<p><strong>' . __('Summary Preview:', 'sakurairo') . '</strong></p>';
+    echo '<div style="max-height: 200px; overflow-y: auto;">' . wpautop(esc_html($summary)) . '</div>';
+    echo '</div>';
+    echo '<p><a href="' . admin_url('edit.php?page=iro-post-summary') . '" class="button">' . __('Edit in Summary Management Page', 'sakurairo') . '</a></p>';
 }
