@@ -3151,11 +3151,16 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'pca_captcha',
-        'type' => 'switcher',
+        'id' => 'comment_captcha_select',
+        'type' => 'select',
         'title' => __('Page Comment Area Captcha','sakurairo_csf'),
         'label' => __('Enabled by default, comments posted without logging in need to be verified by CAPTCHA','sakurairo_csf'),
-        'default' => true
+        'options' => array(
+          'off' => __('Off','sakurairo_csf'),
+          'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
+        ),
+        'default' => 'iro_captcha',
       ),
 
       array(
@@ -3576,26 +3581,19 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('ChatGPT Model','sakurairo_csf'),
         'descr' => __('Only models support Chat Completion API can be used. The default is "gpt-4o-mini. View https://platform.openai.com/docs/models/overview for further info.','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-        ),
         "default" => "gpt-4o-mini"
       ),
-
       array(
-        'id' => 'chatgpt_article_summarize',
+        'id' => 'chatgpt_auto_article_summarize',
         'type' => 'switcher',
-        'title' => __('ChatGPT Article Summarize','sakurairo_csf'),
-        'label' => __('After turning on, title and context of your articles will be automatically sent to ChatGPT to generate excerpts.','sakurairo_csf'),
+        'title' => __('ChatGPT Auto Article Summarize','sakurairo_csf'),
+        'label' => __('After turning on, title and context of your articles will be automatically sent to ChatGPT to generate excerpts when you save your articles.','sakurairo_csf'),
         'default' => false
       ),
 
       array(
         'type'    => 'content',
         'content'=> __('Each update of your post will trigger a request to generate a summary. Due to current API limitations, if your article exceeds 4097 Token, the system will only send the unexceeded portion to generate a summary','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
       ),
 
       array(
@@ -3603,9 +3601,6 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('Article IDs that do not Require ChatGPT Summarize','sakurairo_csf'),
         'desc' => __('Those articles will never be sent to ChatGPT for excerpt generation. Split each id with a ",".','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
         'default'     => ''
       ),
 
@@ -3613,9 +3608,6 @@ $prefix = 'iro_options';
         'id' => 'chatgpt_init_prompt',
         'type' => 'textarea',
         'title' => __('ChatGPT Article Summarize Init Prompt','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
         'desc' => __('Init Prompt instructs AI how to generate summaries for your articles. Init Prompt will be passed to ChatGPT as "system" role','sakurairo_csf'),
         'default' => '请以作者的身份，以激发好奇吸引阅读为目的，结合文章核心观点来提取的文章中最吸引人的内容，为以下文章编写一个用词精炼简短、110字以内、与文章语言一致的引言。'
       ),

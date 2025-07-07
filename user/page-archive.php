@@ -1,11 +1,10 @@
 <?php 
 /*
-  Template Name: Timearchive Template
+  Template Name: Archive Template
 */
 get_header();
 ?>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
 <style>
     /* 基础布局 */
     .site-content {
