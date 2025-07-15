@@ -828,7 +828,7 @@ foreach ($categories as $category) {
             setup_postdata($post);
             $post_date = date_i18n('Y-m-d', strtotime($post->post_date));
             echo '<div class="category-post-item">';
-            echo '<span class="category-post-title">' . get_the_title($post) . '</span>';
+            echo '<a href="' . get_permalink($post) . '" class="category-post-title">' . get_the_title($post) . '</a>';
             echo '<span class="category-post-date">' . $post_date . '</span>';
             echo '</div>';
         }
