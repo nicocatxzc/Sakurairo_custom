@@ -1387,18 +1387,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     //自动收起搜索界面
-    var moSearcgInput = document.querySelector(".mo-menu-search .search-input");
-    function moSearchClose () {
-        moSearcgInput.blur();
-        closeMenu(moNavMenu, moNavButton);
+    let moSearchInput = document.querySelector(".mo-menu-search .search-input");
+    if (moSearchInput) {
+        function moSearchClose () {
+            moSearchInput.blur();
+            closeMenu(moNavMenu, moNavButton);
+        }
+        moSearchInput.addEventListener("focus", function() {
+            document.addEventListener('pjax:complete', moSearchClose);
+        });
+        moSearchInput.addEventListener("blur", function() {
+            document.removeEventListener("pjax:complete", moSearchClose);
+        });
     }
-    moSearcgInput.addEventListener("focus", function() {
-        document.addEventListener('pjax:complete', moSearchClose);
-    });
-    moSearcgInput.addEventListener("blur", function() {
-        document.removeEventListener("pjax:complete", moSearchClose);
-    });
-
 
     //下面是自动收起、展开导航栏部分
     let lastScrollTop = 0;
