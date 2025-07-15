@@ -39,16 +39,18 @@ namespace IROChatGPT {
                     }
                 }
             }, 10, 3);
-            add_filter('the_excerpt', function (string $post_excerpt) {
-                global $post;
-                if (has_excerpt($post)) {
-                    return $post_excerpt;
-                } else {
-                    $ai_excerpt =  get_post_meta($post->ID, "ai_summon_excerpt", true);
-                    return $ai_excerpt ? $ai_excerpt : $post_excerpt;
-                }
-            });
         }
+
+        add_filter('the_excerpt', function (string $post_excerpt) {
+            global $post;
+            if (has_excerpt($post)) {
+                return $post_excerpt;
+            } else {
+                $ai_excerpt =  get_post_meta($post->ID, "ai_summon_excerpt", true);
+                return $ai_excerpt ? $ai_excerpt : $post_excerpt;
+            }
+        });
+        
     }
 
     function summon_article_excerpt(WP_Post $post)
