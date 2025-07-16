@@ -3908,7 +3908,7 @@ $prefix = 'iro_options';
         'id' => 'image_cdn',
         'type' => 'text',
         'title' => __('Image CDN','sakurairo_csf'),
-        'desc' => __('Note: fill in the format https://your CDN domain/. This means that images with original path http://your.domain/wp-content/uploads/2018/05/xx.png will be loaded from http://your CDN domain/2018/05/xx.png','sakurairo_csf'),
+        'desc' => __('Note: fill in the format https://cdn.example.org, DO NOT add a slash at the end of the url. This means that images with original path http://cdn.example.org/wp-content/uploads/2018/05/xx.png will be loaded from http://cdn.example.org/2018/05/xx.png','sakurairo_csf'),
         'default' => ''
       ),
 
