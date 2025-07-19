@@ -83,6 +83,8 @@
 .site-header .menu-wrapper,
 .menu-wrapper nav.sakura_nav{
     display:flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 }
 
@@ -138,6 +140,10 @@ nav .menu>li .sub-menu li {
     padding: 11px 10px;
 }
 
+.searchbox.js-toggle-search {
+    height: 100%;
+}
+
 .searchbox.js-toggle-search i {
     margin: 17px 0;
     border-radius: 10px !important;
@@ -159,6 +165,7 @@ nav .menu>li .sub-menu li {
 }
 
 .bg-switch i{
+    height: unset;
     border: 2px solid transparent;
     border-radius: 10px !important;
 }

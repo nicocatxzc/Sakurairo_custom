@@ -10,27 +10,39 @@
         if (function_exists('get_multiple_authors')) {
             //plugin_support: PublishPress_Authors
             $authors = get_multiple_authors($post, false);
+            if (empty($authors)){
+                return;
+            }
+            $returns = array_map(function ($author) {
+                $author_post_url=get_author_posts_url($author->ID);
+                return '<span class="meta-author">' .
+                    '<a href="' . $author_post_url . '">' .
+                    get_avatar($author,16,'',$author->display_name,array("class"=>"avatar")).
+                    '</a>' .
+                    '<a rel="author" title="' . $author->display_name . '" href="' . $author_post_url . '">'
+                    . $author->display_name .
+                    '</a>' .
+                    '</span>';
+            }, $authors);
+            echo join('', $returns);
         } else {
             if (!$user_id) {
-                global $authordata;
-                $user_id = isset($authordata->ID) ? $authordata->ID : 0;
-            } else {
-                $authordata = get_userdata($user_id);
+                $user_id = get_post_field('post_author', $post->ID);
             }
-            $authors = array($authordata);
-        }
-        $returns = array_map(function ($author) {
-            $author_post_url=get_author_posts_url($author->ID);
-            return '<span class="meta-author">' .
-                '<a href="' . $author_post_url . '">' .
-                get_avatar($author,16,'',$author->display_name,array("class"=>"avatar")).
+            $user = get_userdata($user_id);
+            if (!$user) {return;}
+
+            $author_url = get_author_posts_url($user->ID);
+            $author_name = $user->display_name;
+            echo '<span class="meta-author">' .
+                '<a href="' . esc_url($author_url) . '">' .
+                get_avatar($user->ID, 16, '', $author_name, array("class" => "avatar")) .
                 '</a>' .
-                '<a rel="author" title="' . $author->display_name . '" href="' . $author_post_url . '">'
-                . $author->display_name .
+                '<a rel="author" title="' . esc_attr($author_name) . '" href="' . esc_url($author_url) . '">' .
+                esc_html($author_name) .
                 '</a>' .
                 '</span>';
-        }, $authors);
-        echo join('', $returns);
+        }
     }
  }
 
