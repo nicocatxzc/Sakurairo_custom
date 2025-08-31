@@ -3584,6 +3584,16 @@ $prefix = 'iro_options';
         "default" => "gpt-4o-mini"
       ),
       array(
+        'id' => 'chatgpt_api_request_timeout',
+        'type' => 'slider',
+        'title' => __('ChatGPT API Request Timeout', 'sakurairo_csf'),
+        'desc' => __('The maximum time to wait for a response from the AI service. Increase if you experience frequent "request timed out" errors.', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '5',
+        'max' => '360',
+        'default' => '30'
+      ),
+      array(
         'id' => 'chatgpt_auto_article_summarize',
         'type' => 'switcher',
         'title' => __('ChatGPT Auto Article Summarize','sakurairo_csf'),
