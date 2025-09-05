@@ -124,9 +124,6 @@ function get_smilies_panel() {
         if (comments_open()) {
             $captcha_option = iro_opt('comment_captcha_select',"off");
 			if ($captcha_option == 'iro_captcha') {
-				include_once('inc/classes/Captcha.php');
-				$img = new Sakura\API\Captcha;
-				$test = $img->create_captcha_img();
 
 				$captcha_url = rest_url('sakura/v1/captcha/create');
 
@@ -134,10 +131,10 @@ function get_smilies_panel() {
 			
 				$comment_captcha = '
 					<label for="captcha" class="comment-captcha">
-						<img id="captchaimg" alt="captcha" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . htmlspecialchars($test['data'], ENT_QUOTES, 'UTF-8') . '">
+						<img id="captchaimg" alt="captcha" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . iro_opt('load_in_svg','') . '">
 						<input type="text" name="captcha" id="captcha" class="input" value="" size="20" tabindex="4" placeholder="' . $captcha_placeholder . '" data-placeholder="'.$captcha_placeholder.'">
-						<input type="hidden" name="timestamp" value="' . htmlspecialchars($test['time'], ENT_QUOTES, 'UTF-8') . '">
-						<input type="hidden" name="id" value="' . htmlspecialchars($test['id'], ENT_QUOTES, 'UTF-8') . '">
+						<input type="hidden" name="timestamp" value=" ">
+						<input type="hidden" name="id" value=" ">
 					</label>';
 			} else if($captcha_option == "turnstile") {
                 include_once('inc/classes/Turnstile.php');
