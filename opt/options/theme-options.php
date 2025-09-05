@@ -146,18 +146,22 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id'    => 'iro_meta',
-        'type'  => 'switcher',
-        'title' => __('Custom Site Keywords and Descriptions','sakurairo_csf'),
-        'label'   => __('After turning on, you can customize the site keywords and descriptions','sakurairo_csf'),
-        'default' => false
+        'id'    => 'iro_seo',
+        'type'  => 'select',
+        'title' => __('Auto SEO','sakurairo_csf'),
+        'options'     => array(
+          'off'  => __('Do not use theme SEO','sakurairo_csf'),
+          'auto'  => __('Auto complete SEO','sakurairo_csf'),
+          'on'  => __('Always add theme SEO','sakurairo_csf'),
+        ),
+        "default"=>"on"
       ),
 
       array(
         'id'     => 'iro_meta_keywords',
         'type'   => 'text',
         'title'  => __('Site Keywords','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('The keywords should be separated with half width comma "," and it\'s better to set within 5 keywords','sakurairo_csf'),
       ),
 
@@ -165,7 +169,7 @@ $prefix = 'iro_options';
         'id'     => 'iro_meta_description',
         'type'   => 'text',
         'title'  => __('Site Descriptions','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('Use concise words to describe the site, it is recommended to write within 120 words','sakurairo_csf'),
       ),
 
@@ -3582,6 +3586,16 @@ $prefix = 'iro_options';
         'title' => __('ChatGPT Model','sakurairo_csf'),
         'descr' => __('Only models support Chat Completion API can be used. The default is "gpt-4o-mini. View https://platform.openai.com/docs/models/overview for further info.','sakurairo_csf'),
         "default" => "gpt-4o-mini"
+      ),
+      array(
+        'id' => 'chatgpt_api_request_timeout',
+        'type' => 'slider',
+        'title' => __('ChatGPT API Request Timeout', 'sakurairo_csf'),
+        'desc' => __('The maximum time to wait for a response from the AI service. Increase if you experience frequent "request timed out" errors.', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '5',
+        'max' => '360',
+        'default' => '30'
       ),
       array(
         'id' => 'chatgpt_auto_article_summarize',
