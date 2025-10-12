@@ -3877,6 +3877,14 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'enable_theme_mathjax',
+        'type' => 'switcher',
+        'title' => __('Enable Built-in MathJax','sakurairo_csf'),
+        'label' => __('Disable this option if MathJax is provided by other methods.','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
         'type' => 'submessage',
         'style' => 'danger',
         'content' => __('The following Options are not recommended to be modified blindly, please use them under the guidance of others','sakurairo_csf'),
