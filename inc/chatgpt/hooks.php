@@ -14,8 +14,8 @@ namespace IROChatGPT {
         if (iro_opt('chatgpt_article_summarize')) {
             $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
             add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
-                // Prevent duplicate execution during autosaves and revisions
-                if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+                // Prevent duplicate execution during autosaves
+                if (wp_is_post_autosave($post_id)) {
                     return;
                 }
                 
@@ -26,10 +26,7 @@ namespace IROChatGPT {
                     return;
                 }
                 
-                // Check if AI excerpt already exists (don't regenerate unless manually deleted)
-                $existing_excerpt = get_post_meta($post_id, POST_METADATA_KEY, true);
-                
-                if (!has_excerpt($post_id) && empty($existing_excerpt) && !in_array($post_id, explode(",", $exclude_ids), false)) {
+                if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
                     // Set transient to prevent duplicate calls (expires in 60 seconds)
                     set_transient($transient_key, true, 60);
                     
