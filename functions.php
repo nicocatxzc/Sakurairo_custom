@@ -890,11 +890,12 @@ function get_link_items() {
         'hide_empty' => false
     ));
 
-    $result = null;
-    if (empty($linkcats)) {
-        return get_the_link_items(); // 友链无分类，直接返回全部列表  
+    // 检查是否返回错误或空结果
+    if (is_wp_error($linkcats) || empty($linkcats)) {
+        return get_the_link_items(); // 友链无分类或出错，直接返回全部列表  
     }
     
+    $result = '';
     $pending_cat_name = __('Pending Links', 'sakurairo'); // 未审核链接分类名称
     
     foreach ($linkcats as $linkcat) {
