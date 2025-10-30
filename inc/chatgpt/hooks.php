@@ -30,25 +30,45 @@ namespace IROChatGPT {
         if (iro_opt('chatgpt_auto_article_summarize')) {
             $exclude_ids = iro_opt('chatgpt_exclude_ids', '');
             add_action('save_post_post', function (int $post_id, WP_Post $post, bool $update) use ($exclude_ids) {
+                // Prevent duplicate execution during autosaves
+                if (wp_is_post_autosave($post_id)) {
+                    return;
+                }
+                
+                // Check if this execution is already in progress using a transient
+                $transient_key = 'chatgpt_excerpt_generating_' . $post_id;
+                if (get_transient($transient_key)) {
+                    // Already processing this post, skip
+                    return;
+                }
+                
                 if (!has_excerpt($post_id) && !in_array($post_id, explode(",", $exclude_ids), false)) {
+                    // Set transient to prevent duplicate calls (expires in 60 seconds)
+                    set_transient($transient_key, true, 60);
+                    
                     try {
                         $excerpt = generate_post_summary($post);
                         update_post_meta($post_id, "ai_summon_excerpt", $excerpt);
                     } catch (\Throwable $th) {
                         error_log('ChatGPT-excerpt-err:' . $th);
+                    } finally {
+                        // Clean up transient after execution
+                        delete_transient($transient_key);
                     }
                 }
             }, 10, 3);
-            add_filter('the_excerpt', function (string $post_excerpt) {
-                global $post;
-                if (has_excerpt($post)) {
-                    return $post_excerpt;
-                } else {
-                    $ai_excerpt =  get_post_meta($post->ID, "ai_summon_excerpt", true);
-                    return $ai_excerpt ? $ai_excerpt : $post_excerpt;
-                }
-            });
         }
+
+        add_filter('the_excerpt', function (string $post_excerpt) {
+            global $post;
+            if (has_excerpt($post)) {
+                return $post_excerpt;
+            } else {
+                $ai_excerpt =  get_post_meta($post->ID, "ai_summon_excerpt", true);
+                return $ai_excerpt ? $ai_excerpt : $post_excerpt;
+            }
+        });
+        
     }
 
     function summon_article_excerpt(WP_Post $post)
@@ -92,7 +112,7 @@ namespace IROChatGPT {
         curl_setopt($ch, CURLOPT_URL, $chatgpt_endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_TIMEOUT, iro_opt('chatgpt_api_request_timeout', 30));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
             "Authorization: Bearer " . $chatGPT_access_token
@@ -237,7 +257,7 @@ namespace IROChatGPT {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+            curl_setopt($ch, CURLOPT_TIMEOUT, iro_opt('chatgpt_api_request_timeout', 30));
 
             // 添加到multi
             curl_multi_add_handle($mh, $ch);
