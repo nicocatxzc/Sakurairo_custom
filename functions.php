@@ -445,6 +445,10 @@ function save_custom_meta_box($post_id) {
 }
 add_action('save_post', 'save_custom_meta_box');
 
+
+// 载入区块编辑器修改
+include_once('inc/blocks/iro_blocks.php');
+
 //主查询逻辑，类型只能多不能少，主查询通过后模版页查询才能干扰拓展
 function customize_query_functions($query) {
     //只影响前端
@@ -521,7 +525,9 @@ function sakura_scripts()
             echo '<link rel="preload" href="' .$iro_css. '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
             echo '<link rel="stylesheet" href="' . $iro_css . '">';
         }, 9);
-    } else {        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
+    } else {        
+        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
+        wp_enqueue_style('iro-codes', $core_lib_basepath . '/css/shortcodes.css', array(), IRO_VERSION);
         wp_enqueue_style('iro-dark', $core_lib_basepath . '/css/dark.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-responsive', $core_lib_basepath . '/css/responsive.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-animation', $core_lib_basepath . '/css/animation.css', array('iro-css'), IRO_VERSION);
@@ -2162,6 +2168,90 @@ function custom_admin_open_sans_font_login_page()
 }
 add_action('login_head', 'custom_admin_open_sans_font_login_page');
 
+// 自动为页面添加description标签
+if (iro_opt('iro_seo','on') != 'off') {
+
+    if (iro_opt('iro_seo','on') == 'auto') {
+        add_action('wp_head', function () {
+            ob_start();
+        }, 0);
+
+        add_action('wp_head', function () {
+            $head_content = ob_get_clean();
+
+            // 检查seo部分
+            $has_description = preg_match('/<meta\s+name=["\']description["\']/i', $head_content);
+            $has_keywords    = preg_match('/<meta\s+name=["\']keywords["\']/i', $head_content);
+
+            echo $head_content;
+            // 选择性补充
+            if (!$has_description) {echo iro_get_description();}
+            if (!$has_keywords) {echo iro_get_keywords();}
+        }, 99);
+    } else {
+        // 始终添加
+        add_action('wp_head', function () {
+            echo iro_get_description();
+            echo iro_get_keywords();
+        }, 99);
+    }
+}
+
+function iro_get_keywords(){
+    global $post;
+    $keywords = '';
+
+    if ( is_singular() ) {
+        $tags = get_the_tags();
+        if ( $tags ) {
+            $keywords = implode(',', array_column($tags, 'name'));
+        }
+    } elseif ( is_category() ) {
+        $cats = get_the_category();
+        if ( $cats ) {
+            $keywords = implode(',', array_column($cats, 'name'));
+        }
+    }
+
+    if ( empty($keywords) ) {
+        $keywords = iro_opt('iro_meta_keywords');
+    }
+
+    if ( empty($keywords) ) {
+        $keywords = get_bloginfo('name');
+    }
+
+    if ( ! empty($keywords) ) {
+        return '<meta name="keywords" content="' . esc_attr($keywords) . '">' . "\n";
+    }
+    return '';
+}
+
+function iro_get_description(){
+    global $post;
+
+    if (is_singular() && !empty($post->post_content) ) {
+        $description = trim(mb_strimwidth(preg_replace('/\s+/', ' ', strip_tags($post->post_content)), 0, 240, '…'));
+    }
+    
+    if (is_category()) {
+        $description = trim(category_description()) ?: $description;
+    }
+
+    if ( empty($description) ) {
+        $description = iro_opt('iro_meta_description');
+    }
+
+    if ( empty($description) ) {
+        $description = get_bloginfo('description');
+    }
+
+    if ( ! empty($description) ) {
+        return '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+    return '';
+}
+
 function array_html_props(array $props)
 {
     $props_string = '';
@@ -3594,7 +3684,7 @@ function get_archive_info($get_page = false) {
             'post_date'     => $post->post_date,
             'post_modified'     => $post->post_modified,
             'comment_count' => $comments,
-            'guid'          => $post->guid,
+            'link'          => get_the_permalink( $post->ID ),
             'categories'    => $category_ids,
             'meta' => [
                 'views' => $views,

@@ -146,18 +146,22 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id'    => 'iro_meta',
-        'type'  => 'switcher',
-        'title' => __('Custom Site Keywords and Descriptions','sakurairo_csf'),
-        'label'   => __('After turning on, you can customize the site keywords and descriptions','sakurairo_csf'),
-        'default' => false
+        'id'    => 'iro_seo',
+        'type'  => 'select',
+        'title' => __('Auto SEO','sakurairo_csf'),
+        'options'     => array(
+          'off'  => __('Do not use theme SEO','sakurairo_csf'),
+          'auto'  => __('Auto complete SEO','sakurairo_csf'),
+          'on'  => __('Always add theme SEO','sakurairo_csf'),
+        ),
+        "default"=>"on"
       ),
 
       array(
         'id'     => 'iro_meta_keywords',
         'type'   => 'text',
         'title'  => __('Site Keywords','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('The keywords should be separated with half width comma "," and it\'s better to set within 5 keywords','sakurairo_csf'),
       ),
 
@@ -165,7 +169,7 @@ $prefix = 'iro_options';
         'id'     => 'iro_meta_description',
         'type'   => 'text',
         'title'  => __('Site Descriptions','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('Use concise words to describe the site, it is recommended to write within 120 words','sakurairo_csf'),
       ),
 
@@ -3584,6 +3588,16 @@ $prefix = 'iro_options';
         "default" => "gpt-4o-mini"
       ),
       array(
+        'id' => 'chatgpt_api_request_timeout',
+        'type' => 'slider',
+        'title' => __('ChatGPT API Request Timeout', 'sakurairo_csf'),
+        'desc' => __('The maximum time to wait for a response from the AI service. Increase if you experience frequent "request timed out" errors.', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '5',
+        'max' => '360',
+        'default' => '30'
+      ),
+      array(
         'id' => 'chatgpt_auto_article_summarize',
         'type' => 'switcher',
         'title' => __('ChatGPT Auto Article Summarize','sakurairo_csf'),
@@ -3899,6 +3913,14 @@ $prefix = 'iro_options';
       ),
 
       array(
+        'id' => 'enable_theme_mathjax',
+        'type' => 'switcher',
+        'title' => __('Enable Built-in MathJax','sakurairo_csf'),
+        'label' => __('Disable this option if MathJax is provided by other methods.','sakurairo_csf'),
+        'default' => true
+      ),
+
+      array(
         'type' => 'submessage',
         'style' => 'danger',
         'content' => __('The following Options are not recommended to be modified blindly, please use them under the guidance of others','sakurairo_csf'),
@@ -3908,7 +3930,7 @@ $prefix = 'iro_options';
         'id' => 'image_cdn',
         'type' => 'text',
         'title' => __('Image CDN','sakurairo_csf'),
-        'desc' => __('Note: fill in the format https://your CDN domain/. This means that images with original path http://your.domain/wp-content/uploads/2018/05/xx.png will be loaded from http://your CDN domain/2018/05/xx.png','sakurairo_csf'),
+        'desc' => __('Note: fill in the format https://cdn.example.org, DO NOT add a slash at the end of the url. This means that images with original path http://cdn.example.org/wp-content/uploads/2018/05/xx.png will be loaded from http://cdn.example.org/2018/05/xx.png','sakurairo_csf'),
         'default' => ''
       ),
 
