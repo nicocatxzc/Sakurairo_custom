@@ -84,6 +84,7 @@ function font_end_js_control()
         'entry_content_style' => iro_opt('entry_content_style'),
         'random_graphs_mts' => check(iro_opt('random_graphs_mts')),
         'code_highlight' => iro_opt('code_highlight_method', 'hljs'),
+        'theme_mathjax' => check(iro_opt('enable_theme_mathjax', true)),
         'comment_upload_img' => iro_opt('img_upload_api') == 'off' ? false : true,
         'img_upload_max_size' => iro_opt('img_upload_max_size',5),
         'cache_cover' => check(iro_opt('cache_cover')),
