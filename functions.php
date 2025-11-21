@@ -2229,26 +2229,28 @@ function iro_get_keywords(){
 
 function iro_get_description(){
     global $post;
+    $description = '';
 
-    if (is_singular() && !empty($post->post_content) ) {
+    if (is_singular() && !empty($post->post_content)) {
         $description = trim(mb_strimwidth(preg_replace('/\s+/', ' ', strip_tags($post->post_content)), 0, 240, '…'));
     }
     
-    if (is_category()) {
-        $description = trim(category_description()) ?: $description;
+    if (empty($description) && is_category()) {
+        $description = trim(category_description());
     }
 
-    if ( empty($description) ) {
+    if (empty($description)) {
         $description = iro_opt('iro_meta_description');
     }
 
-    if ( empty($description) ) {
+    if (empty($description)) {
         $description = get_bloginfo('description');
     }
 
-    if ( ! empty($description) ) {
+    if (!empty($description)) {
         return '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     }
+    
     return '';
 }
 
@@ -4495,3 +4497,4 @@ function iro_action_operator()
     }
 }
 iro_action_operator();
+
