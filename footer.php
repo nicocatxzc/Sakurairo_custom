@@ -72,14 +72,15 @@ $reception_background = iro_opt('reception_background');
   <dialog class="dialog-search-form">
     <form class="js-search search-form" method="get" action="<?php echo esc_url(home_url()); ?>" role="search">
       <div class="search-input">
+        <div class="search-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
         <input id="search-input" class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Want to find something?', 'sakurairo'); ?>" required>
+        <div class="search-detail"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J25vbmUnIHN0cm9rZT0nY3VycmVudENvbG9yJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgdmlld0JveD0nMCAwIDI0IDI0Jz48cmVjdCB3aWR0aD0nNycgaGVpZ2h0PSc3JyB4PSczJyB5PSczJyByeD0nMScvPjxyZWN0IHdpZHRoPSc3JyBoZWlnaHQ9JzcnIHg9JzMnIHk9JzE0JyByeD0nMScvPjxwYXRoIGQ9J00xNCA0aDdNMTQgOWg3TTE0IDE1aDdNMTQgMjBoNycvPjwvc3ZnPg=="></div>
       </div>
       <?php if (iro_opt('live_search')): ?>
         <div class="ins-section-wrapper">
           <div class="ins-section-container" id="PostlistBox"></div>
         </div>
       <?php endif; ?>
-      <div class="search_close"></div>
     </form>
   </dialog>
   <!-- search end -->

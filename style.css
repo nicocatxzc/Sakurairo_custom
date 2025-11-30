@@ -2530,7 +2530,7 @@ h1.main-title {
 
 .dialog-search-form .search-form {
   position: fixed;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   top: 5vh;
   width: 800px;
   max-height: 90vh;
@@ -2582,24 +2582,41 @@ h1.main-title {
 }
 
 .dialog-search-form .search-form .search-input {
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  margin: 2vh;
+    border: 1px solid #505050;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    margin: 2.5%;
+}
+
+.dialog-search-form .search-form .search-input:focus-within {
+  border-color:var(--theme-skin-matching)
 }
 
 .dialog-search-form .search-form .search-input input {
-  font-size: 3vh;
-  border-radius: 50px;
-  width: 80%;
   padding-left: 3%;
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.dialog-search-form .search-detail {
+}
+
+.dialog-search-form .search-detail img {
+  height:100%;
+  width: 100%;
+  max-height: 20px;
+  max-width: 20px;
 }
 
 .ins-section-wrapper {
   flex: 1;
   background: rgba(255,255,255,0.9);
   height: 70vh;
-  width:80%;
+  width: 90%;
   margin: auto;
   margin-bottom: 2vh;
   overflow-y: auto;
@@ -2614,7 +2631,7 @@ h1.main-title {
   background: transparent;
   border-radius: 5px;
   font-family: none;
-  max-width: 70vw;
+  max-width: 80vw;
 }
 
 .ins-section {
@@ -2691,27 +2708,42 @@ h1.main-title {
   white-space: nowrap;
   text-overflow: ellipsis;
   color: #9a9a9a;
+  height: 20px;
+  font-size: 16px;
 }
 
 .ins-section .ins-search-item .ins-search-preview {
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
   color: #9a9a9a;
-  margin-left: 20px;
   font-size: 12px;
   margin: 5px 0 0 0px;
   font-weight: var(--global-font-weight);
+  display: none;
+  max-height: 48px;
+  mask-image: linear-gradient(to bottom, black 85%, transparent);
+}
+
+.search-form.is-active.show-detail .ins-search-preview {
+  display: block;
 }
 
 .ins-section .ins-search-item {
   padding: 8px 15px;
   display: block;
+  align-items: center;
+  border-radius: 4px;
+  transition: none;
+  line-height: 1rem;
+  border: solid 2px #e2e2e3;
+  outline: none;
+  margin: 6px;
 }
 
 .ins-section .ins-search-item .search-keyword {
-  font-size: 15px;
+  font-size: unset;
   border-radius: 5px;
+  color: unset;
 }
 
 .ins-section .ins-search-item header i {
