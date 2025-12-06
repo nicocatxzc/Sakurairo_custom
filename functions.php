@@ -525,6 +525,7 @@ function sakura_scripts()
             echo '<link rel="preload" href="' .$iro_css. '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
             echo '<link rel="stylesheet" href="' . $iro_css . '">';
         }, 9);
+
     } else {        
         wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
         wp_enqueue_style('iro-codes', $core_lib_basepath . '/css/shortcodes.css', array(), IRO_VERSION);
@@ -546,6 +547,16 @@ function sakura_scripts()
         if(iro_opt('choice_of_nav_style') == 'sakura'){
             wp_enqueue_style('sakura_header', $core_lib_basepath . '/css/sakura_header.css', array(), IRO_VERSION);
         }
+    }
+    if(iro_opt("poi_pjax",true)==true){
+        // 禁用wp6.9按需加载
+        add_filter( 'wp_should_load_separate_core_block_assets', '__return_false' );
+
+        // 全量加载wordpress区块和原生组件样式
+        wp_enqueue_style( 'wp-block-library' );
+        wp_enqueue_style( 'wp-block-library-theme' );
+        wp_enqueue_style( 'wp-block-library-comments' );
+        wp_enqueue_style( 'wp-block-library-widgets' );
     }
 
     if(!is_404()){
