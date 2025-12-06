@@ -548,16 +548,6 @@ function sakura_scripts()
             wp_enqueue_style('sakura_header', $core_lib_basepath . '/css/sakura_header.css', array(), IRO_VERSION);
         }
     }
-    if(iro_opt("poi_pjax",true)==true){
-        // 禁用wp6.9按需加载
-        add_filter( 'wp_should_load_separate_core_block_assets', '__return_false' );
-
-        // 全量加载wordpress区块和原生组件样式
-        wp_enqueue_style( 'wp-block-library' );
-        wp_enqueue_style( 'wp-block-library-theme' );
-        wp_enqueue_style( 'wp-block-library-comments' );
-        wp_enqueue_style( 'wp-block-library-widgets' );
-    }
 
     if(!is_404()){
         wp_enqueue_script('app', $core_lib_basepath . '/js/app.js', array('polyfills'), IRO_VERSION, true);
@@ -618,6 +608,22 @@ function sakura_scripts()
     }
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
+
+add_action("after_setup_theme",function(){
+    if(iro_opt("poi_pjax",true)==true){
+        // 禁用wp6.9按需加载
+        add_filter( 'wp_should_load_separate_core_block_assets', '__return_false' );
+        add_filter( 'should_load_separate_core_block_assets', '__return_false', 1 );
+        add_filter( 'should_load_block_assets_on_demand', '__return_false', 1 );
+        add_filter( 'enqueue_empty_block_content_assets', '__return_true' );
+
+        // 全量加载wordpress区块和原生组件样式
+        wp_enqueue_style( 'wp-block-library' );
+        wp_enqueue_style( 'wp-block-library-theme' );
+        wp_enqueue_style( 'wp-block-library-comments' );
+        wp_enqueue_style( 'wp-block-library-widgets' );
+    }
+});
 
 /**
  * load .php.
