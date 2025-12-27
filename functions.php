@@ -525,6 +525,7 @@ function sakura_scripts()
             echo '<link rel="preload" href="' .$iro_css. '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
             echo '<link rel="stylesheet" href="' . $iro_css . '">';
         }, 9);
+
     } else {        
         wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
         wp_enqueue_style('iro-codes', $core_lib_basepath . '/css/shortcodes.css', array(), IRO_VERSION);
@@ -607,6 +608,22 @@ function sakura_scripts()
     }
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
+
+add_action("after_setup_theme",function(){
+    if(iro_opt("poi_pjax",true)==true){
+        // 禁用wp6.9按需加载
+        add_filter( 'wp_should_load_separate_core_block_assets', '__return_false' );
+        add_filter( 'should_load_separate_core_block_assets', '__return_false', 1 );
+        add_filter( 'should_load_block_assets_on_demand', '__return_false', 1 );
+        add_filter( 'enqueue_empty_block_content_assets', '__return_true' );
+
+        // 全量加载wordpress区块和原生组件样式
+        wp_enqueue_style( 'wp-block-library' );
+        wp_enqueue_style( 'wp-block-library-theme' );
+        wp_enqueue_style( 'wp-block-library-comments' );
+        wp_enqueue_style( 'wp-block-library-widgets' );
+    }
+});
 
 /**
  * load .php.
