@@ -198,7 +198,7 @@ header('X-Frame-Options: SAMEORIGIN');
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($nav_text_logo['text'])): ?>
-                        <div class="site-title">
+                        <div class="site-title" style="<?php echo $nav_text_logo['font_name']; ?> !important;">
                             <?= esc_html($nav_text_logo['text']); ?>
                         </div>
                     <?php endif; ?>
