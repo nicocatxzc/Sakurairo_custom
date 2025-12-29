@@ -198,8 +198,11 @@ header('X-Frame-Options: SAMEORIGIN');
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($nav_text_logo['text'])): ?>
-                        <div class="site-title" style="<?php echo $nav_text_logo['font_name']; ?> !important;">
-                            <?= esc_html($nav_text_logo['text']); ?>
+                        <div class="site-title"<?php
+                        if(!empty($nav_text_logo['font_name'])) {
+                            echo ' style="font-family:' . esc_attr($nav_text_logo['font_name']) . '!important;"';
+                        } ?>>
+                            <?php echo esc_html($nav_text_logo['text']); ?>
                         </div>
                     <?php endif; ?>
                 </a>
