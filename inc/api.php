@@ -140,7 +140,7 @@ add_action('rest_api_init', function () {
             $time_archive = get_transient('time_archive');
             if (!$time_archive) {
                 $time_archive = get_archive_info();
-                set_transient('time_archive',$time_archive,86400);
+                set_transient('time_archive',$time_archive,30);
             }
             return $time_archive;
         },
