@@ -69,30 +69,6 @@ header('X-Frame-Options: SAMEORIGIN');
     <link rel="preload" href="<?php echo (iro_opt('fontawesome_source','https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css')?>" as="style">
     <link rel="stylesheet" href="<?php echo (iro_opt('fontawesome_source','https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css')?>" type="text/css" media="all" />
     
-    <?php
-    if (iro_opt('iro_meta')) {
-        $keywords = iro_opt('iro_meta_keywords');
-        $description = iro_opt('iro_meta_description');
-        if (is_singular()) {
-            $tags = get_the_tags();
-            if ($tags) {
-                $keywords = implode(',', array_column($tags, 'name'));
-            }
-            if (!empty($post->post_content)) {
-                $description = trim(mb_strimwidth(preg_replace('/\s+/', ' ', strip_tags($post->post_content)), 0, 240, '…'));
-            }
-        }
-        if (is_category()) {
-            $categories = get_the_category();
-            if ($categories) {
-                $keywords = implode(',', array_column($categories, 'name'));
-            }
-            $description = trim(category_description()) ?: $description;
-        }
-    ?>
-        <meta name="description" content="<?= esc_attr($description); ?>" />
-        <meta name="keywords" content="<?= esc_attr($keywords); ?>" />
-    <?php } ?>
     <link rel="shortcut icon" href="<?= esc_url(iro_opt('favicon_link', '')); ?>" />
     
     <?php wp_head(); ?>
@@ -222,8 +198,11 @@ header('X-Frame-Options: SAMEORIGIN');
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($nav_text_logo['text'])): ?>
-                        <div class="site-title">
-                            <?= esc_html($nav_text_logo['text']); ?>
+                        <div class="site-title"<?php
+                        if(!empty($nav_text_logo['font_name'])) {
+                            echo ' style="font-family:' . esc_attr($nav_text_logo['font_name']) . '!important;"';
+                        } ?>>
+                            <?php echo esc_html($nav_text_logo['text']); ?>
                         </div>
                     <?php endif; ?>
                 </a>

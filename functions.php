@@ -262,10 +262,10 @@ function i18n_templates_name ($translated_name, $original_name) {
             'zh_TW' => 'Steam 庫模板',
             'ja'    => 'Steamライブラリテンプレート',
         ),
-        'Timearchive Template' => array(
-            'zh_CN' => '时光归档模板',
-            'zh_TW' => '時光歸檔模板',
-            'ja'    => 'タイムアーカイブテンプレート',
+        'Archive Template' => array(
+            'zh_CN' => '归档模板',
+            'zh_TW' => '歸檔模板',
+            'ja'    => 'アーカイブページテンプレート',
         ),
     );
     
@@ -445,6 +445,10 @@ function save_custom_meta_box($post_id) {
 }
 add_action('save_post', 'save_custom_meta_box');
 
+
+// 载入区块编辑器修改
+include_once('inc/blocks/iro_blocks.php');
+
 //主查询逻辑，类型只能多不能少，主查询通过后模版页查询才能干扰拓展
 function customize_query_functions($query) {
     //只影响前端
@@ -521,7 +525,10 @@ function sakura_scripts()
             echo '<link rel="preload" href="' .$iro_css. '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
             echo '<link rel="stylesheet" href="' . $iro_css . '">';
         }, 9);
-    } else {        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
+
+    } else {        
+        wp_enqueue_style('iro-css', $core_lib_basepath . '/style.css', array(), IRO_VERSION);
+        wp_enqueue_style('iro-codes', $core_lib_basepath . '/css/shortcodes.css', array(), IRO_VERSION);
         wp_enqueue_style('iro-dark', $core_lib_basepath . '/css/dark.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-responsive', $core_lib_basepath . '/css/responsive.css', array('iro-css'), IRO_VERSION);
         wp_enqueue_style('iro-animation', $core_lib_basepath . '/css/animation.css', array('iro-css'), IRO_VERSION);
@@ -601,6 +608,22 @@ function sakura_scripts()
     }
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
+
+add_action("after_setup_theme",function(){
+    if(iro_opt("poi_pjax",true)==true){
+        // 禁用wp6.9按需加载
+        add_filter( 'wp_should_load_separate_core_block_assets', '__return_false' );
+        add_filter( 'should_load_separate_core_block_assets', '__return_false', 1 );
+        add_filter( 'should_load_block_assets_on_demand', '__return_false', 1 );
+        add_filter( 'enqueue_empty_block_content_assets', '__return_true' );
+
+        // 全量加载wordpress区块和原生组件样式
+        wp_enqueue_style( 'wp-block-library' );
+        wp_enqueue_style( 'wp-block-library-theme' );
+        wp_enqueue_style( 'wp-block-library-comments' );
+        wp_enqueue_style( 'wp-block-library-widgets' );
+    }
+});
 
 /**
  * load .php.
@@ -890,11 +913,12 @@ function get_link_items() {
         'hide_empty' => false
     ));
 
-    $result = null;
-    if (empty($linkcats)) {
-        return get_the_link_items(); // 友链无分类，直接返回全部列表  
+    // 检查是否返回错误或空结果
+    if (is_wp_error($linkcats) || empty($linkcats)) {
+        return get_the_link_items(); // 友链无分类或出错，直接返回全部列表  
     }
     
+    $result = '';
     $pending_cat_name = __('Pending Links', 'sakurairo'); // 未审核链接分类名称
     
     foreach ($linkcats as $linkcat) {
@@ -2057,6 +2081,10 @@ add_action('admin_init', 'theme_folder_check_on_admin_init');
 add_action('wp_ajax_update_theme_option', 'update_theme_option');
 function update_theme_option()
 {
+    if (!isset($_POST['option']) || !isset($_POST['value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $option = $_POST['option'];
     $value = sanitize_text_field($_POST['value']);
     iro_opt_update($option, $value);
@@ -2067,6 +2095,10 @@ function update_theme_option()
 add_action('wp_ajax_update_theme_admin_notice_meta', 'update_theme_admin_notice_meta');
 function update_theme_admin_notice_meta()
 {
+    if (!isset($_POST['user_id']) || !isset($_POST['meta_key']) || !isset($_POST['meta_value'])) {
+        wp_die('Missing required parameters');
+    }
+
     $user_id = $_POST['user_id'];
     $meta_key = $_POST['meta_key'];
     $meta_value = sanitize_text_field($_POST['meta_value']);
@@ -2153,6 +2185,92 @@ function custom_admin_open_sans_font_login_page()
     }
 }
 add_action('login_head', 'custom_admin_open_sans_font_login_page');
+
+// 自动为页面添加description标签
+if (iro_opt('iro_seo','on') != 'off') {
+
+    if (iro_opt('iro_seo','on') == 'auto') {
+        add_action('wp_head', function () {
+            ob_start();
+        }, 0);
+
+        add_action('wp_head', function () {
+            $head_content = ob_get_clean();
+
+            // 检查seo部分
+            $has_description = preg_match('/<meta\s+name=["\']description["\']/i', $head_content);
+            $has_keywords    = preg_match('/<meta\s+name=["\']keywords["\']/i', $head_content);
+
+            echo $head_content;
+            // 选择性补充
+            if (!$has_description) {echo iro_get_description();}
+            if (!$has_keywords) {echo iro_get_keywords();}
+        }, 99);
+    } else {
+        // 始终添加
+        add_action('wp_head', function () {
+            echo iro_get_description();
+            echo iro_get_keywords();
+        }, 99);
+    }
+}
+
+function iro_get_keywords(){
+    global $post;
+    $keywords = '';
+
+    if ( is_singular() ) {
+        $tags = get_the_tags();
+        if ( $tags ) {
+            $keywords = implode(',', array_column($tags, 'name'));
+        }
+    } elseif ( is_category() ) {
+        $cats = get_the_category();
+        if ( $cats ) {
+            $keywords = implode(',', array_column($cats, 'name'));
+        }
+    }
+
+    if ( empty($keywords) ) {
+        $keywords = iro_opt('iro_meta_keywords');
+    }
+
+    if ( empty($keywords) ) {
+        $keywords = get_bloginfo('name');
+    }
+
+    if ( ! empty($keywords) ) {
+        return '<meta name="keywords" content="' . esc_attr($keywords) . '">' . "\n";
+    }
+    return '';
+}
+
+function iro_get_description(){
+    global $post;
+    $description = '';
+
+    if (is_singular() && !empty($post->post_content)) {
+        $description = trim(mb_strimwidth(preg_replace('/\s+/', ' ', strip_tags($post->post_content)), 0, 240, '…'));
+    }
+    
+    if (empty($description) && is_category()) {
+        $description = trim(category_description());
+    }
+
+    if (empty($description)) {
+        $description = iro_opt('iro_meta_description');
+    }
+
+    if (empty($description)) {
+        $description = get_bloginfo('description');
+    }
+
+    if (!empty($description)) {
+        return '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+    
+    return '';
+}
 
 function array_html_props(array $props)
 {
@@ -3301,6 +3419,189 @@ if (iro_opt('captcha_select') === 'iro_captcha') {
 
     }
     add_filter('authenticate', 'checkVaptchaAction', 20, 3);
+} else if ((iro_opt('captcha_select') === 'turnstile') && (!empty(iro_opt("turnstile_site_key")) && !empty(iro_opt("turnstile_secret_key")))) {
+    function turnstile_init() {
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        echo $turnstile->html();
+        echo $turnstile->script();
+    }
+    add_action('login_form', 'turnstile_init');
+    add_action('register_form', 'turnstile_init');
+    add_action('lostpassword_form', 'turnstile_init');
+
+    function verify_turnstile($user, $username = '', $password = '') {
+        // Skip captcha check if it's a passwordless login
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $user;
+        }
+        if (isset($_POST['skip_captcha_check']) && $_POST['skip_captcha_check'] == '1') {
+            return $user;
+        }
+        
+        if (empty($_POST['cf-turnstile-response'])) {
+            return new WP_Error('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+
+        $response = $turnstile->verify($token, $ip);
+        if ($response['success'] === false) {
+            return new WP_Error('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+        }
+
+        if (!$response['success']) {
+            return new WP_Error('invalid_turnstile','<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $user;
+    }
+    add_filter('authenticate', 'verify_turnstile', 20, 3);
+
+    function turnstile_lostpassword_check($errors) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_action('lostpassword_post', 'turnstile_lostpassword_check');
+
+    function turnstile_registration_check($errors, $sanitized_user_login, $user_email) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $errors;
+        }
+        if (empty($_POST['cf-turnstile-response'])) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 请完成人机验证', 'sakurairo');
+            return $errors;
+        }
+
+        include_once('inc/classes/Turnstile.php');
+        $turnstile = new Sakura\API\Turnstile;
+        $secret_key = iro_opt('turnstile_secret_key');
+        $token = sanitize_text_field($_POST['cf-turnstile-response']);
+        $ip = get_the_user_ip();
+
+        $response = $turnstile->verify($token, $ip);
+
+        if ($response['success'] === false) {
+            $errors->add('turnstile_error', '<strong>错误</strong>: 无法验证人机验证，请稍后再试', 'sakurairo');
+            return $errors;
+        }
+
+        if (!$response['success']) {
+            $errors->add('invalid_turnstile', '<strong>错误</strong>: 人机验证失败', 'sakurairo');
+        }
+
+        return $errors;
+    }
+    add_filter('registration_errors', 'turnstile_registration_check', 10, 3);
+
+    function add_captcha_check_script() {
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var loginForm = document.getElementById('loginform');
+        if (!loginForm) return;
+        
+        // Add hidden field for skipping captcha check
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'skip_captcha_check';
+        hiddenField.id = 'skip_captcha_check';
+        hiddenField.value = '0';
+        loginForm.appendChild(hiddenField);
+        
+        // Get elements once at initialization
+        var passwordField = document.getElementById('user_pass');
+        var captchaImg = document.getElementById('captchaimg');
+        var yzmField = document.getElementById('yzm');
+        var turnstileWidget = document.querySelector('.cf-turnstile');
+        
+        // Find the captcha container (the parent element that contains the captcha)
+        var captchaContainer = null;
+        if (yzmField) {
+            // Try to find the parent paragraph or label
+            captchaContainer = yzmField.closest('p') || yzmField.closest('label');
+            if (!captchaContainer && yzmField.parentNode) {
+                captchaContainer = yzmField.parentNode;
+            }
+        } else if (turnstileWidget) {
+            captchaContainer = turnstileWidget.parentNode;
+        }
+        
+        function checkPasswordField() {
+            // Check if password field is hidden or not present
+            var isPasswordVisible = passwordField && 
+                                    passwordField.style.display !== 'none' && 
+                                    passwordField.offsetParent !== null;
+            
+            if (!isPasswordVisible) {
+                // Hide captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = 'none';
+                }
+                
+                hiddenField.value = '1';
+            } else {
+                // Show captcha elements
+                if (captchaContainer) {
+                    captchaContainer.style.display = '';
+                }
+                
+                hiddenField.value = '0';
+            }
+        }
+        
+        // Initial check
+        checkPasswordField();
+        
+        // Set up a less frequent interval to reduce performance impact
+        var checkInterval = setInterval(checkPasswordField, 500);
+        
+        // Use MutationObserver for efficiency
+        if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(checkPasswordField);
+            
+            observer.observe(loginForm, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class', 'display']
+            });
+        }
+        
+        // Add event listener for form submission
+        loginForm.addEventListener('submit', checkPasswordField);
+    });
+    </script>
+    <?php
+}
 }
 
 // 获取访客 IP
@@ -3372,11 +3673,9 @@ function get_archive_info($get_page = false) {
         // 判断页面类型
         if ($post->post_type == 'post') {
             $post_type = 'article';
-        }
-        if ($post->post_type == 'shuoshuo') {
+        } elseif ($post->post_type == 'shuoshuo') {
             $post_type = 'shuoshuo';
-        }
-        if ($post->post_type == 'page') {
+        } else {
             $post_type = 'page';
         }
         
@@ -3396,13 +3695,17 @@ function get_archive_info($get_page = false) {
         if ($post->post_password != ''){
             $post->post_title = __("It's a secret",'sakurairo'); // 隐藏受密码保护文章的标题
         }
+
+        $category_ids = wp_get_post_categories($post->ID) ?: [];
+
         $post = [ //仅保存需要的数据（归档、展示区）
             'post_title'    => $post->post_title,
             'post_author'     => $post->post_author,
             'post_date'     => $post->post_date,
             'post_modified'     => $post->post_modified,
             'comment_count' => $comments,
-            'guid'          => $post->guid,
+            'link'          => get_the_permalink( $post->ID ),
+            'categories'    => $category_ids,
             'meta' => [
                 'views' => $views,
                 'words' => $words,
@@ -3484,10 +3787,12 @@ function sakurairo_link_submission_handler() {
         $pending_cat_name = __('Pending Links', 'sakurairo');
         $link_categories = get_terms('link_category', array('hide_empty' => false));
         
-        foreach ($link_categories as $category) {
-            if ($category->name === $pending_cat_name) {
-                $pending_cat_id = $category->term_id;
-                break;
+        if (!is_wp_error($link_categories) && !empty($link_categories)) {
+            foreach ($link_categories as $category) {
+                if ($category->name === $pending_cat_name) {
+                    $pending_cat_id = $category->term_id;
+                    break;
+                }
             }
         }
         
@@ -3676,6 +3981,11 @@ function sakurairo_check_pending_links_limit() {
     $pending_cat_id = 0;
     $pending_cat_name = __('Pending Links', 'sakurairo');
     $link_categories = get_terms('link_category', array('hide_empty' => false));
+    
+    // 检查get_terms是否返回错误
+    if (is_wp_error($link_categories) || empty($link_categories)) {
+        return false; // 如果获取分类失败，返回false（未达到上限）
+    }
     
     foreach ($link_categories as $category) {
         if ($category->name === $pending_cat_name) {
@@ -4212,3 +4522,4 @@ function iro_action_operator()
     }
 }
 iro_action_operator();
+

@@ -146,18 +146,22 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id'    => 'iro_meta',
-        'type'  => 'switcher',
-        'title' => __('Custom Site Keywords and Descriptions','sakurairo_csf'),
-        'label'   => __('After turning on, you can customize the site keywords and descriptions','sakurairo_csf'),
-        'default' => false
+        'id'    => 'iro_seo',
+        'type'  => 'select',
+        'title' => __('Auto SEO','sakurairo_csf'),
+        'options'     => array(
+          'off'  => __('Do not use theme SEO','sakurairo_csf'),
+          'auto'  => __('Auto complete SEO','sakurairo_csf'),
+          'on'  => __('Always add theme SEO','sakurairo_csf'),
+        ),
+        "default"=>"on"
       ),
 
       array(
         'id'     => 'iro_meta_keywords',
         'type'   => 'text',
         'title'  => __('Site Keywords','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('The keywords should be separated with half width comma "," and it\'s better to set within 5 keywords','sakurairo_csf'),
       ),
 
@@ -165,7 +169,7 @@ $prefix = 'iro_options';
         'id'     => 'iro_meta_description',
         'type'   => 'text',
         'title'  => __('Site Descriptions','sakurairo_csf'),
-        'dependency' => array( 'iro_meta', '==', 'true', '', 'true' ),
+        'dependency' => array( 'iro_seo', '!=', 'off', '', 'true' ),
         'desc'   => __('Use concise words to describe the site, it is recommended to write within 120 words','sakurairo_csf'),
       ),
 
@@ -3151,11 +3155,16 @@ $prefix = 'iro_options';
       ),
 
       array(
-        'id' => 'pca_captcha',
-        'type' => 'switcher',
+        'id' => 'comment_captcha_select',
+        'type' => 'select',
         'title' => __('Page Comment Area Captcha','sakurairo_csf'),
         'label' => __('Enabled by default, comments posted without logging in need to be verified by CAPTCHA','sakurairo_csf'),
-        'default' => true
+        'options' => array(
+          'off' => __('Off','sakurairo_csf'),
+          'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
+        ),
+        'default' => 'iro_captcha',
       ),
 
       array(
@@ -3334,7 +3343,8 @@ $prefix = 'iro_options';
         'options' => array(
           'off' => __('Off','sakurairo_csf'),
           'iro_captcha' => __('Theme Built in Captcha','sakurairo_csf'),
-          'vaptcha' => __('Vaptcha','sakurairo_csf')
+          'vaptcha' => __('Vaptcha','sakurairo_csf'),
+          'turnstile' => __('Cloudflare Turnstile',"sakurairo_csf")
         ),
         'default' => 'off',
       ),
@@ -3369,6 +3379,35 @@ $prefix = 'iro_options';
           '6' => __(6,'sakurairo_csf'),
         ),
         'default' => 1,
+      ),
+
+      array(
+        'id' => 'turnstile_site_key',
+        'type' => 'text',
+        'title' => __('Turnstile Site Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Site Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_secret_key',
+        'type' => 'text',
+        'title' => __('Turnstile Secret Key',"sakurairo_csf"),
+        'dependency' => array( 'captcha_select', '==', 'turnstile', '', 'true' ),
+        'desc' => __('Fill in your Turnstile Secret Key','sakurairo_csf'),
+      ),
+
+      array(
+        'id' => 'turnstile_theme',
+        'type' => 'select',
+        'title' => 'Turnstile Theme',
+        'options' => array(
+            'light' => 'Light',
+            'dark' => 'Dark',
+            'auto' => 'Auto',
+        ),
+        'default' => 'light',
+        'dependency' => array('captcha_select', '==', 'turnstile'),
       ),
 
       array(
@@ -3546,26 +3585,29 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('ChatGPT Model','sakurairo_csf'),
         'descr' => __('Only models support Chat Completion API can be used. The default is "gpt-4o-mini. View https://platform.openai.com/docs/models/overview for further info.','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-        ),
         "default" => "gpt-4o-mini"
       ),
-
       array(
-        'id' => 'chatgpt_article_summarize',
+        'id' => 'chatgpt_api_request_timeout',
+        'type' => 'slider',
+        'title' => __('ChatGPT API Request Timeout', 'sakurairo_csf'),
+        'desc' => __('The maximum time to wait for a response from the AI service. Increase if you experience frequent "request timed out" errors.', 'sakurairo_csf'),
+        'step' => '1',
+        'min' => '5',
+        'max' => '360',
+        'default' => '30'
+      ),
+      array(
+        'id' => 'chatgpt_auto_article_summarize',
         'type' => 'switcher',
-        'title' => __('ChatGPT Article Summarize','sakurairo_csf'),
-        'label' => __('After turning on, title and context of your articles will be automatically sent to ChatGPT to generate excerpts.','sakurairo_csf'),
+        'title' => __('ChatGPT Auto Article Summarize','sakurairo_csf'),
+        'label' => __('After turning on, title and context of your articles will be automatically sent to ChatGPT to generate excerpts when you save your articles.','sakurairo_csf'),
         'default' => false
       ),
 
       array(
         'type'    => 'content',
         'content'=> __('Each update of your post will trigger a request to generate a summary. Due to current API limitations, if your article exceeds 4097 Token, the system will only send the unexceeded portion to generate a summary','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
       ),
 
       array(
@@ -3573,9 +3615,6 @@ $prefix = 'iro_options';
         'type' => 'text',
         'title' => __('Article IDs that do not Require ChatGPT Summarize','sakurairo_csf'),
         'desc' => __('Those articles will never be sent to ChatGPT for excerpt generation. Split each id with a ",".','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
         'default'     => ''
       ),
 
@@ -3583,9 +3622,6 @@ $prefix = 'iro_options';
         'id' => 'chatgpt_init_prompt',
         'type' => 'textarea',
         'title' => __('ChatGPT Article Summarize Init Prompt','sakurairo_csf'),
-        'dependency' => array(
-          array( 'chatgpt_article_summarize', '==', 'true', '', 'true' ),
-    ),
         'desc' => __('Init Prompt instructs AI how to generate summaries for your articles. Init Prompt will be passed to ChatGPT as "system" role','sakurairo_csf'),
         'default' => '请以作者的身份，以激发好奇吸引阅读为目的，结合文章核心观点来提取的文章中最吸引人的内容，为以下文章编写一个用词精炼简短、110字以内、与文章语言一致的引言。'
       ),
@@ -3894,7 +3930,7 @@ $prefix = 'iro_options';
         'id' => 'image_cdn',
         'type' => 'text',
         'title' => __('Image CDN','sakurairo_csf'),
-        'desc' => __('Note: fill in the format https://your CDN domain/. This means that images with original path http://your.domain/wp-content/uploads/2018/05/xx.png will be loaded from http://your CDN domain/2018/05/xx.png','sakurairo_csf'),
+        'desc' => __('Note: fill in the format https://cdn.example.org, DO NOT add a slash at the end of the url. This means that images with original path http://cdn.example.org/wp-content/uploads/2018/05/xx.png will be loaded from http://cdn.example.org/2018/05/xx.png','sakurairo_csf'),
         'default' => ''
       ),
 

@@ -122,10 +122,8 @@ function get_smilies_panel() {
 
         <?php
         if (comments_open()) {
-			if (iro_opt('pca_captcha')) {
-				include_once('inc/classes/Captcha.php');
-				$img = new Sakura\API\Captcha;
-				$test = $img->create_captcha_img();
+            $captcha_option = iro_opt('comment_captcha_select',"off");
+			if ($captcha_option == 'iro_captcha') {
 
 				$captcha_url = rest_url('sakura/v1/captcha/create');
 
@@ -133,14 +131,18 @@ function get_smilies_panel() {
 			
 				$comment_captcha = '
 					<label for="captcha" class="comment-captcha">
-						<img id="captchaimg" alt="captcha" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . htmlspecialchars($test['data'], ENT_QUOTES, 'UTF-8') . '">
+						<img id="captchaimg" alt="captcha" width="120" height="40" style="width: 0px;margin-right: 0px;" src="' . iro_opt('load_in_svg','') . '">
 						<input type="text" name="captcha" id="captcha" class="input" value="" size="20" tabindex="4" placeholder="' . $captcha_placeholder . '" data-placeholder="'.$captcha_placeholder.'">
-						<input type="hidden" name="timestamp" value="' . htmlspecialchars($test['time'], ENT_QUOTES, 'UTF-8') . '">
-						<input type="hidden" name="id" value="' . htmlspecialchars($test['id'], ENT_QUOTES, 'UTF-8') . '">
+						<input type="hidden" name="timestamp" value=" ">
+						<input type="hidden" name="id" value=" ">
 					</label>';
+			} else if($captcha_option == "turnstile") {
+                include_once('inc/classes/Turnstile.php');
+				$comment_captcha = '<div id="cfturnstile" class="cfturnstile" data-key="'.iro_opt('turnstile_site_key','').'"></div>
+                                    <input type="hidden" class="cf-turnstile-response" name="cf-turnstile-response" value="">';
 			} else {
-				$robot_comments = null;
-			}
+                $comment_captcha = "";
+            }
             $private_ms = iro_opt('comment_private_message')
                 ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="is-private"><span class="siren-is-private-checkbox siren-checkbox-radioInput"></span>' . __('Comment in private', 'sakurairo') . '</label>'
                 : '';
@@ -190,7 +192,7 @@ function get_smilies_panel() {
                                         </div>',
                 'comment_notes_after'  => '',
                 'comment_notes_before' => '',
-                'fields'            => apply_filters('comment_form_default_fields', array(
+                'fields'            => (!is_user_logged_in()?apply_filters('comment_form_default_fields', array(
                     'avatar' => '<div class="cmt-info-container"><div class="comment-user-avatar">
                                     <img alt="comment_user_avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iIzgwODA4MCIgZD0iTTM5OSAzODQuMkMzNzYuOSAzNDUuOCAzMzUuNCAzMjAgMjg4IDMyMGwtNjQgMGMtNDcuNCAwLTg4LjkgMjUuOC0xMTEgNjQuMmMzNS4yIDM5LjIgODYuMiA2My44IDE0MyA2My44czEwNy44LTI0LjcgMTQzLTYzLjh6TTAgMjU2YTI1NiAyNTYgMCAxIDEgNTEyIDBBMjU2IDI1NiAwIDEgMSAwIDI1NnptMjU2IDE2YTcyIDcyIDAgMSAwIDAtMTQ0IDcyIDcyIDAgMSAwIDAgMTQ0eiIvPjwvc3ZnPg==">
                                     <div class="socila-check qq-check"><i class="fa-brands fa-qq fa-xs"></i></div>
@@ -210,20 +212,20 @@ function get_smilies_panel() {
                                  </div></div>',
                     'qq'     => '<input type="text" placeholder="QQ" name="new_field_qq" id="qq" value="' . esc_attr($comment_author_url) . '" style="display:none" autocomplete="off"/><!--此栏不可见-->',
 					'checks' => '<div class="comment-checks">' . ($comment_captcha ?? '') . ($private_ms ?? '') . ($mail_notify ?? '') ,//此处不闭合，和保存信息在一层级一起闭合
-                ))
+                )):[]) // 用户登录则不显示任何字段
             );
 
-			function comment_cookies_check_lable($field) {
+			function comment_cookies_check_label($field) {
 				$field = '
 							<label class="siren-checkbox-label">
-								<input class="siren-checkbox-radio id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes">
+								<input class="siren-checkbox-radio" id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes">
 								<span class="siren-mail-notify-checkbox siren-checkbox-radioInput"></span>
 								' . __('Save your private info', 'sakurairo') . '
 							</label></div>
 						 ';
 				return $field;
 			}
-			add_filter('comment_form_field_cookies', 'comment_cookies_check_lable');
+			add_filter('comment_form_field_cookies', 'comment_cookies_check_label');
 
             comment_form($args);
         }
