@@ -4268,6 +4268,7 @@ function get_site_stats() {
     $total_views = 0;
     $first_post_date = null;
 
+    $authors = [];
     foreach ($posts_stat as $year => $months) {
         foreach ($months as $month => $posts) {
             foreach ($posts as $post) {
@@ -4301,7 +4302,7 @@ function get_site_stats() {
         }
     }
 
-    $total_authors = count($authors);
+    $total_authors = count($authors ?? []);
     // 第一篇文章的发布日期
     $first_post_date = date('Y-m-d H:i:s', $first_post_date);
     
