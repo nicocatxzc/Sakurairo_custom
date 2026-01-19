@@ -1,11 +1,10 @@
 <?php 
 /*
-  Template Name: Timearchive Template
+  Template Name: Archive Template
 */
 get_header();
 ?>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
 <style>
     /* 基础布局 */
     .site-content {
@@ -594,6 +593,168 @@ get_header();
     }
 
 </style>
+
+<style>
+
+ /* 分类卡片样式 */
+    .category-card {
+        background: rgba(255,255,255,0.7);
+        border-radius: 1.2rem;
+        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+        padding: 1.2rem 1.2rem 1.2rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        min-width: 0;
+        cursor: pointer;
+        transition: background 0.45s cubic-bezier(.4,2,.6,1),
+                    box-shadow 0.45s cubic-bezier(.4,2,.6,1),
+                    border-color 0.45s cubic-bezier(.4,2,.6,1),
+                    color 0.45s cubic-bezier(.4,2,.6,1),
+                    transform 0.3s cubic-bezier(.4,2,.6,1);
+        overflow: visible;
+        border: 1.5px solid #e0e0e0;
+    }
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 48px 0 rgba(0,0,0,0.13);
+        border-color: var(--theme-skin-matching, #505050);
+    }
+    body.dark .category-card {
+        background: rgba(30,30,30,0.92);
+        border: 1.5px solid #333;
+    }
+    body.dark .category-card:hover {
+        border-color: var(--theme-skin-matching, #fff);
+    }
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        align-items: center;
+
+    }
+    .category-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--theme-skin, #222);
+        line-height: 0;
+        transform: translateY(0.2rem);
+    }
+    body.dark .category-name {
+        color: rgba(255,255,255,0.9);
+    }
+    .category-count {
+        font-size: 1rem;
+        background: rgba(0,0,0,0.08);
+        padding: 0.3rem 0.8rem;
+        border-radius: 1rem;
+        color: #666;
+    }
+    body.dark .category-count {
+        background: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+    }
+    .category-description {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 1.2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    body.dark .category-description {
+        color: rgba(255,255,255,0.6);
+    }
+    .category-posts {
+        padding-top: 0.8rem;
+        border-top: 1px dashed #e0e0e0;
+    }
+    body.dark .category-posts {
+        border-top: 1px dashed #333;
+    }
+    .category-post-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        padding: 0.3rem 0;
+    }
+    .category-post-title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #555;
+    }
+    body.dark .category-post-title {
+        color: rgba(255,255,255,0.7);
+    }
+    .category-post-date {
+        color: #999;
+        font-size: 0.8rem;
+        margin-left: 0.8rem;
+        flex-shrink: 0;
+    }
+    body.dark .category-post-date {
+        color: rgba(255,255,255,0.5);
+    }
+    
+    /* 模态框*/
+    .category-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    body.dark .category-modal-header {
+        border-bottom: 1px solid #333;
+    }
+    .category-modal-name {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--theme-skin, #222);
+        margin: 0;
+    }
+    body.dark .category-modal-name {
+        color: rgba(255,255,255,0.95);
+    }
+    .category-modal-count {
+        font-size: 1.1rem;
+        background: rgba(0,0,0,0.08);
+        padding: 0.4rem 1rem;
+        border-radius: 1rem;
+        color: #666;
+    }
+    body.dark .category-modal-count {
+        background: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+    }
+    .category-modal-description {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #666;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+    }
+    body.dark .category-modal-description {
+        color: rgba(255,255,255,0.65);
+    }
+    
+    /* 分类容器 */
+    #category-root {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2.5rem;
+        margin: 2rem 0;
+        padding: 0 1rem;
+    }
+
+</style>
+
 <?php 
     if (!iro_opt('patternimg') || !get_post_thumbnail_id(get_the_ID())) { 
     ?>
@@ -632,4 +793,52 @@ foreach ($years as $year => $months) {
 ?>
 <dialog id="timeline-modal-mask" class="timeline-modal-mask"><div class="timeline-modal"><span class="timeline-modal-close" id="timeline-modal-close">×</span><div id="timeline-modal-content" data-archiveapi=<?php echo rest_url('sakura/v1/archive_info');?>></div></div></dialog>
 </div>
+
+
+<!-- 分类归档容器 -->
+<div class="category-root" id="category-root">
+<?php
+$categories = get_categories(array(
+    'orderby' => 'count',
+    'order' => 'DESC',
+    'hide_empty' => true
+));
+
+foreach ($categories as $category) {
+    $recent_posts = get_posts(array(
+        'category__in' => $category->term_id,
+        'numberposts' => 5,       // 最新5篇文章? 以后添加单独设置项
+        'orderby' => 'date',
+        'order' => 'DESC'
+    ));
+    
+    echo '<section class="category-card" data-categoryid="' . $category->term_id . '">';
+    echo '<div class="category-header">';
+    echo '<h3 class="category-name">' . $category->name . '</h3>';
+    echo '<span class="category-count">' . $category->count . ' ' . __('article', 'sakurairo') . '</span>';
+    echo '</div>';
+    
+    if (!empty($category->description)) {
+        echo '<div class="category-description">' . $category->description . '</div>';
+    }
+    
+    if (!empty($recent_posts)) {
+        echo '<div class="category-posts">';
+        foreach ($recent_posts as $post) {
+            setup_postdata($post);
+            $post_date = date_i18n('Y-m-d', strtotime($post->post_date));
+            echo '<div class="category-post-item">';
+            echo '<a href="' . get_permalink($post) . '" class="category-post-title">' . get_the_title($post) . '</a>';
+            echo '<span class="category-post-date">' . $post_date . '</span>';
+            echo '</div>';
+        }
+        wp_reset_postdata();
+        echo '</div>';
+    }
+    echo '</section>';
+}
+?>
+</div>
+
+
 <?php get_footer(); ?>
