@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 $nav_style = iro_opt('sakura_nav_style');
 $nav_text_logo = iro_opt('nav_text_logo');
 $show_search = (bool)iro_opt('nav_menu_search');
+$show_user_avatar = (bool)iro_opt('nav_user_menu',true);
 ?>
 <style>
   <?php if (!empty($nav_text_logo['font_name'])){ ?>
@@ -157,7 +158,11 @@ $show_search = (bool)iro_opt('nav_menu_search');
 
   <?php get_template_part('layouts/mo_toc_menu');?> 
 
-  <?php header_user_menu(); //用户栏?>
+  <?php
+    if ($show_user_avatar) {
+        header_user_menu(); //用户栏
+    }
+  ?>
 
   <script><?php //置顶时添加底色 ?>
     document.addEventListener('DOMContentLoaded', function(){

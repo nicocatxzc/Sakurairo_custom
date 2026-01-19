@@ -5,6 +5,7 @@ header("Expires: " . gmdate("D, d M Y H:i:s", time() + 86400) . " GMT");
 
 $style_files = [
     '../style.css',
+    'shortcodes.css',
     'dark.css',
     'responsive.css',
     'animation.css',

@@ -516,13 +516,6 @@ animation: slow-rotate 10s linear infinite;
 }
 <?php endif; ?>
 
-<?php if (!iro_opt('chatgpt_article_summarize', 'true')): ?>
-.ai-excerpt,
-.ai-excerpt-tip {
-    display: none;
-}
-<?php endif; ?>
-
 <?php if (!iro_opt('social_area', 'true')): ?>
 .top-social_v2,.top-social{
     display: none;
