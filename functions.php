@@ -55,7 +55,9 @@ if (!function_exists('iro_opt_update')) {
 }
 
 $shared_lib_basepath = iro_opt('shared_library_basepath') ? get_template_directory_uri() : (iro_opt('lib_cdn_path', 'https://fastly.jsdelivr.net/gh/mirai-mamori/Sakurairo@') . IRO_VERSION);
-$core_lib_basepath = iro_opt('core_library_basepath') ? get_template_directory_uri() : (iro_opt('lib_cdn_path', 'https://fastly.jsdelivr.net/gh/mirai-mamori/Sakurairo@') . IRO_VERSION);
+$core_lib_basepath = iro_opt('dev_mode',false) ? get_template_directory_uri() : 
+                    (iro_opt('core_library_basepath',true) ? get_template_directory_uri() : 
+                    (iro_opt('lib_cdn_path', 'https://fastly.jsdelivr.net/gh/mirai-mamori/Sakurairo@') . IRO_VERSION));
 
 // 屏蔽php日志信息
 if (iro_opt('php_notice_filter') != 'inner') {
@@ -504,7 +506,7 @@ function sakura_scripts()
     global $shared_lib_basepath;
 
     // 预加载主要样式文件
-    if(iro_opt('dev_mode',false) == false) { // 压缩并缓存主题样式
+    if(iro_opt('dev_mode',false) == false && iro_opt('core_library_basepath',true) == true) { // 压缩并缓存主题样式
         
         function add_cache_control_header() { // 添加缓存策略
             if ( ! is_user_logged_in() ) {
