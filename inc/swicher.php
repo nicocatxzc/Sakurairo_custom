@@ -79,6 +79,7 @@ function font_end_js_control()
         'post_feature_img' => ( is_singular() && get_post_thumbnail_id(get_the_ID()) ) ? get_the_post_thumbnail_url(get_the_ID(), 'full') : '',
         'page_annotation' => json_encode($annotations) ?? [],
         'live_search' => check(iro_opt('live_search')),
+        'live_search_preview' => check(iro_opt('live_search_preview', true)),
         'loading_ph' => iro_opt('load_in_svg'),
         'clipboardRef' => iro_opt('clipboard_ref') == '0' ? false : true,
         'entry_content_style' => iro_opt('entry_content_style'),

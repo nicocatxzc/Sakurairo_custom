@@ -71,10 +71,24 @@ $reception_background = iro_opt('reception_background');
   <!-- search start -->
   <dialog class="dialog-search-form">
     <form class="js-search search-form" method="get" action="<?php echo esc_url(home_url()); ?>" role="search">
+      <div class="search-header">
+        <h2 class="search-title"><?php esc_html_e('Search', 'sakurairo'); ?></h2>
+        <button type="button" class="search-close" aria-label="<?php esc_attr_e('Close Search', 'sakurairo'); ?>">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
       <div class="search-input">
+        <label class="screen-reader-text" for="search-input"><?php esc_html_e('Search', 'sakurairo'); ?></label>
         <div class="search-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
-        <input id="search-input" class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Want to find something?', 'sakurairo'); ?>" required>
-        <div class="search-detail"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J25vbmUnIHN0cm9rZT0nY3VycmVudENvbG9yJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgdmlld0JveD0nMCAwIDI0IDI0Jz48cmVjdCB3aWR0aD0nNycgaGVpZ2h0PSc3JyB4PSczJyB5PSczJyByeD0nMScvPjxyZWN0IHdpZHRoPSc3JyBoZWlnaHQ9JzcnIHg9JzMnIHk9JzE0JyByeD0nMScvPjxwYXRoIGQ9J00xNCA0aDdNMTQgOWg3TTE0IDE1aDdNMTQgMjBoNycvPjwvc3ZnPg=="></div>
+        <input id="search-input" class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Want to find something?', 'sakurairo'); ?>" autocomplete="off" required>
+        <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Submit Search', 'sakurairo'); ?>">
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </button>
+        <?php if (iro_opt('live_search') && iro_opt('live_search_preview', true)): ?>
+          <button type="button" class="search-detail" aria-label="<?php esc_attr_e('Toggle Details', 'sakurairo'); ?>" aria-pressed="false">
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+          </button>
+        <?php endif; ?>
       </div>
       <?php if (iro_opt('live_search')): ?>
         <div class="ins-section-wrapper">
