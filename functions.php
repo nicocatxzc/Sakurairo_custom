@@ -3667,7 +3667,7 @@ function get_archive_info($get_page = false) {
             'comments' => 0
         ]
     ];
-    foreach ($posts as $post) {
+        foreach ($posts as $post) {
         $views = get_post_views($post->ID);
         $words = get_meta_words_count($post->ID);
         $comments = get_comments_number($post->ID);
