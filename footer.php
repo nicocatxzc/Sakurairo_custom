@@ -67,27 +67,24 @@ $reception_background = iro_opt('reception_background');
   
   <button id="moblieGoTop" title="<?php esc_attr_e('Go to top', 'sakurairo'); ?>"><i class="fa-solid fa-caret-up fa-lg"></i></button>
   <button id="changskin" title="<?php esc_attr_e('Control Panel', 'sakurairo'); ?>"><i class="fa-solid fa-compass-drafting fa-lg fa-flip"></i></button>
+
   <!-- search start -->
-  <form class="js-search search-form search-form--modal" method="get" action="<?php echo esc_url(home_url()); ?>" role="search">
-    <div class="search-form__inner">
+  <dialog class="dialog-search-form">
+    <form class="js-search search-form" method="get" action="<?php echo esc_url(home_url()); ?>" role="search">
+      <div class="search-input">
+        <div class="search-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
+        <input id="search-input" class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Want to find something?', 'sakurairo'); ?>" required>
+        <div class="search-detail"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J25vbmUnIHN0cm9rZT0nY3VycmVudENvbG9yJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgdmlld0JveD0nMCAwIDI0IDI0Jz48cmVjdCB3aWR0aD0nNycgaGVpZ2h0PSc3JyB4PSczJyB5PSczJyByeD0nMScvPjxyZWN0IHdpZHRoPSc3JyBoZWlnaHQ9JzcnIHg9JzMnIHk9JzE0JyByeD0nMScvPjxwYXRoIGQ9J00xNCA0aDdNMTQgOWg3TTE0IDE1aDdNMTQgMjBoNycvPjwvc3ZnPg=="></div>
+      </div>
       <?php if (iro_opt('live_search')): ?>
-        <div class="micro">
-          <input id="search-input" class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Want to find something?', 'sakurairo'); ?>" required>
-        </div>
         <div class="ins-section-wrapper">
-          <a id="Ty" href="#"></a>
           <div class="ins-section-container" id="PostlistBox"></div>
         </div>
-      <?php else: ?>
-        <div class="micro">
-          <p class="micro mb-"><?php esc_html_e('Want to find something?', 'sakurairo'); ?></p>
-          <input class="text-input" type="search" name="s" placeholder="<?php esc_attr_e('Search', 'sakurairo'); ?>" required>
-        </div>
       <?php endif; ?>
-    </div>
-    <div class="search_close"></div>
-  </form>
+    </form>
+  </dialog>
   <!-- search end -->
+
 <?php wp_footer(); ?>
 <div class="skin-menu no-select">
   <?php if (iro_opt('sakura_widget')): ?>
