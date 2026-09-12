@@ -1,0 +1,29 @@
+.site-footer {
+    width: 100%;
+    flex-direction: column;
+    padding: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    &,
+    .theme-info a {
+        color: var(--word-color-third);
+    }
+    .sakura-icon {
+        height: 2rem;
+        width: 2rem;
+        svg {
+            height: 100%;
+            width: 100%;
+            animation: slow-rotate 10s linear infinite;
+        }
+    }
+}
+
+@keyframes slow-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,79 @@
+.pagination {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .el-pagination,
+    .el-pager,
+    //wordpress
+    .nav-links
+     {
+        display: flex;
+        gap: 1rem;
+    }
+
+    //wordpress
+    .nav-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .el-pager li,
+    // wordpress
+    .nav-links .page-numbers:not(.dots)
+     {
+        list-style: none;
+        font-size: 1rem;
+        font-weight: 700;
+        padding: 0.25rem 0.5rem;
+        color: var(--word-color-first);
+        background-color: var(--widget-background-color);
+        border: var(--border-shine);
+        border-radius: 0.5rem;
+        &.is-active,
+        &:hover,
+        //wordpress
+        &.current {
+            color: var(--active-color);
+        }
+    }
+
+    .el-pager li,
+    .btn-prev,
+    .btn-next,
+    // wordpress
+    .nav-links .page-numbers:not(.dots) {
+        aspect-ratio: 1/1;
+        font-size: 1rem;
+        text-align: center;
+        box-sizing: content-box;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        transform: translateZ(0px);
+        border-radius: 48px;
+    }
+
+    .number,
+    .el-icon {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+
+    .el-icon svg {
+        stroke-width: 2;
+    }
+
+    &:disabled,
+    &.is-disabled,
+    *[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
