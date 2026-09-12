@@ -1,0 +1,56 @@
+:root.dark {
+    img,
+    video {
+        filter: brightness(var(--image-bright));
+    }
+}
+
+.background {
+    .progress-bar {
+        z-index: 11;
+    }
+    .site-header {
+        z-index: 10;
+    }
+    .site-header.mobile {
+        display: none;
+        z-index: 10;
+    }
+    @media screen and (max-width: 860px) {
+        .site-header {
+            display: none;
+        }
+        .site-header.mobile {
+            display: flex;
+        }
+    }
+    .layout-slot {
+        position: relative;
+        z-index: 1;
+        .background-filter {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100dvw;
+            background-color: var(--page-background-color);
+            backdrop-filter: saturate(120%) blur(8px);
+
+            z-index: -2;
+        }
+
+        .site-footer {
+            z-index: 1;
+        }
+        #particle {
+            pointer-events: none;
+            z-index: -1;
+        }
+    }
+    .site-widget {
+        z-index: 10;
+    }
+}
+
+section.main-container {
+    min-height: 85dvh;
+}

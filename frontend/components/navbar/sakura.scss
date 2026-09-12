@@ -1,0 +1,170 @@
+.site-header.sakura {
+    position: fixed;
+    top: 0;
+    left: 0;
+    gap: 0.15rem;
+    width: 100%;
+    height: 3.75rem;
+    padding: 0 1.25rem;
+    background: transparent;
+    border-bottom: 0.1rem solid transparent;
+    transition: all 0.6s ease;
+    user-select: none;
+    &.bg,
+    &:hover {
+        border-bottom: var(--border-shine);
+        background: var(--widget-background-color);
+        backdrop-filter: saturate(180%) blur(10px);
+        transition:
+            border-bottom 0.5s ease,
+            all 0.5s ease;
+    }
+
+    .site-branding {
+        border: 0;
+        height: 100%;
+        padding-left: 0.3rem;
+        line-height: 4.7rem;
+        position: relative;
+        justify-content: flex-start;
+        background: transparent;
+    }
+    .site-branding .nuxtpic {
+        max-width: 20vw;
+        max-height: 3.2rem;
+        height: 100%;
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    .site-title {
+        display: flex;
+        width: auto;
+        color: var(--word-color-first);
+        font-weight: 400;
+        white-space: nowrap;
+        padding: 0.32rem 0.64rem;
+        letter-spacing: 1px;
+        font-size: 1.5rem;
+    }
+    .site-title:hover {
+        color: var(--active-color);
+    }
+
+    .menu-wrapper,
+    .menu-wrapper nav,
+    .menu-wrapper nav > ul {
+        flex: 1;
+        display: flex;
+    }
+
+    .menu li,
+    .user-menu-option a {
+        position: relative;
+        list-style: none;
+        margin: 0 0.9rem;
+        padding: 0.6rem 0;
+    }
+
+    nav > ul > li > a:after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -0.32rem;
+        height: 0.25rem;
+        background-color: var(--active-color);
+        width: 100%;
+        border-radius: 2rem;
+        max-width: 0;
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    nav > ul > li > a:hover:after {
+        max-width: 100%;
+    }
+
+    li .sub-menu,
+    .user .user-menu {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        top: 110%;
+        min-width: 5.62rem;
+        white-space: nowrap;
+        background-color: var(--widget-background-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.63rem);
+        border-radius: 0.63rem;
+        padding: 0.31rem 0;
+        border: var(--boarder);
+        transition: all 0.4s ease-in-out;
+    }
+
+    li:hover > .sub-menu,
+    .user:hover .user-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    li .sub-menu li:last-child {
+        border-bottom: none;
+    }
+
+    li .sub-menu a {
+        display: block;
+        font-size: 14px;
+    }
+
+    .avatar {
+        height: 2.5rem;
+        width: 2.5rem;
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+    }
+
+    .user .user-menu {
+        padding: 0.5rem 0.5rem;
+        transform: translateY(-0.63rem) translateX(-20%);
+    }
+    .user:hover .user-menu {
+        transform: translateY(0) translateX(-20%);
+    }
+
+    .user,
+    .user-menu-info,
+    .user-menu-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .user-menu-info *,
+    .user-menu-option * {
+        margin: 0 0.3rem;
+    }
+
+    .button {
+        height: 2.5rem;
+        width: 2.5rem;
+        flex-shrink: 0;
+        border-radius: 0.5rem;
+        border: 0.15rem solid transparent;
+        cursor: pointer;
+        &,
+        * {
+            transition: all 0.3s ease-in-out;
+        }
+        .icon {
+            background-color: var(--word-color-first);
+            transform: scale(1.5);
+        }
+        &:hover {
+            border-color: var(--active-color);
+            .icon {
+                background-color: var(--active-color);
+            }
+        }
+    }
+}

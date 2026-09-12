@@ -1,4 +1,6 @@
-tempCodeRunnerFile.php
 .vscode
 inc/blocks/node_modules
-attached/
+frontend/node_modules
+frontend/dist
+.codex*
+*.patch

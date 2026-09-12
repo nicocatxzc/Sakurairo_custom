@@ -1,0 +1,22 @@
+// 全局样式
+@use "./components/global.scss" as global;
+// 布局样式
+@use "./layout.scss" as layout;
+// 古腾堡块
+@use "./components/block/index.scss" as block;
+// 主页相关
+@use "./components/homepage/index.scss" as homepage;
+// 导航栏
+@use "./components/navbar/index.scss" as navbar;
+// 页面
+@use "./components/page/index.scss" as page;
+// 文章
+@use "./components/post/index.scss" as post;
+// 评论
+@use "./components/comment/index.scss" as comment;
+// 站点组件
+@use "./components/site/index.scss" as site;
+// 布局插槽
+@use './components/slots/index.scss' as slot;
+
+@use './components/slots/pagination.scss' as pagination;
