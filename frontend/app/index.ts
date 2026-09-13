@@ -173,3 +173,5 @@ import("./darkmode");
 import("./pjax");
 
 import("./utils/message")
+
+import("./particle")

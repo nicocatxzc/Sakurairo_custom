@@ -7,7 +7,12 @@ function iro_front_theme_config()
         'ajaxurl' => admin_url('admin-ajax.php'),
         'iro_api' => esc_url_raw(rest_url('sakura/v1')),
 
-        'typed_config' => iro_opt("cover_typedjs_config")
+        'typed_config' => iro_opt("cover_typedjs_config"),
+        'particle' => [
+            'select' => iro_opt("frontend_particle"),
+            'builtin' => iro_opt("frontend_particle_builtin"),
+            'config' => iro_opt("frontend_particle") == 'custom' ? iro_opt("particle_config") : [] // 省流
+        ]
     ];
 ?>
 

@@ -563,7 +563,7 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id' => 'particles_config',
+                'id' => 'particle_config',
                 'type'     => 'code_editor',
                 'sanitize' => false,
                 'title' => __('自定义粒子特效实现', 'sakurairo_csf'),
