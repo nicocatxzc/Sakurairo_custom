@@ -4,9 +4,7 @@ import 'medium-zoom/dist/style.css';
 // 全局存储当前 zoom 实例
 let zoomInstance = null;
 
-/**
- * 初始化灯箱
- */
+// 初始化灯箱
 function initLightbox() {
     // 销毁旧实例
     if (zoomInstance) {
@@ -44,9 +42,4 @@ function initLightbox() {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLightbox);
-} else {
-    initLightbox();
-    document.addEventListener('pjax:complete', initLightbox);
-}
+_iro.hooks.onPageLoaded(initLightbox)
