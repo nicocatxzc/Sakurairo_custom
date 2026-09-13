@@ -4,7 +4,6 @@ import { useTimeoutFn } from "@vueuse/core";
 let id = ref("");
 let image = ref("");
 let answer = ref("");
-const captchaContainer = useTemplateRef("captchaContainer");
 let inputRef = useTemplateRef("captchaInput");
 
 onMounted(async () => {
@@ -41,16 +40,12 @@ async function getCaptcha() {
     image.value = data.data;
     id.value = data.id;
 }
-async function verifyCaptcha() {
-    const verify = await axios.post(`${_iro.config.iro_api}/captcha`, {
-        captcha_id: id.value,
-        captcha_text: answer.value,
-    });
-
-    if (!success) {
-        getCaptcha();
-    }
-}
+// async function verifyCaptcha() {
+//     await axios.post(`${_iro.config.iro_api}/captcha`, {
+//         captcha_id: id.value,
+//         captcha_text: answer.value,
+//     });
+// }
 </script>
 
 <template>
@@ -69,9 +64,10 @@ async function verifyCaptcha() {
                 alt="验证码"
                 title="点击刷新"
                 @click="getCaptcha"
+                @mouseleave="startHideTimer"
             />
         </div>
-        <input type="text" v-model="id" name="captcha_id">
+        <input type="text" v-model="id" name="captcha_id" class="captcha_id">
         <input
             ref="captchaInput"
             v-model="answer"
@@ -80,12 +76,13 @@ async function verifyCaptcha() {
             class="input"
             placeholder="点击显示验证码"
             autocomplete="off"
+            @click="setImageShow(true)"
             @focus="setImageShow(true)"
             @blur="startHideTimer"
         />
-        <button class="button" type="button" @click="verifyCaptcha(answer)">
+        <!-- <button class="button" type="button" @click="verifyCaptcha()">
             点击验证
-        </button>
+        </button> -->
     </div>
 </template>
 
@@ -126,6 +123,9 @@ async function verifyCaptcha() {
     font-size: 1rem;
     border: var(--border-sketch);
     outline: none;
+}
+.captcha_id {
+    display: none;
 }
 .button {
     height: 100%;

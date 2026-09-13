@@ -11,13 +11,13 @@
             'style'      => 'ol',
             'short_ping' => true,
             'avatar_size' => 48,
-            'callback'    => 'iro_comment_callback',
+            'callback'    => 'iro_comment_render',
         ]);
+        ?>
+        <?php
+        // 评论分页
+        iro_comment_pagination();
         ?>
     </ol>
 
-    <?php
-    // 评论分页
-    iro_comment_pagination();
-    ?>
 <?php endif; ?>

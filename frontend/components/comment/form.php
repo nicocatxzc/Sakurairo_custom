@@ -25,7 +25,8 @@ $post_comment_args = iro_comment_form_data();
         <?php else : ?>
 
             <form
-                action="<?= esc_url($post_comment_args['args']['action']) ?>"
+                disaction="<?= esc_url($post_comment_args['args']['action']) ?>"
+                action="<?php echo esc_url(rest_url('wp/v2/comments')); ?>"
                 method="post"
                 id="<?= esc_attr($post_comment_args['args']['id_form']) ?>"
                 class="<?= esc_attr($post_comment_args['args']['class_form']) ?>"
@@ -92,6 +93,7 @@ $post_comment_args = iro_comment_form_data();
 
 
                 <!-- 评论区域 -->
+                <span id="reply-context" class="reply-context" hidden></span>
                 <?php foreach ($comment_fields as $name => $field) : ?>
                     <?= $field ?>
                 <?php endforeach; ?>
@@ -112,8 +114,7 @@ $post_comment_args = iro_comment_form_data();
 
                 <!-- 保存 Cookie -->
                 <div class="checks">
-                    <?php if(iro_opt("comment_captcha","builtin")!="off"): ?>
-                    
+                    <?php require_once get_template_directory() . "/frontend/components/site/captcha/captcha.php"; ?>
                     <?php foreach ($check_fields as $name => $field) : ?>
                         <?= $field ?>
                     <?php endforeach; ?>

@@ -222,7 +222,7 @@ class Captcha
 
         // 返回数据
         return [
-            'code' => 0,
+            'stat' => true,
             'data' => 'data:image/jpeg;base64,' . base64_encode($captchaimg),
             'msg'  => '',
             'id'   => $id,
@@ -248,7 +248,7 @@ class Captcha
             )
         ) {
             return [
-                'code' => 3,
+                'stat' => false,
                 'data' => '',
                 'msg'  => __('Look like you forgot to enter the captcha.', 'sakurairo'),
             ];
@@ -262,7 +262,7 @@ class Captcha
             )
         ) {
             return [
-                'code' => 3,
+                'stat' => false,
                 'data' => '',
                 'msg'  => __('Bad Request.', 'sakurairo'),
             ];
@@ -274,7 +274,7 @@ class Captcha
         // 不存在 = 已过期 / 已经被删除 / 无效 ID
         if ($expected === false) {
             return [
-                'code' => 2,
+                'stat' => false,
                 'data' => '',
                 'msg'  => __('Captcha timeout.', 'sakurairo'),
             ];
@@ -286,14 +286,14 @@ class Captcha
             $this->destroy_captcha($id);
 
             return [
-                'code' => 5,
+                'stat' => true,
                 'data' => '',
                 'msg'  => __('Captcha check passed.', 'sakurairo'),
             ];
         }
 
         return [
-            'code' => 1,
+            'stat' => false,
             'data' => '',
             'msg'  => __('Captcha incorrect.', 'sakurairo'),
         ];

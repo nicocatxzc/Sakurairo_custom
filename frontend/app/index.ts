@@ -171,3 +171,5 @@ import("./stores/scroll");
 import("./darkmode");
 // pjax
 import("./pjax");
+
+import("./utils/message")

@@ -3,7 +3,7 @@ import SwupProgressPlugin from "@swup/progress-plugin";
 
 const swup = new Swup({
     containers: [".layout-slot", "#iro_page_config"],
-    linkSelector: "a[href]:not(.no-pjax)",
+    linkSelector: "a[href]:not(.no-pjax):not(* .no-pjax)",
     animationSelector: false,
 
     plugins: [new SwupProgressPlugin()],

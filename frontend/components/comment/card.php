@@ -1,5 +1,5 @@
 <?php
-function iro_comment_callback($comment, $args, $depth)
+function iro_comment_render($comment, $args=[], $depth=[])
 {
     $GLOBALS['comment'] = $comment;
     $comment_id = get_comment_ID();
