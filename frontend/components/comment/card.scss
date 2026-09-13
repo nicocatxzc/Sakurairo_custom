@@ -37,6 +37,10 @@
     
         will-change: opacity;
     }
+    .author-avatar {
+        border-radius: 50%;
+        overflow: hidden;
+    }
     *:not(.comment-content) {
         list-style: none;
     }

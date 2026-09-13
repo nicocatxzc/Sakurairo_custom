@@ -11,7 +11,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Captcha: typeof import('../components/site/Captcha/Captcha.vuea/Captcha.vue')['default']
+    Builtin: typeof import('./../components/site/captcha/builtin.vue')['default']
+    Captcha: typeof import('../components/site/captcha/builtin.vue/index.js')['default']
     Card: typeof import('./../components/comment/vue/Card.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     Form: typeof import('./../components/comment/vue/Form.vue')['default']

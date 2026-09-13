@@ -355,8 +355,10 @@ function iro_comment_form_field_cookies(
             type="checkbox"
             value="yes"
             <?= $checked ?> />
-        <label for="wp-comment-cookies-consent">
-            <?= esc_html__('Save my name, email, and website in this browser for the next time I comment.') ?>
+        <label
+            for="wp-comment-cookies-consent"
+            title="<?= esc_html__('Save my name, email, and website in this browser for the next time I comment.') ?>">
+            <?= __('保留个人信息', 'sakurairo') ?>
         </label>
     </p>
 <?php
@@ -379,8 +381,11 @@ function iro_comment_form_field_comment(
             cols="45"
             rows="8"
             maxlength="65525"
-            <?= $required_attribute ?>>
-        </textarea>
+            placeholder=" "
+            <?= $required_attribute
+            //此处标签不换行，不然评论区默认会多空格
+            ?>></textarea>
+
         <span class="placeholder">
             <?= iro_opt("comment_input_place_holder", "") ?>
         </span>

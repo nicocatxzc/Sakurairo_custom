@@ -167,9 +167,9 @@ function akina_infinite_scroll_render()
 //侧栏小工具
 add_action('widgets_init', function () {
     register_sidebar([
-        'name'          => __('Sakurairo工具栏', 'textdomain'),
+        'name'          => __('Sakurairo工具栏', 'sakurairo'),
         'id'            => 'iro_widget',
-        'description'   => __('显示在页脚工具栏的内容', 'textdomain'),
+        'description'   => __('显示在页脚工具栏的内容', 'sakurairo'),
         'before_widget' => '<section id="%1$s" class="iro_widget %2$s">',
         'after_widget'  => '</section>',
         'before_title'  => '<h2 class="iro_widget_title">',
