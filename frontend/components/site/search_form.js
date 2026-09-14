@@ -12,13 +12,16 @@ _iro.hooks["DOMContentLoaded"].add(async () => {
         onClickOutside(searchForm, () => {
             searchForm.classList.remove("show");
         });
-        searchForm.querySelector(".close.button").addEventListener("click",()=>{
-            searchForm.classList.remove("show");
-        })
+        searchForm
+            .querySelector(".close.button")
+            .addEventListener("click", () => {
+                searchForm.classList.remove("show");
+            });
         const searchInput = searchForm.querySelector(".search-input");
         searchInput.addEventListener("keyup", (key) => {
-            if (key?.code == "Enter") {
-                _iro.navigate(`/?s=${searchInput.value}`)
+            if (key?.code == "Enter" || key?.code == "NumpadEnter") {
+                _iro.navigate(`/?s=${searchInput.value}`);
+                searchForm.classList.remove("show");
             }
         });
 
