@@ -5,8 +5,7 @@
     .el-pagination,
     .el-pager,
     //wordpress
-    .nav-links
-     {
+    .nav-links {
         display: flex;
         gap: 1rem;
     }
@@ -20,8 +19,7 @@
 
     .el-pager li,
     // wordpress
-    .nav-links .page-numbers:not(.dots)
-     {
+    .nav-links .page-numbers:not(.dots) {
         list-style: none;
         font-size: 1rem;
         font-weight: 700;
@@ -75,5 +73,17 @@
         opacity: 0.4;
         cursor: not-allowed;
         pointer-events: none;
+    }
+}
+
+.ajax-pagination {
+    padding: 1rem;
+    margin: 0 auto;
+    border-radius: 1rem;
+    background-color: var(--widget-background-color);
+    border: var(--border-shine);
+    box-shadow: var(--widget-shadow-shine);
+    :hover {
+        box-shadow: var(--widget-shadow-shining);
     }
 }

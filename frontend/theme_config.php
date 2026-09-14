@@ -12,7 +12,9 @@ function iro_front_theme_config()
             'select' => iro_opt("frontend_particle"),
             'builtin' => iro_opt("frontend_particle_builtin"),
             'config' => iro_opt("frontend_particle") == 'custom' ? iro_opt("particle_config") : [] // 省流
-        ]
+        ],
+        'pagination_mode' => iro_opt("pagination_mode", "pagination"),
+        'pagination_ajax_wait' => iro_opt("pagination_ajax_wait", 3),
     ];
 ?>
 
@@ -50,4 +52,4 @@ function iro_front_theme_config()
     </script>
 <?php
 }
-add_action('wp_enqueue_scripts', 'iro_front_theme_config',1);
+add_action('wp_enqueue_scripts', 'iro_front_theme_config', 1);
