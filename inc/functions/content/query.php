@@ -32,3 +32,50 @@ function customize_query_functions($query)
 }
 
 add_action('pre_get_posts', 'customize_query_functions');
+
+add_filter(
+    'posts_clauses',
+    'iro_sticky_posts_first',
+    10,
+    2
+);
+
+function iro_sticky_posts_first($clauses, WP_Query $query)
+{
+    if (is_admin() || ! $query->is_main_query()) {
+        return $clauses;
+    }
+
+    if (
+        ! $query->is_home()
+        && ! $query->is_archive()
+        && ! $query->is_search()
+    ) {
+        return $clauses;
+    }
+
+    if ($query->get('ignore_sticky_posts')) {
+        return $clauses;
+    }
+
+    $sticky_ids = get_option('sticky_posts', []);
+
+    if (empty($sticky_ids)) {
+        return $clauses;
+    }
+
+    $sticky_ids = array_map('intval', $sticky_ids);
+
+    global $wpdb;
+
+    // 置顶查询结果中的所有sticky文章
+    $sticky_order = sprintf(
+        'CASE WHEN %s.ID IN (%s) THEN 0 ELSE 1 END',
+        $wpdb->posts,
+        implode(',', $sticky_ids)
+    );
+
+    $clauses['orderby'] = $sticky_order . ', ' . $clauses['orderby'];
+
+    return $clauses;
+}

@@ -1,6 +1,6 @@
 <?php if ($_SERVER['HTTP_X_TEMPLATE_PART'] ?? ''): ?>
     <?php
-    if (is_home()) {
+    if (is_home() || is_archive() || is_author() || is_search()) {
         require_once get_template_directory() . '/frontend/components/post/list.php';
     }
     if ($_SERVER['HTTP_X_TEMPLATE_PART'] == "comment_list") {
@@ -39,7 +39,7 @@
             <!-- 主页封面 -->
             <?php require_once get_template_directory() . '/frontend/components/homepage/cover.php'; ?>
 
-            <!-- 内容区域 -->
+            <!-- pjax start -->
             <div class="layout-slot">
                 <div class="background-filter"></div>
                 <?php $is_home = is_home() || is_front_page() ?>
@@ -52,10 +52,10 @@
                         require_once get_template_directory() . '/frontend/components/page/home.php';
                     } elseif (is_single() || is_page()) {
                         require_once get_template_directory() . '/frontend/components/page/post.php';
-                    } elseif (is_archive()) {
-                        require_once get_template_directory() . '/frontend/components/page/archive.php';
                     } elseif (is_author()) {
                         require_once get_template_directory() . '/frontend/components/page/author.php';
+                    } elseif (is_archive()) {
+                        require_once get_template_directory() . '/frontend/components/page/archive.php';
                     } elseif (is_search()) {
                         require_once get_template_directory() . '/frontend/components/page/search.php';
                         // } elseif (is_404()) {
@@ -73,15 +73,17 @@
                 require_once get_template_directory() . '/frontend/components/site/particle.php';
                 ?>
             </div>
+            <!-- pjax end -->
 
             <!-- 小组件 -->
             <?php require_once get_template_directory() . '/frontend/components/site/widget.php'; ?>
-            <!-- <SiteModels /> -->
+            <!-- model start -->
+            <?php if (iro_opt("nav_menu_search_switch", true)): ?>
+                <?php require_once get_template_directory() . '/frontend/components/site/search_form.php'; ?>
+            <?php endif; ?>
+            <!-- model end -->
         </div>
         <!-- layout end -->
-        <script>
-            console.log(<?= json_encode(get_option('iro_options'), JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE) ?>)
-        </script>
     </body>
 
     </html>

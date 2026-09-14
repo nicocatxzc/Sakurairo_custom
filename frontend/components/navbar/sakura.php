@@ -20,14 +20,14 @@ $iro_menu_options = iro_get_navigation();
             <ul
                 class="menu"
                 style="
-                        justify-content: <?= iro_opt("navbar_distribution","right") ?>;
+                        justify-content: <?= iro_opt("navbar_distribution", "right") ?>;
                         font-family: <?= iro_opt("nav_option_font") ?>,
                     ">
                 <?php foreach ($iro_menu_options as $item): ?>
                     <?php if (!empty($item['children'])): ?>
-                        <li style="margin: 0 <?= iro_opt("navbar_option_margin",0.3) ?>rem;">
+                        <li style="margin: 0 <?= iro_opt("navbar_option_margin", 0.3) ?>rem;">
                             <a href="<?= esc_url($item['url']) ?>"><?= esc_html($item['title']) ?></a>
-                            <ul class="sub-menu" style="border-radius: <?= iro_opt("nav_menu_cover_radius",0.6) ?>;">
+                            <ul class="sub-menu" style="border-radius: <?= iro_opt("nav_menu_cover_radius", 0.6) ?>;">
                                 <?php foreach ($item['children'] as $child): ?>
                                     <li class="flex-center">
                                         <a href="<?= esc_url($child['url']) ?>"><?= esc_html($child['title']) ?></a>
@@ -44,12 +44,12 @@ $iro_menu_options = iro_get_navigation();
             </ul>
         </nav>
     </div>
-    <!-- <div
-        v-if="themeConfig?.navbarSearch ?? true"
-        class="button search flex-center"
-        @click="modelStore.search = true">
-        <Icon :name="'fa7-solid:search'" class="icon" />
-    </div> -->
+    <?php if (iro_opt("nav_menu_search_switch", true)): ?>
+        <div
+            class="button search flex-center">
+            <i class="fa-solid fa-search icon"></i>
+        </div>
+    <?php endif; ?>
     <?php if (iro_opt('nav_user_menu', true)): ?>
         <div class="user">
             <?php if (is_user_logged_in()):
