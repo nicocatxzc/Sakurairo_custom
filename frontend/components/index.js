@@ -12,3 +12,5 @@ import "./post/index"
 import "./comment/index"
 // 站点全局
 import "./site/index"
+// 分页
+import "./slots/pagination"

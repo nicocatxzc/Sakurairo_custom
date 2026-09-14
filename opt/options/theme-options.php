@@ -752,7 +752,18 @@ if (class_exists('Sakurairo_CSF')) {
                     'ajax' => __('滚动加载', 'sakurairo_csf'),
                     'pagination' => __('传统分页', 'sakurairo_csf'),
                 ],
-                'default' => 'ajax'
+                'default' => 'pagination'
+            ],
+
+            [
+                'id' => 'pagination_ajax_wait',
+                'type' => 'slider',
+                'title' => __('ajax自动加载等待时间', 'sakurairo_csf'),
+                'dependency' => ['pagination_mode', '==', 'ajax', '', 'true'],
+                'step' => '1',
+                'unit' => 's',
+                'max' => '10',
+                'default' => '3',
             ],
 
             [
