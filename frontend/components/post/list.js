@@ -37,7 +37,7 @@ _iro.hooks.onPageLoaded(() => {
         });
     }
 
-    const commentList = document.querySelector(".comment-list").parentElement;
+    const commentList = document.querySelector(".comment-list")?.parentElement;
 
     if (commentList) {
         commentList.addEventListener("click", async (event) => {

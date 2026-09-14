@@ -3,7 +3,7 @@
 function permalink_tip()
 {
     if (!get_option('permalink_structure')) {
-        $msg = __('<b> For a better experience, please do not set <a href="/wp-admin/options-permalink.php"> permalink </a> as plain. To do this, you may need to configure <a href="https://www.wpdaxue.com/wordpress-rewriterule.html" target="_blank"> pseudo-static </a>. </ b>', 'sakurairo'); /*<b>为了更好的使用体验，请不要将<a href="/wp-admin/options-permalink.php">固定链接</a>设置为朴素。为此，您可能需要配置<a href="https://www.wpdaxue.com/wordpress-rewriterule.html" target="_blank">伪静态</a>。</b>*/
+        $msg = __('<b>为了更好的使用体验，请不要将<a href="/wp-admin/options-permalink.php">固定链接</a>设置为朴素。为此，您可能需要配置<a href="https://www.wpdaxue.com/wordpress-rewriterule.html" target="_blank">伪静态</a>。</b>', 'sakurairo'); /**/
         echo '<div class="notice notice-success is-dismissible" id="scheme-tip"><p><b>' . $msg . '</b></p></div>';
     }
 }
@@ -40,6 +40,17 @@ add_action('rest_api_init', function () {
         array(
             'methods' => 'POST',
             'callback' => 'iro_verify_captcha',
+            'permission_callback' => '__return_true'
+        )
+    );
+
+    require_once get_template_directory() . '/inc/api/search_index.php';
+    register_rest_route(
+        'sakura/v1',
+        '/search_index',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_get_search_index',
             'permission_callback' => '__return_true'
         )
     );

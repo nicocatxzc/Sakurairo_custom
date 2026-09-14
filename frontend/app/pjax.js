@@ -26,6 +26,8 @@ const swup = new Swup({
     },
 });
 
+_iro.navigate = swup.navigate.bind(swup);
+
 swup.hooks.on("visit:start", (visit) => {
     document.dispatchEvent(new CustomEvent("pjax:start", { detail: {} }));
     const url = new URL(visit.to.url, window.location.origin);
