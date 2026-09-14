@@ -16,7 +16,9 @@
         --word-color-first-reverse: <?= iro_opt('word_color_first_dark', '#CCCCCC') ?>;
 
         --widget-background: 255, 255, 255;
+        --widget-background-reverse:26, 26, 26;
         --widget-background-color: rgba(var(--widget-background), var(--widget-transparency));
+        --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
         --widget-shadow-shine: 0 0.1rem 1.8rem -0.25rem rgb(232, 232, 232);
         --widget-shadow-shining: 0 0.1rem 1.8rem 0.7rem rgb(232, 232, 232);
         --widget-shadow-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
@@ -45,7 +47,9 @@
         --word-color-first-reverse: <?= iro_opt('word_color_first', '#505050') ?>;
 
         --widget-background: 26, 26, 26;
+        --widget-background-reverse: 255, 255, 255;
         --widget-background-color: rgba(var(--widget-background), var(--widget-transparency));
+        --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
         --widget-shadow-shine: 0 0.1rem 1.2rem -0.25rem rgba(26, 26, 26, 0.8);
         --widget-shadow-shining: 0 0.1rem 2rem -0.25rem var(--active-color);
         --widget-shadow-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2);

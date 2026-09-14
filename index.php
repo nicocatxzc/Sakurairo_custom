@@ -52,12 +52,12 @@
                         require_once get_template_directory() . '/frontend/components/page/home.php';
                     } elseif (is_single() || is_page()) {
                         require_once get_template_directory() . '/frontend/components/page/post.php';
+                    } elseif (is_search()) {
+                        require_once get_template_directory() . '/frontend/components/page/search.php';
                     } elseif (is_author()) {
                         require_once get_template_directory() . '/frontend/components/page/author.php';
                     } elseif (is_archive()) {
                         require_once get_template_directory() . '/frontend/components/page/archive.php';
-                    } elseif (is_search()) {
-                        require_once get_template_directory() . '/frontend/components/page/search.php';
                         // } elseif (is_404()) {
                         //     require_once get_template_directory() . '/components/404.php';
                     } else {

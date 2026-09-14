@@ -648,29 +648,28 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'search_filter',
                 'type' => 'switcher',
-                'title' => __('Search Filter', 'sakurairo_csf'),
-                'label' => __('When turned on, users can search using the search filter', 'sakurairo_csf'),
+                'title' => __('搜索页过滤栏', 'sakurairo_csf'),
                 'default' => false
             ],
 
             [
                 'id' => 'search_for_shuoshuo',
                 'type' => 'switcher',
-                'title' => __('Show shuoshuo in search results', 'sakurairo_csf'),
+                'title' => __('在搜索结果中显示说说', 'sakurairo_csf'),
                 'default' => true
             ],
 
             [
                 'id' => 'search_for_pages',
                 'type' => 'switcher',
-                'title' => __('Show pages in search results', 'sakurairo_csf'),
+                'title' => __('在搜索结果中显示页面', 'sakurairo_csf'),
                 'default' => true
             ],
 
             [
-                'id' => 'only_admin_can_search_pages',
+                'id' => 'search_pages_can_only_admins',
                 'type' => 'switcher',
-                'title' => __('Only administrators can search pages', 'sakurairo_csf'),
+                'title' => __('只有管理员可以搜索页面', 'sakurairo_csf'),
                 'dependency' => [
                     ['search_for_pages', '==', 'true', '', 'true'],
                 ],
@@ -678,45 +677,26 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id' => 'sticky_pinned_content',
+                'id' => 'search_for_pinned_posts',
                 'type' => 'switcher',
-                'title' => __('Pinned contents will show at the top of the search results', 'sakurairo_csf'),
+                'title' => __('在搜索结果中置顶置顶文章', 'sakurairo_csf'),
                 'default' => true
             ],
 
             [
-                'id' => 'custom_exclude_search_results',
+                'id' => 'search_results_custom_exclude',
                 'type' => 'text',
-                'title' => __('Exclude some content in search results', 'sakurairo_csf'),
-                'desc' => __('Fill in the posts or pages IDs that need to be excluded, such as "12,34".Recommend to fill in the custom login page id,and you can get them from the edit page of those content.', 'sakurairo_csf'),
+                'title' => __('搜索结果排除', 'sakurairo_csf'),
+                'desc' => __('从搜索结果中排除自定义ID内容，在使用自定义登录页面后推荐使用，你可以从编辑页的链接中获取，填写数字ID，例如“12,34”', 'sakurairo_csf'),
             ],
 
             [
-                'id' => 'live_search',
+                'id' => 'search_live',
                 'type' => 'switcher',
-                'title' => __('Live Search', 'sakurairo_csf'),
-                'label' => __('After turning on the live search in the frontend, call Rest API to update the cache once an hour. You can set the cache time manually in api.php', 'sakurairo_csf'),
+                'title' => __('实时搜索', 'sakurairo_csf'),
+                'label' => __('开启后前台客户端会在搜索前加载一份索引，并实时显示键入后的相关搜索结果', 'sakurairo_csf'),
                 'default' => false
             ],
-
-            [
-                'id' => 'live_search_preview',
-                'type' => 'switcher',
-                'title' => __('Enable Search Content Preview', 'sakurairo_csf'),
-                'dependency' => ['live_search', '==', 'true', '', 'true'],
-                'label' => __('Show preview text in live search results', 'sakurairo_csf'),
-                'default' => true
-            ],
-
-            [
-                'id' => 'live_search_comment',
-                'type' => 'switcher',
-                'title' => __('Live Search Comment Support', 'sakurairo_csf'),
-                'dependency' => ['live_search', '==', 'true', '', 'true'],
-                'label' => __('Enable to search for comments in live search (not recommended if site has too many comments)', 'sakurairo_csf'),
-                'default' => false
-            ],
-
         ]
     ]);
 
