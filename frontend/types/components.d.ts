@@ -12,11 +12,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Builtin: typeof import('./../components/site/captcha/builtin.vue')['default']
-    Captcha: typeof import('../components/site/captcha/builtin.vue/index.js')['default']
-    Card: typeof import('./../components/comment/vue/Card.vue')['default']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
-    Form: typeof import('./../components/comment/vue/Form.vue')['default']
-    List: typeof import('./../components/comment/vue/List.vue')['default']
     Pagination: typeof import('./../components/Pagination.vue')['default']
   }
 }

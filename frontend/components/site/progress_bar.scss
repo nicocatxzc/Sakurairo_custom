@@ -1,0 +1,41 @@
+#progress-bars {
+    width: 100vw;
+    height: 0.2rem;
+    position: fixed;
+}
+
+#scroll-progress,
+#load-progress {
+    width: var(--progress,0);
+    height: 100%;
+    position: absolute;
+    transition: width .5s ease;
+}
+
+#scroll-progress {
+    background-color: var(--active-color);
+}
+
+#load-progress {
+    background-color: var(--active-color-reverse);
+}
+
+#load-progress[data-stat=start] {
+    width: 30%;
+}
+#load-progress[data-stat=success] {
+    width: 60%;
+}
+#load-progress[data-stat=complete] {
+    width: 90%;
+    transform: width .3s ease;
+}
+#load-progress[data-stat=end] {
+    width: 100%;
+    transform: width .2s ease;
+}
+#load-progress[data-stat=none] {
+    width: 0;
+    opacity: 0;
+    transition: none;
+}

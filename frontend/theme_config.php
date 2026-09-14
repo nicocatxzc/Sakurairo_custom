@@ -50,4 +50,4 @@ function iro_front_theme_config()
     </script>
 <?php
 }
-add_action('wp_enqueue_scripts', 'iro_front_theme_config');
+add_action('wp_enqueue_scripts', 'iro_front_theme_config',1);

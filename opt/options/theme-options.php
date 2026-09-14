@@ -1967,6 +1967,14 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'dev_mode_hmr_client',
                 'type' => 'text',
                 'title' => __('Vite HMR客户端地址', 'sakurairo_csf'),
+                'default' => 'https://wordpress:5173/@vite/client',
+            ],
+
+            [
+                'id' => 'dev_mode_main_js',
+                'type' => 'text',
+                'title' => __('Vite 主脚本入口地址', 'sakurairo_csf'),
+                'default' => "https://wordpress:5173/main.js",
             ],
 
             [
