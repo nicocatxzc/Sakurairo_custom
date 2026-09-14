@@ -9,9 +9,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
-  const ElMessage: typeof import('element-plus/es').ElMessage
   const _: typeof import('lodash-es').default
-  const _iro: typeof import('_iro').default
   const api: typeof import('../app/utils/api.js').default
   const axios: typeof import('axios').default
   const checkEmail: typeof import('../app/utils/check').checkEmail

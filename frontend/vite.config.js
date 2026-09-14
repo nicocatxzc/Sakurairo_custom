@@ -50,18 +50,25 @@ export default defineConfig(() => {
         },
 
         // 构建配置
+        base: './',
         build: {
             sourcemap: true,
             outDir: "dist",
             emptyOutDir: true,
             rollupOptions: {
                 input: {
-                    app: resolve(import.meta.dirname, "main.ts"),
+                    app: resolve(import.meta.dirname, "main.js"),
                 },
                 output: {
-                    entryFileNames: "dist/app.js",
-                    chunkFileNames: "dist/[name].[hash].js",
-                    assetFileNames: "dist/[name].[hash].[ext]",
+                    entryFileNames: "app.js",
+                    chunkFileNames: "[name].[hash].js",
+                    assetFileNames: (assetInfo) => {
+                        const name = assetInfo.names?.[0] ?? "";
+                        if (name.endsWith(".css")) {
+                            return "style.css";
+                        }
+                        return "[name]-[hash][extname]";
+                    },
                 },
             },
         },

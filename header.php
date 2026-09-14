@@ -113,6 +113,4 @@ if (is_customize_preview()) {
             </script>
     <?php endif;
     } ?>
-    <script type="module" src="https://wordpress:5173/@vite/client"></script>
-    <script type="module" src="https://wordpress:5173/main.js"></script>
 </head>
