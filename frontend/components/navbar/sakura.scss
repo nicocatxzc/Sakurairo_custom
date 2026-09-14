@@ -94,18 +94,21 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-0.63rem);
+        // transform: translateY(-0.63rem);
+        transform: translateX(-50%) translateY(-0.63rem);
         border-radius: 0.63rem;
         padding: 0.31rem 0;
         border: var(--boarder);
         transition: all 0.4s ease-in-out;
+        left: 50%;
     }
 
     li:hover > .sub-menu,
     .user:hover .user-menu {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        // transform: translateY(0);
+        transform: translateX(-50%) translateY(0);
     }
 
     li .sub-menu li:last-child {
