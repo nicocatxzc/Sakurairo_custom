@@ -1,4 +1,8 @@
-<?php if ($_SERVER['HTTP_X_TEMPLATE_PART'] ?? ''): ?>
+<?php
+$iro_only_template = $_SERVER['HTTP_X_TEMPLATE_PART'] ?? '';
+global $iro_only_template;
+?>
+<?php if ($iro_only_template): ?>
     <?php
     if (is_home() || is_archive() || is_author() || is_search()) {
         require_once get_template_directory() . '/frontend/components/post/list.php';
