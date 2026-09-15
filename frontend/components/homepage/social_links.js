@@ -50,7 +50,24 @@ class SocialPager {
     _apply() {
         const current = this.pages[this.currentIndex] || [];
 
+        let showItem;
+        let pageCon = this.container.querySelector(".page-container");
         this.items.forEach((item, index) => {
+            if (current.includes(index)) {
+                if (!showItem) {
+                    showItem = item;
+                    pageCon.style.overflow = "hidden";
+                    showItem.addEventListener(
+                        "transitionend",
+                        (e) => {
+                            setTimeout(() => {
+                                pageCon.style.overflow = "visible";
+                            }, 0);
+                        },
+                        { once: true },
+                    );
+                }
+            }
             item.classList.toggle("show", current.includes(index));
             item.classList.toggle("prev", this.state === "prev");
             item.classList.toggle("next", this.state === "next");
