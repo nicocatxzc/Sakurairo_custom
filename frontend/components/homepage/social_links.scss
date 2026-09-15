@@ -1,0 +1,137 @@
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 0.5rem;
+    height: 2.5rem;
+    width: 100%;
+
+    .social-item,
+    .social-item a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pagination {
+        background: none;
+        border: none;
+        height: 2.5rem;
+        width: 2.5rem;
+        margin: 0;
+
+        .icon {
+            color: var(--active-color);
+        }
+    }
+
+    .page-container {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .social-item {
+        width: 0;
+        height: 2.2rem;
+        position: relative;
+        transition: all 0.5s linear;
+
+        .social-img {
+            height: 100%;
+            object-fit: cover;
+            overflow: hidden;
+        }
+
+        &.next {
+            transform: translateX(-100vw);
+            margin: 0;
+        }
+
+        &.prev {
+            transform: translateX(100vw);
+            margin: 0;
+        }
+
+        &.show {
+            width: 2.2rem;
+            margin: 0 0.2rem;
+            transform: translateX(0);
+
+            &.next {
+                animation: next 0.5s;
+            }
+
+            &.prev {
+                animation: prev 0.5s;
+            }
+        }
+
+        .qrcode {
+            position: absolute;
+            bottom: calc(100% + 0.8rem); 
+            left: 50%;
+
+            height: 12.5rem;
+            aspect-ratio: 1;
+            padding: 0.35rem;
+
+            background: var(--widget-background-color);
+            border-radius: 0.5rem;
+            box-shadow: var(--widget-shadow-shadow);
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateX(-50%) translateY(0.5rem) scale(0.85);
+            transform-origin: center bottom;
+            transition:all 0.3s ease;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 0.25rem;
+            }
+
+            // 箭头
+            &::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 0.4rem solid transparent;
+                border-top-color: var(--widget-background-color);
+            }
+        }
+
+        &:hover .qrcode,
+        &:focus-within .qrcode {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+    }
+}
+
+@keyframes next {
+    0% {
+        transform: translateX(100vw);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes prev {
+    0% {
+        transform: translateX(-100vw);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
