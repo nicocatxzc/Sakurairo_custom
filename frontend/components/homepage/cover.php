@@ -55,7 +55,7 @@
                                 </p>
                             </div>
                         <?php endif; ?>
-                        <HomepageSocialLinks />
+                        <?php require_once get_template_directory() . '/frontend/components/homepage/social_links.php'; ?>
                     </div>
                 <?php endif; ?>
             </div>

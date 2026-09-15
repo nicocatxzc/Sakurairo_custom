@@ -1058,7 +1058,7 @@ if (class_exists('Sakurairo_CSF')) {
                     'fluent_design'  => $vision_resource_basepath . 'options/display_icon_fd.gif',
                     'muh2'  => $vision_resource_basepath . 'options/display_icon_h2.gif',
                     'flat_colorful'  => $vision_resource_basepath . 'options/display_icon_fc.gif',
-                    'remix_iconfont'  => $vision_resource_basepath . 'options/display_icon_svg.webp',
+                    // 'remix_iconfont'  => $vision_resource_basepath . 'options/display_icon_svg.webp',
                 ],
                 'default'     => 'fluent_design'
             ],
@@ -1070,7 +1070,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'dependency' => ['cover_social_switch', '==', 'true', '', 'true'],
                 'fields'    => [
                     [
-                        'id' => 'icon',
+                        'id' => 'select',
                         'type' => 'select',
                         'title' => __('显示的图标', 'sakurairo_csf'),
                         'options' => [
@@ -1094,11 +1094,9 @@ if (class_exists('Sakurairo_CSF')) {
                             'email' => __('邮箱', 'sakurairo_csf'),
                             'custom' => __('自定义', 'sakurairo_csf'),
                         ],
-                        'dependency' => ['cover_switch', '==', 'true', '', 'true'],
-                        'default' => 'filter-nothing'
                     ],
                     [
-                        'id'   => 'icon_img',
+                        'id'   => 'icon',
                         'type' => 'upload',
                         'title' => __('自定义图标', 'sakurairo_csf'),
                     ],
