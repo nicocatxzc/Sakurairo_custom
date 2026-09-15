@@ -30,9 +30,15 @@ _iro.hooks.DOMContentLoaded.push(() => {
     widgetToggle.addEventListener("click", () => {
         panel.classList.toggle("hide");
     });
-    onClickOutside(panel, () => {
-        panel.classList.add("hide");
-    });
+    onClickOutside(
+        panel,
+        () => {
+            panel.classList.add("hide");
+        },
+        {
+            ignore: [control],
+        },
+    );
 });
 
 // 深色模式
@@ -55,6 +61,7 @@ _iro.hooks.DOMContentLoaded.push(() => {
         toggleMode();
         darkmodeIcon();
     });
+    darkmodeIcon();
 });
 
 // 字体
