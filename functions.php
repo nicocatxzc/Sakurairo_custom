@@ -62,64 +62,40 @@ require_once get_template_directory() . '/inc/theme_init/support.php';
 require_once get_template_directory() . '/inc/theme_init/translation.php';
 // 载入shuoshuo文章类型
 require_once get_template_directory() . '/inc/theme_init/shuoshuo.php';
-
-// 载入区块编辑器修改
-require_once('inc/blocks/iro_blocks.php');
-
-// 载入函数组件
-require_once get_template_directory() . '/frontend/components/component_register.php';
-
+// 工具函数
+require_once get_template_directory() . '/inc/functions/tools.php';
+// api
+require_once get_template_directory() . '/inc/api.php';
 // 载入wp精简定制
 require_once get_template_directory() . '/inc/functions/cust_wp.php';
-
-// 载入前台头部资源
-require_once get_template_directory() . '/inc/functions/enqueue_assets.php';
-
 // wordpress兼容性修复
 require_once get_template_directory() . '/inc/theme_init/wp_fix.php';
 require_once get_template_directory() . '/inc/functions/custom/register.php';
-
-// 载入内容相关资源
-require_once get_template_directory() . '/inc/functions/content/index.php';
-
-// 工具函数
-require_once get_template_directory() . '/inc/functions/tools.php';
-
 // 中国本地化
 require_once get_template_directory() . '/inc/functions/wp_cn.php';
-
-// 前端主题配置
-require_once get_template_directory() . '/frontend/theme_config.php';
-
-// api
-require_once get_template_directory() . '/inc/api.php';
-
-// 加载customizer编辑器
-require_once get_template_directory() . '/opt/customizer/index.php';
-
-// 定制后台以及登录页
-require_once get_template_directory() . '/inc/functions/custom/dashboard.php';
-
-// 评论区相关
-require_once get_template_directory() . '/inc/functions/comment/index.php';
-
-// 导航栏相关
-require_once get_template_directory() . '/inc/functions/nav_bar.php';
-
-// 主题安装后检查及后台通知
-require_once get_template_directory() . '/inc/theme_init/check.php';
-
+// 载入区块渲染
+require_once get_template_directory() . '/inc/blocks/render.php';
+// 载入函数组件
+require_once get_template_directory() . '/frontend/components/component_register.php';
+// 载入内容相关资源
+require_once get_template_directory() . '/inc/functions/content/index.php';
+// 载入区块编辑器修改
+require_once get_template_directory() . '/inc/blocks/iro_blocks.php';
 // seo相关
 require_once get_template_directory() . '/inc/functions/seo.php';
-
+// 载入前台头部资源
+require_once get_template_directory() . '/inc/functions/enqueue_assets.php';
+// 前端主题配置
+require_once get_template_directory() . '/frontend/theme_config.php';
+// 加载customizer编辑器
+require_once get_template_directory() . '/opt/customizer/index.php';
+// 定制后台以及登录页
+require_once get_template_directory() . '/inc/functions/custom/dashboard.php';
+// 评论区相关
+require_once get_template_directory() . '/inc/functions/comment/index.php';
+// 导航栏相关
+require_once get_template_directory() . '/inc/functions/nav_bar.php';
+// 主题安装后检查及后台通知
+require_once get_template_directory() . '/inc/theme_init/check.php';
 // 操作触发
 require_once get_template_directory() . '/inc/functions/operator.php';
-
-/**
- * 初始化Bilibili收藏夹缓存定时任务
- */
-add_action('init', function () {
-    if (class_exists('Sakura\API\BilibiliFavListCron')) {
-        Sakura\API\BilibiliFavListCron::init();
-    }
-});

@@ -54,4 +54,49 @@ add_action('rest_api_init', function () {
             'permission_callback' => '__return_true'
         )
     );
+
+    require_once get_template_directory() . '/inc/api/bangumi.php';
+    register_rest_route(
+        'sakura/v1',
+        '/bangumi/bangumi',
+        array(
+            'methods' => 'GET',
+            'callback' => function (\WP_REST_Request $req) {
+                return IroAnimeList::getBangumiList(
+                    (int) $req->get_param('page') ?: 1,
+                    (int) $req->get_param('per_page') ?: 12
+                );
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/bangumi/bilibili',
+        array(
+            'methods' => 'GET',
+            'callback' => function (\WP_REST_Request $req) {
+                return IroAnimeList::getBilibiliList(
+                    (int) $req->get_param('page') ?: 1,
+                    (int) $req->get_param('per_page') ?: 15,
+                    (string) ($req->get_param('type') ?? 'bangumi')
+                );
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/bangumi/mal',
+        array(
+            'methods' => 'GET',
+            'callback' => function (\WP_REST_Request $req) {
+                return IroAnimeList::getMyAnimeList(
+                    (int) $req->get_param('page') ?: 1,
+                    (int) $req->get_param('per_page') ?: 12
+                );
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
 });

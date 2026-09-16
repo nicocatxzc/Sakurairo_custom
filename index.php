@@ -7,11 +7,14 @@ global $iro_only_template;
     if (is_home() || is_archive() || is_author() || is_search()) {
         require_once get_template_directory() . '/frontend/components/post/list.php';
     }
-    if ($_SERVER['HTTP_X_TEMPLATE_PART'] == "comment_list") {
+    if ($iro_only_template == "comment_list") {
         // 没有文章密码且评论已开启
         if (!post_password_required() && get_post_field('comment_status', get_the_ID()) == 'open'):
             comments_template();
         endif;
+    }
+    if ($iro_only_template == "bangumi_list") {
+        require_once get_template_directory() . '/frontend/components/page/template/bangumi.php';
     }
     ?>
 <?php else: ?>

@@ -191,3 +191,18 @@ function iro_check_bool($value)
     if (is_array($value)) return !empty($value);
     return true;
 }
+
+// 编码
+function hachimi_encode_data($data)
+{
+    return esc_attr(
+        wp_json_encode(
+            $data,
+            JSON_HEX_TAG |
+                JSON_HEX_APOS |
+                JSON_HEX_QUOT |
+                JSON_HEX_AMP |
+                JSON_UNESCAPED_UNICODE
+        )
+    );
+}

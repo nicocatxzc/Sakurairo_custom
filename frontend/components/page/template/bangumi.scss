@@ -1,0 +1,116 @@
+.container:has(.post-content .page-bangumi) {
+    max-width: 80rem;
+}
+.page-bangumi * {
+    box-sizing: border-box;
+}
+.page-bangumi {
+    flex-direction: column;
+    color: #fff;
+    p {
+        color: #fff;
+    }
+    .anime-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        list-style: none;
+
+        .anime-item {
+            width: clamp(10rem, 25dvw, 18rem);
+            aspect-ratio: 3/4;
+            margin: 0.5rem 1rem;
+
+            border-radius: 0.7rem;
+
+            overflow: hidden;
+            .anime-content {
+                height: 100%;
+                width: 100%;
+                display: block;
+            }
+        }
+    }
+    .anime-content {
+        position: relative;
+        .anime-image {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+        .anime-info {
+            left: 0;
+            top: calc(100% - 3rem);
+            height: 100%;
+            width: 100%;
+            padding: 0.6rem;
+            position: absolute;
+
+            background-color: rgba(0, 0, 0, 0.5);
+
+            transition: top 1s;
+        }
+        &:hover {
+            .anime-info {
+                top: 0;
+                .anime-title {
+                    height: fit-content;
+                    white-space: wrap;
+                }
+            }
+        }
+    }
+    .anime-info {
+        .anime-title {
+            margin: 0;
+            height: 1.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+
+            display: block;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .bangumi-status {
+            margin: 0.5rem 0;
+            .progress {
+                width: 100%;
+                border-radius: 0.4rem;
+                background-color: gray;
+                .progress-bar {
+                    height: 0.8rem;
+                    border-radius: 0.4rem;
+                    position: relative;
+                    width: var(--progress);
+                    background-color: orange;
+                    &::after {
+                        content: attr(data-progress);
+                        height: 100%;
+                        font-size: 0.6rem;
+                        text-align: center;
+                        position: absolute;
+                        right: 0.5rem;
+                        left: 0.5rem;
+                    }
+                }
+            }
+        }
+        .anime-summary {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+    .pagenation {
+        margin-top: 1rem;
+        button {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+
+            color: var(--word-color-second);
+        }
+    }
+}

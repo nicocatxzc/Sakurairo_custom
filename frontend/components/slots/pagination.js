@@ -1,4 +1,5 @@
 import api from "../../app/utils/api";
+import classicPagination from "../../app/utils/classicPagination";
 
 _iro.hooks.onPageLoaded(() => {
     let postList = document.querySelector(".post-list");
@@ -176,79 +177,18 @@ _iro.hooks.onPageLoaded(() => {
 
             createPaginationSentinel();
         } else {
-            postList.addEventListener("click", async (event) => {
-                const link = event.target.closest(".page-numbers");
-                if (!link) return;
-
-                if (!link.href) return;
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                if (link.dataset.loading === true) return;
-                link.dataset.loading = true;
-
-                try {
-                    const res = await api.get(link.href, {
-                        headers: {
-                            "X-Template-Part": "post_list",
-                        },
-                    });
-
-                    postList.innerHTML = res.data;
-
-                    // 会导致swup混乱
-                    // history.pushState({}, "", link.href);
-
-                    postList.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    });
-                } catch (err) {
-                    console.error("翻页失败:", err);
-                } finally {
-                    link.dataset.loading = false;
-                }
-            });
+            classicPagination(postList, postList, "post_list", ".page-numbers");
         }
     }
 
-    const commentList = document.querySelector(".comment-list")?.parentElement;
+    const commentList = document.querySelector(".comment-list");
 
     if (commentList) {
-        commentList.addEventListener("click", async (event) => {
-            const link = event.target.closest(".page-numbers");
-            if (!link) return;
-
-            if (!link.href) return;
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (link.dataset.loading === "1") return;
-            link.dataset.loading = "1";
-
-            try {
-                const res = await api.get(link.href, {
-                    headers: {
-                        "X-Template-Part": "comment_list",
-                    },
-                });
-
-                commentList.innerHTML = res.data;
-
-                // 会导致swup混乱
-                // history.pushState({}, "", link.href);
-
-                commentList.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            } catch (err) {
-                console.error("翻页失败:", err);
-            } finally {
-                link.dataset.loading = "0";
-            }
-        });
+        classicPagination(
+            commentList,
+            commentList,
+            "comment_list",
+            ".page-numbers",
+        );
     }
 });

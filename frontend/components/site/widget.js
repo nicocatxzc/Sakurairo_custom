@@ -18,6 +18,7 @@ _iro.hooks.DOMContentLoaded.push(() => {
         } else {
             control.classList.add("hide");
         }
+        panel.classList.add("hide");
     });
 
     const goToTop = siteWidget.querySelector("#goToTop");

@@ -1553,7 +1553,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('追番数据来源', 'sakurairo_csf'),
                 'options' => [
                     'bilibili' => $vision_resource_basepath . 'options/bangumi_tep_bili.webp',
-                    'myanimelist' => $vision_resource_basepath . 'options/bangumi_tep_mal.webp',
+                    'mal' => $vision_resource_basepath . 'options/bangumi_tep_mal.webp',
                     'bangumi' => $vision_resource_basepath . 'options/bangumi_tep_bgm.webp'
                 ],
                 'default' => 'bilibili'

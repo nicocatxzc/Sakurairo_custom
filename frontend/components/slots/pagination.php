@@ -8,7 +8,7 @@ function iro_post_pagination()
     global $wp_query;
     if (iro_opt("pagination_mode", "pagination") == "pagination"):
         the_posts_pagination([
-            'class'    => 'pagination site-pagination',
+            'class'    => 'site-pagination',
             'mid_size'  => 2,
             'prev_text' => '<',
             'next_text' => '>',
@@ -17,7 +17,7 @@ function iro_post_pagination()
         $paged     = max(1, (int) get_query_var('paged'));
         $max_pages = (int) $wp_query->max_num_pages;
         if ($paged < $max_pages): ?>
-            <div class="pagination site-pagination flex-center">
+            <div class="site-pagination flex-center">
                 <a
                     class="ajax-pagination no-pjax"
                     href="<?= esc_url(get_pagenum_link($paged + 1)) ?>"
@@ -27,7 +27,7 @@ function iro_post_pagination()
                 </a>
             </div>
         <?php else: ?>
-            <div class="pagination site-pagination flex-center">
+            <div class="site-pagination flex-center">
                 <?= esc_html__("已经到头啦", "sakurairo") ?>
             </div>
 <?php endif;
@@ -37,7 +37,7 @@ function iro_post_pagination()
 function iro_comment_pagination()
 {
     the_comments_pagination([
-        'class'    => 'pagination site-pagination',
+        'class'    => 'site-pagination',
         'mid_size'  => 2,
         'prev_text' => '<',
         'next_text' => '>',

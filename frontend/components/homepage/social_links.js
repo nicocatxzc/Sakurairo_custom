@@ -17,9 +17,8 @@ class SocialPager {
         this.items = Array.from(container.querySelectorAll(".social-item"));
         this.total = this.items.length;
 
-        // 约定：第 1 个 .pagination 是 prev，第 2 个是 next
-        this.prevBtn = container.querySelector(".pagination.prev");
-        this.nextBtn = container.querySelector(".pagination.next");
+        this.prevBtn = container.querySelector(".site-pagination.prev");
+        this.nextBtn = container.querySelector(".site-pagination.next");
 
         this.pageSize = 0;
         this.pages = [];
