@@ -6,7 +6,6 @@ _iro.hooks["DOMContentLoaded"].add(async () => {
     const particleContainer = document.querySelector("#particle");
     if (particleContainer) {
         const options = getConfig();
-        console.log(options);
         if (options?.particles) {
             await loadAll(tsParticles);
             const particle = await tsParticles.load({

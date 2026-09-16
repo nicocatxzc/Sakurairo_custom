@@ -1,4 +1,6 @@
 <script setup>
+import SiteModel from "../../site/Model.vue"
+import { onClickOutside } from "@vueuse/core";
 const emit = defineEmits(["close"]);
 defineExpose({
     showAnime,

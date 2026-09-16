@@ -15,10 +15,6 @@ if ($bangumi_response->is_error()) {
 $bangumi_data = $bangumi_response->get_data()["data"];
 $bangumi_pagination = $bangumi_response->get_data()["pagination"];
 ?>
-<script>
-    'sakura/v1/bangumi/<?= iro_opt("bangumi_source") ?>'
-    console.log(<?= json_encode($bangumi_pagination) ?>)
-</script>
 <?php if (!$iro_only_template): ?>
     <div class="page-bangumi flex-center">
         <ol class="anime-list">
@@ -29,6 +25,7 @@ $bangumi_pagination = $bangumi_response->get_data()["pagination"];
                                     "name_cn" => $item["name_cn"],
                                     "tags" => $item["tags"],
                                     "url" => $item["url"],
+                                    "date"=>$item["date"]
                                 ]) ?>"
                 class="anime-item">
                 <div
@@ -80,5 +77,6 @@ $bangumi_pagination = $bangumi_response->get_data()["pagination"];
         <?php endif; ?>
         <?php if (!$iro_only_template): ?>
         </ol>
+        <div class="bangumi-detail"></div>
     </div>
 <?php endif; ?>
