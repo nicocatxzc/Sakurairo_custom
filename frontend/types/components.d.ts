@@ -13,5 +13,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     BangumiDetail: typeof import('./../components/page/template/BangumiDetail.vue')['default']
     Builtin: typeof import('./../components/site/captcha/builtin.vue')['default']
+    Model: typeof import('./../components/site/Model.vue')['default']
   }
 }

@@ -88,6 +88,7 @@ global $iro_only_template;
             <?php if (iro_opt("nav_menu_search_switch", true)): ?>
                 <?php require_once get_template_directory() . '/frontend/components/site/search_form.php'; ?>
             <?php endif; ?>
+            <div id="site-model-slot" class="flex-center"></div>
             <!-- model end -->
         </div>
         <!-- layout end -->

@@ -55,6 +55,18 @@ section.main-container {
     min-height: 85dvh;
 }
 
+#site-model-slot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 100dvw;
+    pointer-events: none;
+    z-index: 13;
+    * {
+        pointer-events: auto;
+    }
+}
 .site-model {
     z-index: 13;
 }
