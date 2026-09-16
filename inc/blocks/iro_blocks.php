@@ -53,7 +53,6 @@ add_action('enqueue_block_editor_assets', 'sakurairo_editor_styles');
 function sakurairo_editor_styles()
 {
     if (defined('IRO_VERSION')) {
-        global $core_lib_basepath;
         wp_enqueue_style('fontawesome-icons', iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css'), array(), null);
     } else {
         wp_enqueue_style('fontawesome-icons', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css', array(), null);

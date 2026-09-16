@@ -1,14 +1,16 @@
-.content.flex-center {
-    position: relative;
-    width: 100vw;
-    .container {
+@layer layout {
+    .content.flex-center {
         position: relative;
-        max-width: 860px;
-        width: 100%;
-    }
-    @media (max-width: 860px) {
+        width: 100vw;
         .container {
-            padding: 0 4%;
+            position: relative;
+            max-width: 860px;
+            width: 100%;
+        }
+        @media (max-width: 860px) {
+            .container {
+                padding: 0 4%;
+            }
         }
     }
 }

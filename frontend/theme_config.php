@@ -15,6 +15,7 @@ function iro_front_theme_config()
         ],
         'pagination_mode' => iro_opt("pagination_mode", "pagination"),
         'pagination_ajax_wait' => iro_opt("pagination_ajax_wait", 3),
+        'bangumi_source' => iro_opt("bangumi_source"),
     ];
 ?>
 

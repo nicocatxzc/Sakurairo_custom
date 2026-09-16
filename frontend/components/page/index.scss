@@ -1,5 +1,10 @@
-@use "./home.scss";
-@use "./post.scss";
-@use "./archive.scss";
-@use "./author.scss";
-@use "./search.scss";
+@use "./home.scss" as page-home;
+@use "./post.scss" as page-post;
+@use "./archive.scss" as page-category;
+@use "./author.scss" as page-author;
+@use "./search.scss" as page-search;
+
+@use "./template/archive.scss" as page-archive;
+@use "./template/bangumi.scss" as page-bangumi;
+@use "./template/bilibili_favlist.scss" as page-favlist;
+@use "./template/friend_link.scss" as page-friend_link;

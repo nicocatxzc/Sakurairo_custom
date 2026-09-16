@@ -13,6 +13,7 @@ declare global {
   const api: typeof import('../app/utils/api.js').default
   const axios: typeof import('axios').default
   const checkEmail: typeof import('../app/utils/check').checkEmail
+  const classicPagination: typeof import('../app/utils/classicPagination.js').default
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
