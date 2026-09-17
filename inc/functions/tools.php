@@ -206,3 +206,70 @@ function hachimi_encode_data($data)
         )
     );
 }
+
+// 非阻塞内容缓存
+function iro_swr_cache(string $key, callable $refresh_callback)
+{
+    $key_10m = $key . '_10M';
+    $key_30d = $key . '_30D';
+
+    // 短期缓存
+    $cached = get_transient($key_10m);
+    if ($cached !== false) {
+        return $cached;
+    }
+
+    // 长期缓存
+    $cached_30d = get_transient($key_30d);
+    if ($cached_30d !== false) {
+        iro_swr_refresh($key, $refresh_callback);
+        return $cached_30d;
+    }
+
+    // 没有缓存
+    return iro_cache_do_refresh($key, $refresh_callback);
+}
+
+// 执行并写入缓存
+function iro_cache_do_refresh(string $key, callable $refresh_callback)
+{
+    $data = call_user_func($refresh_callback);
+
+    if ($data !== null) {
+        set_transient($key . '_10M', $data, 10 * MINUTE_IN_SECONDS);
+        set_transient($key . '_30D', $data, 30 * DAY_IN_SECONDS);
+    }
+
+    return $data;
+}
+
+// 异步刷新
+function iro_swr_refresh(string $key, callable $refresh_callback): void
+{
+    // 防止同一请求内重复注册
+    static $scheduled = [];
+    if (isset($scheduled[$key])) {
+        return;
+    }
+    $scheduled[$key] = true;
+
+    add_action('shutdown', function () use ($key, $refresh_callback) {
+        // 立即结束响应并开始任务
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+
+        // 加锁，防止多个请求同时刷新
+        $lock_key = $key . '_refreshing';
+        if (get_transient($lock_key)) {
+            return;
+        }
+        set_transient($lock_key, 1, 30);
+
+        try {
+            iro_cache_do_refresh($key, $refresh_callback);
+        } finally {
+            delete_transient($lock_key);
+        }
+    }, PHP_INT_MAX);
+}

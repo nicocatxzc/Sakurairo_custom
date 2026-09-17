@@ -1586,7 +1586,6 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'text',
                 'title' => __('Bilibili用户ID', 'sakurairo_csf'),
                 'desc' => __('填写你的账户ID，例如 https://space.bilibili.com/13972644/，填写数字部分“13972644”', 'sakurairo_csf'),
-                'dependency' => ['bangumi_source', '==', 'bilibili', '', 'true'],
                 'default' => '13972644'
             ],
 
@@ -1595,8 +1594,15 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'text',
                 'title' => __('Bilibili账户cookie', 'sakurairo_csf'),
                 'desc' => __('填写你的Bilibili账户cookie，如果未设置，则无法显示未公开的状态以及观看进度', 'sakurairo_csf'),
-                'dependency' => ['bangumi_source', '==', 'bilibili', '', 'true'],
                 'default' => ''
+            ],
+
+            [
+                'id' => 'bilibili_show_private_favlist',
+                'type' => 'switcher',
+                'title' => __('bilibili收藏显示私人收藏夹', 'sakurairo_csf'),
+                'label' => __('开启后将在bilibili收藏夹模板显示私人收藏夹', 'sakurairo_csf'),
+                'default' => false
             ],
 
             [
