@@ -75,7 +75,7 @@ if ($current_category) {
             <div
                 class="fav-item">
                 <a
-                    href="`https://www.bilibili.com/video/<?= $item["bvid"] ?>`"
+                    href="https://www.bilibili.com/video/<?= $item["bvid"] ?>"
                     target="_blank"
                     rel="noopener noreferrer">
                     <div class="cover">
@@ -99,7 +99,7 @@ if ($current_category) {
                         </div>
                     </div>
                     <div class="fav-desc">
-                        <span class="desc" :title="item.intro">
+                        <span class="desc" title="<?= $item["intro"] ?? "暂无简介" ?>">
                             <?= $item["intro"] ?? "暂无简介" ?>
                         </span>
                     </div>
