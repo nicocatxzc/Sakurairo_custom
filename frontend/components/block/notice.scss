@@ -1,0 +1,51 @@
+.block-notice,
+.block-notice * {
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+.block-notice {
+    margin: 1rem 0.5rem;
+    padding: 1rem 1rem 1rem 1.5rem;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    background: rgba(var(--widget-background), 0.5);
+    border: var(--border-shine);
+    border-radius: 0.5rem;
+    box-shadow: var(--widget-shadow-shadow);
+
+    text-indent: 0;
+
+    &:hover {
+        box-shadow: var(--widget-shadow-shining);
+        background: rgba(var(--widget-background), 0.8);
+        transform: translateY(-0.1rem);
+    }
+
+    .icon {
+        height: 1.5rem;
+        width: 1.5rem;
+        margin-right: 1.5rem;
+    }
+    .task {
+        color: #7d7d7d;
+        text-indent: 0;
+    }
+
+    .warning {
+        color: #f1c700;
+        text-indent: 0;
+    }
+
+    .noway {
+        color: #dc143c;
+        text-indent: 0;
+    }
+
+    .buy {
+        color: #32cd32;
+        text-indent: 0;
+    }
+}
