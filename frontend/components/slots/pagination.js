@@ -171,8 +171,6 @@ _iro.hooks.onPageLoaded(() => {
             // pjax销毁资源
             document.addEventListener("pjax:complete", () => {
                 cleanupPagination();
-
-                document.removeEventListener("pjax:complete", onPjaxComplete);
             });
 
             createPaginationSentinel();

@@ -45,6 +45,8 @@ interface IroNamespace {
 
 window._iro = window._iro || ({} as IroNamespace);
 
+_iro.utils = {};
+
 const domReadyHooks: HookItem[] = [];
 
 /**
@@ -172,4 +174,6 @@ import("./darkmode");
 // pjax
 import("./pjax");
 
-import("./utils/message")
+import("./utils/message");
+
+import("./utils/missImg");
