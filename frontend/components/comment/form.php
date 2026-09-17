@@ -112,8 +112,8 @@ $post_comment_args = iro_comment_form_data();
                 </div>
 
 
-                <!-- 保存 Cookie -->
-                <div class="checks">
+                <!-- 其他字段 -->
+                <div class="checks flex-center">
                     <?php require_once get_template_directory() . "/frontend/components/site/captcha/captcha.php"; ?>
                     <?php foreach ($check_fields as $name => $field) : ?>
                         <?= $field ?>
