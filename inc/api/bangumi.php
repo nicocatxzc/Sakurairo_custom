@@ -1,7 +1,6 @@
 <?php
 class IroAnimeList
 {
-
     private static function buildPagination(int $page, int $totalItems, int $perPage): array
     {
         $totalPages = $perPage > 0 ? (int) ceil($totalItems / $perPage) : 0;
@@ -56,50 +55,37 @@ class IroAnimeList
         $perPage = max(1, $perPage);
         $typeInt = ($type === 'movie' || $type === '2') ? 2 : 1;
 
-        $cacheKey = "bilibili_{$userID}_{$page}_{$perPage}_{$typeInt}";
-        $list     = null;
+        $list = iro_swr_cache(
+            "bilibili_{$userID}_{$page}_{$perPage}_{$typeInt}",
+            function () use ($userID, $page, $perPage, $typeInt) {
+                $url = add_query_arg([
+                    'vmid' => $userID,
+                    'pn'   => $page,
+                    'ps'   => $perPage,
+                    'type' => $typeInt,
+                ], 'https://api.bilibili.com/x/space/bangumi/follow/list');
 
-        // 读缓存
-        $cached = get_transient($cacheKey);
-        if ($cached !== false && is_string($cached)) {
-            $parsed = json_decode($cached, true);
-            if (is_array($parsed) && isset($parsed['data']['data']['list'])) {
-                $list = $parsed['data'];
-            } else {
-                delete_transient($cacheKey);
+                $response = wp_remote_get($url, [
+                    'headers' => [
+                        'Cookie'     => iro_opt('bilibili_cookie') ?: '',
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36',
+                        'Origin'     => 'https://space.bilibili.com',
+                        'Referer'    => 'https://space.bilibili.com/',
+                    ],
+                    'timeout' => 15,
+                ]);
+
+                if (is_wp_error($response)) {
+                    return null;
+                }
+
+                $body = wp_remote_retrieve_body($response);
+                return json_decode($body, true);
             }
-        }
+        );
 
-        // 请求远端
         if ($list === null) {
-            $url = add_query_arg([
-                'vmid' => $userID,
-                'pn'   => $page,
-                'ps'   => $perPage,
-                'type' => $typeInt,
-            ], 'https://api.bilibili.com/x/space/bangumi/follow/list');
-
-            $response = wp_remote_get($url, [
-                'headers' => [
-                    'Cookie'     => iro_opt('bilibili_cookie') ?: '',
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36',
-                    'Origin'     => 'https://space.bilibili.com',
-                    'Referer'    => 'https://space.bilibili.com/',
-                ],
-                'timeout' => 15,
-            ]);
-
-            if (is_wp_error($response)) {
-                return self::errorResult($response->get_error_message(), $perPage);
-            }
-
-            $body = wp_remote_retrieve_body($response);
-            $list = json_decode($body, true);
-
-            set_transient($cacheKey, wp_json_encode([
-                'data'      => $list,
-                'timestamp' => time() * 1000,
-            ]), 1800);
+            return self::errorResult('请求 Bilibili 失败', $perPage);
         }
 
         if (!isset($list['data']['list']) || !is_array($list['data']['list'])) {
@@ -123,7 +109,6 @@ class IroAnimeList
             ];
         }
 
-        // 分页（保持一致：API 已分页，仍按 offset 切片）
         $totalItems    = (int) ($list['data']['total'] ?? 0);
         $offset        = ($page - 1) * $perPage;
         $paginatedData = array_slice($formatted, $offset, $perPage);
@@ -146,55 +131,43 @@ class IroAnimeList
         $page    = max(1, $page);
         $perPage = max(1, $perPage);
 
-        $cacheKey    = "bangumi_{$userID}";
-        $collections = null;
+        $collections = iro_swr_cache(
+            "bangumi_{$userID}",
+            function () use ($userID) {
+                $url = "https://api.bgm.tv/v0/users/{$userID}/collections";
 
-        // 读缓存
-        $cached = get_transient($cacheKey);
-        if ($cached !== false && is_string($cached)) {
-            $parsed      = json_decode($cached, true);
-            $collections = $parsed['data'] ?? null;
-            if (!is_array($collections)) {
-                delete_transient($cacheKey);
-                $collections = null;
-            }
-        }
+                $response = wp_remote_get($url, [
+                    'headers' => [
+                        'User-Agent' => 'nicocatxzc/hachimi(https://github.com/nicocatxzc/hachimi):WordPressTheme',
+                    ],
+                    'timeout' => 15,
+                ]);
 
-        // 请求远端
-        if ($collections === null) {
-            $url = "https://api.bgm.tv/v0/users/{$userID}/collections";
+                if (is_wp_error($response)) {
+                    return null;
+                }
 
-            $response = wp_remote_get($url, [
-                'headers' => [
-                    'User-Agent' => 'nicocatxzc/hachimi(https://github.com/nicocatxzc/hachimi):WordPressTheme',
-                ],
-                'timeout' => 15,
-            ]);
+                $data = json_decode(wp_remote_retrieve_body($response), true);
 
-            if (is_wp_error($response)) {
-                return self::errorResult($response->get_error_message(), $perPage);
-            }
-
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body, true);
-
-            $collections = [];
-            if (isset($data['data']) && is_array($data['data'])) {
-                foreach ($data['data'] as $item) {
-                    // type: 2=在看, 3=看过 ; subject_type: 2=动画
-                    if (
-                        in_array((int) ($item['type'] ?? 0), [2, 3], true) &&
-                        (int) ($item['subject_type'] ?? 0) === 2
-                    ) {
-                        $collections[] = $item;
+                $result = [];
+                if (isset($data['data']) && is_array($data['data'])) {
+                    foreach ($data['data'] as $item) {
+                        // type: 2=在看, 3=看过 ; subject_type: 2=动画
+                        if (
+                            in_array((int) ($item['type'] ?? 0), [2, 3], true) &&
+                            (int) ($item['subject_type'] ?? 0) === 2
+                        ) {
+                            $result[] = $item;
+                        }
                     }
                 }
-            }
 
-            set_transient($cacheKey, wp_json_encode([
-                'data'      => $collections,
-                'timestamp' => time() * 1000,
-            ]), 1800);
+                return $result;
+            }
+        );
+
+        if ($collections === null) {
+            return self::errorResult('请求 Bangumi 失败', $perPage);
         }
 
         if (empty($collections)) {
@@ -269,43 +242,30 @@ class IroAnimeList
                 break;
         }
 
-        $cacheKey = 'mal_' . md5($username . '|' . $sortQuery);
-        $data     = null;
+        $data = iro_swr_cache(
+            'mal_' . md5($username . '|' . $sortQuery),
+            function () use ($username, $sortQuery) {
+                $url = "https://myanimelist.net/animelist/{$username}/load.json?{$sortQuery}";
 
-        // 读缓存
-        $cached = get_transient($cacheKey);
-        if ($cached !== false && is_string($cached)) {
-            $parsed = json_decode($cached, true);
-            if (is_array($parsed)) {
-                $data = $parsed;
-            } else {
-                delete_transient($cacheKey);
+                $response = wp_remote_get($url, [
+                    'headers' => [
+                        'Host'       => 'myanimelist.net',
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36',
+                    ],
+                    'timeout' => 15,
+                ]);
+
+                if (is_wp_error($response)) {
+                    return null;
+                }
+
+                $data = json_decode(wp_remote_retrieve_body($response), true);
+                return is_array($data) ? $data : [];
             }
-        }
+        );
 
-        // 请求远端
         if ($data === null) {
-            $url = "https://myanimelist.net/animelist/{$username}/load.json?{$sortQuery}";
-
-            $response = wp_remote_get($url, [
-                'headers' => [
-                    'Host'       => 'myanimelist.net',
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36',
-                ],
-                'timeout' => 15,
-            ]);
-
-            if (is_wp_error($response)) {
-                return self::errorResult($response->get_error_message(), $perPage);
-            }
-
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body, true);
-            if (!is_array($data)) {
-                $data = [];
-            }
-
-            set_transient($cacheKey, wp_json_encode($data), 1800);
+            return self::errorResult('请求 MyAnimeList 失败', $perPage);
         }
 
         if (empty($data)) {

@@ -8,7 +8,13 @@ function classicPagination(
         const link = event.target.closest(pageNumberSelector);
         if (!link) return;
 
-        if (!link.href) return;
+        if (!link.href) {
+            if (link.getAttribute("href")) {
+                link.href = link.getAttribute("href");
+            } else {
+                return;
+            }
+        }
 
         event.preventDefault();
         event.stopPropagation();

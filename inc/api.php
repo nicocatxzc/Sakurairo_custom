@@ -99,4 +99,41 @@ add_action('rest_api_init', function () {
             'permission_callback' => '__return_true'
         )
     );
+
+    require_once get_template_directory() . '/inc/api/bilibili_favlist.php';
+    register_rest_route(
+        'sakura/v1',
+        '/favlist/all',
+        array(
+            'methods' => 'GET',
+            'callback' => function () {
+                return iro_get_bilibili_favlist();
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/favlist/detail',
+        array(
+            'methods' => 'GET',
+            'callback' => function (WP_REST_Request $req) {
+                $fav_id = (int) $req->get_param('favId');
+                $page   = (int) ($req->get_param('page') ?: 1);
+
+                if (!$fav_id || $page < 1) {
+                    return new WP_Error('invalid_params', '缺少必要参数', ['status' => 400]);
+                }
+
+                $data = iro_get_bilibili_fav_detail($fav_id, $page);
+
+                if ($data === null) {
+                    return new WP_Error('not_found', '不存在该收藏夹', ['status' => 404]);
+                }
+
+                return $data;
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
 });
