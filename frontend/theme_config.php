@@ -15,6 +15,8 @@ function iro_front_theme_config()
         ],
         'pagination_mode' => iro_opt("pagination_mode", "pagination"),
         'pagination_ajax_wait' => iro_opt("pagination_ajax_wait", 3),
+        'missing_images' => iro_opt('missing_images_placeholder'),
+        'missing_avatars' => iro_opt("missing_avatars_placeholder"),
         'bangumi_source' => iro_opt("bangumi_source"),
         'lightbox' => iro_opt("lightbox", "medium_zoom"),
         'code_highlight' => iro_opt("code_highlight_method", "hljs"),

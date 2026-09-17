@@ -200,18 +200,7 @@ add_action('init', function () {
     ]);
 }, 999);
 
-/**
- * =========================================================
- * GitHub Card
- * =========================================================
- */
-
-/**
- * GitHub Card 数据层
- *
- * @param array $args
- * @return array
- */
+// ghcard
 function hachimi_get_ghcard_data($args)
 {
     $path = trim($args['path'] ?? '');
@@ -283,11 +272,7 @@ function hachimi_get_ghcard_data($args)
 }
 
 
-/**
- * GitHub Card 渲染层
- *
- * 短代码和 Block 最终都从这里进入。
- */
+// 渲染ghcard
 function hachimi_render_ghcard($args)
 {
     $data = hachimi_get_ghcard_data($args);
@@ -296,24 +281,19 @@ function hachimi_render_ghcard($args)
         return '<div>' . esc_html($data['message']) . '</div>';
     }
 
-    /*
-     * 模板最终只接收统一的数据。
-     */
     $data_info = hachimi_encode_data($data);
 
+    ob_start();
     require get_template_directory() . '/frontend/components/block/ghcard.php';
+    return ob_get_clean();
 }
 
 
-/**
- * GitHub 路径解析
- */
+// github解析
 function hachimi_parse_github_path($path)
 {
-    /*
-     * 完整 URL
-     * https://github.com/owner/repo
-     */
+
+    //完整 URL
     if (preg_match(
         '/github\.com\/([^\/]+)\/([^\/\?#]+)/',
         $path,
@@ -325,9 +305,7 @@ function hachimi_parse_github_path($path)
         ];
     }
 
-    /*
-     * owner/repo
-     */
+    //owner/repo
     if (preg_match(
         '/^([a-zA-Z0-9\-]+)\/([a-zA-Z0-9\-\._]+)$/',
         $path,
@@ -342,16 +320,7 @@ function hachimi_parse_github_path($path)
     return false;
 }
 
-
-/**
- * =========================================================
- * Notice
- * =========================================================
- */
-
-/**
- * Notice 数据层
- */
+// notice
 function hachimi_get_notice_data($args)
 {
     return [
@@ -360,29 +329,18 @@ function hachimi_get_notice_data($args)
     ];
 }
 
-
-/**
- * Notice 渲染层
- */
 function hachimi_render_notice($args)
 {
     $data = hachimi_get_notice_data($args);
 
     $data_info = hachimi_encode_data($data);
 
+    ob_start();
     require get_template_directory() . '/frontend/components/block/notice.php';
+    return ob_get_clean();
 }
 
-
-/**
- * =========================================================
- * Show Card
- * =========================================================
- */
-
-/**
- * Show Card 数据层
- */
+// showcard
 function hachimi_get_showcard_data($args)
 {
     return [
@@ -394,29 +352,18 @@ function hachimi_get_showcard_data($args)
     ];
 }
 
-
-/**
- * Show Card 渲染层
- */
 function hachimi_render_showcard($args)
 {
     $data = hachimi_get_showcard_data($args);
 
     $data_info = hachimi_encode_data($data);
 
+    ob_start();
     require get_template_directory() . '/frontend/components/block/showcard.php';
+    return ob_get_clean();
 }
 
-
-/**
- * =========================================================
- * Conversation
- * =========================================================
- */
-
-/**
- * Conversation 数据层
- */
+// conversation
 function hachimi_get_conversations_data($args)
 {
     $direction = $args['direction'] ?? 'row';
@@ -433,29 +380,18 @@ function hachimi_get_conversations_data($args)
     ];
 }
 
-
-/**
- * Conversation 渲染层
- */
 function hachimi_render_conversations($args)
 {
     $data = hachimi_get_conversations_data($args);
 
     $data_info = hachimi_encode_data($data);
 
+    ob_start();
     require get_template_directory() . '/frontend/components/block/conversation.php';
+    return ob_get_clean();
 }
 
-
-/**
- * =========================================================
- * Bilibili
- * =========================================================
- */
-
-/**
- * Bilibili 数据层
- */
+// bvideo
 function hachimi_get_bilibili_data($args)
 {
     $content = $args['content'] ?? '';
@@ -469,15 +405,13 @@ function hachimi_get_bilibili_data($args)
     ];
 }
 
-
-/**
- * Bilibili 渲染层
- */
 function hachimi_render_bilibili($args)
 {
     $data = hachimi_get_bilibili_data($args);
 
     $data_info = hachimi_encode_data($data);
 
+    ob_start();
     require get_template_directory() . '/frontend/components/block/bvideo.php';
+    return ob_get_clean();
 }

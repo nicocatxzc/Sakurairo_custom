@@ -17,8 +17,8 @@ class SocialPager {
         this.items = Array.from(container.querySelectorAll(".social-item"));
         this.total = this.items.length;
 
-        this.prevBtn = container.querySelector(".site-pagination.prev");
-        this.nextBtn = container.querySelector(".site-pagination.next");
+        this.prevBtn = container.querySelector(".pagination.prev");
+        this.nextBtn = container.querySelector(".pagination.next");
 
         this.pageSize = 0;
         this.pages = [];
