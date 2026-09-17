@@ -201,6 +201,36 @@ add_action('init', function () {
 }, 999);
 
 // ghcard
+// github解析
+function hachimi_parse_github_path($path)
+{
+
+    //完整 URL
+    if (preg_match(
+        '/github\.com\/([^\/]+)\/([^\/\?#]+)/',
+        $path,
+        $matches
+    )) {
+        return [
+            'owner' => $matches[1],
+            'repo'  => $matches[2],
+        ];
+    }
+
+    //owner/repo
+    if (preg_match(
+        '/^([a-zA-Z0-9\-]+)\/([a-zA-Z0-9\-\._]+)$/',
+        $path,
+        $matches
+    )) {
+        return [
+            'owner' => $matches[1],
+            'repo'  => $matches[2],
+        ];
+    }
+
+    return false;
+}
 function hachimi_get_ghcard_data($args)
 {
     $path = trim($args['path'] ?? '');
@@ -286,38 +316,6 @@ function hachimi_render_ghcard($args)
     ob_start();
     require get_template_directory() . '/frontend/components/block/ghcard.php';
     return ob_get_clean();
-}
-
-
-// github解析
-function hachimi_parse_github_path($path)
-{
-
-    //完整 URL
-    if (preg_match(
-        '/github\.com\/([^\/]+)\/([^\/\?#]+)/',
-        $path,
-        $matches
-    )) {
-        return [
-            'owner' => $matches[1],
-            'repo'  => $matches[2],
-        ];
-    }
-
-    //owner/repo
-    if (preg_match(
-        '/^([a-zA-Z0-9\-]+)\/([a-zA-Z0-9\-\._]+)$/',
-        $path,
-        $matches
-    )) {
-        return [
-            'owner' => $matches[1],
-            'repo'  => $matches[2],
-        ];
-    }
-
-    return false;
 }
 
 // notice
