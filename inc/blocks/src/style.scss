@@ -56,7 +56,11 @@
         }
     }
 
-    // showcard
+    .showcard,
+    .showcard * {
+        box-sizing: border-box;
+    }
+
     .showcard {
         position: relative;
         width: 240px;
@@ -81,11 +85,13 @@
             margin: 4% auto 0;
             box-shadow: 0 1px 30px -4px #e8e8e8;
             opacity: 1;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95),
+                box-shadow 0.4s, opacity 0.4s;
+
             &:hover {
                 box-shadow: 0 1px 20px 10px #e8e8e8;
-                height: 180px;
-                width: 180px;
-                margin: 8% auto 5.1%;
+                transform: scale(0.8);
                 opacity: 0.9;
             }
         }
@@ -127,8 +133,11 @@
             font-size: 32px;
             width: 60px;
             height: 60px;
-            top: 27.5%;
-            right: 27.5%;
+            top: 50%;
+            left: 50%;
+            right: auto;
+            margin: 0;
+            transform: translate(-50%, -50%);
             box-shadow: 0 1px 20px 8px #e8e8e8;
             background: rgba(255, 255, 255, 0.8);
         }
@@ -163,6 +172,11 @@
             width: auto;
             z-index: 999;
         }
+    }
+
+    .conversations-code,
+    .conversations-code * {
+        box-sizing: border-box;
     }
 
     .conversations-code {
