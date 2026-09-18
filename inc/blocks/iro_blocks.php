@@ -52,12 +52,46 @@ function iro_block_base_path()
 add_action('enqueue_block_editor_assets', 'sakurairo_editor_styles');
 function sakurairo_editor_styles()
 {
-    if (defined('IRO_VERSION')) {
-        wp_enqueue_style('fontawesome-icons', iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css'), array(), null);
-    } else {
-        wp_enqueue_style('fontawesome-icons', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css', array(), null);
+    iro_register_editor_styles();
+
+    wp_enqueue_style('fontawesome-icons');
+    wp_enqueue_style('iro-codes');
+}
+
+/**
+ * WP 7.1 起古腾堡画布改为渲染在 editor-canvas iframe 中。
+ * 该 iframe 只消费 enqueue_block_assets 与区块注册时的 style / editorStyle 句柄，
+ * 不会消费 enqueue_block_editor_assets；只挂后者会让编辑器内的区块完全没有主题样式。
+ * 这里把同一份编辑器样式补进 iframe，并用 is_admin() 保证前台不会加载。
+ */
+add_action('enqueue_block_assets', 'sakurairo_iframe_editor_styles');
+function sakurairo_iframe_editor_styles()
+{
+    if (! is_admin()) {
+        return;
     }
-    wp_enqueue_style('iro-codes', iro_block_base_url() . 'build/style-index.css', array(), '3.0');
+
+    iro_register_editor_styles();
+
+    wp_enqueue_style('fontawesome-icons');
+    wp_enqueue_style('iro-codes');
+}
+
+// 注册编辑器样式句柄，供编辑器外层文档与编辑器 iframe 两处复用
+function iro_register_editor_styles()
+{
+    if (wp_style_is('iro-codes', 'registered')) {
+        return;
+    }
+
+    if (defined('IRO_VERSION')) {
+        $fontawesome = iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+    } else {
+        $fontawesome = 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css';
+    }
+
+    wp_register_style('fontawesome-icons', $fontawesome, array(), null);
+    wp_register_style('iro-codes', iro_block_base_url() . 'build/style-index.css', array(), '3.0');
 }
 
 add_action('enqueue_block_editor_assets', 'iro_load_editor_block');
