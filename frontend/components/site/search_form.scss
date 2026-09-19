@@ -74,17 +74,17 @@
         list-style: none;
         max-height: 70dvh;
     }
-}
-.post-list {
-    width: 100%;
-    gap: 1rem;
-    overflow: auto;
-    .post-item {
+    .post-list {
         width: 100%;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        border: var(--border-sketch);
-
-        background-color: var(--widget-background-color);
+        gap: 1rem;
+        overflow: auto;
+        .post-item {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: var(--border-sketch);
+    
+            background-color: var(--widget-background-color);
+        }
     }
 }
