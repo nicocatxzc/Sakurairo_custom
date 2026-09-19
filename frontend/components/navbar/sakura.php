@@ -77,6 +77,11 @@ $iro_menu_options = iro_get_navigation();
                     </div>
                 </div>
             <?php else: ?>
+                    <img
+                        src="<?= iro_opt("missing_avatars_placeholder") ?>"
+                        alt="用户头像"
+                        class="nuxtpic avatar"
+                    />
                 <div class="user-menu">
                     <div class="user-menu-info">
                         <span class="name">游客</span>
