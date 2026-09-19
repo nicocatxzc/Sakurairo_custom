@@ -102,6 +102,9 @@
         transition: all 0.4s ease-in-out;
         left: 50%;
     }
+    .user .user-menu {
+        left:unset;
+    }
 
     li:hover > .sub-menu,
     .user:hover .user-menu {
@@ -125,6 +128,7 @@
         width: 2.5rem;
         min-width: 2.5rem;
         min-height: 2.5rem;
+        border-radius: 50%;
     }
 
     .user .user-menu {
