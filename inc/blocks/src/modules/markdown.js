@@ -63,7 +63,7 @@ export default function markdownBlock() {
                 "div",
                 {
                     id: "hachimi-markdown",
-                    "data-md": encoded,
+                    // "data-md": encoded,
                 },
                 createElement("pre", {}, raw),
             );

@@ -50,7 +50,7 @@ export default defineConfig(() => {
         },
 
         // 构建配置
-        base: './',
+        base: "./",
         build: {
             sourcemap: true,
             outDir: "dist",
@@ -64,10 +64,12 @@ export default defineConfig(() => {
                     chunkFileNames: "[name].[hash].js",
                     assetFileNames: (assetInfo) => {
                         const name = assetInfo.names?.[0] ?? "";
-                        if (name.endsWith(".css")) {
+
+                        if (name === "style.css") {
                             return "style.css";
                         }
-                        return "[name]-[hash][extname]";
+
+                        return "assets/[name]-[hash][extname]";
                     },
                 },
             },

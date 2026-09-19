@@ -50,12 +50,13 @@ let lang = createI18n({
 const TYPES = {
     task: {
         label: lang.taskLabel,
-        icon: "fa-solid fa-clipboard-list",
+        // 与前台 notice.php 的图标表保持一致
+        icon: "fa-regular fa-clipboard",
         className: "task",
     },
     warning: {
         label: lang.warningLabel,
-        icon: "fa-solid fa-triangle-exclamation",
+        icon: "fa-solid fa-warning",
         className: "warning",
     },
     noway: {

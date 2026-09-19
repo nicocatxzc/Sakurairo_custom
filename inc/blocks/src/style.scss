@@ -1,44 +1,54 @@
 @layer blocks {
-    // 提示块
+    // 提示块：外观对齐前台 frontend/components/block/notice.scss 的 .block-notice
+    .shortcodestyle,
+    .shortcodestyle * {
+        box-sizing: border-box;
+    }
+
     .shortcodestyle {
-        padding: 15px 15px 15px 30px !important;
+        // 前台用 var(--widget-*) / var(--border-shine)，编辑器画布拿不到这些变量，这里写等价字面值
+        display: flex;
+        align-items: center;
+        margin: 1rem 0.5rem;
+        padding: 1rem 1rem 1rem 1.5rem !important;
         position: relative !important;
         color: #505050;
-        box-shadow: 0 1px 30px -4px #e8e8e8;
+        box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
         background: rgba(255, 255, 255, 0.5);
-        border-radius: 10px !important;
-        border: 1.5px solid #ffffff;
-        box-sizing: border-box;
+        border-radius: 0.5rem !important;
+        border: 0.1rem solid #ffffff;
 
         text-indent: 0 !important;
 
+        // 只过渡视觉属性：切换类型时颜色立刻反馈，悬停也不会牵动布局
+        transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+
         &:hover {
-            box-shadow: 0 1px 20px 10px #e8e8e8;
+            box-shadow: 0 0.1rem 1.8rem 0.7rem rgb(232, 232, 232);
             background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-0.1rem);
         }
 
+        // 前台 .icon 是 1.5rem 方块 + 1.5rem 右边距；
+        // 编辑器里图标外面多包了一层 span，所以这里用 inline-block 让宽高生效
         i {
-            margin-right: 25px;
-            font-size: 20px;
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 1.5rem;
             text-indent: 0 !important;
-        }
-
-        a {
-            padding: 5px !important;
         }
 
         &.task,
         &.warning,
         &.noway,
         &.buy {
-            // text-indent: 0 !important;
-
             p {
                 text-indent: 0 !important;
             }
         }
 
-        // 类型颜色
+        // 类型颜色（与前台一致）
         &.task i {
             color: #7d7d7d !important;
         }

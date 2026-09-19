@@ -165,6 +165,7 @@ _iro.hooks.onPageLoaded(initFrontConfig);
 
 export default _iro;
 
+import("./utils/missImg");
 // 事件总线
 import("./bus");
 // 滚动广播
@@ -175,5 +176,3 @@ import("./darkmode");
 import("./pjax");
 
 import("./utils/message");
-
-import("./utils/missImg");
