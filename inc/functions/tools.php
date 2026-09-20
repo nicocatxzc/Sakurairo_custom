@@ -36,64 +36,6 @@ function DEFAULT_FEATURE_IMAGE()
     return $url ? get_random_url($url) : '';
 }
 
-// 获取访客 IP
-function get_the_user_ip()
-{
-    // if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-    //     //check ip from share internet
-    //     $ip = $_SERVER['HTTP_CLIENT_IP'];
-    // } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    //     //to check ip is pass from proxy
-    //     $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    // } else {
-    //     $ip = $_SERVER['REMOTE_ADDR'];
-    // }
-    // 简略版
-    // $ip = $_SERVER['HTTP_CLIENT_IP'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['REMOTE_ADDR']);
-    $ip = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
-    return apply_filters('wpb_get_ip', $ip);
-}
-
-function iterator_to_string(Iterator $iterator): string
-{
-    $content = '';
-    foreach ($iterator as $item) {
-        $content .= $item;
-    }
-    return $content;
-}
-
-function check_title_tags($content)
-{
-    if (!empty($content)) {
-        $dom = new DOMDocument();
-        @$dom->loadHTML($content);
-        $headings = $dom->getElementsByTagName('h1');
-        for ($i = 1; $i <= 6; $i++) {
-            $headings = $dom->getElementsByTagName('h' . $i);
-            foreach ($headings as $heading) {
-                if (trim($heading->nodeValue) != '') {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-/**
- * 返回是否应当显示文章标题。
- * 
- */
-function should_show_title(): bool
-{
-    $id = get_the_ID();
-    $use_as_thumb = get_post_meta($id, 'use_as_thumb', true); //'true','only',(default)
-    return !iro_opt('patternimg')
-        || !get_post_thumbnail_id($id)
-        && $use_as_thumb != 'true' && !get_post_meta($id, 'video_cover', true);
-}
-
 /**
  * 获取用户UA信息
  */

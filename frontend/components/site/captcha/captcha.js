@@ -1,23 +1,32 @@
 import { createApp } from "vue";
-import App from "./builtin.vue";
+import Builtin from "./builtin.vue";
+import Turnstile from "./turnstile.vue";
 
-let captahaApp = null;
+const CAPTCHAS = [
+    [".captcha.builtin", Builtin],
+    [".captcha.turnstile", Turnstile],
+];
+
+const apps = [];
+
 function mountCaptcha() {
-    const captcha = document.querySelector(".captcha");
-    if (captcha) {
-        captahaApp = createApp(App);
-        captahaApp.mount(captcha);
+    for (const [selector, component] of CAPTCHAS) {
+        document.querySelectorAll(selector).forEach((el) => {
+            const app = createApp(component);
+            app.mount(el);
+            apps.push(app);
+        });
     }
-    _iro.hooks["pjax:start"].add(
-        () => {
-            if (captahaApp) {
-                captahaApp.unmount();
-                captahaApp = null;
-            }
-        },
-        { once: true },
-    );
+}
+
+function unmountCaptcha() {
+    apps.forEach((app) => app.unmount());
+    apps.length = 0;
 }
 
 _iro.hooks.onPageLoaded(mountCaptcha);
-document.addEventListener("captcha:refresh",mountCaptcha)
+_iro.hooks["pjax:start"].add(unmountCaptcha);
+document.addEventListener("captcha:refresh", () => {
+    unmountCaptcha();
+    mountCaptcha();
+});

@@ -1516,12 +1516,12 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'comment_captcha',
                 'type' => 'select',
-                'title' => __('Page Comment Area Captcha', 'sakurairo_csf'),
-                'label' => __('Enabled by default, comments posted without logging in need to be verified by CAPTCHA', 'sakurairo_csf'),
+                'title' => __('评论区验证码', 'sakurairo_csf'),
+                'label' => __('开启后游客评论需要通过验证码验证', 'sakurairo_csf'),
                 'options' => [
                     'off' => __('Off', 'sakurairo_csf'),
                     'builtin' => __('主题内建验证码', 'sakurairo_csf'),
-                    'cloudflare' => __('Cloudflare Turnstile', "sakurairo_csf")
+                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
                 ],
                 'default' => 'builtin',
             ],
@@ -1734,7 +1734,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'options' => [
                     'off' => __('Off', 'sakurairo_csf'),
                     'builtin' => __('主题内建验证码', 'sakurairo_csf'),
-                    'cloudflare' => __('Cloudflare Turnstile', "sakurairo_csf")
+                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
                 ],
                 'default' => 'off',
             ],

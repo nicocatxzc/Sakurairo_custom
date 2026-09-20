@@ -220,6 +220,9 @@ importers:
       vue:
         specifier: ^3.5.42
         version: 3.5.42(typescript@7.0.2)
+      vue-cloudflare-turnstile:
+        specifier: ^1.0.3
+        version: 1.0.3(vue@3.5.42(typescript@7.0.2))
     devDependencies:
       '@vitejs/plugin-basic-ssl':
         specifier: ^2.3.0
@@ -2166,6 +2169,12 @@ packages:
   vscode-uri@3.2.0:
     resolution: {integrity: sha512-m2gXo3bn0G1kT9InzMf07fTbqMbGtyckj3bH5ktLO+1Ssv+yiATZ4dhwaQv9UZWxJh6E9IFGnQyjgWVDWVBDrg==}
 
+  vue-cloudflare-turnstile@1.0.3:
+    resolution: {integrity: sha512-VHMuHEvpS4hsYYZh5odbR3Nf9nJIQiVLGAeo+HH/Tv4k+fGx5xsvrwS89you1EPakqTS0xbpoKhLuPkGHPv6wA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      vue: ^3.3.0
+
   vue-component-type-helpers@3.3.11:
     resolution: {integrity: sha512-LwcxzeliO9fkQcpJG0PoX8X5kmAhKmH9wkpDLxNabwzkQ9Zeib2YVHwFV4pcWmMLfXVfjr/dSV+DaJ3cIPgSNA==}
 
@@ -3943,6 +3952,10 @@ snapshots:
       sass-embedded: 1.104.0
 
   vscode-uri@3.2.0: {}
+
+  vue-cloudflare-turnstile@1.0.3(vue@3.5.42(typescript@7.0.2)):
+    dependencies:
+      vue: 3.5.42(typescript@7.0.2)
 
   vue-component-type-helpers@3.3.11: {}
 
