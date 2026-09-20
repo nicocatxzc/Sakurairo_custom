@@ -29,52 +29,83 @@ function iro_rest_comment_captcha_check(
         return $prepared_comment;
     }
 
-    $id = $request->get_param('captcha_id');
-    $captchaCode = $request->get_param('captcha_text');
-
-    if (!$id || !$captchaCode) {
-        return new WP_Error(
-            'captcha_required',
-            __('Captcha verification required.', 'sakurairo'),
-            [
-                'status' => 400,
-                'code'   => 5,
-                'data'   => '',
-                'msg'    => __('Captcha verification required.', 'sakurairo'),
-            ]
-        );
+    if (iro_opt("comment_captcha", "builtin") == "off") {
+        return $prepared_comment;
     }
 
-    $captcha = new Captcha();
+    // 已登陆，跳过验证
+    if (is_user_logged_in()) {
+        return $prepared_comment;
+    }
 
-    $result = $captcha->check_captcha(
-        $captchaCode,
-        $id
-    );
+    if (iro_opt("comment_captcha", "builtin") == "builtin") {
+        $id = $request->get_param('captcha_id');
+        $captchaCode = $request->get_param('captcha_text');
 
-    if (
-        !is_array($result) ||
-        $result["stat"] != true
-    ) {
-        return new WP_Error(
-            'captcha_failed',
-            $result['msg']
-                ?? __('验证码校验失败', 'sakurairo'),
-            [
-                'status' => 400,
+        if (!$id || !$captchaCode) {
+            return new WP_Error(
+                'captcha_required',
+                __('Captcha verification required.', 'sakurairo'),
+                [
+                    'status' => 400,
+                    'code'   => 5,
+                    'data'   => '',
+                    'msg'    => __('Captcha verification required.', 'sakurairo'),
+                ]
+            );
+        }
 
-                /**
-                 * 保留你的协议
-                 */
-                'stat' => false,
-                'data' => '',
-                'msg'  => $result['msg']
+        $captcha = new IroCaptcha();
+
+        $result = $captcha->check_captcha(
+            $captchaCode,
+            $id
+        );
+
+        if (
+            !is_array($result) ||
+            $result["stat"] != true
+        ) {
+            return new WP_Error(
+                'captcha_failed',
+                $result['msg']
                     ?? __('验证码校验失败', 'sakurairo'),
-            ]
-        );
+                [
+                    'status' => 400,
+                    'stat' => false,
+                    'data' => '',
+                    'msg'  => $result['msg']
+                        ?? __('验证码校验失败', 'sakurairo'),
+                ]
+            );
+        }
+
+        return $prepared_comment;
     }
 
-    return $prepared_comment;
+    if (iro_opt("comment_captcha") == "turnstile") {
+
+        $token = $request->get_param('turnstile_token');
+
+        $result = iro_verify_turnstile($token);
+
+        if ($result) {
+            return $prepared_comment;
+        } else {
+            return new WP_Error(
+                'captcha_failed',
+                $result['msg']
+                    ?? __('验证码校验失败', 'sakurairo'),
+                [
+                    'status' => 400,
+                    'stat' => false,
+                    'data' => '',
+                    'msg'  => $result['msg']
+                        ?? __('验证码校验失败', 'sakurairo'),
+                ]
+            );
+        }
+    }
 }
 
 // ajax评论

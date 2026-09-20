@@ -67,7 +67,13 @@ async function getCaptcha() {
                 @mouseleave="startHideTimer"
             />
         </div>
-        <input type="text" v-model="id" name="captcha_id" class="captcha_id">
+        <input
+            type="text"
+            v-model="id"
+            name="captcha_id"
+            class="captcha_id"
+            hidden
+        />
         <input
             ref="captchaInput"
             v-model="answer"

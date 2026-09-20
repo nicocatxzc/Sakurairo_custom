@@ -1,12 +1,28 @@
 <?php
+function iro_get_basic_theme_config(): array
+{
+    return [
+        'language' => esc_js(str_replace('-', '_', get_locale())),
+        'api'      => esc_url_raw(rest_url()),
+        'ajaxurl'  => admin_url('admin-ajax.php'),
+        'iro_api'  => esc_url_raw(rest_url('sakura/v1')),
+    ];
+}
+
+function iro_basic_theme_config(): void
+{
+?>
+    <script id="iro_theme_config" type="application/json">
+        <?= json_encode(iro_get_basic_theme_config(), JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE) ?>
+    </script>
+<?php
+}
+add_action('admin_head', 'iro_basic_theme_config');
+add_action('login_head', 'iro_basic_theme_config');
+
 function iro_front_theme_config()
 {
-    $iro_theme_config = [
-        'language' => esc_js(str_replace('-', '_', get_locale())),
-        'api' => esc_url_raw(rest_url()),
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'iro_api' => esc_url_raw(rest_url('sakura/v1')),
-
+    $iro_theme_config = array_merge(iro_get_basic_theme_config(), [
         'typed_config' => iro_opt("cover_typedjs_config"),
         'particle' => [
             'select' => iro_opt("frontend_particle"),
@@ -22,7 +38,7 @@ function iro_front_theme_config()
         'code_highlight' => iro_opt("code_highlight_method", "hljs"),
         'code_katex' => iro_opt('code_katex', true),
         'turnstile_site_key' => iro_opt("turnstile_site_key"),
-    ];
+    ]);
 ?>
 
     <?php

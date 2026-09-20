@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import Builtin from "./builtin.vue";
 import Turnstile from "./turnstile.vue";
 
+window._iro = window._iro || {};
+
 const CAPTCHAS = [
     [".captcha.builtin", Builtin],
     [".captcha.turnstile", Turnstile],
@@ -24,9 +26,16 @@ function unmountCaptcha() {
     apps.length = 0;
 }
 
-_iro.hooks.onPageLoaded(mountCaptcha);
-_iro.hooks["pjax:start"].add(unmountCaptcha);
-document.addEventListener("captcha:refresh", () => {
-    unmountCaptcha();
+if (window?._iro?.hooks) {
+    _iro.hooks.onPageLoaded(mountCaptcha);
+    _iro.hooks["pjax:start"].add(unmountCaptcha);
+    document.addEventListener("captcha:refresh", () => {
+        unmountCaptcha();
+        mountCaptcha();
+    });
+} else {
+    _iro.config = JSON.parse(
+        document.querySelector("#iro_theme_config")?.innerHTML,
+    );
     mountCaptcha();
-});
+}

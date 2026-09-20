@@ -7,9 +7,9 @@ const turnstileToken = ref("");
 
 async function verify(token) {
     turnstileToken.value = token;
-    const { data } = axios.post(`${_iro.config.iro_api}/captcha/turnstile`, {
-        turnstile_token: turnstileToken.value,
-    });
+    // const { data } = axios.post(`${_iro.config.iro_api}/captcha/turnstile`, {
+    //     turnstile_token: turnstileToken.value,
+    // });
 }
 </script>
 

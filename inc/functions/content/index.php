@@ -1,32 +1,5 @@
 <?php
 /*
- * 订制body类
- */
-function akina_body_classes($classes)
-{
-    // Adds a class of group-blog to blogs with more than 1 published author.
-    if (is_multi_author()) {
-        $classes[] = 'group-blog';
-    }
-    // Adds a class of hfeed to non-singular pages.
-    if (!is_singular()) {
-        $classes[] = 'hfeed';
-    }
-    // 定制中文字体class
-    $classes[] = 'chinese-font';
-    /*if(!wp_is_mobile()) {
-    $classes[] = 'serif';
-    }*/
-    if (isset($_COOKIE['dark' . iro_opt('cookie_version', '')])) {
-        $classes[] = $_COOKIE['dark' . iro_opt('cookie_version', '')] == '1' ? 'dark' : ' ';
-    } else {
-        $classes[] = ' ';
-    }
-    return $classes;
-}
-add_filter('body_class', 'akina_body_classes');
-
-/*
  * 图片CDN
  */
 add_filter('upload_dir', 'wpjam_custom_upload_dir');

@@ -1,4 +1,19 @@
 <?php
+/**
+ * 获取 POST 字段
+ */
+function iro_get_post_key(string $key)
+{
+    if (
+        !isset($_POST[$key]) ||
+        !is_scalar($_POST[$key])
+    ) {
+        return '';
+    }
+
+    return trim((string) wp_unslash($_POST[$key]));
+}
+
 //生成随机链接，防止浏览器缓存策略
 function get_random_url(string $url): string
 {
