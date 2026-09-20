@@ -127,7 +127,7 @@ if (iro_opt('custom_login_switch', false)) {
                 border-radius: 8px !important;
             }
         </style>
-<?php
+    <?php
     }
     add_action('login_head', 'custom_login');
 
@@ -146,6 +146,234 @@ if (iro_opt('custom_login_switch', false)) {
     add_filter('login_headerurl', 'custom_loginlogo_url');
 }
 
-if (!iro_opt('login_language_opt') == '1') {
+if (iro_opt('login_language_opt') == true) {
     add_filter('login_display_language_dropdown', '__return_false');
 }
+
+function iro_render_login_captcha(): void
+{
+    ?>
+    <?php if (iro_opt("login_captcha_select", "builtin") != "off"): ?>
+        <div class="captcha <?= iro_opt("login_captcha_select", "builtin") ?>"></div>
+        <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/captcha.js' ?>"></script>
+    <?php endif; ?>
+<?php
+}
+
+add_action('login_form',        'iro_render_login_captcha');
+add_action('register_form',     'iro_render_login_captcha');
+add_action('lostpassword_form', 'iro_render_login_captcha');
+
+/**
+ * 登录/注册/找回密码验证码错误
+ */
+function iro_login_captcha_error($message = null)
+{
+    $message = $message ?: __('验证码校验失败', 'sakurairo');
+
+    return new WP_Error(
+        'captcha_failed',
+        $message,
+        [
+            'status' => 400,
+            'stat'   => false,
+            'data'   => '',
+            'msg'    => $message,
+        ]
+    );
+}
+
+/**
+ * 校验登录相关表单验证码
+ *
+ * 返回：
+ * - true       验证通过
+ * - WP_Error   验证失败
+ */
+function iro_login_captcha_validate()
+{
+    $captchaType = iro_opt('login_captcha_select', 'builtin');
+
+    // 关闭验证码
+    if ($captchaType === 'off') {
+        return true;
+    }
+
+    // 内置验证码
+    if ($captchaType === 'builtin') {
+        $id   = iro_get_post_key('captcha_id');
+        $code = iro_get_post_key('captcha_text');
+
+        if (!$id || !$code) {
+            return iro_login_captcha_error(
+                __('Captcha verification required.', 'sakurairo')
+            );
+        }
+
+        $captcha = new IroCaptcha();
+
+        $result = $captcha->check_captcha(
+            $code,
+            $id
+        );
+
+        if (
+            !is_array($result) ||
+            empty($result['stat'])
+        ) {
+            return iro_login_captcha_error(
+                is_array($result) && !empty($result['msg'])
+                    ? $result['msg']
+                    : __('验证码校验失败', 'sakurairo')
+            );
+        }
+
+        return true;
+    }
+
+    // Cloudflare Turnstile
+    if ($captchaType === 'turnstile') {
+        $token = iro_get_post_key('turnstile_token');
+
+        if (!$token) {
+            return iro_login_captcha_error(
+                __('Captcha verification required.', 'sakurairo')
+            );
+        }
+
+        $result = iro_verify_turnstile($token);
+
+        /*
+         * 兼容 iro_verify_turnstile() 返回：
+         *
+         * 1. bool
+         * 2. ['success' => true]
+         * 3. ['stat' => true]
+         */
+        if (is_array($result)) {
+            if (isset($result['stat'])) {
+                $success = (bool) $result['stat'];
+            } else {
+                $success = !empty($result['success']);
+            }
+
+            $message =
+                $result['msg']
+                ?? $result['message']
+                ?? __('验证码校验失败', 'sakurairo');
+        } else {
+            $success = (bool) $result;
+            $message = __('验证码校验失败', 'sakurairo');
+        }
+
+        if (!$success) {
+            return iro_login_captcha_error($message);
+        }
+
+        return true;
+    }
+
+    // 未知验证码类型，建议默认拒绝
+    return iro_login_captcha_error(
+        __('验证码配置错误，请联系管理员。', 'sakurairo')
+    );
+}
+
+
+/**
+ * 登录验证码
+ *
+ * WP 登录认证入口：
+ * authenticate
+ *
+ * @param WP_User|WP_Error|null $user
+ * @param string               $username
+ * @param string               $password
+ */
+function iro_login_captcha_check($user, $username, $password)
+{
+    // 只处理正常登录 POST
+    if (
+        ($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' ||
+        !isset($_POST['log'])
+    ) {
+        return $user;
+    }
+
+    $result = iro_login_captcha_validate();
+
+    if (is_wp_error($result)) {
+        return $result;
+    }
+
+    return $user;
+}
+
+add_filter(
+    'authenticate',
+    'iro_login_captcha_check',
+    99,
+    3
+);
+
+
+/**
+ * 注册验证码
+ *
+ * @param WP_Error $errors
+ * @param string   $sanitized_user_login
+ * @param string   $user_email
+ */
+function iro_register_captcha_check(
+    $errors,
+    $sanitized_user_login,
+    $user_email
+) {
+    $result = iro_login_captcha_validate();
+
+    if (is_wp_error($result)) {
+        $errors->add(
+            $result->get_error_code(),
+            $result->get_error_message()
+        );
+    }
+
+    return $errors;
+}
+
+add_filter(
+    'registration_errors',
+    'iro_register_captcha_check',
+    10,
+    3
+);
+
+
+/**
+ * 找回密码验证码
+ *
+ * @param WP_Error $errors
+ * @param WP_User|false $user_data
+ */
+function iro_lostpassword_captcha_check(
+    $errors,
+    $user_data
+) {
+    $result = iro_login_captcha_validate();
+
+    if (is_wp_error($result)) {
+        $errors->add(
+            $result->get_error_code(),
+            $result->get_error_message()
+        );
+    }
+
+    return $errors;
+}
+
+add_filter(
+    'lostpassword_errors',
+    'iro_lostpassword_captcha_check',
+    10,
+    2
+);

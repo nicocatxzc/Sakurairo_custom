@@ -58,9 +58,10 @@ export default defineConfig(() => {
             rollupOptions: {
                 input: {
                     app: resolve(import.meta.dirname, "main.js"),
+                    captcha: resolve(import.meta.dirname, "components/site/captcha/captcha.js"),
                 },
                 output: {
-                    entryFileNames: "app.js",
+                    entryFileNames: "[name].js",
                     chunkFileNames: "[name].[hash].js",
                     assetFileNames: (assetInfo) => {
                         const name = assetInfo.names?.[0] ?? "";

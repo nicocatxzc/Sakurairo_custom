@@ -91,7 +91,7 @@ require_once get_template_directory() . '/frontend/theme_config.php';
 // 加载customizer编辑器
 require_once get_template_directory() . '/opt/customizer/index.php';
 // 定制后台以及登录页
-require_once get_template_directory() . '/inc/functions/custom/dashboard.php';
+require_once get_template_directory() . '/inc/functions/custom/index.php';
 // 评论区相关
 require_once get_template_directory() . '/inc/functions/comment/index.php';
 // 导航栏相关
