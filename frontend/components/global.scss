@@ -120,21 +120,4 @@ html {
         height: auto;
         max-width: 100%;
     }
-    .nuxtpic {
-        display: block;
-        img {
-            display: block;
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-        }
-    }
-    .flex-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .hide {
-        display: none;
-    }
 }
