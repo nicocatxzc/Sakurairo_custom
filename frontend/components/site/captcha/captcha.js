@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import Builtin from "./builtin.vue";
 import Turnstile from "./turnstile.vue";
+import "../../login.scss"
 
 window._iro = window._iro || {};
 

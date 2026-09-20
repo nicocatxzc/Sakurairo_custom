@@ -150,9 +150,23 @@ if (iro_opt('login_language_opt') == true) {
     add_filter('login_display_language_dropdown', '__return_false');
 }
 
+// 验证码样式
+function iro_login_captcha_style(): void
+{
+    if (iro_opt("login_captcha_select", "builtin") == "off") {
+        return;
+    }
+    require get_template_directory() . '/frontend/theme_style_vars.php';
+    ?>
+    <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css' ?>">
+<?php
+}
+
+add_action('login_head', 'iro_login_captcha_style');
+
 function iro_render_login_captcha(): void
 {
-    ?>
+?>
     <?php if (iro_opt("login_captcha_select", "builtin") != "off"): ?>
         <div class="captcha <?= iro_opt("login_captcha_select", "builtin") ?>"></div>
         <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/captcha.js' ?>"></script>
@@ -273,7 +287,7 @@ function iro_login_captcha_validate()
         return true;
     }
 
-    // 未知验证码类型，建议默认拒绝
+    // 未知验证码类型，默认拒绝
     return iro_login_captcha_error(
         __('验证码配置错误，请联系管理员。', 'sakurairo')
     );

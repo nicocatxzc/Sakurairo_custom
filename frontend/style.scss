@@ -1,5 +1,6 @@
 // 全局样式
 @use "./components/global.scss" as global;
+@use "./components/keyword.scss" as keyword;
 // 布局样式
 @use "./layout.scss" as layout;
 // 古腾堡块
@@ -17,6 +18,6 @@
 // 站点组件
 @use "./components/site/index.scss" as site;
 // 布局插槽
-@use './components/slots/index.scss' as slot;
+@use "./components/slots/index.scss" as slot;
 
-@use './components/slots/pagination.scss' as pagination;
+@use "./components/slots/pagination.scss" as pagination;
