@@ -9,12 +9,15 @@ function permalink_tip()
 }
 add_action('admin_notices', 'permalink_tip');
 
+// 载入通用验证码方法
+require_once get_template_directory() . '/inc/api/captcha.php';
+require_once get_template_directory() . '/inc/api/turnstile.php';
+
 /**
  * 自定义api接口
-*/
+ */
 add_action('rest_api_init', function () {
-    require_once get_template_directory() . '/inc/api/captcha.php';
-    
+
     // 评论区api自定义
     require_once get_template_directory() . '/inc/api/comments.php';
 
@@ -37,9 +40,15 @@ add_action('rest_api_init', function () {
             'permission_callback' => '__return_true'
         )
     );
-
-    require_once get_template_directory() . '/inc/api/search_index.php';
-
+    register_rest_route(
+        'sakura/v1',
+        '/captcha/turnstile',
+        array(
+            'methods' => 'POST',
+            'callback' => 'iro_verify_turnstile_api',
+            'permission_callback' => '__return_true'
+        )
+    );
 
     require_once get_template_directory() . '/inc/api/search_index.php';
     register_rest_route(

@@ -21,7 +21,7 @@ function iro_front_theme_config()
         'lightbox' => iro_opt("lightbox", "medium_zoom"),
         'code_highlight' => iro_opt("code_highlight_method", "hljs"),
         'code_katex' => iro_opt('code_katex', true),
-        'turnstile_site_key' => iro_opt("Turnstile Site Key"),
+        'turnstile_site_key' => iro_opt("turnstile_site_key"),
     ];
 ?>
 

@@ -1832,14 +1832,12 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'turnstile_site_key',
                 'type' => 'text',
                 'title' => __('Turnstile Site Key', "sakurairo_csf"),
-                'dependency' => ['captcha_select', '==', 'turnstile', '', 'true'],
             ],
 
             [
                 'id' => 'turnstile_secret_key',
                 'type' => 'text',
                 'title' => __('Turnstile Secret Key', "sakurairo_csf"),
-                'dependency' => ['captcha_select', '==', 'turnstile', '', 'true'],
             ],
         ]
     ]);
