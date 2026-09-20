@@ -10,21 +10,15 @@ function permalink_tip()
 add_action('admin_notices', 'permalink_tip');
 
 /**
- * Router
- */
+ * 自定义api接口
+*/
 add_action('rest_api_init', function () {
-    require_once get_template_directory() . '/inc/api/comments.php';
-    register_rest_route(
-        'sakura/v1',
-        '/comments',
-        array(
-            'methods' => 'GET',
-            'callback' => 'iro_get_comments',
-            'permission_callback' => '__return_true'
-        )
-    );
-
     require_once get_template_directory() . '/inc/api/captcha.php';
+    
+    // 评论区api自定义
+    require_once get_template_directory() . '/inc/api/comments.php';
+
+    // 验证码接口
     register_rest_route(
         'sakura/v1',
         '/captcha',
@@ -43,6 +37,9 @@ add_action('rest_api_init', function () {
             'permission_callback' => '__return_true'
         )
     );
+
+    require_once get_template_directory() . '/inc/api/search_index.php';
+
 
     require_once get_template_directory() . '/inc/api/search_index.php';
     register_rest_route(

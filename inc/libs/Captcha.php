@@ -1,6 +1,6 @@
 
 <?php
-class Captcha
+class IroCaptcha
 {
 
     //验证码文字

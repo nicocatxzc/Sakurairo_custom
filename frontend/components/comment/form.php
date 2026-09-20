@@ -114,7 +114,9 @@ $post_comment_args = iro_comment_form_data();
 
                 <!-- 其他字段 -->
                 <div class="checks flex-center">
-                    <?php require_once get_template_directory() . "/frontend/components/site/captcha/captcha.php"; ?>
+                    <?php if (iro_opt("comment_captcha", "builtin") != "off"): ?>
+                        <div class="captcha <?= iro_opt("comment_captcha", "builtin") ?>"></div>
+                    <?php endif; ?>
                     <?php foreach ($check_fields as $name => $field) : ?>
                         <?= $field ?>
                     <?php endforeach; ?>
