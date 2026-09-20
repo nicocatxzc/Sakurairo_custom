@@ -1,8 +1,6 @@
-
 <?php
 class IroCaptcha
 {
-
     //验证码文字
 
     private string $captchaText = '';
