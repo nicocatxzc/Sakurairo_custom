@@ -135,7 +135,29 @@ _iro.hooks.onPageLoaded(() => {
         // 收集所有数据
         const formData = new FormData(form);
 
+        // 这些字段在下方手动映射，不能按原名直接提交（author 在 REST 里是用户 ID）
+        const mappedFields = [
+            "author",
+            "email",
+            "url",
+            "comment",
+            "comment_post_ID",
+            "comment_parent",
+            "captcha_id",
+            "captcha_text",
+        ];
+
         const requestData: any = {
+            /**
+             * 未手动收集的字段按原名扁平提交
+             * （_wp_unfiltered_html_comment、enable_markdown 等）
+             */
+            ...Object.fromEntries(
+                [...formData.entries()].filter(
+                    ([name]) => !mappedFields.includes(name),
+                ),
+            ),
+
             author_name: formData.get("author") || "",
             author_email: formData.get("email") || "",
             author_url: formData.get("url") || "",
