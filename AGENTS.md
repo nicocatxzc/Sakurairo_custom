@@ -18,13 +18,13 @@
 
 ## 2. 本机环境与工具链（实测）
 
-| 工具 | 状态 |
-| --- | --- |
-| Node.js | v24.21.0（`~/.nvmd/bin/node`） |
-| pnpm | 12.5.1 |
-| PHP CLI | **不存在**（`NO_PHP_CLI`） |
-| Composer | **不存在** |
-| yarn | 未安装 |
+| 工具     | 状态                           |
+| -------- | ------------------------------ |
+| Node.js  | v24.21.0（`~/.nvmd/bin/node`） |
+| pnpm     | 12.5.1                         |
+| PHP CLI  | **不存在**（`NO_PHP_CLI`）     |
+| Composer | **不存在**                     |
+| yarn     | 未安装                         |
 
 因此：
 
@@ -36,7 +36,7 @@
 
 ## 3. 目录结构
 
-```
+```tree
 Sakurairo/
 ├── functions.php            # 入口：定义常量、按顺序 require 所有模块
 ├── style.css                # 仅主题头（名称/版本/依赖声明）
@@ -62,7 +62,7 @@ Sakurairo/
 │   │   └── index.js         # 汇总 import 所有组件 JS（新增 JS 必须在此登记）
 │   ├── theme_config.php     # 把 PHP 配置以 <script type="application/json"> 注入
 │   ├── theme_style_vars.php # 输出 :root / :root.dark 的 CSS 变量
-│   ├── types/               # unplugin 自动生成的 d.ts（已纳入版本管理）
+│   ├── types/               # ★ iro.d.ts（手写的 _iro 全局类型）+ unplugin 自动生成的 d.ts（均纳入版本管理）
 │   └── dist/                # 构建产物（.gitignore，不提交）
 ├── inc/
 │   ├── api.php              # rest_api_init，注册 sakura/v1 路由
@@ -115,11 +115,11 @@ $GLOBALS['iro_options'];           // 完整数组
 
 `frontend/theme_config.php` 在页面上输出三个 JSON `<script>`：
 
-| id | JS 侧 | 内容 |
-| --- | --- | --- |
+| id                  | JS 侧         | 内容                                    |
+| ------------------- | ------------- | --------------------------------------- |
 | `#iro_theme_config` | `_iro.config` | 站点/接口/粒子/分页/lightbox 等全局配置 |
-| `#iro_page_config` | `_iro.page` | `post_id`、`is_home` |
-| `#iro_user_config` | `_iro.user` | 当前用户 id/name/avatar... |
+| `#iro_page_config`  | `_iro.page`   | `post_id`、`is_home`                    |
+| `#iro_user_config`  | `_iro.user`   | 当前用户 id/name/avatar...              |
 
 在 `frontend/app/index.ts` 的 `initFrontConfig()`（注册于 `onPageLoaded`）里解析。**PJAX 后会重新解析**，因为 `#iro_page_config` 是 Swup 的替换容器之一。
 
@@ -138,6 +138,8 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 其他全局：`_iro.bus`（mitt 事件总线，如 `scroll:update`）、`_iro.navigate`（Swup 导航）、`_iro.utils`（`missImg` / `missAvatar` 等）。
 
+`_iro` 及其成员的类型统一定义在 `frontend/types/iro.d.ts`（`declare const _iro` + `interface Window`），各文件直接写 `_iro` 即可获得提示。该文件是**手写的全局声明**，新增 `_iro` 成员时要同步补上；`_iro.config` 目前是 `any`，其形状（对应 `theme_config.php` 的三个 JSON）记录在同文件的 `IroThemeConfig` / `IroPageConfig` / `IroUserConfig` 中，收紧类型时替换即可。
+
 ### 4.4 PJAX / Swup
 
 - `frontend/app/pjax.js` 用 Swup，替换容器：`.layout-slot` 与 `#iro_page_config`。
@@ -150,12 +152,12 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 `index.php` 顶部读取请求头 `X-Template-Part`，命中时只渲染片段（不输出 `<html>`）：
 
-| 值 | 渲染内容 |
-| --- | --- |
-| 任意非空（首页/归档/作者/搜索） | `frontend/components/post/list.php` |
-| `comment_list` | `comments_template()` |
-| `bangumi_list` | `page/template/bangumi.php` |
-| `bilibili_favlist` | `page/template/bilibili_favlist.php` |
+| 值                              | 渲染内容                             |
+| ------------------------------- | ------------------------------------ |
+| 任意非空（首页/归档/作者/搜索） | `frontend/components/post/list.php`  |
+| `comment_list`                  | `comments_template()`                |
+| `bangumi_list`                  | `page/template/bangumi.php`          |
+| `bilibili_favlist`              | `page/template/bilibili_favlist.php` |
 
 前端通过 `frontend/app/utils/classicPagination.js` 携带该头发起请求（AJAX 翻页/加载更多），并收到 `global $iro_only_template`。
 
@@ -191,12 +193,12 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 ### 4.9 翻译
 
-| textdomain | 语言包目录 | 用途 |
-| --- | --- | --- |
-| `sakurairo` | `languages/` | 主题前台/部分后台 |
-| `sakurairo_csf` | `opt/languages/` | CSF 设置页 |
-| `Sakurairo_C` | `opt/customizer/` 内联 | Kirki Customizer |
-| `plugin-update-checker` | `update-checker/languages/` | 更新检查器 |
+| textdomain              | 语言包目录                  | 用途              |
+| ----------------------- | --------------------------- | ----------------- |
+| `sakurairo`             | `languages/`                | 主题前台/部分后台 |
+| `sakurairo_csf`         | `opt/languages/`            | CSF 设置页        |
+| `Sakurairo_C`           | `opt/customizer/` 内联      | Kirki Customizer  |
+| `plugin-update-checker` | `update-checker/languages/` | 更新检查器        |
 
 新文案统一用 `sakurairo`。历史文件里残留 `'iro'` 域名（如 `inc/functions/nav_bar.php`），新代码不要模仿。
 
@@ -220,12 +222,15 @@ cd frontend
 pnpm install          # 安装依赖
 pnpm dev              # Vite dev server: https://0.0.0.0:5173（HMR host = "wordpress"）
 pnpm build            # 产出 frontend/dist/{app.js,style.css,captcha.css,assets/*}
+pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 app/、components/、main.js）
 ```
 
 - 本地开发需在**站点选项里打开 `dev_mode`**，`inc/functions/enqueue_assets.php` 会改为加载 `https://wordpress:5173/@vite/client` 与 `/main.js`。
 - dev server 使用自签 HTTPS，且 HMR `host: "wordpress"`；本机需能把 `wordpress` 解析到该容器/主机（官方 docker 环境已配置）。
 - `frontend/dist/` 已被 `.gitignore`，**不要提交**。
 - Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式）。
+- `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
+- `components/**/*.js` 是 `checkJs: false` 的 JS：纳入 tsconfig 只为拿到 `_iro` 等智能提示，不会因 JS 里的小毛病报错。
 
 ### 区块（`inc/blocks/`）
 
@@ -248,7 +253,8 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 2. 若新增设置项：确认 CSF 字段、`iro_opt()` 读取、默认值三处一致。
 3. 若新增组件 JS：确认已在 `frontend/components/index.js`（或 `app/index.ts`）登记，并且初始化挂在 `_iro.hooks.onPageLoaded` 上。
 4. 若改动区块：`inc/blocks/build/` 已同步。
-5. PHP：人工检查括号/引号闭合、`<?php ?>` 配对（本机无 PHP CLI 可 lint）。
+5. 若新增/修改 `_iro` 的成员（`hooks` / `bus` / `navigate` / `message` / `utils` 等）：同步 `frontend/types/iro.d.ts`，并跑 `pnpm exec tsc --noEmit`。
+6. PHP：人工检查括号/引号闭合、`<?php ?>` 配对（本机无 PHP CLI 可 lint）。
 
 ---
 
@@ -330,6 +336,8 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 9. **本机无 PHP CLI**：任何 PHP 改动都要格外小心语法，且无法通过命令验证。
 10. **`_helper/` 里的脚本已过时**，不要按它们的路径去构建资源。
 11. **新增前台功能时 PHP 与 JS 都要登记**：漏掉任一侧都会「页面有结构但无交互」或「脚本打包了但没人用」。
+12. **`frontend/types/iro.d.ts` 必须保持脚本形态**：加了顶层 `import`/`export` 就变成模块，`_iro` / `Window` 的全局声明随即失效，全项目报 `TS2304 Cannot find name '_iro'`。要引用外部类型请用 `import("xxx").Yyy` 这种内联写法。
+13. **在 `.ts` / `.vue` 里写了 `_iro` 却报「找不到名称」**：说明该文件没被 tsconfig 的 `include` 覆盖（会退回 VS Code 的 inferred project），而不是语法错误。
 
 ---
 

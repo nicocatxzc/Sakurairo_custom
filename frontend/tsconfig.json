@@ -12,8 +12,8 @@
     },
     "include": [
         "types/**/*",
-        "components/**/*.vue",
-        "app/**/*.ts",
-        "types/*.ts"
+        "app/**/*",
+        "components/**/*",
+        "main.js"
     ]
 }
