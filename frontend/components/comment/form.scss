@@ -112,6 +112,50 @@
     .functions {
         display: flex;
         flex-flow: row-reverse;
+        gap: 0.6rem;
+
+        .markdown-toggle,
+        #emotion-toggle,
+        .emotion-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 2.8rem;
+            height: 2.8rem;
+            margin: 0;
+            padding: 0.6rem;
+
+            font-size: 1rem;
+            text-align: center;
+            color: var(--word-color-first);
+
+            background-color: rgba(var(--widget-background), 0.5);
+            border: var(--border-shine);
+            border-radius: 0.6rem;
+            box-shadow: var(--widget-shadow-shine);
+
+            cursor: pointer;
+
+            &:hover {
+                color: var(--active-color);
+                box-shadow: var(--widget-shadow-shining);
+            }
+        }
+
+        .markdown-toggle {
+            input {
+                display: none;
+            }
+
+            input:checked + i {
+                color: var(--active-color);
+            }
+
+            &:has(input:checked) {
+                border: var(--border-active);
+            }
+        }
 
         .submit {
             font-size: 1rem;

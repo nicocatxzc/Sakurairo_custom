@@ -2,8 +2,8 @@
 /*
  * 图片CDN
  */
-add_filter('upload_dir', 'wpjam_custom_upload_dir');
-function wpjam_custom_upload_dir($uploads)
+add_filter('upload_dir', 'iro_custom_upload_dir');
+function iro_custom_upload_dir($uploads)
 {
     /*     $upload_path = '';
      */
