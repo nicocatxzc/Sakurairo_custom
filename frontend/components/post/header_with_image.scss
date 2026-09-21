@@ -59,6 +59,9 @@
         display: flex;
         gap: 0.3rem;
         align-items: center;
+        .avatar {
+            border-radius: 50%;
+        }
     }
     .meta-author:hover {
         color: var(--active-color);
