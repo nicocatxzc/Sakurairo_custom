@@ -43,6 +43,7 @@ interface IroThemeConfig {
     api?: string;
     ajaxurl?: string;
     iro_api?: string;
+    nonce?: string;
     typed_config?: unknown;
     particle?: {
         select?: string;
@@ -65,6 +66,7 @@ interface IroThemeConfig {
 interface IroPageConfig {
     post_id?: number;
     is_home?: boolean;
+    is_singular?: boolean;
     [key: string]: unknown;
 }
 
@@ -116,13 +118,15 @@ type IroMessageType = "success" | "warning" | "info" | "error";
 /** 主题前端全局命名空间，运行时由 app/index.ts 组装 */
 interface IroNamespace {
     hooks: IroHooks;
-    // 暂用 any，收紧时替换为 IroThemeConfig
-    config: any;
+    config: IroThemeConfig;
     page: IroPageConfig;
     user: IroUserConfig;
     bus: IroBus;
     utils: IroUtils;
-    navigate: (url: string, options?: Record<string, unknown>) => Promise<unknown>;
+    navigate: (
+        url: string,
+        options?: Record<string, unknown>,
+    ) => Promise<unknown>;
     message: (message: string, type?: IroMessageType) => void;
 }
 

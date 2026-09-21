@@ -3,7 +3,7 @@
 /**
  * post views
  */
-function restyle_text($input)
+function iro_restyle_text($input)
 {
     // 类型修复
     if (is_numeric($input)) {
@@ -33,24 +33,21 @@ function restyle_text($input)
     }
 }
 
-function set_post_views()
+function iro_set_post_views($post_id = 0)
 {
-    if (!is_singular())
-        return;
+    $post_id = intval($post_id);
 
-    global $post;
-    $post_id = intval($post->ID);
     if (!$post_id)
         return;
     $views = (int) get_post_meta($post_id, 'views', true);
     if (!update_post_meta($post_id, 'views', ($views + 1))) {
         add_post_meta($post_id, 'views', 1, true);
     }
+
+    return $views + 1;
 }
 
-add_action('get_header', 'set_post_views');
-
-function get_post_views($post_id)
+function iro_get_post_views($post_id)
 {
     // 检查传入的参数是否有效
     if (empty($post_id) || !is_numeric($post_id)) {
@@ -68,6 +65,6 @@ function get_post_views($post_id)
             return 0;
         }
         // 格式化浏览量
-        return restyle_text(intval($views));
+        return iro_restyle_text(intval($views));
     }
 }

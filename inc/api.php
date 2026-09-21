@@ -14,6 +14,40 @@ require_once get_template_directory() . '/inc/api/captcha.php';
 require_once get_template_directory() . '/inc/api/turnstile.php';
 
 /**
+ * REST nonce 校验
+ * nonce 由 frontend/theme_config.php 的 nonce 字段注入前端，经 X-WP-Nonce 头或 _wpnonce / nonce 参数传入
+ * action 固定为 wp_rest：登录态请求的内核校验也用该 action，自定义 action 会在内核层被拒
+ * 用法：'permission_callback' => 'iro_rest_check_nonce'
+ *
+ * @return true|WP_Error
+ */
+function iro_rest_check_nonce(WP_REST_Request $request)
+{
+    // 头给前端调用；_wpnonce 是内核也会读取的参数名，登录态用地址栏手动调试时不会被降级为 uid 0
+    $nonce = $request->get_header('X-WP-Nonce')
+        ?: $request->get_param('_wpnonce')
+        ?: $request->get_param('nonce');
+
+    if (empty($nonce)) {
+        return new WP_Error(
+            'iro_rest_nonce_missing',
+            __('缺少 nonce 校验参数', 'sakurairo'),
+            ['status' => 403]
+        );
+    }
+
+    if (!wp_verify_nonce($nonce, 'wp_rest')) {
+        return new WP_Error(
+            'iro_rest_nonce_invalid',
+            __('nonce 校验失败', 'sakurairo'),
+            ['status' => 403]
+        );
+    }
+
+    return true;
+}
+
+/**
  * 自定义api接口
  */
 add_action('rest_api_init', function () {
@@ -140,6 +174,40 @@ add_action('rest_api_init', function () {
                 return $data;
             },
             'permission_callback' => '__return_true'
+        )
+    );
+
+    require_once get_template_directory() . '/inc/api/post_view.php';
+    register_rest_route(
+        'sakura/v1',
+        '/post/views',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_rest_iro_get_post_views',
+            'permission_callback' => 'iro_rest_check_nonce',
+            'args' => array(
+                'post_id' => array(
+                    'required' => true,
+                    'type'     => 'integer',
+                    'minimum'  => 1,
+                ),
+            ),
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/post/views',
+        array(
+            'methods' => 'POST',
+            'callback' => 'iro_rest_iro_set_post_views',
+            'permission_callback' => 'iro_rest_check_nonce',
+            'args' => array(
+                'post_id' => array(
+                    'required' => true,
+                    'type'     => 'integer',
+                    'minimum'  => 1,
+                ),
+            ),
         )
     );
 });
