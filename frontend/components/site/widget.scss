@@ -58,7 +58,8 @@
 
             .icon {
                 animation: rotateY 3s linear infinite;
-                transform-style: preserve-3d;
+                // 在低性能设备上会导致背景闪烁
+                // transform-style: preserve-3d;
                 width: 1.5rem;
                 height: 1.5rem;
             }
