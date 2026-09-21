@@ -1,128 +1,121 @@
-<header
-    ref="header"
-    class="site-header mobile flex-center"
-    :class="{
-            bg: headerBg,
-            hide: headerHide,
-        }">
-    <div class="menu-toggle flex-center" @click="toggleMenu('menu')">
-        <Icon class="icon" :name="'ic:round-menu'"></Icon>
-    </div>
+<?php
+$iro_menu_options = iro_get_navigation();
+
+if (!is_array($iro_menu_options)) {
+    $iro_menu_options = [];
+}
+?>
+
+<header class="site-header mobile flex-center">
+    <button
+        type="button"
+        class="menu-toggle flex-center"
+        data-panel-toggle="menu"
+        aria-expanded="false"
+        aria-label="打开菜单">
+        <i class="fa-solid fa-bars icon"></i>
+    </button>
 
     <div class="site-branding flex-center">
-        <NuxtPicture
-            class="nuxtpic flex-center"
-            :src="themeConfig?.navLogo || ''"
-            alt="site logo" />
-        <NuxtLink :to="'/'">
+        <img src="<?= iro_opt("nav_logo") ?>" class="nuxtpic" alt="site logo">
+        <a href="<?= esc_url(home_url('/')) ?>">
             <span
                 class="site-title"
-                :style="{ fontFamily: themeConfig?.navTitleFont || '' }">
-                {{ themeConfig?.navTitle }}
+                style="font-family: <?= iro_opt("nav_title_font") ?>">
+                <?= iro_opt("nav_title") ?>
             </span>
-        </NuxtLink>
+        </a>
     </div>
 
-    <div v-if="themeConfig?.navbarUserMenu ?? true" class="user-toggle flex-center" @click="toggleMenu('user')">
-        <Icon class="icon" :name="'fluent:bookmark-16-regular'"></Icon>
-    </div>
+    <?php if (iro_opt('nav_user_menu', true)): ?>
+        <button
+            type="button"
+            class="user-toggle flex-center"
+            data-panel-toggle="user"
+            aria-expanded="false"
+            aria-label="打开用户菜单">
+            <i class="fa-regular fa-bookmark icon"></i>
+        </button>
+    <?php endif; ?>
 
-    <nav ref="menuScope" class="menu-wrapper">
-        <div v-if="themeConfig?.navbarSearch ?? true" class="search-form">
-            <ElInput
-                v-model="searchKeyword"
-                class="search-input"
-                placeholder="想找点什么呢?"
-                :prefix-icon="Search"
-                inputmode="search"
-                @keyup.enter="gotoSearch()" />
-        </div>
+    <nav class="menu-wrapper" data-panel="menu">
+        <?php if (iro_opt("nav_menu_search_switch", true)): ?>
+            <div class="search-form flex-center">
+                <i class="fa-solid fa-search icon"></i>
+                <input
+                    class="search-input"
+                    type="text"
+                    inputmode="search"
+                    autocomplete="off"
+                    placeholder="想找点什么呢?">
+            </div>
+        <?php endif; ?>
         <ul
             class="menu"
-            :style="{
-                    fontFamily: themeConfig?.navOptionFont || '',
-                }">
-            <li
-                v-for="(item, index) in menuItems"
-                :key="index"
-                class="item">
-                <div class="item-head">
-                    <NuxtLink class="link" :to="item.url">
-                        {{ item.title }}
-                    </NuxtLink>
-                    <Icon
-                        v-if="item.children && item.children.length"
-                        class="button"
-                        :class="{
-                                expand: expandedMenuItem == index,
-                            }"
-                        :name="'fa7-solid:angle-right'"
-                        @click="toggleMenuItem(index)" />
-                </div>
-                <template v-if="item.children && item.children.length">
-                    <ul
-                        class="sub-menu"
-                        :class="{
-                                expand: expandedMenuItem == index,
-                            }">
-                        <li v-for="child in item.children" :key="child.id">
-                            <NuxtLink :to="child.url">
-                                {{ child.title }}
-                            </NuxtLink>
-                        </li>
-                    </ul>
-                </template>
-            </li>
+            style="font-family: <?= iro_opt("nav_option_font") ?>">
+            <?php foreach ($iro_menu_options as $item): ?>
+                <?php $has_children = !empty($item['children']); ?>
+                <li class="item">
+                    <div class="item-head">
+                        <a class="link" href="<?= esc_url($item['url']) ?>"><?= esc_html($item['title']) ?></a>
+                        <?php if ($has_children): ?>
+                            <i class="fa-solid fa-angle-right button" aria-hidden="true"></i>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($has_children): ?>
+                        <ul class="sub-menu">
+                            <?php foreach ($item['children'] as $child): ?>
+                                <li>
+                                    <a href="<?= esc_url($child['url']) ?>"><?= esc_html($child['title']) ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </nav>
 
-    <ClientOnly>
-        <div v-if="themeConfig?.navbarUserMenu ?? true" ref="userScope" class="user-wrapper">
+    <?php if (iro_opt('nav_user_menu', true)): ?>
+        <div class="user-wrapper" data-panel="user">
             <div class="user-menu-container">
                 <div class="user-menu flex-center">
-                    <ElAvatar size="default" class="avatar">
-                        <NuxtPicture
-                            :src="getUserAvatar(user?.avatar)"
-                            alt="navbar avatar"
-                            class="nuxtpic" />
-                    </ElAvatar>
-                    <div class="user-info">
-                        <span class="name">{{
-                                user?.role ? user.name : "游客"
-                            }}</span>
+                    <?php if (is_user_logged_in()):
+                        $current_user = wp_get_current_user();
+                    ?>
+                        <?= get_avatar($current_user->ID, 80, '', '用户头像', ['class' => 'avatar']) ?>
+                        <div class="user-info">
+                            <span class="name"><?= esc_html($current_user->display_name) ?></span>
+                        </div>
+                    <?php else: ?>
+                        <img
+                            src="<?= iro_opt("missing_avatars_placeholder") ?>"
+                            alt="用户头像"
+                            class="avatar">
+                        <div class="user-info">
+                            <span class="name">游客</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php if (is_user_logged_in()): ?>
+                    <div class="user-option">
+                        <?php if (current_user_can('manage_options')): ?>
+                            <a href="<?= esc_url(admin_url()) ?>" target="_blank">管理后台</a>
+                        <?php endif; ?>
+                        <?php if (current_user_can('administrator')): ?>
+                            <a href="<?= esc_url(admin_url('customize.php')) ?>" target="_blank">主题设置</a>
+                        <?php endif; ?>
+                        <?php if (current_user_can('edit_posts')): ?>
+                            <a href="<?= esc_url(admin_url('post-new.php')) ?>" target="_blank">撰写文章</a>
+                        <?php endif; ?>
+                        <a href="<?= esc_url(wp_logout_url(home_url())) ?>" target="_top">退出登录</a>
                     </div>
-                </div>
-                <div v-if="user?.role" class="user-option">
-                    <a
-                        v-if="user?.management?.admin"
-                        :href="user?.management?.admin"
-                        target="_blank">
-                        管理后台
-                    </a>
-                    <NuxtLink
-                        v-if="user?.role == 'administrator'"
-                        :to="'/dashboard'">
-                        主题设置
-                    </NuxtLink>
-                    <a
-                        v-if="user?.management?.newpost"
-                        :href="user?.management?.newpost"
-                        target="_blank">
-                        撰写文章
-                    </a>
-                    <a href="#" target="_top" @click="authStore.clearAuth()">
-                        退出登录
-                    </a>
-                </div>
-                <div v-else class="visitor-option flex-center">
-                    <a
-                        href="#"
-                        aria-label="点击登录"
-                        @click="openLoginForm">
-                        登录
-                    </a>
-                </div>
+                <?php else: ?>
+                    <div class="visitor-option flex-center">
+                        <a href="<?= esc_url(wp_login_url()) ?>" aria-label="点击登录">登录</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-    </ClientOnly>
+    <?php endif; ?>
 </header>
