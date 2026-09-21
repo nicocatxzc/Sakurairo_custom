@@ -116,13 +116,11 @@ function iro_comment_form_data($args = array(), $post = null)
 
         'cancel_reply_link' => __('Cancel reply'),
 
-        'label_submit' => __('Post Comment'),
+        'label_submit' => iro_opt("comment_submit_button_text", __('Submit✈️', 'sakurairo')),
 
-        'submit_button' =>
-        '<input name="%1$s" type="submit" id="%2$s" class="%3$s" value="%4$s" />',
+        'submit_button' => iro_comment_form_submit_button(),
 
-        'submit_field' =>
-        '<p class="form-submit functions">%1$s %2$s</p>',
+        'submit_field' => iro_comment_form_submit_field(),
     );
 
     // 保留 WordPress comment_form_defaults。
@@ -459,4 +457,41 @@ function iro_comment_form_notes_before(string $required_text)
 <?php
     return ob_get_clean();
     */
+}
+
+function iro_comment_form_submit_button()
+{
+    ob_start();
+?>
+    <input
+        name="%1$s"
+        type="submit"
+        id="%2$s"
+        class="%3$s"
+        value="%4$s" />
+<?php
+    return ob_get_clean();
+}
+
+function iro_comment_form_submit_field()
+{
+    // 该字符串会被 comment_form() 送入 sprintf()，其中的字面量 % 必须写成 %%
+    ob_start();
+?>
+    <div class="form-submit functions">
+        %1$s %2$s
+        <label class="markdown-toggle">
+            <input
+                type="checkbox"
+                id="enable_markdown"
+                name="enable_markdown" />
+            <i class="fa-brands fa-markdown fa-sm"></i>
+        </label>
+
+        <div id="emotion-toggle" class="no-select">
+            <i class="fa-regular fa-face-kiss-wink-heart"></i>
+        </div>
+    </div>
+<?php
+    return ob_get_clean();
 }

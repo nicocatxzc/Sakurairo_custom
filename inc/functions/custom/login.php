@@ -256,14 +256,6 @@ function iro_login_captcha_validate()
         }
 
         $result = iro_verify_turnstile($token);
-
-        /*
-         * 兼容 iro_verify_turnstile() 返回：
-         *
-         * 1. bool
-         * 2. ['success' => true]
-         * 3. ['stat' => true]
-         */
         if (is_array($result)) {
             if (isset($result['stat'])) {
                 $success = (bool) $result['stat'];
