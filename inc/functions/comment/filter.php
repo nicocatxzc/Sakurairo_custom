@@ -53,8 +53,53 @@ function comment_picture_support($content)
 add_filter('comment_text', 'comment_picture_support');
 
 /**
- * 安全解析 WordPress 评论中的 Markdown 内容。
- * 此函数应挂载到 `preprocess_comment` 过滤器。
+ * 评论内容安全过滤：未启用 Markdown 时转义 HTML，启用时经 Parsedown 渲染后再用 wp_kses 过滤。
+ *
+ * @param string $content         评论正文。
+ * @param bool   $enable_markdown 是否启用 Markdown。
+ * @return string|WP_Error 处理后的正文；命中恶意特征时返回 WP_Error。
+ */
+function iro_comment_filter_content(string $content, bool $enable_markdown)
+{
+    global $allowedtags;
+
+    /**
+     * 初步安全检查：阻止 <script>、HTML 属性中的 onxxx 事件、javascript: / data: 协议
+     */
+    $may_script = array(
+        '/<script\b[^>]*>(.*?)<\/script>/is',
+        '/<[^>]+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/is',
+        '/\s(?:href|src)\s*=\s*(?:"(?:javascript|data):[^"]*"|\'(?:javascript|data):[^\']*\'|(?:javascript|data):[^\s>]+)/is',
+    );
+
+    foreach ($may_script as $pattern) {
+        if (preg_match($pattern, $content)) {
+            return new WP_Error(
+                'comment_content_invalid',
+                __("For security reasons, JavaScript is not allowed in comments.", 'sakurairo'),
+                array('status' => 403)
+            );
+        }
+    }
+
+    if (! $enable_markdown) {
+        return htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+    }
+
+    require_once get_template_directory() . '/inc/libs/Parsedown.php';
+
+    $Parsedown = new Parsedown();
+    // 安全模式，阻止不安全 HTML 标签
+    $Parsedown->setSafeMode(true);
+    // 禁用自动链接
+    $Parsedown->setUrlsLinked(false);
+
+    return wp_kses($Parsedown->text($content), $allowedtags);
+}
+
+/**
+ * 传统评论表单（wp-comments-post.php）的 Markdown 处理。
+ * 只有该流程会触发 preprocess_comment，REST 流程见 iro_rest_comment_markdown()。
  *
  * @param array $incoming_comment 评论数据数组。
  * @return array 修改后的评论数据数组。
@@ -62,73 +107,53 @@ add_filter('comment_text', 'comment_picture_support');
 function markdown_parser($incoming_comment)
 {
     global $wpdb, $comment_markdown_content;
-    global $allowedtags;
 
-    /** 
-     * 检查是否启用了 Markdown（假设前端评论表单中有 enable_markdown 字段）
-     * Check if Markdown is enabled (assuming there is an enable_markdown field in the frontend comment form)
-     */
-    $enable_markdown = isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false;
-
-    /**
-     * 初步安全检查
-     * Initial security checks
-     */
-    $may_script = array(
-        '/<script\b[^>]*>(.*?)<\/script>/is', // 阻止 <script> 标签
-        '/<[^>]+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/is', // 阻止 HTML 属性中的 onxxx 事件
-        '/\s(?:href|src)\s*=\s*(?:"(?:javascript|data):[^"]*"|\'(?:javascript|data):[^\']*\'|(?:javascript|data):[^\s>]+)/is', // 阻止带引号的 javascript: 或 data: 协议的 href/src 属性
+    $filtered = iro_comment_filter_content(
+        (string) $incoming_comment['comment_content'],
+        isset($_POST['enable_markdown']) ? (bool) $_POST['enable_markdown'] : false
     );
 
-    foreach ($may_script as $pattern) {
-        if (preg_match($pattern, $incoming_comment['comment_content'])) {
-            siren_ajax_comment_err(__("For security reasons, JavaScript is not allowed in comments.")); //恶意内容警告
-            return ($incoming_comment);
-        }
+    if (is_wp_error($filtered)) {
+        wp_die($filtered->get_error_message(), '', array('response' => 403));
     }
 
-    /**
-     * 启用 Markdown（如果启用）
-     * Enable Markdown (if enabled)
-     * 这里使用 wp_kses 来过滤 HTML 标签，允许的标签在 $allowedtags 中定义。
-     * Here, we use wp_kses to filter HTML tags, and the allowed tags are defined in $allowedtags.
-     */
-    if ($enable_markdown) {
-        include 'inc/Parsedown.php';
-        $Parsedown = new Parsedown();
-        // 核心安全
-        // Set safe mode to true to prevent unsafe HTML tags
-        $Parsedown->setSafeMode(true);
-
-        // 禁用自动链接
-        // Disable automatic linking of URLs
-        $Parsedown->setUrlsLinked(false);
-
-        $incoming_comment['comment_content'] = $Parsedown->text($incoming_comment['comment_content']);
-        /**
-         * 使用 wp_kses 过滤 HTML 标签
-         * Use wp_kses to filter HTML tags
-         * 使用全局的 $allowedtags 变量来定义允许的 HTML 标签。
-         * Use the global $allowedtags variable to define allowed HTML tags.
-         */
-        // kses 过滤
-        // Use wp_kses to filter the comment content
-        $incoming_comment['comment_content'] = wp_kses($incoming_comment['comment_content'], $allowedtags); // 自行调用kses
-    } else {
-        $incoming_comment['comment_content'] = htmlspecialchars($incoming_comment['comment_content'], ENT_QUOTES, 'UTF-8'); //未启用markdown直接转义
-    }
-
-    // $column_names = $wpdb->get_row("SELECT * FROM information_schema.columns where 
-    // table_name='$wpdb->comments' and column_name = 'comment_markdown' LIMIT 1");
-    // //Add column if not present.
-    // if (!isset($column_names)) {
-    //     $wpdb->query("ALTER TABLE $wpdb->comments ADD comment_markdown text");
-    // }
-    $comment_markdown_content = $incoming_comment['comment_content'];
+    $incoming_comment['comment_content'] = $filtered;
+    $comment_markdown_content = $filtered;
 
     return $incoming_comment;
 }
 add_filter('preprocess_comment', 'markdown_parser');
+
+/**
+ * REST 评论流程的 Markdown 处理。
+ * create_item() 只经过 rest_pre_insert_comment，不触发 preprocess_comment，
+ * 且 JSON 请求体不会填充 $_POST，所以启用标记只能从 $request 读取。
+ *
+ * @param array|WP_Error  $prepared_comment 待入库的评论数据。
+ * @param WP_REST_Request $request          当前请求。
+ * @return array|WP_Error
+ */
+function iro_rest_comment_markdown($prepared_comment, WP_REST_Request $request)
+{
+    if (! is_array($prepared_comment) || ! isset($prepared_comment['comment_content'])) {
+        return $prepared_comment;
+    }
+
+    $filtered = iro_comment_filter_content(
+        (string) $prepared_comment['comment_content'],
+        (bool) $request->get_param('enable_markdown')
+    );
+
+    if (is_wp_error($filtered)) {
+        return $filtered;
+    }
+
+    $prepared_comment['comment_content'] = $filtered;
+
+    return $prepared_comment;
+}
+add_filter('rest_pre_insert_comment', 'iro_rest_comment_markdown', 10, 2);
+
 remove_filter('comment_text', 'make_clickable', 9);
 
 //打开评论HTML标签限制
@@ -152,6 +177,7 @@ function allow_more_tag_in_comment()
     $allowedtags['br'] = array('class' => array());
     $allowedtags['blockquote'] = array('class' => array());
     $allowedtags['p'] = array('class' => array());
+    $allowedtags['hr'] = array('class' => array());
     $allowedtags['pre'] = array('class' => array());
     $allowedtags['code'] = array('class' => array());
     $allowedtags['h1'] = array('class' => array());
@@ -159,6 +185,7 @@ function allow_more_tag_in_comment()
     $allowedtags['h3'] = array('class' => array());
     $allowedtags['h4'] = array('class' => array());
     $allowedtags['h5'] = array('class' => array());
+    $allowedtags['h6'] = array('class' => array());
     $allowedtags['ul'] = array('class' => array());
     $allowedtags['ol'] = array('class' => array());
     $allowedtags['li'] = array('class' => array());
