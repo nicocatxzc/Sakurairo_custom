@@ -1,65 +1,21 @@
-// 全局命名空间扩展
-declare global {
-    interface Window {
-        _iro: IroNamespace;
-    }
-}
-
-interface HookOptions {
-    once?: boolean;
-}
-
-type HookFn = () => void;
-
-type HookItem = HookFn | [HookFn, HookOptions];
-
-interface HookQueue extends Array<HookItem> {
-    add(fn: HookFn, options?: HookOptions): number;
-    push(...items: HookItem[]): number;
-}
-
-interface DomReadyHook {
-    push(fn: HookFn): void;
-
-    add(fn: HookFn, options?: HookOptions): void;
-}
-
-/** 主题前端全局配置对象 */
-interface IroNamespace {
-    hooks: {
-        DOMContentLoaded: DomReadyHook;
-        "pjax:start": HookQueue;
-        "pjax:success": HookQueue;
-        "pjax:complete": HookQueue;
-        "pjax:end": HookQueue;
-        "pjax:error": HookQueue;
-        onPageLoaded: (fn: HookFn) => void;
-    };
-
-    config?: Record<string, unknown>;
-
-    page?: Record<string, unknown>;
-
-    user?: Record<string, unknown>;
-}
-
+// _iro 及其成员的类型声明见 types/iro.d.ts
 window._iro = window._iro || ({} as IroNamespace);
 
 _iro.utils = {};
 
-const domReadyHooks: HookItem[] = [];
+const domReadyHooks: IroHookItem[] = [];
 
 /**
  * 创建一个带 add 方法的钩子队列
  * @returns 可链式添加钩子的队列
  */
-function createHookQueue(): HookQueue {
-    const queue = [] as unknown as HookQueue;
+function createHookQueue(): IroHookQueue {
+    const queue = [] as unknown as IroHookQueue;
 
     // 以不可枚举方式定义 add 方法，避免污染 for...in 遍历
     Object.defineProperty(queue, "add", {
         enumerable: false,
-        value(fn: HookFn, options: HookOptions = {}): number {
+        value(fn: IroHookFn, options: IroHookOptions = {}): number {
             queue.push([fn, options]);
             return queue.length;
         },
@@ -74,7 +30,7 @@ function createHookQueue(): HookQueue {
  * 执行异常时捕获并打印，配置 once 的函数执行后自动移除
  * @param queue 待执行的钩子队列
  */
-function runHookQueue(queue: HookItem[]): void {
+function runHookQueue(queue: IroHookItem[]): void {
     for (let i = 0; i < queue.length; i++) {
         const item = queue[i];
 
@@ -104,14 +60,14 @@ function runHookQueue(queue: HookItem[]): void {
 
 _iro.hooks = {
     DOMContentLoaded: {
-        push(fn: HookFn): void {
+        push(fn: IroHookFn): void {
             if (document.readyState !== "loading") {
                 fn();
             } else {
                 domReadyHooks.push(fn);
             }
         },
-        add(fn: HookFn, options: HookOptions = {}): void {
+        add(fn: IroHookFn, options: IroHookOptions = {}): void {
             if (document.readyState !== "loading") {
                 fn();
             } else {
@@ -124,7 +80,7 @@ _iro.hooks = {
     "pjax:complete": createHookQueue(),
     "pjax:end": createHookQueue(),
     "pjax:error": createHookQueue(),
-    onPageLoaded: (fn: HookFn) => {
+    onPageLoaded: (fn: IroHookFn) => {
         _iro.hooks.DOMContentLoaded.push(fn);
         _iro.hooks["pjax:complete"].push(fn);
     },
