@@ -54,7 +54,8 @@ Sakurairo/
 │   │   ├── bus.js           # mitt 事件总线（window._iro.bus）
 │   │   ├── darkmode.js      # 深色模式（cookie: darkmode）
 │   │   ├── stores/scroll.js # 滚动进度广播 scroll:update
-│   │   └── utils/           # api.js(axios+缓存) / missImg / classicPagination / parseMarkdown ...
+│   │   ├── utils/           # api.js(axios+缓存) / missImg / classicPagination / parseMarkdown ...
+│   │   └── plugins/         # postViews.js（阅读量上报），在 app/index.ts 末尾 import
 │   ├── components/          # ★ PHP 局部 + JS 行为 成对出现
 │   │   ├── block/           # 古腾堡块的前台渲染（notice/showcard/bvideo/ghcard/conversation）
 │   │   ├── comment/  homepage/  navbar/  page/  post/  site/  slots/
@@ -66,7 +67,7 @@ Sakurairo/
 │   └── dist/                # 构建产物（.gitignore，不提交）
 ├── inc/
 │   ├── api.php              # rest_api_init，注册 sakura/v1 路由
-│   ├── api/                 # bangumi / bilibili_favlist / captcha / turnstile / comments / search_index
+│   ├── api/                 # bangumi / bilibili_favlist / captcha / turnstile / comments / search_index / post_view
 │   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts，独立 pnpm 工程）
 │   │   ├── src/             # index.js + modules/*.js + style.scss
 │   │   ├── build/           # 构建产物（已提交，必须与 src 同步！）
@@ -118,7 +119,7 @@ $GLOBALS['iro_options'];           // 完整数组
 | id                  | JS 侧         | 内容                                    |
 | ------------------- | ------------- | --------------------------------------- |
 | `#iro_theme_config` | `_iro.config` | 站点/接口/粒子/分页/lightbox 等全局配置 |
-| `#iro_page_config`  | `_iro.page`   | `post_id`、`is_home`                    |
+| `#iro_page_config`  | `_iro.page`   | `post_id`、`is_home`、`is_singular`（列表页的 `post_id` 是循环首篇，判定单页要靠 `is_singular`） |
 | `#iro_user_config`  | `_iro.user`   | 当前用户 id/name/avatar...              |
 
 在 `frontend/app/index.ts` 的 `initFrontConfig()`（注册于 `onPageLoaded`）里解析。**PJAX 后会重新解析**，因为 `#iro_page_config` 是 Swup 的替换容器之一。
@@ -188,6 +189,9 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 - `/captcha`（GET 生成 / POST 校验）、`/captcha/turnstile`
 - `/search_index`、`/comments/*`
 - `/bangumi/bangumi|bilibili|mal`、`/favlist/all|detail`
+- `/post/views`（GET 读取阅读量 / POST 上报计数，`inc/api/post_view.php`）
+
+**nonce 约定**：`iro_get_basic_theme_config()`（`frontend/theme_config.php`）随基础配置输出 `nonce`（`wp_create_nonce('wp_rest')`），前端经 `X-WP-Nonce` 头或 `nonce` 参数回传；`iro_rest_check_nonce()`（定义在 `inc/api.php`，全局可用）作为 `permission_callback` 统一校验，新接口直接复用它即可。**action 必须保持 `wp_rest`**：带 cookie 的请求，内核会先用同名头按 `wp_rest` 校验一次，自定义 action 会在进入 `permission_callback` 之前就被 403（`rest_cookie_invalid_nonce`）。另注意 `wp_verify_nonce` 允许前后各一个 tick，整页缓存站点里页面上的 nonce 最长 12~24h 内仍有效，超时后上报只会静默收到 403。
 
 新增接口要同时更新 `frontend/theme_config.php` 暴露的配置（如需）与前端调用处。
 
@@ -208,7 +212,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 - `inc/theme_init/check.php`：主题目录名必须是 `Sakurairo`，否则后台提示并尝试重命名。
 - `inc/functions/content/query.php`：`pre_get_posts` 干预主查询（首页/搜索/归档允许 `shuoshuo` 等类型），并让置顶文章在非搜索页优先。
 - `inc/theme_init/shuoshuo.php`：注册 `shuoshuo` 自定义文章类型。
-- `inc/functions/content/post_views.php`：阅读量统计。
+- `inc/functions/content/post_views.php`：阅读量统计（meta key `views`）。计数由 `frontend/app/plugins/postViews.js` 驻留 3 秒后 POST `/post/views` 触发，`iro_set_post_views($post_id)` 是唯一入口（原 `add_action('get_header', 'iro_set_post_views')` 已移除，避免与服务端即时计数重复）。
 - `update-checker/` 在 `functions.php` 顶部引入，并依 `iro_update_source` 选择更新源。
 
 ---
@@ -338,6 +342,7 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 11. **新增前台功能时 PHP 与 JS 都要登记**：漏掉任一侧都会「页面有结构但无交互」或「脚本打包了但没人用」。
 12. **`frontend/types/iro.d.ts` 必须保持脚本形态**：加了顶层 `import`/`export` 就变成模块，`_iro` / `Window` 的全局声明随即失效，全项目报 `TS2304 Cannot find name '_iro'`。要引用外部类型请用 `import("xxx").Yyy` 这种内联写法。
 13. **在 `.ts` / `.vue` 里写了 `_iro` 却报「找不到名称」**：说明该文件没被 tsconfig 的 `include` 覆盖（会退回 VS Code 的 inferred project），而不是语法错误。
+14. **别给 REST nonce 换 action**：`X-WP-Nonce` 头里必须放 `wp_create_nonce('wp_rest')`。内核 `rest_cookie_check_errors()`（`wp-includes/rest-api.php`）会拿这个头按 `wp_rest` 先校验一遍，用自定义 action 只会拿回 `rest_cookie_invalid_nonce`，连 `permission_callback` 都进不去。
 
 ---
 

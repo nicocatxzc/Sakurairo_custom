@@ -6,6 +6,7 @@ function iro_get_basic_theme_config(): array
         'api'      => esc_url_raw(rest_url()),
         'ajaxurl'  => admin_url('admin-ajax.php'),
         'iro_api'  => esc_url_raw(rest_url('sakura/v1')),
+        'nonce' => wp_create_nonce('wp_rest'),
     ];
 }
 
@@ -45,6 +46,7 @@ function iro_front_theme_config()
     $iro_page_config = [
         "post_id" => get_the_ID(),
         "is_home" => is_home(),
+        "is_singular" => is_singular(),
     ];
     ?>
 

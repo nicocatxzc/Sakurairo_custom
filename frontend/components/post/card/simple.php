@@ -63,7 +63,7 @@
                 case 'views': ?>
                     <span class="flex-center">
                         <i class="fa-solid fa-eye"></i>
-                        <?= (int) get_post_meta(get_the_ID(), 'post_views', true) ?>
+                        <?= (int) iro_get_post_views(get_the_ID()) ?>
                     </span>
                     <?php break; ?>
                 <?php
