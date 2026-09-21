@@ -101,7 +101,7 @@ $post_comment_args = iro_comment_form_data();
                 <?= $post_comment_args['args']['comment_notes_after'] ?>
 
                 <!-- 名称 / 邮箱 / 网站 -->
-                <?php if (is_user_logged_in()): ?>
+                <?php if (!is_user_logged_in()): ?>
                     <div class="infos">
                         <img
                             alt="avatar"
