@@ -30,6 +30,7 @@
 
 - **无法运行 `php -l` 做语法检查**，PHP 改动必须靠人工逐行比对（模板标签、括号、字符串闭合）。
 - 没有 PHP 单元测试框架、没有 PHPCS/Prettier/ESLint/Stylelint 配置。**验证手段只有前端构建 + 人工审阅**。
+- 编辑器默认自带 Vue (Official)、Stylelint、Prettier、markdownlint、PHP Intelephense、ESLint、es6-string-html、Auto Rename Tag、Auto Close Tag 插件：**提交即视为格式检查通过**，不必再单独执行格式化/风格检查命令。
 - 两个 npm 工程是独立的（没有根 `package.json`），各自用 pnpm 安装。
 
 ---
