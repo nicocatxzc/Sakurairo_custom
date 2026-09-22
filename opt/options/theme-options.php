@@ -509,6 +509,18 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'frontend_background_fill_mode',
+                'type'  => 'select',
+                'title' => __('前台背景填充模式', 'sakurairo_csf'),
+                'desc' => __('根据你选择的图片类型选择合适的填充方案，插画为缩放至填充满，纹理为复制并铺满', 'sakurairo_csf'),
+                'options'     => [
+                    'pattern'  => __('插画', 'sakurairo_csf'),
+                    'texture'  => __('纹理', 'sakurairo_csf'),
+                ],
+                "default" => "pattern",
+            ],
+
+            [
                 'id'    => 'frontend_particle',
                 'type'  => 'select',
                 'title' => __('前台背景粒子特效', 'sakurairo_csf'),

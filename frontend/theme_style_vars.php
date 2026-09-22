@@ -34,6 +34,13 @@
 
     <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {
         background-image: url(<?= iro_opt('frontend_default_background') ?>);
+        <?php if (iro_opt("frontend_background_fill_mode") == "texture"): ?>background-size: auto;
+        background-position: center;
+        background-repeat: repeat;
+        <?php else: ?>background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        <?php endif; ?>
     }
 
     <?php endif; ?> :root.dark {
