@@ -13,10 +13,12 @@
     <?php if (have_posts()): ?>
         <?php while (have_posts()) : the_post(); ?>
             <?php
-            if (has_post_thumbnail()) :
-                require get_template_directory() . '/frontend/components/post/card/with_image.php';
-            else :
+            if (!has_post_thumbnail()) :
                 require get_template_directory() . '/frontend/components/post/card/simple.php';
+            elseif (iro_opt('post_card_with_image_design') === 'ticket') :
+                require get_template_directory() . '/frontend/components/post/card/ticket.php';
+            else :
+                require get_template_directory() . '/frontend/components/post/card/with_image.php';
             endif;
             ?>
         <?php endwhile; ?>
