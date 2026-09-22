@@ -45,9 +45,9 @@ function comment_picture_support($content)
     $content = str_replace('http://', 'https://', $content); // 干掉任何可能的 http
     $content = str_replace('{UPLOAD}', 'https://i.loli.net/', $content);
     $content = str_replace('[/img][img]', '[/img^img]', $content);
-    $content = str_replace('[img]', '<br><img src="' . iro_opt('load_in_svg') . '" data-src="', $content);
+    $content = str_replace('[img]', '<br><img src="' . iro_opt('missing_images_placeholder') . '" data-src="', $content);
     $content = str_replace('[/img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><br>', $content);
-    $content = str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="' . iro_opt('load_in_svg') . '" data-src="', $content);
+    $content = str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="' . iro_opt('missing_images_placeholder') . '" data-src="', $content);
     return $content;
 }
 add_filter('comment_text', 'comment_picture_support');

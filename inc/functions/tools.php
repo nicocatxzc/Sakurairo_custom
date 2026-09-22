@@ -32,23 +32,17 @@ function get_random_url(string $url): string
 function DEFAULT_FEATURE_IMAGE()
 {
     //使用独立外部api
-    if (iro_opt('post_cover_options') == 'type_2') {
-        $url = iro_opt('post_cover');
+    if (iro_opt('post_card_image') == 'always_alone') {
+        $url = iro_opt('post_card_image_url');
         return $url ? get_random_url($url) : '';
     }
-    //使用内建
-    if (iro_opt('random_graphs_options') == 'gallery') {
-        $url = rest_url('sakura/v1/gallery') . '?img=w';
-        return get_random_url($url);
-    }
-    //使用封面外部
-    if (iro_opt('random_graphs_options') == 'external_api') {
-        $url = iro_opt('random_graphs_link');
+    //使用封面外部api
+    if (iro_opt('post_card_image') == 'always_with_cover') {
+        $url = wp_is_mobile() ? iro_opt('cover_random_pic_url_mb') : iro_opt('cover_random_pic_url_pc');
         return $url ? get_random_url($url) : '';
     }
-    //意外情况
-    $url = iro_opt('random_graphs_link');
-    return $url ? get_random_url($url) : '';
+    //仅特色图片，不使用随机图
+    return '';
 }
 
 /**

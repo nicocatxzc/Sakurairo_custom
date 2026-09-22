@@ -228,9 +228,9 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id'     => 'background_transparency_dark',
+                'id'     => 'image_bright_dark',
                 'type'   => 'slider',
-                'title'  => __('图像亮度', 'sakurairo_csf'),
+                'title'  => __('深色模式图像亮度', 'sakurairo_csf'),
                 'step'   => '0.01',
                 'min'   => '0',
                 'max'   => '1',
@@ -1789,7 +1789,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'login_logo_img',
                 'type' => 'upload',
                 'title' => __('登录页Logo', 'sakurairo_csf'),
-                'dependency' => ['custom_login_switch', '==', 'true', '', 'true'],
+                'dependency' => ['login_custom_switch', '==', 'true', '', 'true'],
                 'library' => 'image',
                 'default' => $vision_resource_basepath . 'series/login_logo.webp'
             ],
@@ -2128,11 +2128,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'channel_validate_value',
                 'type' => 'text',
                 'title' => __('Theme Update Test Channel Disclaimer', 'sakurairo_csf'),
-                'dependency' => [
-                    ['core_library_basepath', '==', 'true', '', 'true'],
-                    ['shared_library_basepath', '==', 'true'],
-                    ['iro_update_source', '==', 'official_building'],
-                ],
+                'dependency' => ['iro_update_source', '==', 'official_building'],
                 'desc' => __('Please copy the text in quotes after <strong>ensure that you have carefully understood the risks associated with participating in the test and are willing to assume all consequences at your own risk</strong> (including but not limited to possible data loss) into the options text box <strong> "I agree and am willing to bear all unexpected consequences"</strong>', 'sakurairo_csf'),
             ],
 
@@ -2142,8 +2138,6 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('Theme Update Channel', 'sakurairo_csf'),
                 'dependency' => [
                     ['channel_validate_value', '==', 'I agree and am willing to bear all unexpected consequences'],
-                    ['core_library_basepath', '==', 'true', '', 'true'],
-                    ['shared_library_basepath', '==', 'true'],
                     ['iro_update_source', '==', 'official_building'],
                 ],
                 'desc' => __('You can toggle the update channel here to participate in the testing of the new version', 'sakurairo_csf'),

@@ -39,7 +39,7 @@ function iro_front_theme_config()
         'code_highlight' => iro_opt("code_highlight_method", "hljs"),
         'code_katex' => iro_opt('code_katex', true),
         'turnstile_site_key' => iro_opt("turnstile_site_key"),
-        'hitokoto_apis'=>iro_opt("yiyan_api"),
+        'hitokoto_apis' => json_decode((string) iro_opt("footer_hitokoto_api"), true) ?: ['https://v1.hitokoto.cn/'],
     ]);
 ?>
 
