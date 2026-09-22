@@ -16,7 +16,7 @@
         --word-color-first-reverse: <?= iro_opt('word_color_first_dark', '#CCCCCC') ?>;
 
         --widget-background: 255, 255, 255;
-        --widget-background-reverse:26, 26, 26;
+        --widget-background-reverse: 26, 26, 26;
         --widget-background-color: rgba(var(--widget-background), var(--widget-transparency));
         --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
         --widget-shadow-shine: 0 0.1rem 1.8rem -0.25rem rgb(232, 232, 232);
@@ -68,4 +68,38 @@
         --border-active: 0.1rem solid var(--active-color);
         --background-blur: <?= iro_opt('background_blur', 0.7) ?>;
     }
+
+    /* 纪念模式 */
+    <?php if (iro_is_commemorate_date()) { ?>html {
+        filter: grayscale(100%) !important;
+    }
+
+    <?php } ?>
 </style>
+<?php
+function iro_is_commemorate_date()
+{
+    $dateList = iro_opt("theme_commemorate_mode_date");
+
+    // 把 "1-5" 和 "01-05" 都转成 "1-5"
+    function normalizeDate(string $str)
+    {
+        $str = trim($str);
+        if (preg_match('/^(\d{1,2})-(\d{1,2})$/', $str, $m)) {
+            return (int)$m[1] . '-' . (int)$m[2]; // 去掉前导零
+        }
+        return null;
+    }
+
+    $dates = [];
+    foreach (explode("\n", $dateList) as $line) {
+        $n = normalizeDate($line);
+        if ($n !== null) {
+            $dates[] = $n;
+        }
+    }
+
+    $today = date('n-j'); // 例如 "1-5"
+
+    return in_array($today, $dates);
+}

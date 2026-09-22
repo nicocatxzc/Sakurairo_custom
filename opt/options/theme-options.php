@@ -255,6 +255,13 @@ if (class_exists('Sakurairo_CSF')) {
                 'dependency' => ['theme_darkmode_auto', '==', 'true', '', 'true'],
 
             ],
+
+            [
+                'id' => 'theme_commemorate_mode_date',
+                'type' => 'textarea',
+                'title' => __('纪念模式日期', 'sakurairo_csf'),
+                'desc' => __('一行一个，例如7-21，主题会在这些日期加上黑白滤镜', 'sakurairo_csf'),
+            ],
         ]
     ]);
 
