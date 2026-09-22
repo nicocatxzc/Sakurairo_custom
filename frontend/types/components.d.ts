@@ -14,6 +14,7 @@ declare module 'vue' {
     BangumiDetail: typeof import('./../components/page/template/BangumiDetail.vue')['default']
     Builtin: typeof import('./../components/site/captcha/builtin.vue')['default']
     Model: typeof import('./../components/site/Model.vue')['default']
+    Smiles: typeof import('./../components/comment/Smiles.vue')['default']
     Turnstile: typeof import('./../components/site/captcha/turnstile.vue')['default']
   }
 }

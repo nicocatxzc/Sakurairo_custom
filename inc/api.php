@@ -55,6 +55,18 @@ add_action('rest_api_init', function () {
     // 评论区api自定义
     require_once get_template_directory() . '/inc/api/comments.php';
 
+    // 评论表情面板
+    require_once get_template_directory() . '/inc/api/smiles.php';
+    register_rest_route(
+        'sakura/v1',
+        '/comment/smiles',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_rest_get_smiley_packs',
+            'permission_callback' => '__return_true'
+        )
+    );
+
     // 验证码接口
     register_rest_route(
         'sakura/v1',

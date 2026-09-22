@@ -1525,6 +1525,53 @@ if (class_exists('Sakurairo_CSF')) {
                 ],
                 'default' => 'builtin',
             ],
+
+            [
+                'type'    => 'subheading',
+                'content' => __('自定义表情包', 'sakurairo_csf'),
+            ],
+
+            [
+                'id'         => 'comment_smilies_custom',
+                'type'       => 'repeater',
+                'title'      => __('自定义表情列表', 'sakurairo_csf'),
+                'desc'       => __('表情包名称见上方「自定义表情包名称」。每行的「表情名」就是写进评论的标记，形如 {{doge}}', 'sakurairo_csf'),
+                'dependency' => ['comment_smilies_list', 'any', 'custom', '', 'true'],
+                'fields'     => [
+                    [
+                        'id'    => 'img',
+                        'type'  => 'upload',
+                        'title' => __('图片', 'sakurairo_csf'),
+                        'desc'  => __('建议用正方形图片，尺寸接近下面的显示高度', 'sakurairo_csf'),
+                    ],
+                    [
+                        'id'         => 'name',
+                        'type'       => 'text',
+                        'title'      => __('表情名', 'sakurairo_csf'),
+                        'desc'       => __('写进评论的标记名，同一表情包内不能重复；不要带空格、花括号等符号', 'sakurairo_csf'),
+                        'attributes' => ['placeholder' => 'doge'],
+                    ],
+                    [
+                        'id'    => 'title',
+                        'type'  => 'text',
+                        'title' => __('提示文案', 'sakurairo_csf'),
+                        'desc'  => __('鼠标悬停提示与图片 alt，留空则用表情名', 'sakurairo_csf'),
+                    ],
+                    [
+                        'id'      => 'size',
+                        'type'    => 'spinner',
+                        'title'   => __('显示高度', 'sakurairo_csf'),
+                        'desc'    => __('评论里渲染出来的高度', 'sakurairo_csf'),
+                        'min'     => 0,
+                        'max'     => 300,
+                        'step'    => 1,
+                        'unit'    => 'px',
+                        'default' => 60,
+                    ],
+                ],
+                'default'    => [],
+            ],
+
         ]
     ]);
 

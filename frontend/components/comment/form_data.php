@@ -488,9 +488,11 @@ function iro_comment_form_submit_field()
             <i class="fa-brands fa-markdown fa-sm"></i>
         </label>
 
-        <div id="emotion-toggle" class="no-select">
-            <i class="fa-regular fa-face-kiss-wink-heart"></i>
-        </div>
+        <?php if (iro_get_smiley_packs()): ?>
+            <div id="emotion-toggle" class="no-select">
+                <i class="fa-regular fa-face-kiss-wink-heart"></i>
+            </div>
+        <?php endif; ?>
     </div>
 <?php
     return ob_get_clean();

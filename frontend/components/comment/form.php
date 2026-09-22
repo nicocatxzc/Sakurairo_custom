@@ -114,14 +114,16 @@ $post_comment_args = iro_comment_form_data();
                 <?php endif; ?>
 
                 <!-- 其他字段 -->
-                <div class="checks flex-center">
-                    <?php if (iro_opt("comment_captcha", "builtin") != "off"): ?>
-                        <div class="captcha <?= iro_opt("comment_captcha", "builtin") ?>"></div>
-                    <?php endif; ?>
-                    <?php foreach ($check_fields as $name => $field) : ?>
-                        <?= $field ?>
-                    <?php endforeach; ?>
-                </div>
+                <?php if (!is_user_logged_in()): ?>
+                    <div class="checks flex-center">
+                        <?php if (iro_opt("comment_captcha", "builtin") != "off"): ?>
+                            <div class="captcha <?= iro_opt("comment_captcha", "builtin") ?>"></div>
+                        <?php endif; ?>
+                        <?php foreach ($check_fields as $name => $field) : ?>
+                            <?= $field ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
 
 
                 <!-- 其他附加字段 -->
