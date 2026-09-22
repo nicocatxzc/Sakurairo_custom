@@ -7,23 +7,27 @@ _iro.hooks.onPageLoaded(() => {
     ) as HTMLElement;
     if (!commentForm) return;
 
-    const avatar = commentForm.querySelector(".avatar") as HTMLImageElement;
-    const email = commentForm.querySelector("#email") as HTMLInputElement;
+    // 未登录时表单里没有头像，取不到就跳过，别让后面的监听全部失效
+    const avatar = commentForm.querySelector(".avatar") as HTMLImageElement | null;
+    const email = commentForm.querySelector("#email") as HTMLInputElement | null;
 
-    let originAvatar = avatar.src;
-    email.addEventListener("change", () => {
-        if (!checkEmail(email.value)) {
-            avatar.src = originAvatar;
-            return;
-        }
-        const gravatar =
-            "https://gravatar.com/avatar/" +
-            md5(email.value) +
-            ".jpg?s=" +
-            80 +
-            "&d=mm";
-        avatar.src = gravatar;
-    });
+    if (avatar && email) {
+        const originAvatar = avatar.src;
+
+        email.addEventListener("change", () => {
+            if (!checkEmail(email.value)) {
+                avatar.src = originAvatar;
+                return;
+            }
+            const gravatar =
+                "https://gravatar.com/avatar/" +
+                md5(email.value) +
+                ".jpg?s=" +
+                80 +
+                "&d=mm";
+            avatar.src = gravatar;
+        });
+    }
 
     const commentList = document.querySelector(".comment-list") as HTMLElement;
     const form = document.getElementById("commentform") as HTMLFormElement;
@@ -88,43 +92,41 @@ _iro.hooks.onPageLoaded(() => {
 
     // 监听回复点击
     commentList.addEventListener("click", (event) => {
-        console.log(222);
-        if (event.target) {
-            console.log(111);
-            const replyButton = event.target.closest(".reply-button");
+        const replyButton = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+            ".reply-button",
+        );
 
-            if (!replyButton || !commentList.contains(replyButton)) {
-                return;
-            }
-
-            event.preventDefault();
-
-            const commentId = replyButton.dataset.commentid;
-            const commentAuthor = replyButton.dataset.commentauthor;
-
-            if (!commentId) {
-                return;
-            }
-
-            setReplyTarget(commentId, commentAuthor || "");
+        if (!replyButton || !commentList.contains(replyButton)) {
+            return;
         }
+
+        event.preventDefault();
+
+        const commentId = replyButton.dataset.commentid;
+        const commentAuthor = replyButton.dataset.commentauthor;
+
+        if (!commentId) {
+            return;
+        }
+
+        setReplyTarget(commentId, commentAuthor || "");
     });
 
     // 取消回复
 
     replyContext.addEventListener("click", (event) => {
-        if (event.target) {
-            const cancelButton = event.target.closest(".cancel-reply");
+        const cancelButton = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+            ".cancel-reply",
+        );
 
-            if (!cancelButton) {
-                return;
-            }
-
-            event.preventDefault();
-
-            clearReplyTarget();
-            textarea.focus();
+        if (!cancelButton) {
+            return;
         }
+
+        event.preventDefault();
+
+        clearReplyTarget();
+        textarea.focus();
     });
 
     //表单提交
@@ -198,14 +200,25 @@ _iro.hooks.onPageLoaded(() => {
         }
 
         try {
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            };
+
+            /**
+             * 带 cookie 的 REST 请求必须回传 wp_rest nonce：内核 rest_cookie_check_errors() 拿不到
+             * nonce 时会直接 wp_set_current_user(0)，已登录用户在接口里就成了游客——作者信息填不进去、
+             * 验证码也照旧要求。空 nonce 会撞 rest_cookie_invalid_nonce，所以判空再带。
+             */
+            if (_iro.config?.nonce) {
+                headers["X-WP-Nonce"] = _iro.config.nonce;
+            }
+
             const response = await fetch(form.action, {
                 method: "POST",
                 credentials: "same-origin",
 
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
+                headers,
 
                 body: JSON.stringify(requestData),
             });
