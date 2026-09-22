@@ -40,6 +40,12 @@ add_action('template_redirect', 'search_404_fix_template_redirect');
 add_action('admin_footer', function () {
 ?><script>
         document.addEventListener('DOMContentLoaded', function() {
+            const csf = document.querySelector(".csf-nav")
+            if (csf) {
+                csf.addEventListener("click", () => {
+                    window.dispatchEvent(new Event("resize"));
+                })
+            }
             window.dispatchEvent(new Event("resize"));
         })
     </script>
