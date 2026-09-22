@@ -18,15 +18,14 @@ function comment_mail_notify($comment_id)
 
     // 获取评论的审核状态，如果评论无需审核则直接发送
     $comment_approved = $comment->comment_approved;
-    $mail_notify = iro_opt('mail_notify') ? get_comment_meta($parent_id, 'mail_notify', false) : false;
-    $admin_notify = iro_opt('admin_notify') ? '1' : ((isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0');
+    $admin_notify = (isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0';
 
-    if (($parent_id != '') && ($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0') && (!$mail_notify)) {
+    if (($parent_id != '') && ($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0')) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
         $to = trim(get_comment($parent_id)->comment_author_email);
 
         // 主题主色调
-        $theme_color = iro_opt('theme_skin_matching') ?: '#FE9600';
+        $theme_color = iro_opt('active_color') ?: '#FE9600';
 
         // 获取用户语言环境
         $comment_author_locale = get_comment_meta($parent_id, 'comment_author_locale', true);

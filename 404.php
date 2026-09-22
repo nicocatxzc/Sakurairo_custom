@@ -14,7 +14,7 @@ add_action('wp_head', function() {
 }, 5);
 
 // 获取主题颜色
-$theme_matching_color = iro_opt('theme_skin_matching', '#8e95fb'); 
+$theme_matching_color = iro_opt('active_color', '#00b0f0');
 
 // 使用主题提供的函数获取随机背景图片
 $random_bg_url = DEFAULT_FEATURE_IMAGE();

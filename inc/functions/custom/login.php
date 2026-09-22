@@ -2,7 +2,7 @@
 /*
  * 后台登录页
  */
-if (iro_opt('custom_login_switch', false)) {
+if (iro_opt('login_custom_switch', false)) {
     // Add custom login styles
     function custom_login()
     {
@@ -48,7 +48,7 @@ if (iro_opt('custom_login_switch', false)) {
 
             .wp-core-ui .button-primary,
             #wp-webauthn {
-                background: <?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;
+                background: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
                 border-color: transparent;
                 border-radius: 6px;
                 padding: 1px 18px !important;
@@ -57,7 +57,7 @@ if (iro_opt('custom_login_switch', false)) {
 
             .wp-core-ui .button-primary:hover,
             #wp-webauthn:hover {
-                background: <?php echo iro_opt('theme_skin_matching') ?: '#FF69B4'; ?>;
+                background: <?php echo iro_opt('active_color') ?: '#FF69B4'; ?>;
                 border-color: transparent;
                 transition: all 0.3s ease;
             }
@@ -71,11 +71,11 @@ if (iro_opt('custom_login_switch', false)) {
             }
 
             .login .button.wp-hide-pw .dashicons {
-                color: <?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;
+                color: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
             }
 
             #language-switcher {
-                color: <?php echo iro_opt('theme_skin') ?: '#FF69B4'; ?>;
+                color: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
             }

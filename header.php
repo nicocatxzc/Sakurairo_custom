@@ -69,7 +69,7 @@ if (is_customize_preview()) {
     // 前端主题样式
     require get_template_directory() . '/frontend/theme_style_vars.php';
     ?>
-    <?= iro_opt("site_header_insert"); ?>
+    <?= iro_opt("custom_site_header"); ?>
 
     <?php if (iro_opt('pjax')) {
         $script_leep_loading_list = iro_opt("pjax_keep_loading");

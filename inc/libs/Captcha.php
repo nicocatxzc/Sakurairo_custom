@@ -81,7 +81,7 @@ class IroCaptcha
     public function create_captcha_img(): array
     {
         // 动态计算验证码难度
-        $level = (float) iro_opt('iro_captcha_level') / 100;
+        $level = (float) iro_opt('builtin_captcha_level') / 100;
 
         $conf = [
             'noise'   => (int) (700 + 500 * $level),

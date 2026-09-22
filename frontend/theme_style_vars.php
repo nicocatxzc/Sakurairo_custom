@@ -32,7 +32,7 @@
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }
 
-    <?php if (is_array(iro_opt('reception_background', [])) && !empty(iro_opt('frontend_default_background'))): ?>body {
+    <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {
         background-image: url(<?= iro_opt('frontend_default_background') ?>);
     }
 
@@ -61,7 +61,7 @@
 
         --page-background-color: rgba(51, 51, 51, var(--background-transparency));
         --code-background: <?= iro_opt('code_block_background_color_dark', '#24292e') ?>;
-        --image-bright: <?= iro_opt('theme_darkmode_img_bright', 0.7) ?>;
+        --image-bright: <?= iro_opt('image_bright_dark', 0.7) ?>;
     }
 
     :root {
