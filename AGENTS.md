@@ -117,11 +117,11 @@ $GLOBALS['iro_options'];           // 完整数组
 
 `frontend/theme_config.php` 在页面上输出三个 JSON `<script>`：
 
-| id                  | JS 侧         | 内容                                    |
-| ------------------- | ------------- | --------------------------------------- |
-| `#iro_theme_config` | `_iro.config` | 站点/接口/粒子/分页/lightbox 等全局配置 |
+| id                  | JS 侧         | 内容                                                                                             |
+| ------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| `#iro_theme_config` | `_iro.config` | 站点/接口/粒子/分页/lightbox 等全局配置                                                          |
 | `#iro_page_config`  | `_iro.page`   | `post_id`、`is_home`、`is_singular`（列表页的 `post_id` 是循环首篇，判定单页要靠 `is_singular`） |
-| `#iro_user_config`  | `_iro.user`   | 当前用户 id/name/avatar...              |
+| `#iro_user_config`  | `_iro.user`   | 当前用户 id/name/avatar...                                                                       |
 
 在 `frontend/app/index.ts` 的 `initFrontConfig()`（注册于 `onPageLoaded`）里解析。**PJAX 后会重新解析**，因为 `#iro_page_config` 是 Swup 的替换容器之一。
 
