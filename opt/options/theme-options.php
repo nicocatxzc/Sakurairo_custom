@@ -1497,6 +1497,156 @@ if (class_exists('Sakurairo_CSF')) {
         ]
     ]);
 
+    Sakurairo_CSF::createSection($prefix, array(
+        'parent' => 'page',
+        'title' => __('文章页面', 'sakurairo_csf'),
+        'icon' => 'fa fa-archive',
+        'fields' => array(
+
+            array(
+                'type' => 'subheading',
+                'content' => __('文章拓展区域', 'sakurairo_csf'),
+            ),
+
+            array(
+                'id' => 'article_function',
+                'type' => 'switcher',
+                'title' => __('文章功能栏', 'sakurairo_csf'),
+                'label' => __('默认开启，将在文章页面显示下方启用的功能', 'sakurairo_csf'),
+                'default' => true
+            ),
+
+            array(
+                'id' => 'article_lincenses',
+                'type' => 'select',
+                'title' => __('文章版权协议', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('默认开启，版权协议将显示在功能栏中。也可通过文章自定义字段「license」单独指定。', 'sakurairo_csf'),
+                'options' => array(
+                    false => __("不显示", "sakurairo_csf"),
+                    "cc0" => "CC0 1.0",
+                    "cc-by" => "CC BY 4.0",
+                    "cc-by-nc" => "CC BY-NC 4.0",
+                    "cc-by-nc-nd" => "CC BY-NC-ND 4.0",
+                    true => "CC BY-NC-SA 4.0",
+                    "cc-by-nd" => "CC BY-ND 4.0",
+                    "cc-by-sa" => "CC BY-SA 4.0",
+                ),
+                'default' => true
+            ),
+
+            array(
+                'type'    => 'content',
+                'content' => __(
+                    '<p><strong>"BY"</strong> 表示转载时须署名原作者</p>'
+                        . '<p><strong>"NC"</strong> 表示不得用于商业用途</p>'
+                        . '<p><strong>"ND"</strong> 表示不得演绎（不可修改后再发布）</p>'
+                        . '<p><strong>"SA"</strong> 表示演绎作品须以相同协议共享</p>'
+                        . '<p><strong>"CC0"</strong> 是公共领域贡献工具，允许创作者放弃版权，将作品投入全球公共领域。</p>'
+                        . '<p>详细说明与法律建议请访问<a href="https://creativecommons.org/">官方网站</a></p>'
+                        . '<p>若想<strong>按文章</strong>单独指定协议，请把文章自定义字段 "license" 修改（或添加）为对应格式的协议名。</p>'
+                        . '<p>例如：</p>'
+                        . '<ul><li><code>cc0</code> 对应 CC0 1.0</li><li><code>cc-by-nc-sa</code> 对应 CC BY-NC-SA 4.0</li></ul>',
+                    'sakurairo_csf'
+                ),
+                'dependency' => array('article_lincenses', '!=', 'false', '', 'true'),
+            ),
+
+            array(
+                'id' => 'article_author_reward',
+                'type' => 'fieldset',
+                'title' => __('打赏', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'fields' => array(
+                    array(
+                        'id' => 'link',
+                        'type' => 'text',
+                        'title' => __('按钮链接', 'sakurairo_csf'),
+                        'desc' => __('点击打赏按钮后跳转的链接', 'sakurairo_csf'),
+                    ),
+                    array(
+                        'id' => 'image1',
+                        'type' => 'upload',
+                        'title' => __('图片', 'sakurairo_csf'),
+                        'library' => 'image',
+                    ),
+                    array(
+                        'id' => 'link1',
+                        'type' => 'text',
+                        'title' => __('链接', 'sakurairo_csf'),
+                        'desc' => __('点击图片后跳转的链接', 'sakurairo_csf'),
+                    ),
+                    array(
+                        'id' => 'image2',
+                        'type' => 'upload',
+                        'title' => __('图片', 'sakurairo_csf'),
+                        'library' => 'image',
+                    ),
+                    array(
+                        'id' => 'link2',
+                        'type' => 'text',
+                        'title' => __('链接', 'sakurairo_csf'),
+                        'desc' => __('点击图片后跳转的链接', 'sakurairo_csf'),
+                    ),
+                ),
+            ),
+
+            array(
+                'id' => 'article_author_avatar',
+                'type' => 'switcher',
+                'title' => __('文章作者头像', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('默认开启，作者头像将显示在功能栏中', 'sakurairo_csf'),
+                'default' => true
+            ),
+
+            array(
+                'id' => 'article_author_name',
+                'type' => 'switcher',
+                'title' => __('文章作者名称', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('开启后作者名称将显示在功能栏中', 'sakurairo_csf'),
+                'default' => false
+            ),
+
+            array(
+                'id' => 'article_author_quote',
+                'type' => 'switcher',
+                'title' => __('文章作者签名', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('默认开启，作者签名将显示在功能栏中', 'sakurairo_csf'),
+                'default' => true
+            ),
+
+            array(
+                'id' => 'article_modified_time',
+                'type' => 'switcher',
+                'title' => __('文章最后更新时间', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('开启后最后更新时间将显示在功能栏中', 'sakurairo_csf'),
+                'default' => false
+            ),
+
+            array(
+                'id' => 'article_tag',
+                'type' => 'switcher',
+                'title' => __('文章标签', 'sakurairo_csf'),
+                'dependency' => array('article_function', '==', 'true', '', 'true'),
+                'label' => __('默认开启，文章标签将显示在功能栏中', 'sakurairo_csf'),
+                'default' => true
+            ),
+
+            array(
+                'id' => 'article_nextpre',
+                'type' => 'switcher',
+                'title' => __('文章上一篇/下一篇导航', 'sakurairo_csf'),
+                'label' => __('默认开启，文章页面将显示上一篇/下一篇切换', 'sakurairo_csf'),
+                'default' => true
+            ),
+
+        )
+    ));
+
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'page',
         'title' => __('评论区设置', 'sakurairo_csf'),

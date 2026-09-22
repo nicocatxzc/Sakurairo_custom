@@ -17,7 +17,9 @@
                 </div>
             <?php endif; ?>
             <?php iro_content_container_end() ?>
+            <?php require get_template_directory() . '/frontend/components/post/footer.php'; ?>
         </article>
+        <?php require get_template_directory() . '/frontend/components/post/navigator.php'; ?>
 <?php endwhile;
 endif; ?>
 <?php

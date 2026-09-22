@@ -1,0 +1,158 @@
+.post-footer {
+    --post-footer-pill-background: rgba(var(--widget-background), 0.5);
+    --post-footer-pill-radius: 0.62rem;
+
+    position: relative;
+    width: 100%;
+    margin-top: 3.12rem;
+    padding: 1.88rem 0;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.62rem;
+
+    // 版权、打赏、作者名片、更新时间、标签等胶囊共用同一套外观
+    > * {
+        color: var(--word-color-second);
+        background: var(--post-footer-pill-background);
+        box-shadow: var(--widget-shadow-shine);
+        border: var(--border-shine);
+        border-radius: var(--post-footer-pill-radius);
+
+        &:hover {
+            background: var(--widget-background-color);
+            box-shadow: var(--widget-shadow-shining);
+        }
+    }
+
+    a:hover {
+        color: var(--active-color);
+    }
+
+    .post-license {
+        display: flex;
+        gap: 0.19rem;
+        padding: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .reward-open {
+        padding: 0.37rem 0.75rem;
+        font-size: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .reward-main {
+        position: absolute;
+        top: 5rem;
+        left: -1%;
+        width: 25rem;
+        z-index: 99;
+        display: none;
+        animation: reward-main 0.4s;
+
+        ul,
+        li {
+            cursor: auto;
+        }
+    }
+
+    .reward-open:hover .reward-main {
+        display: block;
+    }
+
+    .reward-row {
+        margin: 2% 0 0 2%;
+        padding: 0.94rem;
+        background: var(--widget-background-color);
+        border: var(--border-shine);
+        border-radius: var(--post-footer-pill-radius);
+    }
+
+    .reward-row li {
+        display: inline-block;
+        padding: 0 0.75rem;
+
+        img {
+            position: relative;
+            width: 9.38rem;
+            max-width: 9.38rem;
+            border-radius: 0.19rem;
+        }
+    }
+
+    .info {
+        padding: 0.56rem 0.59rem;
+        overflow: hidden;
+    }
+
+    .profile {
+        display: block;
+
+        img {
+            float: left;
+            max-width: 1.88rem;
+            max-height: 1.88rem;
+            border-radius: 100%;
+        }
+    }
+
+    .meta {
+        padding: 0.75rem 1rem;
+
+        a {
+            font-size: 1rem;
+        }
+    }
+
+    .desc {
+        padding: 0.87rem 1.12rem;
+        font-size: 0.8rem;
+        letter-spacing: 0;
+        overflow: hidden;
+
+        i {
+            margin-right: 0.62rem;
+            font-size: 1rem;
+        }
+    }
+
+    .post-modified-time {
+        padding: 0.9rem 1.12rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+
+        i {
+            margin-right: 0.62rem;
+        }
+    }
+
+    .post-tags {
+        padding: 0.87rem 1.12rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+
+        a {
+            margin-right: 0.3rem;
+        }
+
+        i {
+            margin-right: 0.3rem;
+            font-size: 1rem;
+        }
+    }
+}
+
+@keyframes reward-main {
+    from {
+        opacity: 0;
+        transform: translateY(3.12rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
