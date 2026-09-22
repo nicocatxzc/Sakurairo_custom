@@ -160,6 +160,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 | `comment_list`                  | `comments_template()`                |
 | `bangumi_list`                  | `page/template/bangumi.php`          |
 | `bilibili_favlist`              | `page/template/bilibili_favlist.php` |
+| `steam_list`                    | `page/template/steam.php`            |
 
 前端通过 `frontend/app/utils/classicPagination.js` 携带该头发起请求（AJAX 翻页/加载更多），并收到 `global $iro_only_template`。
 

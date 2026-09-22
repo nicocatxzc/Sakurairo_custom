@@ -189,6 +189,22 @@ add_action('rest_api_init', function () {
         )
     );
 
+    require_once get_template_directory() . '/inc/api/steam.php';
+    register_rest_route(
+        'sakura/v1',
+        '/steam',
+        array(
+            'methods' => 'GET',
+            'callback' => function (WP_REST_Request $req) {
+                return IroSteam::getSteamList(
+                    (int) ($req->get_param('page') ?: 1),
+                    (int) ($req->get_param('per_page') ?: 20)
+                );
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
+
     require_once get_template_directory() . '/inc/api/post_view.php';
     register_rest_route(
         'sakura/v1',

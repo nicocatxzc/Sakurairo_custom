@@ -19,6 +19,9 @@ global $iro_only_template;
     if ($iro_only_template == "bilibili_favlist") {
         require_once get_template_directory() . '/frontend/components/page/template/bilibili_favlist.php';
     }
+    if ($iro_only_template == "steam_list") {
+        require_once get_template_directory() . '/frontend/components/page/template/steam.php';
+    }
     ?>
 <?php else: ?>
     <!DOCTYPE html>
