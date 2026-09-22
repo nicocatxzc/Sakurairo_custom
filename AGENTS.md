@@ -16,22 +16,32 @@
 
 ---
 
-## 2. 本机环境与工具链（实测）
+## 2. 环境与工具链（推荐配置，默认视为已存在）
 
-| 工具     | 状态                           |
-| -------- | ------------------------------ |
-| Node.js  | v24.21.0（`~/.nvmd/bin/node`） |
-| pnpm     | 12.5.1                         |
-| PHP CLI  | **不存在**（`NO_PHP_CLI`）     |
-| Composer | **不存在**                     |
-| yarn     | 未安装                         |
+下列工具链是**推荐配置，默认按「本机已就绪」处理**：直接调用即可，不必先 `command -v` 探测，也不必先解释「本机有没有」。
 
-因此：
+| 工具     | 推荐版本       | 用途                                                         |
+| -------- | -------------- | ------------------------------------------------------------ |
+| PHP CLI  | >= 8.0（8.4+） | `php -l` 语法检查、跑一次性调试脚本                          |
+| Composer | 2.x            | 仅安装第三方 PHP 库时需要（主题本体不依赖 vendor 自动加载）  |
+| Node.js  | >= 20          | `frontend/` 与 `inc/blocks/` 的构建                          |
+| pnpm     | >= 9           | 两个前端工程的唯一包管理器（**不要用 npm/yarn**）            |
 
-- **无法运行 `php -l` 做语法检查**，PHP 改动必须靠人工逐行比对（模板标签、括号、字符串闭合）。
-- 没有 PHP 单元测试框架、没有 PHPCS/Prettier/ESLint/Stylelint 配置。**验证手段只有前端构建 + 人工审阅**。
+- PHP 改动先跑 `php -l <文件>` 挡住语法错（`<?php ?>` 配对、字符串闭合、模板标签），再做人工逐行比对；全量检查命令见 §5「PHP 语法检查」。
+- 项目没有 PHP 单元测试框架、没有 PHPCS/ESLint/Stylelint 配置。**验证手段 = 前端构建 + `php -l` + 人工审阅**。
 - 编辑器默认自带 Vue (Official)、Stylelint、Prettier、markdownlint、PHP Intelephense、ESLint、es6-string-html、Auto Rename Tag、Auto Close Tag 插件：**提交即视为格式检查通过**，不必再单独执行格式化/风格检查命令。
+- 个别工具**确实缺失**时（如 `composer` 未装），跳过依赖它的步骤、改用等价手段即可，不要为了补装工具而中断任务。
 - 两个 npm 工程是独立的（没有根 `package.json`），各自用 pnpm 安装。
+
+### 2.1 调用 shell 的约定（重要）
+
+内置 shell 工具偶发**不回显输出**（命令已执行但结果为空），因此：
+
+- 命令一律**尽量重定向输出到文件**，再读文件取结果：`pnpm build > /tmp/iro-build.log 2>&1`，然后读 `/tmp/iro-build.log`，根据系统环境自行适配临时目录路径。
+- 需要在一次调用里拿到结果时，用 `<cmd> > /tmp/iro-<name>.log 2>&1; tail -n 50 /tmp/iro-<name>.log`，不要依赖裸命令的回显。
+- 长耗时命令（`pnpm install` / `pnpm build`）放后台并落盘：`nohup pnpm build > /tmp/iro-build.log 2>&1 &`，随后再读日志判断成败。
+- 日志文件统一放 `/tmp/`，命名形如 `/tmp/iro-<用途>.log`，避免污染仓库工作区。
+- **以日志文件内容为准**：一次没拿到输出不代表命令失败或成功，别急着下结论或重复执行。
 
 ---
 
@@ -236,6 +246,7 @@ pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 app/、components/�
 - `frontend/dist/` 已被 `.gitignore`，**不要提交**。
 - Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式）。
 - `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
+- 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
 - `components/**/*.js` 是 `checkJs: false` 的 JS：纳入 tsconfig 只为拿到 `_iro` 等智能提示，不会因 JS 里的小毛病报错。
 
 ### 区块（`inc/blocks/`）
@@ -260,7 +271,7 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 3. 若新增组件 JS：确认已在 `frontend/components/index.js`（或 `app/index.ts`）登记，并且初始化挂在 `_iro.hooks.onPageLoaded` 上。
 4. 若改动区块：`inc/blocks/build/` 已同步。
 5. 若新增/修改 `_iro` 的成员（`hooks` / `bus` / `navigate` / `message` / `utils` 等）：同步 `frontend/types/iro.d.ts`，并跑 `pnpm exec tsc --noEmit`。
-6. PHP：人工检查括号/引号闭合、`<?php ?>` 配对（本机无 PHP CLI 可 lint）。
+6. PHP：`php -l <改动文件>` 全部通过，再人工复核模板标签、括号/引号闭合与 `<?php ?>` 配对。
 
 ---
 
@@ -324,6 +335,7 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 
 ### 通用
 
+- 调用 shell 遵循 §2.1：命令输出一律重定向到 `/tmp/iro-*.log` 再读文件，不依赖内置 shell 的回显。
 - 不引入新的第三方库，除非确实必要并同步更新 `pnpm-lock.yaml`（项目已内置 vue、element-plus、swup、animejs、tsparticles、markdown-it、katex、highlight.js、tocbot、medium-zoom、typed.js 等）。
 - 不修改 `update-checker/vendor`、`update-checker/Puc`、`opt/classes`、`opt/fields`、`opt/customizer/kirki` —— 它们是 vendored 上游代码。
 
@@ -339,7 +351,7 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 6. **主题文件夹名必须为 `Sakurairo`**：否则触发 `inc/theme_init/check.php` 的重命名/告警逻辑。
 7. **编辑器 iframe 样式**：`iro_blocks.php` 的双重注册是必要的兼容处理。
 8. **分页/自定义 AJAX 链接要加 `no-pjax`**，否则会被 Swup 拦截，与局部渲染逻辑冲突。
-9. **本机无 PHP CLI**：任何 PHP 改动都要格外小心语法，且无法通过命令验证。
+9. **PHP 改动必须过 `php -l`**：模板里 `<?php ?>` 配对、字符串闭合、替代语法（`endforeach;` 等）肉眼极易漏看，命令能挡掉绝大部分低级错误。
 10. **`_helper/` 里的脚本已过时**，不要按它们的路径去构建资源。
 11. **新增前台功能时 PHP 与 JS 都要登记**：漏掉任一侧都会「页面有结构但无交互」或「脚本打包了但没人用」。
 12. **`frontend/types/iro.d.ts` 必须保持脚本形态**：加了顶层 `import`/`export` 就变成模块，`_iro` / `Window` 的全局声明随即失效，全项目报 `TS2304 Cannot find name '_iro'`。要引用外部类型请用 `import("xxx").Yyy` 这种内联写法。
