@@ -1,19 +1,6 @@
-let mdInstance = null;
-let mdInstanceWithTex = null;
-let loadingPromise = null;
-
-async function loadDeps(useKatex) {
-    const tasks = [import("markdown-it").then((m) => m.default)];
-
-    if (useKatex) {
-        tasks.push(
-            import("markdown-it-texmath").then((m) => m.default),
-            import("katex").then((m) => m.default),
-            import("katex/dist/katex.min.css"),
-        );
-    }
-    return Promise.all(tasks);
-}
+let MarkdownIt;
+let texmath;
+let katex;
 
 /**
  * 将Markdown字符串渲染为HTML字符串
@@ -32,31 +19,27 @@ async function loadDeps(useKatex) {
  *
  */
 export default async function parseMarkdown(text) {
-    const useKatex = !!_iro.config.code_katex;
-
-    // 用缓存避免重复实例化 / 重复加载
-    const cacheKey = useKatex ? "tex" : "plain";
-    if (cacheKey === "tex" && mdInstanceWithTex) {
-        return mdInstanceWithTex.render(text);
-    }
-    if (cacheKey === "plain" && mdInstance) {
-        return mdInstance.render(text);
+    if (!MarkdownIt || !texmath) {
+        MarkdownIt = (await import("markdown-it")).default;
+        texmath = (await import("markdown-it-texmath")).default;
     }
 
-    const [MarkdownIt, texmath, katex] = await loadDeps(useKatex);
-
-    const md = new MarkdownIt({ html: true });
-
-    if (useKatex) {
-        md.use(texmath, {
+    let tex;
+    if (_iro.config.code_katex) {
+        if (!katex) {
+            katex = (await import("katex")).default;
+            import("katex/dist/katex.min.css");
+        }
+        tex = {
             engine: katex,
-            delimiters: "dollars",
-            katexOptions: { throwOnError: false },
-        });
-        mdInstanceWithTex = md;
-    } else {
-        mdInstance = md;
+        };
     }
+    const md = new MarkdownIt({ html: true }).use(texmath, {
+        ...tex,
+        delimiters: "dollars", // $...$ 和 $$...$$
+        katexOptions: { throwOnError: false },
+    });
 
-    return md.render(text);
+    const html = md.render(text);
+    return html;
 }
