@@ -835,6 +835,20 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'cover_height',
+                'type' => 'slider',
+                'title' => __('封面高度', 'sakurairo_csf'),
+                'desc'   => __('封面占可视窗口的百分比', 'sakurairo_csf'),
+                'dependency' => [
+                    ['cover_switch', '==', 'true', '', 'true'],
+                ],
+                'step' => '1',
+                'unit' => 'dvh',
+                'max' => '100',
+                'default' => '100'
+            ],
+
+            [
                 'type' => 'subheading',
                 'content' => __('封面信息栏', 'sakurairo_csf'),
             ],

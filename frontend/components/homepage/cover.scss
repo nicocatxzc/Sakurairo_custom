@@ -1,18 +1,19 @@
 .homepage-cover {
-    height: 100dvh;
+    height: var(--cover-height,100dvh);
     width: 100dvw;
     overflow-anchor: none;
 
     .cover,
     .cover-info {
-        height: 100dvh;
-        width: 100dvw;
+        height: 100%;
+        width: 100%;
         overflow-anchor: none;
     }
 
     .cover {
         background: var(--background-img-pc);
         background-size: cover;
+        position: relative;
 
         &.transparent {
             background: transparent;
