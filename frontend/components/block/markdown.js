@@ -1,10 +1,10 @@
 import parseMarkdown from "../../app/utils/parseMarkdown";
 
-_iro.hooks.onPageLoaded(() => {
+_iro.hooks.onPageLoaded(async () => {
     const markdown = document.querySelectorAll(".wp-block-hachimi-markdown");
-    markdown.forEach((e) => {
+    markdown.forEach(async (e) => {
         const mdtext = e.querySelector("pre").innerHTML;
-        const rendered = parseMarkdown(mdtext);
+        const rendered = await parseMarkdown(mdtext);
         e.innerHTML = rendered;
     });
 });
