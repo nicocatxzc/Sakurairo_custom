@@ -1,6 +1,19 @@
-import MarkdownIt from "markdown-it";
-import texmath from "markdown-it-texmath";
-import katex from "katex";
+let mdInstance = null;
+let mdInstanceWithTex = null;
+let loadingPromise = null;
+
+async function loadDeps(useKatex) {
+    const tasks = [import("markdown-it").then((m) => m.default)];
+
+    if (useKatex) {
+        tasks.push(
+            import("markdown-it-texmath").then((m) => m.default),
+            import("katex").then((m) => m.default),
+            import("katex/dist/katex.min.css"),
+        );
+    }
+    return Promise.all(tasks);
+}
 
 /**
  * 将Markdown字符串渲染为HTML字符串
@@ -18,24 +31,32 @@ import katex from "katex";
  * 应确保输入的Markdown文本来源可信
  *
  */
-let imported = false
-export default function parseMarkdown(text) {
-    let tex;
-    if (_iro.config.code_katex) {
-        tex = {
-            engine: katex,
-        };
-        if (!imported) {
-            import("katex/dist/katex.min.css")
-            imported = true
-        }
-    }
-    const md = new MarkdownIt({ html: true }).use(texmath, {
-        ...text,
-        delimiters: "dollars", // $...$ 和 $$...$$
-        katexOptions: { throwOnError: false },
-    });
+export default async function parseMarkdown(text) {
+    const useKatex = !!_iro.config.code_katex;
 
-    const html = md.render(text);
-    return html;
+    // 用缓存避免重复实例化 / 重复加载
+    const cacheKey = useKatex ? "tex" : "plain";
+    if (cacheKey === "tex" && mdInstanceWithTex) {
+        return mdInstanceWithTex.render(text);
+    }
+    if (cacheKey === "plain" && mdInstance) {
+        return mdInstance.render(text);
+    }
+
+    const [MarkdownIt, texmath, katex] = await loadDeps(useKatex);
+
+    const md = new MarkdownIt({ html: true });
+
+    if (useKatex) {
+        md.use(texmath, {
+            engine: katex,
+            delimiters: "dollars",
+            katexOptions: { throwOnError: false },
+        });
+        mdInstanceWithTex = md;
+    } else {
+        mdInstance = md;
+    }
+
+    return md.render(text);
 }
