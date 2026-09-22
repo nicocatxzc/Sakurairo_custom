@@ -1,0 +1,37 @@
+.post-nav {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    display: grid;
+    .nav-prev,
+    .nav-next {
+        background-color: rgba(var(--widget-background),0.5);
+        border: var(--border-sketch);
+        border-radius: 1rem;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 1rem 1.2rem;
+        transition: all 0.2s;
+        display: flex;
+    }
+
+    .nav-prev:hover,
+    .nav-next:hover {
+        box-shadow: var(--widget-shadow-shadow);
+    }
+
+    .nav-next {
+        text-align: right;
+    }
+
+    .nav-label {
+        color: var(--word-color-second);
+        font-size: 0.7rem;
+    }
+
+    .nav-title {
+        color: var(--word-color-first);
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+}
