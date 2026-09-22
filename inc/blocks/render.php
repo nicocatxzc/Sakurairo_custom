@@ -41,6 +41,19 @@ add_action('init', function () {
         },
     ]);
 
+    add_shortcode('steam', function () {
+        ob_start();
+        require get_template_directory() . '/frontend/components/page/template/steam.php';
+        return ob_get_clean();
+    });
+    register_block_type('sakurairo/steam', [
+        'render_callback' => function ($attributes) {
+            ob_start();
+            require get_template_directory() . '/frontend/components/page/template/steam.php';
+            return ob_get_clean();
+        },
+    ]);
+
     add_shortcode('archive', function () {
         ob_start();
         require get_template_directory() . '/frontend/components/page/template/archive.php';

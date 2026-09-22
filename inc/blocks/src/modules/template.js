@@ -74,6 +74,13 @@ export default function registerTemplateBlocks() {
     });
 
     createTemplateBlock({
+        name: "steam",
+        title: "Steam 库",
+        nodeId: "hachimi-steam",
+        icon: createElement("i", { className: "fa-brands fa-steam" }),
+    });
+
+    createTemplateBlock({
         name: "timeline",
         title: "时光轴",
         nodeId: "hachimi-timeline",
