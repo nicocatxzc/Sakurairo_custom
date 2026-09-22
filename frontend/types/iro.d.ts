@@ -59,6 +59,7 @@ interface IroThemeConfig {
     code_highlight?: string;
     code_katex?: boolean;
     turnstile_site_key?: string;
+    hitokoto_apis?:Array[string];
     [key: string]: unknown;
 }
 

@@ -605,28 +605,41 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id' => 'footer_yiyan',
-                'type' => 'switcher',
+                'id'    => 'footer_hitokoto_select',
+                'type'  => 'select',
                 'title' => __('页脚一言', 'sakurairo_csf'),
-                'label' => __('Hitokoto will appear at the end of the page after turning it on', 'sakurairo_csf'),
-                'default' => false
+                'options'     => [
+                    'off'  => __('关闭', 'sakurairo_csf'),
+                    'api'  => __('总是使用API', 'sakurairo_csf'),
+                    'custom'  => __('总是自定义', 'sakurairo_csf'),
+                    'both'  => __('各一半', 'sakurairo_csf'),
+                ],
+                "default" => "off",
             ],
 
             [
                 'type' => 'content',
-                'dependency' => ['footer_yiyan', '==', 'true', '', 'true'],
+                'dependency' => ['footer_hitokoto_select', '!=', 'off', '', 'true'],
                 'content' => __('<h4>Hitokoto API Setup Instructions</h4>'
                     . ' <p>Fill in as the example:<code> ["https://v1.hitokoto.cn/", "https://v1.hitokoto.cn/"]</code>, where the first API will be used first and the next ones will be the backup. </p>'
                     . ' <p><strong>Official API:</strong> See the <a href="https://developer.hitokoto.cn/sentence/"> documentation</a> for how to use it, and the parameter "return code" should not be anything except JSON. <a href="https://v1.hitokoto.cn/">https://v1.hitokoto.cn/</a></p>', 'sakurairo_csf'),
             ],
 
             [
-                'id' => 'yiyan_api',
+                'id' => 'footer_hitokoto_api',
                 'type' => 'textarea',
                 'title' => __('一言API地址', 'sakurairo_csf'),
-                'dependency' => ['footer_yiyan', '==', 'true', '', 'true'],
-                'desc' => __('Fill in the address in JavaScript array format', 'sakurairo_csf'),
+                'dependency' => ['footer_hitokoto_select', '!=', 'off', '', 'true'],
+                'desc' => __('填写地址，格式为 JavaScript 数组', 'sakurairo_csf'),
                 'default' => '["https://v1.hitokoto.cn/","https://v1.hitokoto.cn/"]'
+            ],
+
+            [
+                'id' => 'footer_hitokoto_custom',
+                'type' => 'textarea',
+                'title' => __('一言自定义内容', 'sakurairo_csf'),
+                'dependency' => ['footer_hitokoto_select', '!=', 'off', '', 'true'],
+                'desc' => __('一行一句，尽量不要出现特殊字符。', 'sakurairo_csf'),
             ],
 
         ]
