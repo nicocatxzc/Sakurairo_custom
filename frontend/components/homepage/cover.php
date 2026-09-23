@@ -2,7 +2,9 @@
     <div class="homepage-cover <?= is_home() ? '' : 'hide' ?>"
         style="
         --cover-height: <?= iro_opt('cover_height', 100) ?>dvh; ">
-        <video class="cover-video" src="<?= iro_opt("cover_video_source") ?>" <?= iro_opt("cover_video_loop", false) ? "loop" : "" ?> muted autoplay></video>
+        <?php if (iro_opt("cover_video", false)): ?>
+            <video class="cover-video" src="<?= iro_opt("cover_video_source") ?>" <?= iro_opt("cover_video_loop", false) ? "loop" : "" ?> muted autoplay></video>
+        <?php endif; ?>
         <figure
             class="cover
         <?= iro_opt('cover_as_background', false) ? 'transparent' : '' ?>
