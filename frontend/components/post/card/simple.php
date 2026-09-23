@@ -12,15 +12,15 @@
     </a>
     <div class="post-metas">
         <div class="post-meta-date">
-            <!-- Icon: fa7-solid:calendar -->
-            <i class="fa7-solid fa-calendar icon"></i>
+            <!-- Icon: fa-solid:calendar -->
+            <i class="fa-solid fa-calendar icon"></i>
             <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
                 更新于:<?= get_the_modified_date('Y年m月d日') ?>
             </time>
         </div>
         <div class="post-meta-categories">
-            <!-- Icon: fa7-solid:folder-open -->
-            <i class="fa7-solid fa-folder-open"></i>
+            <!-- Icon: fa-solid:folder-open -->
+            <i class="fa-solid fa-folder-open"></i>
             <?php
             foreach (get_the_category() as $category) :
             ?>
@@ -32,8 +32,8 @@
             ?>
         </div>
         <div class="post-meta-tags">
-            <!-- Icon: fa7-solid:tags -->
-            <i class="fa7-solid fa-tags icon"></i>
+            <!-- Icon: fa-solid:tags -->
+            <i class="fa-solid fa-tags icon"></i>
             <?php
             foreach (wp_get_post_tags() as $tag) :
             ?>

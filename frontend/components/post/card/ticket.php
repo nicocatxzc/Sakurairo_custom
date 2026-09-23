@@ -31,7 +31,7 @@
             switch ($meta):
                 case 'author': ?>
                     <span>
-                        <i class="fa7-solid fa-feather-pointed"></i>
+                        <i class="fa-solid fa-feather-pointed"></i>
                         <?= esc_html(get_the_author()) ?>
                     </span>
                     <?php break; ?>
@@ -40,14 +40,14 @@
                     $categories = get_the_category();
                     if (!empty($categories)) : ?>
                         <span>
-                            <i class="fa7-solid fa-folder-open"></i>
+                            <i class="fa-solid fa-folder-open"></i>
                             <a href="<?= esc_url(get_category_link($categories[0]->term_id)) ?>">
                                 <?= esc_html($categories[0]->name) ?>
                             </a>
                         </span>
                     <?php else : ?>
                         <span>
-                            <i class="fa7-solid fa-folder-open"></i>
+                            <i class="fa-solid fa-folder-open"></i>
                             未分类
                         </span>
                     <?php endif; ?>
@@ -55,14 +55,14 @@
                 <?php
                 case 'commentCounts': ?>
                     <span>
-                        <i class="fa7-solid fa-comment"></i>
+                        <i class="fa-solid fa-comment"></i>
                         <?= get_comments_number() ?>
                     </span>
                     <?php break; ?>
                 <?php
                 case 'views': ?>
                     <span>
-                        <i class="fa7-solid fa-eye"></i>
+                        <i class="fa-solid fa-eye"></i>
                         <?= (int) iro_get_post_views(get_the_ID()) ?>
                     </span>
                     <?php break; ?>
