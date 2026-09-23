@@ -5,3 +5,5 @@ inc/blocks/build
 .codex*
 *.patch
 temp
+/languages/
+/opt/languages/
