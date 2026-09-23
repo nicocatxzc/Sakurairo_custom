@@ -1,0 +1,10 @@
+{
+    "name": "sakurairo-workspace",
+    "private": true,
+    "packageManager": "pnpm@12.5.1",
+    "scripts": {
+        "build": "pnpm -r --if-present run build",
+        "build:frontend": "pnpm --filter frontend run build",
+        "build:blocks": "pnpm --filter iro_blocks run build"
+    }
+}

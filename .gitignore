@@ -1,8 +1,7 @@
 .vscode
-inc/blocks/node_modules
-inc/blocks/build
-frontend/node_modules
+node_modules/
 frontend/dist
+inc/blocks/build
 .codex*
 *.patch
 temp
