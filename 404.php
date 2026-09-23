@@ -15,9 +15,6 @@ add_action('wp_head', function() {
 
 // 获取主题颜色
 $theme_matching_color = iro_opt('active_color', '#00b0f0');
-
-// 使用主题提供的函数获取随机背景图片
-$random_bg_url = DEFAULT_FEATURE_IMAGE();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -43,7 +40,7 @@ $random_bg_url = DEFAULT_FEATURE_IMAGE();
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            background-image: url('<?php echo esc_url($random_bg_url); ?>');
+            background-image: url('<?= iro_opt('cover_random_pic_url_pc') ?? iro_opt('cover_random_pic_url_mb') ?? iro_opt('post_card_image_url') ?>');
             background-position: center center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -196,10 +193,10 @@ $random_bg_url = DEFAULT_FEATURE_IMAGE();
             <h1 class="page-404-number">404</h1>
         </div>
         
-        <h2 class="page-404-title"><?php _e('Page Not Found', 'sakurairo'); ?></h2>
+        <h2 class="page-404-title"><?php _e('页面不存在', 'sakurairo'); ?></h2>
         
         <p class="page-404-message">
-            <?php _e('The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.', 'sakurairo'); ?>
+            <?php _e('你当前正在查看的页面可能不存在或已被修改，或者只是暂时不可用。', 'sakurairo'); ?>
         </p>
         
         <div class="page-404-actions">
@@ -210,9 +207,8 @@ $random_bg_url = DEFAULT_FEATURE_IMAGE();
                 <i class="fa-icon-solid fa-house"></i>
             </a>
             <form class="page-404-search-form" method="get" action="<?php echo esc_url(home_url('/')); ?>" role="search">
-                <label class="screen-reader-text" for="page-404-search-input"><?php esc_html_e('Search', 'sakurairo'); ?></label>
                 <input id="page-404-search-input" class="page-404-search-input" type="search" name="s" placeholder="<?php _e('Search...', 'sakurairo'); ?>" required>
-                <button class="page-404-button" type="submit" aria-label="<?php esc_attr_e('Submit Search', 'sakurairo'); ?>">
+                <button class="page-404-button" type="submit" aria-label="<?php esc_attr_e('点击搜索', 'sakurairo'); ?>">
                     <i class="fa-icon-solid fa-magnifying-glass" aria-hidden="true"></i>
                 </button>
             </form>
