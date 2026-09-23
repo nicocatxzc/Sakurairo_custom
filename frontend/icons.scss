@@ -1,4 +1,4 @@
-i {
+i:not(.sakura) {
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -9,6 +9,11 @@ i {
     mask-repeat: no-repeat;
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
+}
+
+i {
+    display: inline-block;
+    background-image: url("./components/icons/sakura.svg");
 }
 
 i {
@@ -32,9 +37,6 @@ i {
     }
     &.mdi-theme-light-dark {
         --svg: url("./components/icons/mdi-theme-light-dark.svg");
-    }
-    &.sakura {
-        --svg: url("./components/icons/sakura.svg");
     }
 
     &.fa-solid.fa-angle-left {
