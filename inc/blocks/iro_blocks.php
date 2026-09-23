@@ -97,6 +97,10 @@ function iro_register_editor_styles()
 add_action('enqueue_block_editor_assets', 'iro_load_editor_block');
 function iro_load_editor_block()
 {
+    if (! file_exists(iro_block_base_path() . 'build/index.asset.php')) {
+        return;
+    }
+
     $asset_file = include(iro_block_base_path() . 'build/index.asset.php');
     // 加载编辑器脚本
     wp_enqueue_script(

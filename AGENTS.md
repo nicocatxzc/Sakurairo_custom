@@ -25,13 +25,13 @@
 | PHP CLI  | >= 8.0（8.4+） | `php -l` 语法检查、跑一次性调试脚本                          |
 | Composer | 2.x            | 仅安装第三方 PHP 库时需要（主题本体不依赖 vendor 自动加载）  |
 | Node.js  | >= 20          | `frontend/` 与 `inc/blocks/` 的构建                          |
-| pnpm     | >= 9           | 两个前端工程的唯一包管理器（**不要用 npm/yarn**）            |
+| pnpm     | >= 9           | 两个前端工程共用的唯一包管理器（workspace 统一安装，**不要用 npm/yarn**） |
 
 - PHP 改动先跑 `php -l <文件>` 挡住语法错（`<?php ?>` 配对、字符串闭合、模板标签），再做人工逐行比对；全量检查命令见 §5「PHP 语法检查」。
 - 项目没有 PHP 单元测试框架、没有 PHPCS/ESLint/Stylelint 配置。**验证手段 = 前端构建 + `php -l` + 人工审阅**。
 - 编辑器默认自带 Vue (Official)、Stylelint、Prettier、markdownlint、PHP Intelephense、ESLint、es6-string-html、Auto Rename Tag、Auto Close Tag 插件：**提交即视为格式检查通过**，不必再单独执行格式化/风格检查命令。
 - 个别工具**确实缺失**时（如 `composer` 未装），跳过依赖它的步骤、改用等价手段即可，不要为了补装工具而中断任务。
-- 两个 npm 工程是独立的（没有根 `package.json`），各自用 pnpm 安装。
+- `frontend/` 与 `inc/blocks/` 由主题根的 **pnpm workspace 统一管理**：只在主题根 `pnpm install` 一次，依赖物理装在根 `node_modules/`，两个子目录里只剩指向它的软链（几十 KB）。子目录各自安装、各自锁文件的旧流程已废弃，见 §5。
 
 ### 2.1 调用 shell 的约定（重要）
 
@@ -49,12 +49,16 @@
 
 ```tree
 Sakurairo/
+├── package.json             # ★ 根工程：pnpm workspace 的脚本入口（build / build:frontend / build:blocks）
+├── pnpm-workspace.yaml      # ★ workspace 成员清单（frontend、inc/blocks）+ allowBuilds 白名单
+├── pnpm-lock.yaml           # ★ 唯一锁文件，同时覆盖 frontend 与 inc/blocks
+├── node_modules/            # 依赖物理位置（workspace 共享，.gitignore；子目录里只有软链）
 ├── functions.php            # 入口：定义常量、按顺序 require 所有模块
 ├── style.css                # 仅主题头（名称/版本/依赖声明）
 ├── header.php               # <head>，含 Customizer 预览合并逻辑、CSS 变量输出
 ├── index.php                # 主模板 + 「局部渲染」分发（X-Template-Part）
 ├── footer.php / comments.php / 404.php
-├── frontend/                # ★ 前端源码（Vite 工程）
+├── frontend/                # ★ 前端源码（Vite 工程；workspace 成员，锁文件在主题根）
 │   ├── main.js              # 入口：样式 + app + components
 │   ├── style.scss / layout.scss
 │   ├── vite.config.js       # 双入口 app/captcha、产物重命名、HTTPS dev server
@@ -79,9 +83,9 @@ Sakurairo/
 ├── inc/
 │   ├── api.php              # rest_api_init，注册 sakura/v1 路由
 │   ├── api/                 # bangumi / bilibili_favlist / captcha / turnstile / comments / search_index / post_view
-│   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts，独立 pnpm 工程）
+│   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts；workspace 成员，锁文件在主题根）
 │   │   ├── src/             # index.js + modules/*.js + style.scss
-│   │   ├── build/           # 构建产物（已提交，必须与 src 同步！）
+│   │   ├── build/           # 构建产物（.gitignore，不提交；改完 src 必须本地构建）
 │   │   ├── render.php       # 前台 shortcode + register_block_type 渲染
 │   │   └── iro_blocks.php   # 编辑器脚本/样式入队、注入 window.iroBlockEditor
 │   ├── functions/
@@ -192,7 +196,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 - 编辑器端：`inc/blocks/src/`（`index.js` 汇总 `modules/*`），用 `@wordpress/scripts` 构建。
 - 前台端：`inc/blocks/render.php` 注册短代码（`[friend_link]`、`[bangumi]`、`[favlist]`、`[archive]` 等）和 `register_block_type('sakurairo/*')`。
 - 编辑器样式在 `inc/blocks/iro_blocks.php` 中**注册两次**（外层文档 + `enqueue_block_assets` iframe），这是为兼容 WP 7.1 画布 iframe 的刻意设计，勿删。
-- `inc/blocks/build/` **已提交到仓库**。改完 `src/` 必须重新 build 并一起提交，否则线上不生效。
+- `inc/blocks/build/` **不纳入版本管理**（与 `frontend/dist` 一致）。改完 `src/` 必须在本地重新 build 才生效；发布/部署/打包前务必跑过 `pnpm build:blocks`，否则新 clone 出来的主题缺编辑器资源（`iro_blocks.php` 检测到产物缺失会跳过入队，不会报错，但编辑器里所有 Sakurairo 区块都不会出现）。
 
 ### 4.8 REST API
 
@@ -231,19 +235,33 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 ## 5. 构建与常用命令
 
+### 依赖安装（主题根目录，唯一入口）
+
+```bash
+pnpm install          # 唯一一次安装：frontend 与 inc/blocks 的依赖一起装好
+pnpm build            # = pnpm -r --if-present run build，依次构建 frontend、inc/blocks
+pnpm build:frontend   # 只构建前台（= pnpm --filter frontend run build）
+pnpm build:blocks     # 只构建区块（= pnpm --filter iro_blocks run build）
+```
+
+- 锁文件只有一个：根 `pnpm-lock.yaml`；pnpm 版本只在根 `package.json` 的 `packageManager` 里声明。
+- **不要在 `frontend/` 或 `inc/blocks/` 里执行 `pnpm install`**：子目录一旦出现自己的 `pnpm-workspace.yaml` / `pnpm-lock.yaml`，pnpm 就会把该目录当成独立 workspace 根、静默忽略根锁文件（见 §7 第 15 条）。
+- 依赖解析仍按成员隔离：`lodash`(CJS) 与 `lodash-es`、React 18（区块）与 Vue 3（前台）并存互不干扰。
+
 ### 前端（`frontend/`）
 
 ```bash
-cd frontend
-pnpm install          # 安装依赖
+cd frontend           # 以下命令在 frontend/ 里执行（根目录没有 dev 脚本）
 pnpm dev              # Vite dev server: https://0.0.0.0:5173（HMR host = "wordpress"）
 pnpm build            # 产出 frontend/dist/{app.js,style.css,captcha.css,assets/*}
 pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 app/、components/、main.js）
 ```
 
+- 这三条命令也可以从主题根用 `pnpm --filter frontend run dev` / `pnpm --filter frontend run build` / `pnpm --filter frontend exec tsc --noEmit` 执行；只是**别在子目录里 `pnpm install`**。
+
 - 本地开发需在**站点选项里打开 `dev_mode`**，`inc/functions/enqueue_assets.php` 会改为加载 `https://wordpress:5173/@vite/client` 与 `/main.js`。
 - dev server 使用自签 HTTPS，且 HMR `host: "wordpress"`；本机需能把 `wordpress` 解析到该容器/主机（官方 docker 环境已配置）。
-- `frontend/dist/` 已被 `.gitignore`，**不要提交**。
+- `frontend/dist/` 已被 `.gitignore`，**不要提交**（`inc/blocks/build/` 同样不提交）。
 - Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式）。
 - `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
 - 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
@@ -252,13 +270,13 @@ pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 app/、components/�
 ### 区块（`inc/blocks/`）
 
 ```bash
-cd inc/blocks
-pnpm install
-pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
+pnpm build:blocks     # 主题根执行；= pnpm --filter iro_blocks run build
+# 等价写法（仍可用）：cd inc/blocks && pnpm build
+# 实际命令：wp-scripts build src/index.js → inc/blocks/build/
 ```
 
-- `inc/blocks/build/**` 与 `frontend/types/*.d.ts` **属于版本管理内容，需要提交**。
-- 用 pnpm 而非 npm/yarn；lockfile 是 `pnpm-lock.yaml`。
+- `frontend/types/*.d.ts`（unplugin 自动生成）**属于版本管理内容，需要提交**；`inc/blocks/build/**` 与 `frontend/dist/**` 一样**不提交**（`.gitignore` 已覆盖）。
+- 用 pnpm 而非 npm/yarn；lockfile 是主题根的 `pnpm-lock.yaml`。
 
 ### 其他
 
@@ -266,12 +284,13 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 
 ### 提交前自检清单
 
-1. `cd frontend && pnpm build` 与 `cd inc/blocks && pnpm build` 通过（若改动了对应源码）。
+1. 主题根 `pnpm build` 通过（或按改动范围跑 `pnpm build:frontend` / `pnpm build:blocks`）。
 2. 若新增设置项：确认 CSF 字段、`iro_opt()` 读取、默认值三处一致。
 3. 若新增组件 JS：确认已在 `frontend/components/index.js`（或 `app/index.ts`）登记，并且初始化挂在 `_iro.hooks.onPageLoaded` 上。
-4. 若改动区块：`inc/blocks/build/` 已同步。
-5. 若新增/修改 `_iro` 的成员（`hooks` / `bus` / `navigate` / `message` / `utils` 等）：同步 `frontend/types/iro.d.ts`，并跑 `pnpm exec tsc --noEmit`。
+4. 若改动区块：本地已跑 `pnpm build:blocks`（产物不入库，但要落到工作区才会生效）。
+5. 若新增/修改 `_iro` 的成员（`hooks` / `bus` / `navigate` / `message` / `utils` 等）：同步 `frontend/types/iro.d.ts`，并在主题根跑 `pnpm --filter frontend exec tsc --noEmit`。
 6. PHP：`php -l <改动文件>` 全部通过，再人工复核模板标签、括号/引号闭合与 `<?php ?>` 配对。
+7. 若增删/升级依赖：只改成员自己的 `package.json`，然后回主题根跑 `pnpm install` 更新根 `pnpm-lock.yaml`；确认 `frontend/`、`inc/blocks/` 里没有冒出 `pnpm-lock.yaml` 或 `pnpm-workspace.yaml`。
 
 ---
 
@@ -345,7 +364,7 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 
 1. **JS 不登记就不会生效**：只创建 `.js` 文件而不在聚合入口 import，Vite 不会打包它。
 2. **顶层 DOM 操作在 PJAX 后失效**：必须放进 `_iro.hooks.onPageLoaded()`。
-3. **`frontend/dist` 不提交，`inc/blocks/build` 要提交**：两者规则完全相反。
+3. **`frontend/dist` 与 `inc/blocks/build` 都不提交**：两者都由本地 `pnpm build` 产出，新 clone 必须先构建；`inc/blocks/build/` 缺失时 PHP 侧会静默跳过入队（见 `iro_blocks.php` 的 `file_exists` 判断），表现为「编辑器里没有 Sakurairo 区块」而非报错。
 4. **Customizer 的 `iro_key` 写错**：预览看似正常，保存后设置丢失。
 5. **`style.css` 不是样式文件**：往里写 CSS 不会被加载（只有主题头）。
 6. **主题文件夹名必须为 `Sakurairo`**：否则触发 `inc/theme_init/check.php` 的重命名/告警逻辑。
@@ -357,6 +376,8 @@ pnpm build            # wp-scripts build src/index.js → inc/blocks/build/
 12. **`frontend/types/iro.d.ts` 必须保持脚本形态**：加了顶层 `import`/`export` 就变成模块，`_iro` / `Window` 的全局声明随即失效，全项目报 `TS2304 Cannot find name '_iro'`。要引用外部类型请用 `import("xxx").Yyy` 这种内联写法。
 13. **在 `.ts` / `.vue` 里写了 `_iro` 却报「找不到名称」**：说明该文件没被 tsconfig 的 `include` 覆盖（会退回 VS Code 的 inferred project），而不是语法错误。
 14. **别给 REST nonce 换 action**：`X-WP-Nonce` 头里必须放 `wp_create_nonce('wp_rest')`。内核 `rest_cookie_check_errors()`（`wp-includes/rest-api.php`）会拿这个头按 `wp_rest` 先校验一遍，用自定义 action 只会拿回 `rest_cookie_invalid_nonce`，连 `permission_callback` 都进不去。
+15. **不要在 `frontend/`、`inc/blocks/` 里跑 `pnpm install`**：这两个目录只要出现自己的 `pnpm-workspace.yaml`（哪怕里面只有 `allowBuilds`），pnpm 就把该目录当成独立 workspace 根，静默生成子锁文件并彻底无视根 `pnpm-lock.yaml`，安装结果与提交的锁文件不一致且没有任何警告。依赖统一在主题根装。
+16. **两个子目录里的 `node_modules` 只是软链农场**：物理包全部在根 `node_modules/`（约 1G），子目录各几十 KB。删掉子目录的 `node_modules` 不影响仓库，回主题根重跑 `pnpm install` 会重新生成；不要为了「只装前台」而去子目录单独装。
 
 ---
 

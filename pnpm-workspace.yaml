@@ -1,0 +1,11 @@
+packages:
+  - frontend
+  - inc/blocks
+
+# 只允许这些依赖执行安装脚本（postinstall），其余一律跳过。
+allowBuilds:
+  '@parcel/watcher': true
+  '@tsparticles/engine': true
+  core-js: true
+  core-js-pure: true
+  unrs-resolver: true
