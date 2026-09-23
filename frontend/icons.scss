@@ -161,12 +161,16 @@ i {
     &.fa-solid.fa-tags {
         --svg: url("./components/icons/fa/tags-solid-full.svg");
     }
+    &.fa-solid.fa-warning,
     &.fa-solid.fa-triangle-exclamation {
         --svg: url("./components/icons/fa/triangle-exclamation-solid-full.svg");
     }
     &.fa-solid.fa-close,
     &.fa-solid.fa-xmark {
         --svg: url("./components/icons/fa/xmark-solid-full.svg");
+    }
+    &.fa-solid.fa-square-xmark {
+        --svg: url("./components/icons/fa/square-xmark-solid-full.svg");
     }
     &.fa-solid.fa-caret-up {
         --svg: url("./components/icons/fa/caret-up-solid-full.svg");
