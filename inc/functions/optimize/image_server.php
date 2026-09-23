@@ -15,8 +15,12 @@
 add_action('init', 'iro_media_register_routes', 10);
 add_filter('query_vars', 'iro_media_query_vars');
 add_action('template_redirect', 'iro_media_dispatch', 0);
-add_action('after_switch_theme', function () {});
-flush_rewrite_rules();
+add_action('after_switch_theme', function () {
+    flush_rewrite_rules();
+});
+add_action( 'updated_option', function() {
+    flush_rewrite_rules();
+});
 
 
 /**
