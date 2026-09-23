@@ -98,6 +98,13 @@
 
     <?php } ?>
 </style>
+<style id="iro_theme_style_dymanic_vars">
+    <?php if(iro_opt("post_cover_as_background",false)&&is_single()): ?>
+        body {
+            background-image: url(<?= iro_media_optimize_image_url(get_the_post_thumbnail_url(get_post(), 'full')) ?>);
+        }
+    <?php endif; ?>
+</style>
 <?php
 function iro_is_commemorate_date()
 {
