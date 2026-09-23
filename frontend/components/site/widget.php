@@ -16,6 +16,11 @@ font-family:<?= iro_opt("widget_font") ?>;
         </button>
     </div>
     <div class="panel hide">
+        <?php if (is_active_sidebar('iro_widget')) : ?>
+            <aside class="wp-widget">
+                <?php dynamic_sidebar('iro_widget'); ?>
+            </aside>
+        <?php endif; ?>
         <div class="theme-controls widget-groups">
             <div class="darkmode group">
                 <button
