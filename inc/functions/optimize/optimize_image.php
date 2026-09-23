@@ -4,9 +4,9 @@ add_filter('the_content', 'iro_media_optimize_content_images', 99);
 /**
  * 相对 URL：
  *
- *     /wp-content/uploads/a.jpg
- *     wp-content/uploads/a.jpg
- *     //example.com/a.jpg
+ *     /wp-content/uploads/a.jpg，
+ *     wp-content/uploads/a.jpg，
+ *     //example.com/a.jpg，
  *
  * 以及当前 domain：
  *
@@ -82,8 +82,8 @@ function iro_media_public_base_url(): string
 
 
 /**
- * 把一个同源图片 URL 转为：
- *
+ * 把一个同源图片 URL 转为优化图片：
+ * 
  * /static/media/...
  *
  * $args 支持：
@@ -103,11 +103,13 @@ function iro_media_public_base_url(): string
  *
  * /static/media/wp-content/uploads/...
  *
- * 服务端默认输出无损 WebP。
+ * 服务端默认输出无损 WebP，
+ * 当$force为true时强制进行优化
  */
 function iro_media_optimize_image_url(
     string $url,
-    array $args = []
+    array $args = [],
+    bool $force = false,
 ): string {
 
     $original = $url;
@@ -115,6 +117,10 @@ function iro_media_optimize_image_url(
     // 读取选项
     $optimize_enabled = (bool) iro_opt("iro_image_optimize");
     $cdn_domain       = trim((string) iro_opt("iro_image_cdn"));
+
+    if ($force == true) {
+        $optimize_enabled = true;
+    }
 
     // 两个条件都不满足，直接返回原 URL
     if (!$optimize_enabled && $cdn_domain === '') {
@@ -274,7 +280,7 @@ function iro_media_optimize_image_url(
         }
     }
 
-    return esc_url($route);
+    return esc_url_raw($route);
 }
 
 /**
