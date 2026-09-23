@@ -28,6 +28,8 @@ function initLightbox() {
             a.addEventListener("click", (e) => {
                 e.preventDefault();
             });
+            // 阻止swup跳转
+            a.classList.add("no-pjax");
             // 可添加标记以便 CSS 或调试
             img.dataset.zoomable = "";
         }
