@@ -310,20 +310,6 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id'     => 'gfonts_api',
-                'type'   => 'text',
-                'title'  => __('Google Fonts API', 'sakurairo_csf'),
-                'default' => 'fonts.googleapis.com'
-            ],
-
-            [
-                'id'     => 'gfonts_add_name',
-                'type'   => 'text',
-                'title'  => __('Google Fonts 字体名称', 'sakurairo_csf'),
-                'desc'   => __('请确保添加的字体在谷歌字体库内可被引用，填写字体名称。添加的字体前面必须有”|“。如果引用多个字体，请使用“|”作为分割符，如果字体名称有空格，请用加号替代。例如：|ZCOOL+XiaoWei|Ma+Shan+Zheng', 'sakurairo_csf'),
-            ],
-
-            [
                 'id'        => 'extra_fonts',
                 'type'      => 'repeater',
                 'title'     => __('额外字体', 'sakurairo_csf'),
