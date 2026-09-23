@@ -105,10 +105,14 @@ function iro_media_home_path(): string
  */
 function iro_media_parse_request_uri(): ?array
 {
-    $request_path = (string) wp_parse_url(
-        $_SERVER['REQUEST_URI'] ?? '/',
-        PHP_URL_PATH
-    );
+
+    $raw = $_SERVER['REQUEST_URI'] ?? '/';
+
+    // 处理可能的转义
+    $raw = html_entity_decode($raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $raw = urldecode($raw);
+
+    $request_path = (string) wp_parse_url($raw, PHP_URL_PATH);
 
     $home_path = iro_media_home_path();
 
@@ -196,6 +200,11 @@ function iro_media_parse_request_uri(): ?array
  */
 function iro_media_parse_modifiers(string $modifiers): array|WP_Error
 {
+
+    $modifiers = html_entity_decode($modifiers, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    $modifiers = urldecode($modifiers);
+
     $result = [
         'quality' => null,
         'format'  => 'webp',
