@@ -2,12 +2,13 @@ import Typed from "typed.js";
 
 let typedInstance = null;
 _iro.hooks.onPageLoaded(() => {
-    const cover = document.querySelector(".homepage-cover")
-    if(!cover) {
-        return
+    const cover = document.querySelector(".homepage-cover");
+    if (!cover) {
+        return;
     }
+    const isHome = document.querySelector(".page-home");
     // 封面适时隐藏
-    if (!document.querySelector(".page-home")) {
+    if (!isHome) {
         cover.classList.add("hide");
     } else {
         cover.classList.remove("hide");
@@ -24,5 +25,12 @@ _iro.hooks.onPageLoaded(() => {
             typed_el.innerHTML = "";
             typedInstance = new Typed(typed_el, config);
         }
+    }
+
+    const video = document.querySelector(".cover-video");
+    if (!isHome) {
+        video.pause();
+    } else {
+        video.play();
     }
 });

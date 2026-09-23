@@ -1,17 +1,19 @@
 .homepage-cover {
-    height: var(--cover-height,100dvh);
+    height: var(--cover-height, 100dvh);
     width: 100dvw;
     overflow-anchor: none;
 
     .cover,
     .cover-info {
+        position: relative;
         height: 100%;
         width: 100%;
         overflow-anchor: none;
+        z-index: 1;
     }
 
     .cover {
-        background: var(--cover-background-img-pc,--cover-background-img-mb);
+        background: var(--cover-background-img-pc, --cover-background-img-mb);
         background-size: cover;
         position: relative;
 
@@ -20,7 +22,10 @@
         }
 
         @media (max-width: 860px) {
-            background: var(--cover-background-img-mb,--cover-background-img-pc);
+            background: var(
+                --cover-background-img-mb,
+                --cover-background-img-pc
+            );
             background-size: cover;
         }
     }
@@ -92,5 +97,13 @@
                 color: var(--word-color-first);
             }
         }
+    }
+
+    .cover-video {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        z-index: -1;
     }
 }

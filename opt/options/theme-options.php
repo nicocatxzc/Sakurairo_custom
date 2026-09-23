@@ -1064,6 +1064,57 @@ if (class_exists('Sakurairo_CSF')) {
                 'dependency' => ['cover_switch', '==', 'true', '', 'true'],
                 'default' => 'filter-nothing'
             ],
+
+            array(
+                'type' => 'subheading',
+                'content' => __('封面视频', 'sakurairo_csf'),
+            ),
+
+            array(
+                'id' => 'cover_video',
+                'type' => 'switcher',
+                'title' => __('封面视频', 'sakurairo_csf'),
+                'label' => __('用视频代替封面图片', 'sakurairo_csf'),
+                'dependency' => array('cover_switch', '==', 'true', '', 'true'),
+                'default' => false
+            ),
+
+            array(
+                'id' => 'cover_video_loop',
+                'type' => 'switcher',
+                'title' => __('封面视频循环', 'sakurairo_csf'),
+                'dependency' => array(
+                    array('cover_video', '==', 'true'),
+                    array('cover_switch', '==', 'true', '', 'true'),
+                ),
+                'label' => __('开启后视频将会循环播放', 'sakurairo_csf'),
+                'default' => false
+            ),
+
+            array(
+                'id' => 'cover_video_live',
+                'type' => 'switcher',
+                'title' => __('视频自动恢复', 'sakurairo_csf'),
+                'dependency' => array(
+                    array('cover_video', '==', 'true'),
+                    array('cover_switch', '==', 'true', '', 'true'),
+                ),
+                'label' => __('开启后，将在用户回到首页后自动恢复播放进度，需要开启PJAX', 'sakurairo_csf'),
+                'default' => false
+            ),
+
+            array(
+                'id' => 'cover_video_source',
+                'type' => 'upload',
+                'title' => __('视频URL地址', 'sakurairo_csf'),
+                'library'=>'video',
+                'dependency' => array(
+                    array('cover_video', '==', 'true'),
+                    array('cover_switch', '==', 'true', '', 'true'),
+                ),
+                'validate' => 'iro_validate_optional_url',
+                'desc' => __("视频的文件地址", 'sakurairo_csf'),
+            ),
         ]
     ]);
 
