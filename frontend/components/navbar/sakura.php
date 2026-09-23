@@ -5,7 +5,7 @@ $iro_menu_options = iro_get_navigation();
 <header
     class="site-header sakura flex-center">
     <div class="site-branding flex-center">
-        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo")) ?>" class="nuxtpic" alt="site logo">
+        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo")) ?>" class="nuxtpic logo" alt="site logo">
         <a href="/">
             <span
                 class="site-title"
