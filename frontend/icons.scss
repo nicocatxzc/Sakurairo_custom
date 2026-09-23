@@ -175,4 +175,11 @@ i {
     &.fa-solid.fa-calendar {
         --svg: url("./components/icons/fa/calendar-solid-full.svg");
     }
+    &.fa-solid.fa-house {
+        --svg: url("./components/icons/fa/house-solid-full.svg");
+    }
+    &.fa-solid.fa-rotate-left,
+    &.fa-solid.fa-rotate-left-arrow {
+        --svg: url("./components/icons/fa/arrow-rotate-left-solid-full.svg");
+    }
 }

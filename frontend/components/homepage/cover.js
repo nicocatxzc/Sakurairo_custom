@@ -2,11 +2,15 @@ import Typed from "typed.js";
 
 let typedInstance = null;
 _iro.hooks.onPageLoaded(() => {
+    const cover = document.querySelector(".homepage-cover")
+    if(!cover) {
+        return
+    }
     // 封面适时隐藏
     if (!document.querySelector(".page-home")) {
-        document.querySelector(".homepage-cover").classList.add("hide");
+        cover.classList.add("hide");
     } else {
-        document.querySelector(".homepage-cover").classList.remove("hide");
+        cover.classList.remove("hide");
     }
     // 封面打字机
     const typed_config = _iro?.config?.typed_config;
