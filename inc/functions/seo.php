@@ -147,12 +147,3 @@ function siren_auto_images_alt($content)
 
     return $content;
 }
-
-// 分类页面全部添加斜杠，利于SEO
-function siren_nice_trailingslashit($string, $type_of_url)
-{
-    if ($type_of_url != 'single')
-        $string = trailingslashit($string);
-    return $string;
-}
-add_filter('user_trailingslashit', 'siren_nice_trailingslashit', 10, 2);

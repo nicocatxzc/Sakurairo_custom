@@ -9,6 +9,9 @@ let siteWidget = document.querySelector(".site-widget");
 _iro.hooks.DOMContentLoaded.push(() => {
     // 控制面板
     siteWidget = siteWidget ?? document.querySelector(".site-widget");
+    if (!siteWidget) {
+        return;
+    }
     const control = siteWidget.querySelector(".control");
     bus.on("scroll:update", (data) => {
         const { progress, direction } = data;
@@ -44,6 +47,9 @@ _iro.hooks.DOMContentLoaded.push(() => {
 
 // 深色模式
 _iro.hooks.DOMContentLoaded.push(() => {
+    if (!siteWidget) {
+        return;
+    }
     const darkmode = siteWidget.querySelector(".darkmode-toggle");
     function darkmodeIcon() {
         switch (getState()) {
@@ -82,6 +88,9 @@ function applyFont(name) {
 
 // 同步按钮高亮状态
 function setActive(name) {
+        if(!siteWidget) {
+        return
+    }
     siteWidget
         .querySelectorAll(".font-controls button[data-name]")
         .forEach(function (btn) {
@@ -90,6 +99,9 @@ function setActive(name) {
 }
 
 _iro.hooks.DOMContentLoaded.push(() => {
+    if (!siteWidget) {
+        return;
+    }
     siteWidget.addEventListener("click", function (e) {
         const btn = e.target.closest(".font-controls button[data-name]");
         if (!btn) return;
