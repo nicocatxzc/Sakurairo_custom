@@ -9,9 +9,15 @@ _iro.hooks["DOMContentLoaded"].add(async () => {
         searchButton.addEventListener("click", () => {
             searchForm.classList.toggle("show");
         });
-        onClickOutside(searchForm, () => {
-            searchForm.classList.remove("show");
-        });
+        onClickOutside(
+            searchForm,
+            () => {
+                searchForm.classList.remove("show");
+            },
+            {
+                ignore: [searchButton],
+            },
+        );
         searchForm
             .querySelector(".close.button")
             .addEventListener("click", () => {
