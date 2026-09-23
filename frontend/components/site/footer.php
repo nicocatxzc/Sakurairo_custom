@@ -17,7 +17,7 @@ if (!function_exists('iro_get_custom_hitokoto')) {
     <?php if (iro_opt('footer_sakura')): ?>
         <div
             class="sakura-icon flex-center">
-            <?= file_get_contents(get_template_directory() . '/frontend/components/icons/sakura.svg') ?>
+            <i class="sakura"></i>
         </div>
     <?php endif; ?>
     <?php if (iro_opt('footer_hitokoto_select', 'off') != "off"): ?>
