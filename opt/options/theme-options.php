@@ -1517,7 +1517,7 @@ if (class_exists('Sakurairo_CSF')) {
             ),
 
             array(
-                'id' => 'article_lincenses',
+                'id' => 'article_licenses',
                 'type' => 'select',
                 'title' => __('文章版权协议', 'sakurairo_csf'),
                 'dependency' => array('article_function', '==', 'true', '', 'true'),
@@ -1528,11 +1528,11 @@ if (class_exists('Sakurairo_CSF')) {
                     "cc-by" => "CC BY 4.0",
                     "cc-by-nc" => "CC BY-NC 4.0",
                     "cc-by-nc-nd" => "CC BY-NC-ND 4.0",
-                    true => "CC BY-NC-SA 4.0",
+                    "cc-by-nc-sa" => "CC BY-NC-SA 4.0",
                     "cc-by-nd" => "CC BY-ND 4.0",
                     "cc-by-sa" => "CC BY-SA 4.0",
                 ),
-                'default' => true
+                'default' => "cc-by-nc-sa"
             ),
 
             array(

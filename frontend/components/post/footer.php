@@ -3,11 +3,7 @@ if (!iro_opt('article_function', true) || !is_single()) {
     return;
 }
 
-$license = get_post_meta(get_the_ID(), 'license', true) ?: iro_opt('article_lincenses', true);
-// CSF 的 select 把 true/false 存成 "1"/"0"，"1" 对应默认的 CC BY-NC-SA
-if ($license === '1' || $license === true) {
-    $license = 'cc-by-nc-sa';
-}
+$license = get_post_meta(get_the_ID(), 'license', true) ?: iro_opt('article_licenses', true);
 $reward = iro_opt('article_author_reward', []);
 ?>
 <?php iro_content_container_start() ?>

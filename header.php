@@ -48,22 +48,13 @@ if (is_customize_preview()) {
     <?php endif; ?>>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-
-    <?php //优化资源加载 
-    ?>
+    
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <link rel="preconnect" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>">
-
-    <link rel="preload" href="<?php echo (iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?>" as="style">
-    <link rel="stylesheet" href="<?php echo (iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?>" type="text/css" media="all" />
 
     <link rel="shortcut icon" href="<?= esc_url(iro_opt('favicon_link', '')); ?>" />
 
     <?php wp_head(); ?>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
-
-    <link rel="preload" as="style" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css2?family=Noto+Serif+SC&Noto+Sans+SC&Fira+Code<?= esc_attr(iro_opt('gfonts_add_name')); ?>&display=swap">
-    <link rel="stylesheet" href="https://<?= esc_attr(iro_opt('gfonts_api', 'fonts.googleapis.com')); ?>/css2?family=Noto+Serif+SC&Noto+Sans+SC&Fira+Code<?= esc_attr(iro_opt('gfonts_add_name')); ?>&display=swap" media="all">
 
     <?php
     // 前端主题样式

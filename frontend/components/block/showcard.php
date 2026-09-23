@@ -16,7 +16,7 @@
                 <button
                     class="showcard-button"
                     style="color: <?= esc_attr($data['color']) ?>;">
-                    <i class="fa7-solid fa-angle-right"></i>
+                    <i class="fa-solid fa-angle-right"></i>
                 </button>
             </a>
         <?php endif; ?>

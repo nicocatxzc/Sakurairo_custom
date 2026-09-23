@@ -1,0 +1,175 @@
+i {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+i {
+    &.gh-fork {
+        --svg: url("./components/icons/gh-fork.svg");
+    }
+    &.gh-license {
+        --svg: url("./components/icons/gh-license.svg");
+    }
+    &.gh-repo {
+        --svg: url("./components/icons/gh-repo.svg");
+    }
+    &.gh-star {
+        --svg: url("./components/icons/gh-star.svg");
+    }
+    &.line-md-moon-loop {
+        --svg: url("./components/icons/line-md-moon-loop.svg");
+    }
+    &.line-md-sun-rising-loop {
+        --svg: url("./components/icons/line-md-sun-rising-loop.svg");
+    }
+    &.mdi-theme-light-dark {
+        --svg: url("./components/icons/mdi-theme-light-dark.svg");
+    }
+    &.sakura {
+        --svg: url("./components/icons/sakura.svg");
+    }
+
+    &.fa-solid.fa-angle-left {
+        --svg: url("./components/icons/fa/angle-left-solid-full.svg");
+    }
+    &.fa-solid.fa-angle-right {
+        --svg: url("./components/icons/fa/angle-right-solid-full.svg");
+    }
+    &.fa-solid.fa-bars {
+        --svg: url("./components/icons/fa/bars-solid-full.svg");
+    }
+    &.fa-regular.fa-bookmark {
+        --svg: url("./components/icons/fa/bookmark-regular-full.svg");
+    }
+    &.fa-solid.fa-box-archive {
+        --svg: url("./components/icons/fa/box-archive-solid-full.svg");
+    }
+    &.fa-solid.fa-calendar-day {
+        --svg: url("./components/icons/fa/calendar-day-solid-full.svg");
+    }
+    &.fa-solid.fa-circle-info {
+        --svg: url("./components/icons/fa/circle-info-solid-full.svg");
+    }
+    &.fa-solid.fa-clipboard-list {
+        --svg: url("./components/icons/fa/clipboard-list-solid-full.svg");
+    }
+    &.fa-regular.fa-clock {
+        --svg: url("./components/icons/fa/clock-regular-full.svg");
+    }
+    &.fa-solid.fa-comment {
+        --svg: url("./components/icons/fa/comment-solid-full.svg");
+    }
+    &.fa-solid.fa-copy {
+        --svg: url("./components/icons/fa/copy-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons {
+        --svg: url("./components/icons/fa/creative-commons-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-by {
+        --svg: url("./components/icons/fa/creative-commons-by-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-nc {
+        --svg: url("./components/icons/fa/creative-commons-nc-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-nc-eu {
+        --svg: url("./components/icons/fa/creative-commons-nc-eu-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-nc-jp {
+        --svg: url("./components/icons/fa/creative-commons-nc-jp-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-nd {
+        --svg: url("./components/icons/fa/creative-commons-nd-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-pd {
+        --svg: url("./components/icons/fa/creative-commons-pd-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-pd-alt {
+        --svg: url("./components/icons/fa/creative-commons-pd-alt-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-remix {
+        --svg: url("./components/icons/fa/creative-commons-remix-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-sa {
+        --svg: url("./components/icons/fa/creative-commons-sa-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-sampling {
+        --svg: url("./components/icons/fa/creative-commons-sampling-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-sampling-plus {
+        --svg: url("./components/icons/fa/creative-commons-sampling-plus-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-share {
+        --svg: url("./components/icons/fa/creative-commons-share-brands-solid-full.svg");
+    }
+    &.fa-brands.fa-creative-commons-zero {
+        --svg: url("./components/icons/fa/creative-commons-zero-brands-solid-full.svg");
+    }
+    &.fa-solid.fa-eye {
+        --svg: url("./components/icons/fa/eye-solid-full.svg");
+    }
+    &.fa-regular.fa-face-kiss-wink-heart {
+        --svg: url("./components/icons/fa/face-kiss-wink-heart-regular-full.svg");
+    }
+    &.fa-solid.fa-feather,
+    &.fa-solid.fa-feather-pointed {
+        --svg: url("./components/icons/fa/feather-pointed-solid-full.svg");
+    }
+    &.fa-solid.fa-folder-open {
+        --svg: url("./components/icons/fa/folder-open-solid-full.svg");
+    }
+    &.fa-solid.fa-gamepad {
+        --svg: url("./components/icons/fa/gamepad-solid-full.svg");
+    }
+    &.fa-solid.fa-inbox {
+        --svg: url("./components/icons/fa/inbox-solid-full.svg");
+    }
+    &.fa-solid.fa-laptop {
+        --svg: url("./components/icons/fa/laptop-solid-full.svg");
+    }
+    &.fa-solid.fa-search,
+    &.fa-solid.fa-magnifying-glass {
+        --svg: url("./components/icons/fa/magnifying-glass-solid-full.svg");
+    }
+    &.fa-brands.fa-markdown {
+        --svg: url("./components/icons/fa/markdown-brands-solid-full.svg");
+    }
+    &.fa-solid.fa-piggy-bank {
+        --svg: url("./components/icons/fa/piggy-bank-solid-full.svg");
+    }
+    &.fa-solid.fa-quote-left {
+        --svg: url("./components/icons/fa/quote-left-solid-full.svg");
+    }
+    &.fa-solid.fa-quote-right {
+        --svg: url("./components/icons/fa/quote-right-solid-full.svg");
+    }
+    &.fa-solid.fa-square-check {
+        --svg: url("./components/icons/fa/square-check-solid-full.svg");
+    }
+    &.fa-solid.fa-tags {
+        --svg: url("./components/icons/fa/tags-solid-full.svg");
+    }
+    &.fa-solid.fa-triangle-exclamation {
+        --svg: url("./components/icons/fa/triangle-exclamation-solid-full.svg");
+    }
+    &.fa-solid.fa-close,
+    &.fa-solid.fa-xmark {
+        --svg: url("./components/icons/fa/xmark-solid-full.svg");
+    }
+    &.fa-solid.fa-caret-up {
+        --svg: url("./components/icons/fa/caret-up-solid-full.svg");
+    }
+    &.fa-solid.fa-compass-drafting {
+        --svg: url("./components/icons/fa/compass-drafting-solid-full.svg");
+    }
+    &.fa-solid.fa-calendar {
+        --svg: url("./components/icons/fa/calendar-solid-full.svg");
+    }
+}
