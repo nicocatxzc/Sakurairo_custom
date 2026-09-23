@@ -2196,10 +2196,18 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'iro_image_optimize',
+                'type'  => 'switcher',
+                'title' => __('全站webp优化', 'sakurairo_csf'),
+                'label'   => __('将源站所有图片优化至webp', 'sakurairo_csf'),
+                'default' => false,
+            ],
+
+            [
                 'id' => 'image_cdn',
                 'type' => 'text',
-                'title' => __('Image CDN', 'sakurairo_csf'),
-                'desc' => __('Note: fill in the format https://cdn.example.org, DO NOT add a slash at the end of the url. This means that images with original path http://cdn.example.org/wp-content/uploads/2018/05/xx.png will be loaded from http://cdn.example.org/2018/05/xx.png', 'sakurairo_csf'),
+                'title' => __('图片cdn', 'sakurairo_csf'),
+                'desc' => __('将源站所有图片域名替换为该cdn域名', 'sakurairo_csf'),
                 'default' => ''
             ],
 

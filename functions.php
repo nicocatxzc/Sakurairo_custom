@@ -67,6 +67,8 @@ require_once get_template_directory() . '/inc/functions/tools.php';
 require_once get_template_directory() . '/inc/functions/ip.php';
 // api
 require_once get_template_directory() . '/inc/api.php';
+// 全站优化
+require_once get_template_directory() . '/inc/functions/optimize/index.php';
 // 载入wp精简定制
 require_once get_template_directory() . '/inc/functions/cust_wp.php';
 // wordpress兼容性修复
