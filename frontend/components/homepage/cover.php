@@ -30,7 +30,7 @@
 
                     <?php if (iro_opt("cover_infor_bar_switch", true)): ?>
                         <div class="socials" style="
-                        board-radius:<?= iro_opt("cover_infor_bar_radius", 1) ?>rem;
+                        border-radius:<?= iro_opt("cover_infor_bar_radius", 1) ?>rem;
                         ">
                             <?php if (iro_opt("cover_typedjs")): ?>
                                 <div
