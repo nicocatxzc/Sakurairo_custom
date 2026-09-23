@@ -2287,6 +2287,14 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'dev_mode_admin_only',
+                'type'  => 'switcher',
+                'title' => __('开发者模式仅管理员', 'sakurairo'),
+                'label'   => __('启用后只有登陆为管理员的用户才会进入开发模式，游客不受影响', 'sakurairo'),
+                'default' => true,
+            ],
+
+            [
                 'id' => 'php_notice_filter',
                 'type' => 'select',
                 'title' => __('PHP日志过滤', 'sakurairo'),

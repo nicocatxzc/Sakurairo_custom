@@ -6,9 +6,15 @@
 function iro_enqueue_scripts()
 {
 ?>
-    <?php if (iro_opt("dev_mode", false)): ?>
-        <script type="module" src="https://wordpress:5173/@vite/client"></script>
-        <script type="module" src="https://wordpress:5173/main.js"></script>
+    <?php if (
+        iro_opt("dev_mode", false) &&
+        (
+            !iro_opt("dev_mode_admin_only", true) ||
+            current_user_can('manage_options')
+        )
+    ): ?>
+        <script type="module" src="<?= iro_opt("dev_mode_hmr_client") ?>"></script>
+        <script type="module" src="<?= iro_opt("dev_mode_main_js") ?>"></script>
     <?php else: ?>
         <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/app.js?ver=' . INT_VERSION ?>"></script>
         <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/style.css?ver=' . INT_VERSION ?>">
