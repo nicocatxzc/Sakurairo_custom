@@ -5,7 +5,7 @@
         <?php if (!empty($data['avatar'])): ?>
             <img
                 class="nuxtpic"
-                src="<?= esc_url($data['avatar']) ?>"
+                src="<?= iro_media_optimize_image_url(esc_url($data['avatar'])) ?>"
                 alt="<?= esc_attr($data['username']) ?>"
                 loading="lazy" />
         <?php endif; ?>

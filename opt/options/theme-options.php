@@ -2204,7 +2204,7 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id' => 'image_cdn',
+                'id' => 'iro_image_cdn',
                 'type' => 'text',
                 'title' => __('图片cdn', 'sakurairo_csf'),
                 'desc' => __('将源站所有图片域名替换为该cdn域名', 'sakurairo_csf'),

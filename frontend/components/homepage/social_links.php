@@ -37,7 +37,7 @@ $icons_map = [
                     title="点击访问<?= $item['title'] ?? '' ?>">
                     <img
                         loading="lazy"
-                        src="<?= iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp' ?>"
+                        src="<?= iro_media_optimize_image_url(iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp') ?>"
                         class="social-img nuxtpic"
                         alt="<?= $item['title'] ?? '' ?>" />
                 </a>

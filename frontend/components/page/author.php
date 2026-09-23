@@ -7,7 +7,7 @@
             class="author-avatar"
             style="--post-count:'<?= count_user_posts($author) ?>'">
             <img
-                src="<?= esc_url(get_avatar_url($author, ['size' => 150])) ?>"
+                src="<?= iro_media_optimize_image_url(esc_url(get_avatar_url($author, ['size' => 150]))) ?>"
                 alt="avatar of <?= esc_attr(get_the_author_meta('display_name', $author)) ?>"
                 class="nuxtpic" />
         </div>

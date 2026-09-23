@@ -17,7 +17,7 @@
                     <img
                         class="nuxtpic"
                         alt="showcard-image"
-                        src="<?= $showcard["img"] ?>"
+                        src="<?= iro_media_optimize_image_url($showcard["img"]) ?>"
                         loading="lazy" />
                 </div>
                 <div class="card-info">

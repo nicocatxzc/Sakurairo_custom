@@ -3,7 +3,7 @@
         <?php if (!empty($data['img'])): ?>
             <img
                 class="nuxtpic"
-                src="<?= esc_url($data['img']) ?>"
+                src="<?= iro_media_optimize_image_url(esc_url($data['img'])) ?>"
                 alt="<?= esc_attr(wp_strip_all_tags($data['title'])) ?>"
                 loading="lazy" />
         <?php endif; ?>

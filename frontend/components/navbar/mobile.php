@@ -17,7 +17,7 @@ if (!is_array($iro_menu_options)) {
     </button>
 
     <div class="site-branding flex-center">
-        <img src="<?= iro_opt("nav_logo") ?>" class="nuxtpic" alt="site logo">
+        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo")) ?>" class="nuxtpic" alt="site logo">
         <a href="<?= esc_url(home_url('/')) ?>">
             <span
                 class="site-title"
@@ -89,7 +89,7 @@ if (!is_array($iro_menu_options)) {
                         </div>
                     <?php else: ?>
                         <img
-                            src="<?= iro_opt("missing_avatars_placeholder") ?>"
+                            src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
                             alt="用户头像"
                             class="avatar">
                         <div class="user-info">

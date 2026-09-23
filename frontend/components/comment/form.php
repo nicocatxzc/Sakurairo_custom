@@ -105,7 +105,7 @@ $post_comment_args = iro_comment_form_data();
                     <div class="infos">
                         <img
                             alt="avatar"
-                            src="<?= iro_opt("missing_avatars_placeholder") ?>"
+                            src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
                             class="nuxtpic avatar" />
                         <?php foreach ($info_fields as $name => $field) : ?>
                             <?= $field ?>
