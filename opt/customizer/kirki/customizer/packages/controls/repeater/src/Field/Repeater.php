@@ -103,6 +103,10 @@ class Repeater extends Field {
 			return $value;
 		}
 
+		if ( ! is_array( $value ) ) {
+   			return [];
+ 		}
+
 		foreach ( $value as $row_id => $row_value ) {
 
 			// Make sure the row is formatted as an array.
