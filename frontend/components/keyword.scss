@@ -1,17 +1,19 @@
-.nuxtpic {
-    display: block;
-    img {
+@layer keyword {
+    .nuxtpic {
         display: block;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
+        img {
+            display: block;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
     }
-}
-.flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.hide {
-    display: none;
+    .flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .hide {
+        display: none;
+    }
 }
