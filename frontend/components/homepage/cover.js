@@ -28,9 +28,11 @@ _iro.hooks.onPageLoaded(() => {
     }
 
     const video = document.querySelector(".cover-video");
-    if (!isHome) {
-        video.pause();
-    } else {
-        video.play();
+    if (video) {
+        if (!isHome) {
+            video.pause();
+        } else {
+            video.play();
+        }
     }
 });
