@@ -34,10 +34,15 @@
     }
 
     .social-item {
+        width: 0;
         height: 2.2rem;
-        aspect-ratio: 1;
         position: relative;
         transition: all 0.5s linear;
+
+        // 非 show 项宽度归零后靠自身裁剪图标，无需再依赖分页容器的 overflow
+        a {
+            overflow: hidden;
+        }
 
         .social-img {
             height: 100%;
