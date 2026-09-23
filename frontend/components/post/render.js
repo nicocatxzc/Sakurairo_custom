@@ -27,6 +27,7 @@ function initLightbox() {
             // 阻止 a 标签的默认跳转行为
             a.addEventListener("click", (e) => {
                 e.preventDefault();
+                e.stopPropagation();
             });
             // 可添加标记以便 CSS 或调试
             img.dataset.zoomable = "";
