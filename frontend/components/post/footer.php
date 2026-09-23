@@ -83,19 +83,19 @@ $reward = iro_opt('article_author_reward', []);
     <?php endif; ?>
 
     <?php if (iro_opt('article_author_quote', true)): ?>
-        <div class="desc">
+        <div class="desc flex-center">
             <i class="fa-solid fa-feather" aria-hidden="true"></i><?= esc_html(get_the_author_meta('description') ?: __('This author has not provided a description.', 'sakurairo')) ?>
         </div>
     <?php endif; ?>
 
     <?php if (iro_opt('article_modified_time', false)): ?>
-        <div class="post-modified-time">
+        <div class="post-modified-time flex-center">
             <i class="fa-solid fa-calendar-day" aria-hidden="true"></i><?= esc_html__('Last updated on ', 'sakurairo') . get_the_modified_time('Y-m-d') ?>
         </div>
     <?php endif; ?>
 
     <?php if (iro_opt('article_tag', true) && has_tag()): ?>
-        <div class="post-tags">
+        <div class="post-tags flex-center">
             <i class="fa-solid fa-tag" aria-hidden="true"></i>
             <?php the_tags('', ' ', ' '); ?>
         </div>
