@@ -16,7 +16,7 @@ font-family:<?= iro_opt("widget_font") ?>;
         </button>
     </div>
     <div class="panel hide">
-        <?php if (is_active_sidebar('iro_widget')) : ?>
+        <?php if (is_active_sidebar('iro_widget')&&iro_opt("widget_wordpress_widget",false)) : ?>
             <aside class="wp-widget">
                 <?php dynamic_sidebar('iro_widget'); ?>
             </aside>
