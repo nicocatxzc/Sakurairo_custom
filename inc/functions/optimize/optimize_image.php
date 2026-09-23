@@ -112,6 +112,15 @@ function iro_media_optimize_image_url(
 
     $original = $url;
 
+    // 读取选项
+    $optimize_enabled = (bool) iro_opt("iro_image_optimize");
+    $cdn_domain       = trim((string) iro_opt("iro_image_cdn"));
+
+    // 两个条件都不满足，直接返回原 URL
+    if (!$optimize_enabled && $cdn_domain === '') {
+        return $original;
+    }
+
     $url = trim(
         html_entity_decode(
             $url,
@@ -120,6 +129,7 @@ function iro_media_optimize_image_url(
         )
     );
 
+    // 只处理同源图片
     if (!iro_media_is_same_origin($url)) {
         return $original;
     }
@@ -135,127 +145,137 @@ function iro_media_optimize_image_url(
 
     $path = (string) $parts['path'];
 
-    /*
-     * 去掉 WordPress 安装子目录。
-     */
-    $home_path = iro_media_home_path();
+    // 如果开启了优化，则走原有的优化路径逻辑
+    if ($optimize_enabled) {
 
-    if (
-        $home_path !== '/'
-        && str_starts_with(
-            $path,
-            $home_path . '/'
-        )
-    ) {
-        $path_for_route = substr(
-            $path,
-            strlen($home_path)
-        );
+        /*
+         * 去掉 WordPress 安装子目录。
+         */
+        $home_path = iro_media_home_path();
+
+        if (
+            $home_path !== '/'
+            && str_starts_with(
+                $path,
+                $home_path . '/'
+            )
+        ) {
+            $path_for_route = substr(
+                $path,
+                strlen($home_path)
+            );
+        } else {
+            $path_for_route = $path;
+        }
+
+        /*
+         * 已经是优化路由则不重复改写路径。
+         */
+        if (
+            str_starts_with(
+                $path_for_route,
+                '/static/media/'
+            )
+        ) {
+            // 已是优化路由，保留原始 URL，后续可能还要替换 CDN 域名
+            $route = $original;
+        } else {
+            // 构造优化路由
+            $options = [
+                'quality' => null,
+                'format'  => 'webp',
+                'width'   => null,
+                'height'  => null,
+            ];
+
+            $aliases = [
+                'q' => 'quality',
+                'f' => 'format',
+                'w' => 'width',
+                'h' => 'height',
+            ];
+
+            foreach ($args as $key => $value) {
+                $key = strtolower((string) $key);
+                if (isset($aliases[$key])) {
+                    $key = $aliases[$key];
+                }
+                if (array_key_exists($key, $options)) {
+                    $options[$key] = $value;
+                }
+            }
+
+            $modifier_segment = iro_media_build_modifier_segment($options);
+
+            if (is_wp_error($modifier_segment)) {
+                // 参数错误时退回原 URL
+                $route = $original;
+            } else {
+                $route = iro_media_public_base_url();
+
+                if ($modifier_segment !== '') {
+                    $route .= $modifier_segment . '/';
+                }
+
+                $route .= ltrim($path_for_route, '/');
+
+                if (!empty($parts['query'])) {
+                    $route .= '?' . $parts['query'];
+                }
+
+                if (!empty($parts['fragment'])) {
+                    $route .= '#' . $parts['fragment'];
+                }
+            }
+        }
     } else {
-        $path_for_route = $path;
+        // 未开启优化，保持原始路径，仅后续可能替换域名
+        $route = $original;
     }
 
-    /*
-     * 已经是优化路由则不重复处理。
-     */
-    if (
-        str_starts_with(
-            $path_for_route,
-            '/static/media/'
-        )
-    ) {
-        return $original;
-    }
+    // 如果配置了 CDN 域名，则替换最终 URL 的 scheme + host
+    if ($cdn_domain !== '') {
 
-    /*
-     * 默认：
-     * format = webp
-     * quality = null
-     */
-    $options = [
-        'quality' => null,
-        'format'  => 'webp',
-        'width'   => null,
-        'height'  => null,
-    ];
-
-    $aliases = [
-        'q' => 'quality',
-        'f' => 'format',
-        'w' => 'width',
-        'h' => 'height',
-    ];
-
-    foreach ($args as $key => $value) {
-
-        $key = strtolower(
-            (string) $key
-        );
-
-        if (isset($aliases[$key])) {
-            $key = $aliases[$key];
+        // 补全 scheme
+        if (!preg_match('#^https?://#i', $cdn_domain)) {
+            $cdn_domain = 'https://' . $cdn_domain;
         }
 
-        if (array_key_exists(
-            $key,
-            $options
-        )) {
-            $options[$key] = $value;
+        $cdn_parts = wp_parse_url($cdn_domain);
+
+        if (
+            $cdn_parts
+            && !empty($cdn_parts['scheme'])
+            && !empty($cdn_parts['host'])
+        ) {
+            $route_parts = wp_parse_url($route);
+
+            if ($route_parts) {
+                $new_url = $cdn_parts['scheme'] . '://' . $cdn_parts['host'];
+
+                if (!empty($cdn_parts['port'])) {
+                    $new_url .= ':' . $cdn_parts['port'];
+                }
+
+                if (!empty($route_parts['path'])) {
+                    $new_url .= $route_parts['path'];
+                }
+
+                if (!empty($route_parts['query'])) {
+                    $new_url .= '?' . $route_parts['query'];
+                }
+
+                if (!empty($route_parts['fragment'])) {
+                    $new_url .= '#' . $route_parts['fragment'];
+                }
+
+                $route = $new_url;
+            }
         }
-    }
-
-    /*
-     * 构造：
-     *
-     * q_80&f_webp&w_1536
-     */
-    $modifier_segment =
-        iro_media_build_modifier_segment(
-            $options
-        );
-
-    if (is_wp_error($modifier_segment)) {
-        return $original;
-    }
-
-    $route = iro_media_public_base_url();
-
-    if ($modifier_segment !== '') {
-        $route .= $modifier_segment . '/';
-    }
-
-    /*
-     * 保留原始图片文件路径。
-     *
-     * 所以：
-     *
-     * image.png
-     *
-     * 最终 URL 依然叫 image.png，
-     * 但 HTTP Content-Type 会是 image/webp。
-     */
-    $route .= ltrim(
-        $path_for_route,
-        '/'
-    );
-
-    /*
-     * 原 URL query 一并保留。
-     */
-    if (!empty($parts['query'])) {
-        $route .= '?' . $parts['query'];
-    }
-
-    /*
-     * fragment 浏览器本地使用。
-     */
-    if (!empty($parts['fragment'])) {
-        $route .= '#' . $parts['fragment'];
     }
 
     return esc_url($route);
 }
-
 
 /**
  * @return string|WP_Error

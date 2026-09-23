@@ -3,12 +3,12 @@
         <a href="<?= esc_url(get_permalink()) ?>">
             <?php if (has_post_thumbnail()) : ?>
                 <img
-                    src="<?= esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large')) ?>"
+                    src="<?= iro_media_optimize_image_url(esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large'))) ?>"
                     alt="<?= esc_attr(sprintf('featured image for post %s', get_the_title())) ?>"
                     loading="lazy">
             <?php else : ?>
                 <img
-                    src="<?= esc_url(get_template_directory_uri() . '/assets/images/default-thumb.jpg') ?>"
+                    src="<?= iro_media_optimize_image_url(esc_url(get_template_directory_uri() . '/assets/images/default-thumb.jpg')) ?>"
                     alt="<?= esc_attr(sprintf('default image for post %s', get_the_title())) ?>"
                     loading="lazy">
             <?php endif; ?>
