@@ -20,7 +20,7 @@ $lang_color = !empty($data['language']) && isset($language_colors[$data['languag
         <a href="<?= esc_url($data['url']) ?>" target="_blank" rel="noopener">
             <header class="repo-name">
                 <span class="title-text">
-                    <i class="icon icon-repo"></i>
+                    <i class="icon gh-repo"></i>
                     <?= esc_html($data['name']) ?>
                 </span>
             </header>
@@ -40,18 +40,18 @@ $lang_color = !empty($data['language']) && isset($language_colors[$data['languag
                 <?php endif; ?>
 
                 <span class="stars">
-                    <i class="icon icon-star"></i>
+                    <i class="icon gh-star"></i>
                     <?= (int) $data['stars'] ?>
                 </span>
 
                 <span class="forks">
-                    <i class="icon icon-fork"></i>
+                    <i class="icon gh-fork"></i>
                     <?= (int) $data['forks'] ?>
                 </span>
 
                 <?php if (!empty($data['license'])): ?>
                     <span class="license">
-                        <i class="icon icon-license"></i>
+                        <i class="icon gh-license"></i>
                         <?= esc_html($data['license']) ?>
                     </span>
                 <?php endif; ?>
