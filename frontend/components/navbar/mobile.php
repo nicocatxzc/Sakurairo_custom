@@ -17,7 +17,7 @@ if (!is_array($iro_menu_options)) {
     </button>
 
     <div class="site-branding flex-center">
-        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo")) ?>" class="nuxtpic" alt="site logo">
+        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo")) ?>" class="nuxtpic logo" alt="site logo">
         <a href="<?= esc_url(home_url('/')) ?>">
             <span
                 class="site-title"

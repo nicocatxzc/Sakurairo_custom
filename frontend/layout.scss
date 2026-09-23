@@ -1,5 +1,5 @@
 :root.dark {
-    img,
+    img:not(.logo,.avatar),
     video {
         filter: brightness(var(--image-bright));
     }
