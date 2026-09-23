@@ -28,6 +28,9 @@
         position: relative;
         justify-content: flex-start;
         background: transparent;
+        img {
+            height: 100%;
+        }
     }
     .site-branding .nuxtpic {
         max-width: 20vw;
