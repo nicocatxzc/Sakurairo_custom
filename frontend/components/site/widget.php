@@ -6,13 +6,13 @@ font-family:<?= iro_opt("widget_font") ?>;
 ">
     <div class="control">
         <button id="goToTop" title="回到顶部">
-            <i class="icon fa-solid fa-caret-up fa-lg flex-center"></i>
+            <i class="icon fa-icon-solid fa-caret-up fa-lg flex-center"></i>
         </button>
         <button
             id="widgetToggle"
             title="小工具"
             @click="isPanelShow = !isPanelShow">
-            <i class="icon fa-solid fa-compass-drafting fa-lg fa-flip flex-center"></i>
+            <i class="icon fa-icon-solid fa-compass-drafting fa-lg fa-flip flex-center"></i>
         </button>
     </div>
     <div class="panel hide">

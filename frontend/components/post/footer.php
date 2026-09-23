@@ -30,10 +30,10 @@ $reward = iro_opt('article_author_reward', []);
         <div class="reward-open">
             <?php if ($reward['link'] ?? ''): ?>
                 <a class="reward-button" href="<?= esc_url($reward['link']) ?>" target="_blank" rel="noopener noreferrer">
-                    <i class="fa-solid fa-piggy-bank fa-sm"></i>
+                    <i class="fa-icon-solid fa-piggy-bank fa-sm"></i>
                 </a>
             <?php else: ?>
-                <i class="fa-solid fa-piggy-bank fa-sm"></i>
+                <i class="fa-icon-solid fa-piggy-bank fa-sm"></i>
             <?php endif; ?>
             <?php if (!empty($reward['image1']) || !empty($reward['image2'])): ?>
                 <div class="reward-main">
@@ -84,19 +84,19 @@ $reward = iro_opt('article_author_reward', []);
 
     <?php if (iro_opt('article_author_quote', true)): ?>
         <div class="desc flex-center">
-            <i class="fa-solid fa-feather" aria-hidden="true"></i><?= esc_html(get_the_author_meta('description') ?: __('This author has not provided a description.', 'sakurairo')) ?>
+            <i class="fa-icon-solid fa-feather" aria-hidden="true"></i><?= esc_html(get_the_author_meta('description') ?: __('This author has not provided a description.', 'sakurairo')) ?>
         </div>
     <?php endif; ?>
 
     <?php if (iro_opt('article_modified_time', false)): ?>
         <div class="post-modified-time flex-center">
-            <i class="fa-solid fa-calendar-day" aria-hidden="true"></i><?= esc_html__('Last updated on ', 'sakurairo') . get_the_modified_time('Y-m-d') ?>
+            <i class="fa-icon-solid fa-calendar-day" aria-hidden="true"></i><?= esc_html__('Last updated on ', 'sakurairo') . get_the_modified_time('Y-m-d') ?>
         </div>
     <?php endif; ?>
 
     <?php if (iro_opt('article_tag', true) && has_tag()): ?>
         <div class="post-tags flex-center">
-            <i class="fa-solid fa-tag" aria-hidden="true"></i>
+            <i class="fa-icon-solid fa-tag" aria-hidden="true"></i>
             <?php the_tags('', ' ', ' '); ?>
         </div>
     <?php endif; ?>

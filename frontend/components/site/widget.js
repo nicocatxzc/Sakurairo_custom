@@ -54,13 +54,13 @@ _iro.hooks.DOMContentLoaded.push(() => {
     function darkmodeIcon() {
         switch (getState()) {
             case "false":
-                darkmode.innerHTML = iconSunRisingLoop;
+                darkmode.innerHTML = /*html*/`<i class="line-md-sun-rising-loop"></i>`;
                 break;
             case "true":
-                darkmode.innerHTML = iconMoonLoop;
+                darkmode.innerHTML = /*html*/`<i class="line-md-moon-loop"></i>`;
                 break;
             case "auto":
-                darkmode.innerHTML = iconThemeLightDark;
+                darkmode.innerHTML = /*html*/`<i class="mdi-theme-light-dark"></i>`;
                 break;
         }
     }

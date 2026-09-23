@@ -40,12 +40,12 @@ $steam_pagination = $steam_result['pagination'] ?? [];
                 </div>
                 <div class="steam-info">
                     <div class="steam-stat">
-                        <i class="fa-solid fa-gamepad"></i>
+                        <i class="fa-icon-solid fa-gamepad"></i>
                         <span><?= esc_html($game['playtime']) ?></span>
                     </div>
                     <?php if ($game['last_played']): ?>
                         <div class="steam-stat">
-                            <i class="fa-regular fa-clock"></i>
+                            <i class="fa-icon-regular fa-clock"></i>
                             <span><?= esc_html($game['last_played']) ?></span>
                         </div>
                     <?php endif; ?>

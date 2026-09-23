@@ -48,13 +48,19 @@ if (is_customize_preview()) {
     <?php endif; ?>>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    
+
     <meta http-equiv="x-dns-prefetch-control" content="on">
 
     <link rel="shortcut icon" href="<?= esc_url(iro_opt('favicon_link', '')); ?>" />
 
     <?php wp_head(); ?>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
+
+    <?php if (iro_opt("fontawesome_source_add_to_frontend")): ?>
+        <link rel="preconnect" href="https://s4.zstatic.net" crossorigin>
+        <link rel="preload" href="<?php echo (iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?>" as="style">
+        <link rel="stylesheet" href="<?php echo (iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?>" type="text/css" media="all" />
+    <?php endif; ?>
 
     <?php
     // 前端主题样式

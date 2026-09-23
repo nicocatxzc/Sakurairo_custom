@@ -13,7 +13,7 @@ if (!is_array($iro_menu_options)) {
         data-panel-toggle="menu"
         aria-expanded="false"
         aria-label="打开菜单">
-        <i class="fa-solid fa-bars icon"></i>
+        <i class="fa-icon-solid fa-bars icon"></i>
     </button>
 
     <div class="site-branding flex-center">
@@ -34,14 +34,14 @@ if (!is_array($iro_menu_options)) {
             data-panel-toggle="user"
             aria-expanded="false"
             aria-label="打开用户菜单">
-            <i class="fa-regular fa-bookmark icon"></i>
+            <i class="fa-icon-regular fa-bookmark icon"></i>
         </button>
     <?php endif; ?>
 
     <nav class="menu-wrapper" data-panel="menu">
         <?php if (iro_opt("nav_menu_search_switch", true)): ?>
             <div class="search-form flex-center">
-                <i class="fa-solid fa-search icon"></i>
+                <i class="fa-icon-solid fa-search icon"></i>
                 <input
                     class="search-input"
                     type="text"
@@ -59,7 +59,7 @@ if (!is_array($iro_menu_options)) {
                     <div class="item-head">
                         <a class="link" href="<?= esc_url($item['url']) ?>"><?= esc_html($item['title']) ?></a>
                         <?php if ($has_children): ?>
-                            <i class="fa-solid fa-angle-right button" aria-hidden="true"></i>
+                            <i class="fa-icon-solid fa-angle-right button" aria-hidden="true"></i>
                         <?php endif; ?>
                     </div>
                     <?php if ($has_children): ?>

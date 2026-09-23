@@ -36,13 +36,13 @@
                                 <div
                                     class="typed-container">
                                     <?php if (iro_opt("cover_typedjs_mark")): ?>
-                                        <i class="fa-solid fa-quote-left"></i>
+                                        <i class="fa-icon-solid fa-quote-left"></i>
                                     <?php endif; ?>
                                     <span id="typed" class="typed">
                                         <?= iro_opt("cover_typedjs_placeholder") ?>
                                     </span>
                                     <?php if (iro_opt("cover_typedjs_mark")): ?>
-                                        <i class="fa-solid fa-quote-right"></i>
+                                        <i class="fa-icon-solid fa-quote-right"></i>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>

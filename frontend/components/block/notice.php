@@ -1,9 +1,9 @@
 <?php
 $icons = [
-    'task'    => 'fa-regular fa-clipboard',
-    'warning' => 'fa-solid fa-warning',
-    'noway'   => 'fa-solid fa-square-xmark',
-    'buy'     => 'fa-solid fa-square-check',
+    'task'    => 'fa-icon-regular fa-clipboard',
+    'warning' => 'fa-icon-solid fa-warning',
+    'noway'   => 'fa-icon-solid fa-square-xmark',
+    'buy'     => 'fa-icon-solid fa-square-check',
 ];
 
 $type = $data['type'] ?? 'task';

@@ -490,7 +490,7 @@ function iro_comment_form_submit_field()
 
         <?php if (iro_get_smiley_packs()): ?>
             <div id="emotion-toggle" class="no-select">
-                <i class="fa-regular fa-face-kiss-wink-heart"></i>
+                <i class="fa-icon-regular fa-face-kiss-wink-heart"></i>
             </div>
         <?php endif; ?>
     </div>

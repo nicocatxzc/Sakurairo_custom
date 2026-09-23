@@ -47,7 +47,7 @@ $iro_menu_options = iro_get_navigation();
     <?php if (iro_opt("nav_menu_search_switch", true)): ?>
         <div
             class="button search flex-center">
-            <i class="fa-solid fa-search icon"></i>
+            <i class="fa-icon-solid fa-search icon"></i>
         </div>
     <?php endif; ?>
     <?php if (iro_opt('nav_user_menu', true)): ?>

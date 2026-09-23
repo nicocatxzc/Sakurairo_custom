@@ -74,7 +74,7 @@ $search_filters = iro_get_search_type_filters();
     <?php iro_content_container_start() ?>
     <header class="search-header flex-center">
         <div class="search-box flex-center">
-            <i class="fa-solid fa-search search-icon"></i>
+            <i class="fa-icon-solid fa-search search-icon"></i>
 
             <input
                 type="text"

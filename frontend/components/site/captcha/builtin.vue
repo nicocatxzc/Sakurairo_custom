@@ -52,7 +52,7 @@ async function getCaptcha() {
     <div ref="captchaContainer" class="captcha-container flex-center">
         <div class="image-button flex-center">
             <i
-                class="fa-solid fa-circle-info icon"
+                class="fa-icon-solid fa-circle-info icon"
                 @click="setImageShow(!imageShow)"
             />
             <img

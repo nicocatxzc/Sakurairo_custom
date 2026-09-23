@@ -25,7 +25,7 @@
         <?php iro_post_pagination(); ?>
     <?php else: ?>
         <div v-else class="empty-state">
-            <i name="fa-solid fa-inbox"></i>
+            <i name="fa-icon-solid fa-inbox"></i>
             <p>暂时还没有内容哦</p>
         </div>
     <?php endif; ?>

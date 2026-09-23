@@ -23,7 +23,7 @@ $icons_map = [
 ?>
 <div class="social-links">
     <button class="pagination prev flex-center">
-        <i class="fa-solid fa-angle-left icon"></i>
+        <i class="fa-icon-solid fa-angle-left icon"></i>
     </button>
     <div class="page-container">
         <?php foreach (iro_opt("cover_social_displays", []) as $item): ?>
@@ -50,6 +50,6 @@ $icons_map = [
         <?php endforeach; ?>
     </div>
     <button class="pagination next flex-center">
-        <i class="fa-solid fa-angle-right icon"></i>
+        <i class="fa-icon-solid fa-angle-right icon"></i>
     </button>
 </div>

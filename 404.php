@@ -204,16 +204,16 @@ $random_bg_url = DEFAULT_FEATURE_IMAGE();
         
         <div class="page-404-actions">
             <a id="golast" href="javascript:history.go(-1);" class="page-404-button">
-                <i class="fa-solid fa-rotate-left"></i>
+                <i class="fa-icon-solid fa-rotate-left"></i>
             </a>
             <a id="gohome" href="<?php echo esc_url(home_url('/')); ?>" class="page-404-button">
-                <i class="fa-solid fa-house"></i>
+                <i class="fa-icon-solid fa-house"></i>
             </a>
             <form class="page-404-search-form" method="get" action="<?php echo esc_url(home_url('/')); ?>" role="search">
                 <label class="screen-reader-text" for="page-404-search-input"><?php esc_html_e('Search', 'sakurairo'); ?></label>
                 <input id="page-404-search-input" class="page-404-search-input" type="search" name="s" placeholder="<?php _e('Search...', 'sakurairo'); ?>" required>
                 <button class="page-404-button" type="submit" aria-label="<?php esc_attr_e('Submit Search', 'sakurairo'); ?>">
-                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <i class="fa-icon-solid fa-magnifying-glass" aria-hidden="true"></i>
                 </button>
             </form>
         </div>

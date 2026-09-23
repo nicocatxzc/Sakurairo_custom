@@ -2250,9 +2250,17 @@ if (class_exists('Sakurairo1_CSF')) {
             [
                 'id' => 'fontawesome_source',
                 'type' => 'text',
-                'title' => __('Fontawesome Source', 'sakurairo'),
-                'desc' => __('The source link of Fontawesome icons style', 'sakurairo'),
+                'title' => __('Fontawesome源', 'sakurairo'),
+                'desc' => __('Fontawesome图标的加载地址，仅用于后台主题设置框架图标正常显示', 'sakurairo'),
                 'default' => "https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css",
+            ],
+
+            [
+                'id'    => 'fontawesome_source_add_to_frontend',
+                'type'  => 'switcher',
+                'title' => __('将fontawesome源载入到前台', 'sakurairo'),
+                'label'   => __('如果你需要使用自定义fontawesome图标，可以开启这个选项', 'sakurairo'),
+                'default' => false,
             ],
 
             [

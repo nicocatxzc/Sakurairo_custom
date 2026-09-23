@@ -44,7 +44,7 @@ function initLightbox() {
 }
 
 const COPY_ICON_SVG = /* html */ `
-<i class="fa-regular fa-clipboard"></i>
+<i class="fa-icon-regular fa-clipboard"></i>
 `;
 
 // 处理pre标签
