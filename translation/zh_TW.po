@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sakurairo\n"
-"POT-Creation-Date: 2025-09-05 17:01+0800\n"
-"PO-Revision-Date: 2025-09-05 17:03+0800\n"
+"POT-Creation-Date: 2026-09-23 23:37+0800\n"
+"PO-Revision-Date: 2026-09-23 23:38+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: style.css\n"
@@ -18,438 +18,328 @@ msgstr ""
 "X-Poedit-KeywordsList: "
 "__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.min.js\n"
-"X-Poedit-SearchPathExcluded-1: inc/kirki\n"
-"X-Poedit-SearchPathExcluded-2: opt\n"
-"X-Poedit-SearchPathExcluded-3: inc/customizer.php\n"
+"X-Poedit-SearchPathExcluded-0: frontend/dist\n"
+"X-Poedit-SearchPathExcluded-1: inc/blocks/build\n"
+"X-Poedit-SearchPathExcluded-2: opt/csf\n"
+"X-Poedit-SearchPathExcluded-3: opt/customizer/kirki\n"
 "X-Poedit-SearchPathExcluded-4: update-checker\n"
-"X-Poedit-SearchPathExcluded-5: js\n"
 
-#: 404.php:188
+#: 404.php:199
 msgid "Page Not Found"
 msgstr "找不到網頁"
 
-#: 404.php:191
+#: 404.php:202
 msgid ""
 "The page you are looking for might have been removed, had its name changed, "
 "or is temporarily unavailable."
 msgstr "你要尋找的頁面可能已被移除、改名或暫時無法使用。"
 
-#: 404.php:202 header.php:194 layouts/sakura_header.php:75 search.php:176
-msgid "Search..."
-msgstr "搜尋..."
-
-#: archive.php:42 author.php:55 index.php:61
-msgid " Previous"
-msgstr " 更早的文章"
-
-#: author.php:15
-msgid "No personal profile set yet"
-msgstr "尚未設置個人資料"
-
-#: comments.php:53
-msgid "Woooooow ヾ(≧∇≦*)ゝ"
-msgstr "嘿嘿嘿 ヾ(≧∇≦*)ゝ"
-
-#: comments.php:75
-msgid "view comments"
-msgstr "查看留言"
-
-#: comments.php:84 inc/post_metas.php:94
-msgid "NOTHING"
-msgstr "什麼也沒有呀"
-
-#: comments.php:86 comments.php:97
-msgid " comment"
-msgstr " 條留言"
-
-#: comments.php:88 comments.php:97
-msgid " comments"
-msgstr " 條留言"
-
-#: comments.php:117
-msgid "no comment"
-msgstr "暫無留言"
-
-#: comments.php:130
-msgid "Click here to show captcha"
-msgstr "點此開始驗證"
-
-#: comments.php:147
-msgid "Comment in private"
-msgstr "私密留言"
-
-#: comments.php:150
-msgid "Comment reply notify"
-msgstr "郵件通知"
-
-#: comments.php:178
-msgid "Leave a Reply to"
-msgstr "回復給"
-
-#: comments.php:179
-msgid "Cancel Reply"
-msgstr "取消回復"
-
-#: comments.php:202
-msgid "Nickname"
-msgstr "暱稱 或 QQ號"
-
-#: comments.php:202 comments.php:206
-msgid "Required* "
-msgstr "必填* "
-
-#: comments.php:203
-msgid "Enter your nickname"
-msgstr "輸入QQ號碼將自動拉取暱稱和頭像"
-
-#: comments.php:206
-msgid "email"
-msgstr "電子郵箱"
-
-#: comments.php:207
-msgid "For notification purposes"
-msgstr "用於通知"
-
-#: comments.php:210
-msgid "Site"
-msgstr "網站"
-
-#: comments.php:211
-msgid "Advertisement is forbidden 😀"
-msgstr "禁止小廣告😀"
-
-#: comments.php:223
-msgid "Save your private info"
-msgstr "保留個人資訊"
-
-#: exhibition.php:31
-msgid "Content Count"
-msgstr "內容數"
-
-#: exhibition.php:32
-msgid "posts"
-msgstr "篇"
-
-#: exhibition.php:40
-msgid "Comment Count"
-msgstr "留言數"
-
-#: exhibition.php:41
-msgid "comments"
-msgstr "條"
-
-#: exhibition.php:49
-msgid "Visitor Count"
-msgstr "訪問數"
-
-#: exhibition.php:50
-msgid "visits"
-msgstr "次"
-
-#: exhibition.php:58
-msgid "Link Count"
-msgstr "友情連結數"
-
-#: exhibition.php:59
-msgid "links"
-msgstr "條"
-
-#: exhibition.php:67
-msgid "Author Count"
-msgstr "作者數"
-
-#: exhibition.php:68
-msgid "authors"
-msgstr "位"
-
-#: exhibition.php:76
-msgid "Total Words"
-msgstr "總字數"
-
-#: exhibition.php:77
-msgid "words"
-msgstr "字"
-
-#: exhibition.php:85
-msgid "Blog Running"
-msgstr "部落格已運行"
-
-#: exhibition.php:86
-msgid "days"
-msgstr "天"
-
-#: exhibition.php:94
-msgid "Last Online"
-msgstr "最後在線"
-
-#: exhibition.php:103
-msgid "Latest Announcement"
-msgstr "最新公告"
-
-#: exhibition.php:127
-msgid "Gold Blogger"
-msgstr "流光遷徙"
-
-#: exhibition.php:132
-msgid ""
-"The string of creation has vibrated the membrane, each resonance weaving the "
-"warp and weft of spacetime thoughts."
-msgstr "創作之弦已振動膜層，每個諧振都在編織時空的思維經緯。"
-
-#: exhibition.php:139
-msgid "Silver Blogger"
-msgstr "刻入年輪"
-
-#: exhibition.php:144
-msgid ""
-"The wheel of creation has engaged the gears, each component calibrating the "
-"temporal precision of your blog."
-msgstr "創作之輪已咬合齒輪，每個零件都在校準部落格的時光精準度。"
-
-#: exhibition.php:145 exhibition.php:158
-#, php-format
-msgid "%s more days to next level"
-msgstr "還需 %s 天達到下一級別"
-
-#: exhibition.php:152
-msgid "Bronze Blogger"
-msgstr "時光漣漪"
-
-#: exhibition.php:157
-msgid ""
-"The ship of creation has set sail, each wave carving the depth markers of "
-"your blog's journey."
-msgstr "創作之舟已揚帆遠航，每道浪痕都在刻寫部落格的深度航標。"
-
-#: exhibition.php:175
-msgid "Gold Popularity"
-msgstr "如振落葉"
-
-#: exhibition.php:180
-msgid ""
-"You have planted a garden of wisdom, its fragrance now discovered by distant "
-"butterflies."
-msgstr "你已種滿了智慧的花朵，芬芳正被遠方的蝴蝶發現。"
-
-#: exhibition.php:187
-msgid "Silver Popularity"
-msgstr "声聞遐迩"
-
-#: exhibition.php:192
-msgid ""
-"You have illuminated the star chart of reading, each piece of writing "
-"flowing through the galaxy."
-msgstr "你已點亮閱讀的星圖，每篇文字都在銀河中流轉。"
-
-#: exhibition.php:193 exhibition.php:206
-#, php-format
-msgid "%s more visits to next level"
-msgstr "還需 %s 次訪問達到下一級別"
-
-#: exhibition.php:200
-msgid "Bronze Popularity"
-msgstr "濫觞所始"
-
-#: exhibition.php:205
-msgid ""
-"You have built a harbor of knowledge, the ripples of thought continuously "
-"spreading."
-msgstr "你已築起知識的港灣，思想的漣漪正不斷擴散。"
-
-#: exhibition.php:223
-msgid "Gold Friendship"
-msgstr "揮袂成雲"
-
-#: exhibition.php:228
-msgid ""
-"The world of friendship has no boundaries, the starry river will mark your "
-"position."
-msgstr "結交朋友的世界已無邊界，星河將標記你的方位。"
-
-#: exhibition.php:235
-msgid "Silver Friendship"
-msgstr "呼朋引伴"
-
-#: exhibition.php:240
-msgid ""
-"The network of friendship has been laid out, each resonance will eventually "
-"echo."
-msgstr "結交朋友的網絡已然鋪開，每次共鳴終將迴響。"
-
-#: exhibition.php:241 exhibition.php:254
-#, php-format
-msgid "%s more links to next level"
-msgstr "還需 %s 條友情連結達到下一級別"
-
-#: exhibition.php:248
-msgid "Bronze Friendship"
-msgstr "初遇同好"
-
-#: exhibition.php:253
-msgid ""
-"The journey of making friends has just begun, each encounter marks a new "
-"chapter."
-msgstr "結交朋友的旅程才剛開始，每次遇見皆為新章。"
-
-#: exhibition.php:271
-msgid "Gold Author"
-msgstr "映雪囊螢"
-
-#: exhibition.php:276
-msgid ""
-"The power of words has blossomed in your hands, rich creations have gathered "
-"into an ocean."
-msgstr "文字的力量已在你手中綻放，豐富的創作匯聚成海。"
-
-#: exhibition.php:283
-msgid "Silver Author"
-msgstr "筆耕不輟"
-
-#: exhibition.php:288
-msgid ""
-"You have woven an extensive web of thoughts, the streams of inspiration are "
-"rushing into rivers."
-msgstr "你已織就綿延的思維之網，靈感的溪流正奔湧成河。"
-
-#: exhibition.php:289 exhibition.php:302
-#, php-format
-msgid "%s more words to next level"
-msgstr "還需 %s 個字達到下一級別"
-
-#: exhibition.php:296
-msgid "Bronze Author"
-msgstr "寸楮点墨"
-
-#: exhibition.php:301
-msgid ""
-"Sparks of words dance at your fingertips, as the faint light of thoughts "
-"quietly illuminates."
-msgstr "你指尖躍動著文字的火花，思想的微光正悄然點亮。"
-
-#: exhibition.php:438
-msgid "Meet my friend!"
-msgstr "介紹給你"
-
-#: footer.php:32
-#, php-format
-msgid "Load Time %.3f seconds | %d Query | RAM Usage %.2f MB "
-msgstr "載入時間 %.3f 秒 | 查詢 %d 次 | 記憶體使用 %.2f MB "
-
-#: footer.php:68
-msgid "Go to top"
-msgstr "回到頂端"
-
-#: footer.php:69
-msgid "Control Panel"
-msgstr "控制面板"
-
-#: footer.php:75 footer.php:83
-msgid "Want to find something?"
-msgstr "想要找點什麼呢？"
-
-#: footer.php:84 header.php:260
+#: 404.php:213
 msgid "Search"
 msgstr "搜尋"
 
-#: footer.php:103
-msgid "Light Mode"
-msgstr "淺色模式"
+#: 404.php:214
+msgid "Search..."
+msgstr "搜尋..."
 
-#: footer.php:106
-msgid "Dark Mode"
-msgstr "深色模式"
+#: 404.php:215
+#, fuzzy
+#| msgid "Search"
+msgid "Submit Search"
+msgstr "搜尋"
 
-#: footer.php:112
-msgid "Toggle Page Background Image"
-msgstr "切換頁面背景圖像"
+#: frontend/components/comment/form_data.php:106
+#, fuzzy
+#| msgid "Leave a Reply to"
+msgid "Leave a Reply"
+msgstr "回復給"
 
-#: footer.php:133
-msgid "Switch To Font A"
-msgstr "切換到字體 A"
+#: frontend/components/comment/form_data.php:107
+#, fuzzy, php-format
+#| msgid "Leave a Reply to"
+msgid "Leave a Reply to %s"
+msgstr "回復給"
 
-#: footer.php:136
-msgid "Switch To Font B"
-msgstr "切換到字體 B"
+#: frontend/components/comment/form_data.php:117
+#, fuzzy
+#| msgid "Cancel Reply"
+msgid "Cancel reply"
+msgstr "取消回復"
 
-#: functions.php:127
-msgid "Nav Menus"
-msgstr "導航菜單"
+#: frontend/components/comment/form_data.php:119 opt/theme-options.php:1708
+msgid "Submit✈️"
+msgstr ""
 
-#: functions.php:283
+#: frontend/components/comment/form_data.php:275
+#: frontend/components/comment/form_data.php:281
+#, fuzzy
+#| msgid "Link Name"
+msgid "Name"
+msgstr "連結名稱"
+
+#: frontend/components/comment/form_data.php:301
+#: frontend/components/comment/form_data.php:307
+#, fuzzy
+#| msgid "email"
+msgid "Email"
+msgstr "電子郵箱"
+
+#: frontend/components/comment/form_data.php:325
+#: frontend/components/comment/form_data.php:330
+msgid "Website"
+msgstr ""
+
+#: frontend/components/comment/form_data.php:358
+msgid ""
+"Save my name, email, and website in this browser for the next time I comment."
+msgstr ""
+
+#: frontend/components/comment/form_data.php:359
+msgid "保留个人信息"
+msgstr ""
+
+#: frontend/components/comment/form_data.php:374
+#, fuzzy
+#| msgid "Comment"
+msgctxt "noun"
+msgid "Comment"
+msgstr "評論"
+
+#: frontend/components/comment/form_data.php:409
+#, php-format
+msgid "You must be <a href=\"%s\">logged in</a> to post a comment."
+msgstr ""
+
+#: frontend/components/page/archive.php:4
+msgid "未知的分类"
+msgstr ""
+
+#: frontend/components/page/search.php:8
+msgid "文章"
+msgstr ""
+
+#: frontend/components/page/search.php:12
+msgid "说说"
+msgstr ""
+
+#: frontend/components/page/search.php:19
+msgid "页面"
+msgstr ""
+
+#: frontend/components/page/search.php:95
+msgid "results found"
+msgstr "個結果"
+
+#: frontend/components/page/template/friend_link.php:80
+msgid "未分类"
+msgstr ""
+
+#: frontend/components/page/template/steam.php:20
+msgid "暂无游戏数据"
+msgstr ""
+
+#: frontend/components/post/footer.php:21
+#, php-format
+msgid "This article is licensed under %s"
+msgstr "本文採用 %s 创用CC授权"
+
+#: frontend/components/post/footer.php:87
+msgid "This author has not provided a description."
+msgstr "此作者沒有設定個人簡介。"
+
+#: frontend/components/post/footer.php:93
+msgid "Last updated on "
+msgstr "最後更新於 "
+
+#: frontend/components/post/navigator.php:20
+msgid "上一篇"
+msgstr ""
+
+#: frontend/components/post/navigator.php:26
+msgid "下一篇"
+msgstr ""
+
+#: frontend/components/slots/pagination.php:26
+msgid "加载更多"
+msgstr ""
+
+#: frontend/components/slots/pagination.php:31
+msgid "已经到头啦"
+msgstr ""
+
+#: inc/api.php:6
+msgid ""
+"<b>为了更好的使用体验，请不要将<a href=\"/wp-admin/options-permalink.php\">固"
+"定链接</a>设置为朴素。为此，您可能需要配置<a href=\"https://www.wpdaxue.com/"
+"wordpress-rewriterule.html\" target=\"_blank\">伪静态</a>。</b>"
+msgstr ""
+
+#: inc/api.php:34
+msgid "缺少 nonce 校验参数"
+msgstr ""
+
+#: inc/api.php:42
+msgid "nonce 校验失败"
+msgstr ""
+
+#: inc/api/comments.php:48 inc/api/comments.php:53
+#: inc/functions/custom/login.php:223 inc/functions/custom/login.php:254
+#, fuzzy
+#| msgid "Security verification failed."
+msgid "Captcha verification required."
+msgstr "安全驗證失敗。"
+
+#: inc/api/comments.php:72 inc/api/comments.php:78 inc/api/comments.php:98
+#: inc/api/comments.php:104 inc/functions/custom/login.php:186
+#: inc/functions/custom/login.php:241 inc/functions/custom/login.php:269
+#: inc/functions/custom/login.php:272
+msgid "验证码校验失败"
+msgstr ""
+
+#: inc/api/post_view.php:15
+msgid "无效的文章 ID"
+msgstr ""
+
+#: inc/api/steam.php:244
+msgid "请先在主题设置中填写 Steam 账号 ID 与 API 密钥"
+msgstr ""
+
+#: inc/api/steam.php:250
+msgid "请求 Steam 失败，请检查 API 密钥或账号资料是否公开"
+msgstr ""
+
+#: inc/api/steam.php:254
+msgid "游戏库为空"
+msgstr ""
+
+#: inc/api/steam.php:290
+msgid "尚未游玩"
+msgstr ""
+
+#: inc/api/steam.php:294
+#, php-format
+msgid "%s 分钟"
+msgstr ""
+
+#: inc/api/steam.php:297
+#, php-format
+msgid "%s 小时"
+msgstr ""
+
+#: inc/functions/comment/filter.php:79
+msgid "For security reasons, JavaScript is not allowed in comments."
+msgstr ""
+
+#: inc/functions/cust_wp.php:31 inc/functions/cust_wp.php:34
+msgid "Dashboard"
+msgstr "管理後台"
+
+#: inc/functions/custom/login.php:284
+msgid "验证码配置错误，请联系管理员。"
+msgstr ""
+
+#: inc/functions/nav_bar.php:12 opt/theme-options.php:334
+msgid "导航栏"
+msgstr ""
+
+#: inc/functions/operator.php:10
+msgid "Access denied."
+msgstr "拒絕訪問。"
+
+#: inc/libs/Captcha.php:251
+msgid "Look like you forgot to enter the captcha."
+msgstr "看起來你忘記輸入驗證碼。"
+
+#: inc/libs/Captcha.php:265
+msgid "Bad Request."
+msgstr "錯誤的請求。"
+
+#: inc/libs/Captcha.php:277
+msgid "Captcha timeout."
+msgstr "驗證碼超時。"
+
+#: inc/libs/Captcha.php:289
+msgid "Captcha check passed."
+msgstr "驗證碼檢查已通過。"
+
+#: inc/libs/Captcha.php:296
+msgid "Captcha incorrect."
+msgstr "驗證碼不正確。"
+
+#: inc/theme_init/shuoshuo.php:5
 msgctxt "post type general name"
 msgid "Shuoshuo"
 msgstr "說說"
 
-#: functions.php:284
+#: inc/theme_init/shuoshuo.php:6
 msgctxt "post type singular name"
 msgid "Shuoshuo"
 msgstr "說說"
 
-#: functions.php:285
+#: inc/theme_init/shuoshuo.php:7
 msgctxt "admin menu"
 msgid "Shuoshuo"
 msgstr "說說"
 
-#: functions.php:286
+#: inc/theme_init/shuoshuo.php:8
 msgctxt "add new on admin bar"
 msgid "Shuoshuo"
 msgstr "說說"
 
-#: functions.php:287
+#: inc/theme_init/shuoshuo.php:9
 msgctxt "shuoshuo"
 msgid "Add New"
 msgstr "新增"
 
-#: functions.php:288
+#: inc/theme_init/shuoshuo.php:10
 msgid "Add New Shuoshuo"
 msgstr "新增說說"
 
-#: functions.php:289
+#: inc/theme_init/shuoshuo.php:11
 msgid "New Shuoshuo"
 msgstr "新說說"
 
-#: functions.php:290
+#: inc/theme_init/shuoshuo.php:12
 msgid "Edit Shuoshuo"
 msgstr "編輯說說"
 
-#: functions.php:291
+#: inc/theme_init/shuoshuo.php:13
 msgid "View Shuoshuo"
 msgstr "查看說說"
 
-#: functions.php:292
+#: inc/theme_init/shuoshuo.php:14
 msgid "All Shuoshuo"
 msgstr "所有說說"
 
-#: functions.php:293
+#: inc/theme_init/shuoshuo.php:15
 msgid "Search Shuoshuo"
 msgstr "搜尋說說"
 
-#: functions.php:294
+#: inc/theme_init/shuoshuo.php:16
 msgid "Parent Shuoshuo:"
 msgstr "父級說說："
 
-#: functions.php:295
+#: inc/theme_init/shuoshuo.php:17
 msgid "No shuoshuo found."
 msgstr "沒有找到說說。"
 
-#: functions.php:296
+#: inc/theme_init/shuoshuo.php:18
 msgid "No shuoshuo found in Trash."
 msgstr "垃圾桶里沒有找到說說。"
 
-#: functions.php:343
+#: inc/theme_init/shuoshuo.php:67
 msgid "Emotion Meta Box"
 msgstr "情緒数据"
 
-#: functions.php:356
+#: inc/theme_init/shuoshuo.php:81
 msgid "Emotion"
 msgstr "情緒"
 
-#: functions.php:359
+#: inc/theme_init/shuoshuo.php:84
 msgid "Emotion Color"
 msgstr "情緒顏色"
 
-#: functions.php:362
+#: inc/theme_init/shuoshuo.php:87
 msgid ""
 "For the Emotion, please fill in the Unicode value of the Fontawesome icon, "
 "and for the Emotion Color, please fill in the RGBA or hexadecimal color."
@@ -457,19 +347,19 @@ msgstr ""
 "情緒請填入 Fontawesome 圖示的 Unicode 值，情緒顏色請填入 RGBA 或十六進位顏"
 "色。"
 
-#: functions.php:407
+#: inc/theme_init/shuoshuo.php:135
 msgid "Custom Meta Box"
 msgstr "自訂單元"
 
-#: functions.php:420
+#: inc/theme_init/shuoshuo.php:149
 msgid "Title Style"
 msgstr "標題樣式"
 
-#: functions.php:423
+#: inc/theme_init/shuoshuo.php:152
 msgid "License"
 msgstr "文章知識共享協定"
 
-#: functions.php:426
+#: inc/theme_init/shuoshuo.php:155
 msgid ""
 "For the Title Style, Please fill in the css style, part of the style need to "
 "add !important effective, and for the License, please go to Theme Options to "
@@ -478,1631 +368,4296 @@ msgstr ""
 "标题样式请填写 CSS 样式，部分样式需要添加 !important 后生效；文章知識共享協定"
 "请查找主题相关选项以了解如何设置。"
 
-#: functions.php:577
-msgid "Copied!"
-msgstr "已複製!"
+#: inc/theme_init/support.php:12
+msgid "Nav Menus"
+msgstr "導航菜單"
 
-#: functions.php:578
-msgid "Copy Code"
-msgstr "拷貝程式碼"
+#: inc/theme_init/support.php:170
+#, fuzzy
+#| msgid "Sakurairo"
+msgid "Sakurairo工具栏"
+msgstr "桜いろ"
 
-#: functions.php:579
-msgid ""
-"Your cover API seems to not support Cross Origin Access. In this case, Cover "
-"Cache won't take effect."
-msgstr "你的封面 API 似乎不支援跨來源請求。這種情況下暫存是不會生效的哦。"
-
-#: functions.php:580
-msgid "Commiting...."
-msgstr "提交中。。。"
-
-#: functions.php:581
-msgid "Succeed"
-msgstr "成功"
-
-#: functions.php:582
-msgid "10 files max per request"
-msgstr "每次上傳上限為 10 張"
-
-#: functions.php:583
-msgid ""
-"5 MB max per file.\n"
-"\n"
-"「{0}」\n"
-"\n"
-"This image is too large~Please reupload!"
+#: inc/theme_init/support.php:172
+msgid "显示在页脚工具栏的内容"
 msgstr ""
-"圖片上傳大小限制為 5 MB。\n"
-"\n"
-"「{0}」\n"
-"\n"
-"這張圖太大啦~請重新上傳噢！"
 
-#: functions.php:584
-msgid "Uploading..."
-msgstr "上傳中..."
-
-#: functions.php:585
-msgid "Uploaded successfully~"
-msgstr "上傳成功～"
-
-#: functions.php:586
-msgid ""
-"Upload failed!\n"
-"File Name=> {0}\n"
-"code=> {1}\n"
-"{2}"
+#: opt/customizer/init.php:26
+msgid "Global Options"
 msgstr ""
-"上傳失敗！\n"
-"檔案名=> {0}\n"
-"錯誤碼=> {1}\n"
-"{2}"
 
-#: functions.php:587
-msgid "Upload failed, please retry."
-msgstr "上傳失敗，請重試。"
+#: opt/customizer/init.php:31
+msgid "Homepage Cover"
+msgstr ""
 
-#: functions.php:588
-msgid "Page Load failed. HTTP {0}"
-msgstr "頁面載入出錯了。HTTP{0}"
+#: opt/customizer/init.php:36 opt/customizer/init.php:969
+msgid "Homepage Components"
+msgstr ""
 
-#: functions.php:589
-msgid "Glad you come, but we've got nothing left."
-msgstr "很高興你翻到這裡，但是真的沒有了..."
+#: opt/customizer/init.php:41
+msgid "Pages Options"
+msgstr ""
 
-#: functions.php:590 search.php:85
-msgid "Post"
-msgstr "文章"
+#: opt/customizer/init.php:85
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav Menu"
+msgstr "導航菜單"
 
-#: functions.php:591
-msgid "Tag"
-msgstr "標籤"
+#: opt/customizer/init.php:93
+msgid ""
+"<p>You can edit your nav menu options <a href=\"/wp-admin/nav-"
+"menus.php\">here</a></p>"
+msgstr ""
 
-#: functions.php:592
-msgid "Category"
-msgstr "類別"
+#: opt/customizer/init.php:99
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav Menu Style"
+msgstr "導航菜單"
 
-#: functions.php:593 search.php:96
-msgid "Page"
-msgstr "頁面"
+#: opt/customizer/init.php:109
+msgid "Spirit Island Nav Style"
+msgstr ""
 
-#: functions.php:594
-msgid "Comment"
-msgstr "評論"
+#: opt/customizer/init.php:111 opt/customizer/init.php:174
+msgid "Always centered"
+msgstr ""
 
-#: functions.php:595
-msgid "Paused..."
-msgstr "暫停。。。"
+#: opt/customizer/init.php:112
+msgid "Dispersed"
+msgstr ""
 
-#: functions.php:596
-msgid "Loading Video..."
-msgstr "載入影片..."
+#: opt/customizer/init.php:125
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav Menu Radius"
+msgstr "導航菜單"
 
-#: functions.php:597
-msgid "Downloading fonts, be aware of your data usage."
-msgstr "下載字體時，請注意你的數據使用方式。"
+#: opt/customizer/init.php:150
+msgid "Classic Nav Style"
+msgstr ""
 
-#: functions.php:598
-msgid "Are you sure you want set it private?"
-msgstr "是否確實要將其設置為專用？"
+#: opt/customizer/init.php:154
+msgid "Loose"
+msgstr ""
 
-#: functions.php:599
-msgid "You had set private comment before"
-msgstr "你之前設置了私人評論"
+#: opt/customizer/init.php:155
+msgid "Standered"
+msgstr ""
 
-#: functions.php:696 inc/theme-plus.php:239
+#: opt/customizer/init.php:168
+msgid "Nav Menu Options Display Method"
+msgstr ""
+
+#: opt/customizer/init.php:172
+msgid "Keep to the left"
+msgstr ""
+
+#: opt/customizer/init.php:173
+msgid "Keep to the right"
+msgstr ""
+
+#: opt/customizer/init.php:195
+msgid "Menu option left and right spacing"
+msgstr ""
+
+#: opt/customizer/init.php:222
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav Menu Font"
+msgstr "導航菜單"
+
+#: opt/customizer/init.php:235
+msgid "Navigation Menu Logo"
+msgstr ""
+
+#: opt/customizer/init.php:247
+msgid "Nav Menu Text Logo Text"
+msgstr ""
+
+#: opt/customizer/init.php:261
+msgid "Nav Menu Text Logo Font"
+msgstr ""
+
+#: opt/customizer/init.php:276
+msgid "Switch Button of Random Images"
+msgstr ""
+
+#: opt/customizer/init.php:281
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav User Menu"
+msgstr "導航菜單"
+
+#: opt/customizer/init.php:282
+msgid "It is on by default. The user avatar and menu will be displayed."
+msgstr ""
+
+#: opt/customizer/init.php:290
+#, fuzzy
+#| msgid "Nav Menus"
+msgid "Nav Menu Search"
+msgstr "導航菜單"
+
+#: opt/customizer/init.php:296
+#, fuzzy
+#| msgid "Toggle Page Background Image"
+msgid "Search Area Background Image"
+msgstr "切換頁面背景圖像"
+
+#: opt/customizer/init.php:310
+msgid "Theme Colors"
+msgstr ""
+
+#: opt/customizer/init.php:320
+msgid "Extract Theme Color from Cover Image"
+msgstr ""
+
+#: opt/customizer/init.php:321
+msgid "After turning on,the theme color will be taken from the homepage cover"
+msgstr ""
+
+#: opt/customizer/init.php:327
+msgid "Extract Article Highlight from Featured Image"
+msgstr ""
+
+#: opt/customizer/init.php:328
+msgid ""
+"After turning on,the colors displayed on the article page will be taken from "
+"the article featured image"
+msgstr ""
+
+#: opt/customizer/init.php:333
+msgid "Theme Color"
+msgstr ""
+
+#: opt/customizer/init.php:342
+#, fuzzy
+#| msgid "Watching "
+msgid "Matching Color"
+msgstr "追番中 "
+
+#: opt/customizer/init.php:359
+#, fuzzy
+#| msgid "Dark Mode"
+msgid "Dark Mode Theme Color"
+msgstr "深色模式"
+
+#: opt/customizer/init.php:375
+msgid "Dark Mode Image Brightness"
+msgstr ""
+
+#: opt/customizer/init.php:386
+msgid "Dark Mode Component Transparency"
+msgstr ""
+
+#: opt/customizer/init.php:399
+msgid "Logo"
+msgstr ""
+
+#: opt/customizer/init.php:407
+msgid "Cover Personal Avatar"
+msgstr ""
+
+#: opt/customizer/init.php:420
+msgid "Enable Mashiro Special Effects Text"
+msgstr ""
+
+#: opt/customizer/init.php:421
+msgid "After turning it on, it will replace your avatar on the homepage"
+msgstr ""
+
+#: opt/customizer/init.php:427
+msgid "Mashiro Special Effects Text"
+msgstr ""
+
+#: opt/customizer/init.php:448
+msgid "Mashiro Special Effects Text Color"
+msgstr ""
+
+#: opt/customizer/init.php:472
+msgid "Mashiro Special Effects Font"
+msgstr ""
+
+#: opt/customizer/init.php:493
+msgid "Mashiro Special Effects Size"
+msgstr ""
+
+#: opt/customizer/init.php:522
+msgid "Apperance"
+msgstr ""
+
+#: opt/customizer/init.php:530
+msgid "Enable Cover"
+msgstr ""
+
+#: opt/customizer/init.php:536
+msgid "Cover Full Screen"
+msgstr ""
+
+#: opt/customizer/init.php:550
+msgid "Cover Random Images Filter"
+msgstr ""
+
+#: opt/customizer/init.php:559
+#, fuzzy
+#| msgid "Click to filter"
+msgid "No filter"
+msgstr "點擊篩選"
+
+#: opt/customizer/init.php:560
+#, fuzzy
+#| msgid "Click to filter"
+msgid "Light filter"
+msgstr "點擊篩選"
+
+#: opt/customizer/init.php:561
+msgid "Dimmed filter"
+msgstr ""
+
+#: opt/customizer/init.php:562
+#, fuzzy
+#| msgid "Click to filter"
+msgid "Grid filter"
+msgstr "點擊篩選"
+
+#: opt/customizer/init.php:563
+#, fuzzy
+#| msgid "Click to filter"
+msgid "Dot filter"
+msgstr "點擊篩選"
+
+#: opt/customizer/init.php:569
+msgid "Cover Arc Occlusion (Below)"
+msgstr ""
+
+#: opt/customizer/init.php:587
+#, fuzzy
+#| msgid "Save Annotations"
+msgid "Cover Animation"
+msgstr "儲存註解"
+
+#: opt/customizer/init.php:600
+msgid "Cover Animation Time"
+msgstr ""
+
+#: opt/customizer/init.php:625
+msgid "Infos"
+msgstr ""
+
+#: opt/customizer/init.php:634
+msgid "Cover Info Bar"
+msgstr ""
+
+#: opt/customizer/init.php:640
+msgid "Cover Info Bar Style"
+msgstr ""
+
+#: opt/customizer/init.php:658
+msgid "Cover Widget Transparency"
+msgstr ""
+
+#: opt/customizer/init.php:683
+msgid "Cover Info Bar Avatar Radius"
+msgstr ""
+
+#: opt/customizer/init.php:709
+msgid "Cover Info Bar Rounded"
+msgstr ""
+
+#: opt/customizer/init.php:735
+msgid "Cover Signature Field Text"
+msgstr ""
+
+#: opt/customizer/init.php:755
+msgid "Cover Signature Field Text Font"
+msgstr ""
+
+#: opt/customizer/init.php:776
+msgid "Cover Signature Field Text Font Size"
+msgstr ""
+
+#: opt/customizer/init.php:802
+msgid "Cover Signature Bar Typing Effects"
+msgstr ""
+
+#: opt/customizer/init.php:815
+msgid "Cover Signature Field Typing Effects Double Quotes"
+msgstr ""
+
+#: opt/customizer/init.php:833
+msgid "Typed.js initial option"
+msgstr ""
+
+#: opt/customizer/init.php:855 opt/customizer/init.php:1659
+msgid "Others"
+msgstr ""
+
+#: opt/customizer/init.php:864
+msgid "Cover and Frontend Background Integration"
+msgstr ""
+
+#: opt/customizer/init.php:865
+msgid ""
+"When enabled, the background of the cover will be set to transparent, while "
+"the frontend background will use the cover's random image API"
+msgstr ""
+
+#: opt/customizer/init.php:871
+msgid "Post Cover As Background"
+msgstr ""
+
+#: opt/customizer/init.php:872
+msgid "Use post feature image as background in post pages"
+msgstr ""
+
+#: opt/customizer/init.php:885
+msgid "Cover Wave Effects"
+msgstr ""
+
+#: opt/customizer/init.php:886
+msgid "It will be forced off in the dark mode"
+msgstr ""
+
+#: opt/customizer/init.php:892
+msgid "Cover Dropdown Arrow"
+msgstr ""
+
+#: opt/customizer/init.php:898
+msgid "Cover Dropdown Arrow Display on Mobile Devices"
+msgstr ""
+
+#: opt/customizer/init.php:911
+msgid "Cover Dropdown Arrow Color"
+msgstr ""
+
+#: opt/customizer/init.php:935
+msgid "Cover Dropdown Arrow Color (Dark Mode)"
+msgstr ""
+
+#: opt/customizer/init.php:960
+msgid "Overall layout"
+msgstr ""
+
+#: opt/customizer/init.php:971
+msgid "Display Area"
+msgstr ""
+
+#: opt/customizer/init.php:972
+msgid "Article Area"
+msgstr ""
+
+#: opt/customizer/init.php:973 opt/theme-options.php:1231
+msgid "Static Page"
+msgstr ""
+
+#: opt/customizer/init.php:980 opt/theme-options.php:1232
+msgid "Select a page"
+msgstr ""
+
+#: opt/customizer/init.php:993
+msgid "Display Area Icon"
+msgstr ""
+
+#: opt/customizer/init.php:1006
+msgid "Display Area Title"
+msgstr ""
+
+#: opt/customizer/init.php:1019
+#, fuzzy
+#| msgid "Posted on "
+msgid "Post Area Icon"
+msgstr "發布於 "
+
+#: opt/customizer/init.php:1032
+#, fuzzy
+#| msgid "Post Title"
+msgid "Post Area Title"
+msgstr "文章標題"
+
+#: opt/customizer/init.php:1045
+msgid "Area Title Font"
+msgstr ""
+
+#: opt/customizer/init.php:1059
+msgid "Area Title Alignment"
+msgstr ""
+
+#: opt/customizer/init.php:1079
+msgid "Display Aera"
+msgstr ""
+
+#: opt/customizer/init.php:1087
+msgid "Capsule Components"
+msgstr ""
+
+#: opt/customizer/init.php:1089
+#, fuzzy
+#| msgid "Post Title"
+msgid "Posts Capsule"
+msgstr "文章標題"
+
+#: opt/customizer/init.php:1090
+#, fuzzy
+#| msgid "Comment Closed"
+msgid "Comments Capsule"
+msgstr "留言板已關閉"
+
+#: opt/customizer/init.php:1091
+#, fuzzy
+#| msgid "Visitor Count"
+msgid "Visitors Capsule"
+msgstr "訪問數"
+
+#: opt/customizer/init.php:1092
+#, fuzzy
+#| msgid "Links Status"
+msgid "Links Capsule"
+msgstr "連結狀態"
+
+#: opt/customizer/init.php:1093
+#, fuzzy
+#| msgid "Author Count"
+msgid "Authors Capsule"
+msgstr "作者數"
+
+#: opt/customizer/init.php:1094
+#, fuzzy
+#| msgid "Total Words"
+msgid "Total Words Capsule"
+msgstr "總字數"
+
+#: opt/customizer/init.php:1095
+#, fuzzy
+#| msgid "Blog Running"
+msgid "Blog Running Capsule"
+msgstr "部落格已運行"
+
+#: opt/customizer/init.php:1096
+#, fuzzy
+#| msgid "Last Online"
+msgid "Last Online Capsule"
+msgstr "最後在線"
+
+#: opt/customizer/init.php:1097
+msgid "Random Link Capsule"
+msgstr ""
+
+#: opt/customizer/init.php:1098
+#, fuzzy
+#| msgid "Latest Announcement"
+msgid "Announcement Capsule"
+msgstr "最新公告"
+
+#: opt/customizer/init.php:1105
+msgid "Show Medal Badges Style Capsule"
+msgstr ""
+
+#: opt/customizer/init.php:1107
+msgid ""
+"Enable to show bronze/silver/gold medal badges for blog milestones, Requires "
+"you to unlock the relevant achievement to replace the relevant capsule"
+msgstr ""
+
+#: opt/customizer/init.php:1113
+#, fuzzy
+#| msgid "Latest Announcement"
+msgid "Announcement Text"
+msgstr "最新公告"
+
+#: opt/customizer/init.php:1114
+msgid ""
+"Set the text for announcement capsule. The front-end will automatically "
+"split the text into two lines, you can also use line breaks for manual line "
+"breaks"
+msgstr ""
+
+#: opt/customizer/init.php:1128
+msgid "Article Aera"
+msgstr ""
+
+#: opt/customizer/init.php:1137 opt/customizer/init.php:1830
+msgid "Article Area Meta Displays"
+msgstr ""
+
+#: opt/customizer/init.php:1140 opt/customizer/init.php:1833
 msgid "Author"
 msgstr "作者"
 
-#: functions.php:696
-msgid "Blogger"
-msgstr "部落客"
-
-#: functions.php:705 functions.php:4305
-msgid "Location"
-msgstr "來自"
-
-#: functions.php:711
-msgid "Private"
-msgstr "私密"
-
-#: functions.php:713
-msgid "Yes"
-msgstr "是"
-
-#: functions.php:715
-msgid "No"
-msgstr "否"
-
-#: functions.php:718 inc/link-status.php:168
-msgid "Edit"
-msgstr "編輯"
-
-#: functions.php:866
-msgid "This guy is so lazy ╮(╯▽╰)╭"
-msgstr "這傢伙好懶 ╮(╯▽╰)╭"
-
-#: functions.php:904 functions.php:3683 functions.php:3876
-msgid "Pending Links"
-msgstr "待處理連結"
-
-#: functions.php:1733 functions.php:1736 inc/theme-plus.php:394
-#: layouts/mo_toc_menu.php:29
-msgid "Dashboard"
-msgstr "管理後台"
-
-#: functions.php:2293
-msgid "QQ"
-msgstr "QQ"
-
-#: functions.php:2395
-msgid "Sidebar"
-msgstr "側欄"
-
-#: functions.php:2437
-msgid "For security reasons, JavaScript is not allowed in comments."
-msgstr ""
-
-#: functions.php:2562
-msgid ""
-"<b> For a better experience, please do not set <a href=\"/wp-admin/options-"
-"permalink.php\"> permalink </a> as plain. To do this, you may need to "
-"configure <a href=\"https://www.wpdaxue.com/wordpress-rewriterule.html\" "
-"target=\"_blank\"> pseudo-static </a>. </ b>"
-msgstr ""
-"<b> 為了更好的使用體驗，請不要將<a href=\"/wp-admin/options-permalink.php\">"
-"固定連結</a>設置為樸素。為此，你可能需要配置<a href=\"https://"
-"www.wpdaxue.com/wordpress-rewriterule.html\" target=\"_blank\">偽靜態</a></b>"
-
-#: functions.php:2751
-#, php-format
-msgid "%s says: "
-msgstr "%s 說： "
-
-#: functions.php:2772
-msgid "Expand / Collapse"
-msgstr "展開 / 摺疊"
-
-#: functions.php:3592
-msgid "It's a secret"
-msgstr ""
-
-#: functions.php:3633
-msgid "Invalid request method."
-msgstr "請求方法無效。"
-
-#: functions.php:3644
-msgid "You are submitting too frequently. Please try again later."
-msgstr "你提交的頻率太高。請稍後再試。"
-
-#: functions.php:3650
-msgid "Security verification failed."
-msgstr "安全驗證失敗。"
-
-#: functions.php:3658
-msgid "Please fill in all required fields."
-msgstr "請填寫所有必填字段。"
-
-#: functions.php:3703 user/page-links.php:496
-msgid ""
-"Sorry, we are not accepting new link submissions at this time due to "
-"backlog. Please try again later."
-msgstr "很抱歉，由於待處理連結積壓，我們暫時不接受新的連結提交。請稍後再試。"
-
-#: functions.php:3716
-msgid "Site name is too long."
-msgstr "網站名稱過長。"
-
-#: functions.php:3721
-msgid "Site description is too long."
-msgstr "網站描述過長。"
-
-#: functions.php:3727
-msgid "Please enter a valid URL."
-msgstr "請輸入有效的 URL。"
-
-#: functions.php:3733
-msgid "Please enter a valid image URL."
-msgstr "請輸入有效的圖片 URL。"
-
-#: functions.php:3739
-msgid "Please enter a valid email address."
-msgstr "請輸入有效的電子郵件地址。"
-
-#: functions.php:3747
-msgid "This website URL is already in our links list."
-msgstr "此網站 URL 已在我們的連結清單中。"
-
-#: functions.php:3773 functions.php:3838
-msgid "Failed to submit link. Please try again later."
-msgstr "提交連結失敗。請稍後再試。"
-
-#: functions.php:3785 functions.php:3845
-#, php-format
-msgid "[%s] New Friend Link Submission"
-msgstr "[%s] 提交新的朋友連結"
-
-#: functions.php:3787 functions.php:3847
-#, php-format
-msgid ""
-"A new friend link has been submitted on your website %s:\n"
-"\n"
-msgstr ""
-"你的網站 %s 已提交新的友情連結：\n"
-"\n"
-
-#: functions.php:3788
-#, php-format
-msgid "Site Name: %s\n"
-msgstr "網站名稱：%s\n"
-
-#: functions.php:3789
-#, php-format
-msgid "Site URL: %s\n"
-msgstr "網站 URL：%s\n"
-
-#: functions.php:3790
-#, php-format
-msgid "Site Description: %s\n"
-msgstr "網站描述：%s\n"
-
-#: functions.php:3791
-#, php-format
-msgid "Site Image: %s\n"
-msgstr "網站圖片：%s\n"
-
-#: functions.php:3792
-#, php-format
-msgid "Contact Email: %s\n"
-msgstr "聯絡人電子郵件： %s\n"
-
-#: functions.php:3793
-#, php-format
-msgid ""
-"IP Address: %s\n"
-"\n"
-msgstr ""
-"IP 位址： %s\n"
-"\n"
-
-#: functions.php:3794
-msgid "Please review this submission in your WordPress admin panel.\n"
-msgstr "請在你的 WordPress 管理面板中檢查此提交。\n"
-
-#: functions.php:3804 functions.php:3855
-msgid "Thank you! Your link has been submitted for review."
-msgstr "謝謝！你的連結已提交審核。"
-
-#: functions.php:3809
-#, php-format
-msgid "Site Name: %s"
-msgstr "網站名稱︰ %s"
-
-#: functions.php:3810
-#, php-format
-msgid "Site URL: %s"
-msgstr "網站 URL：%s"
-
-#: functions.php:3811
-#, php-format
-msgid "Site Description: %s"
-msgstr "網站描述：%s"
-
-#: functions.php:3812
-#, php-format
-msgid "Site Image: %s"
-msgstr "網站圖片：%s"
-
-#: functions.php:3813
-#, php-format
-msgid "Contact Email: %s"
-msgstr "聯絡人電子郵件： %s"
-
-#: functions.php:3814
-#, php-format
-msgid "IP Address: %s"
-msgstr "IP 位址： %s"
-
-#: functions.php:3817
-msgid "Friend Link Submission: "
-msgstr "友情連結提交："
-
-#: functions.php:3849
-msgid ""
-"\n"
-"Please review this submission in your WordPress admin panel.\n"
-msgstr ""
-"\n"
-"請在你的 WordPress 管理面板中檢查此提交。\n"
-
-#: functions.php:3862
-msgid "An unexpected error occurred. Please try again later."
-msgstr "發生意外錯誤。請稍後再試。"
-
-#: functions.php:4038
-#, php-format
-msgid "[%s] Friend Link Check Failure: %s"
-msgstr "[%s] 友站連結檢查失敗：%s"
-
-#: functions.php:4041
-#, php-format
-msgid ""
-"The friend link '%s' has failed our status check %d times.\n"
-"\n"
-msgstr ""
-"好友連結 '%s' 的狀態檢查 %d 次失敗。\n"
-"\n"
-
-#: functions.php:4042
-#, php-format
-msgid "Link URL: %s\n"
-msgstr "連結 URL：%s\n"
-
-#: functions.php:4045
-#, php-format
-msgid "HTTP Status Code: %s\n"
-msgstr "HTTP 狀態碼： %s\n"
-
-#: functions.php:4049
-#, php-format
-msgid "Error Message: %s\n"
-msgstr "錯誤訊息： %s\n"
-
-#: functions.php:4052
-#, php-format
-msgid ""
-"\n"
-"Last Check Time: %s\n"
-"\n"
-msgstr ""
-"\n"
-"最後檢查時間：%s\n"
-"\n"
-
-#: functions.php:4053
-msgid ""
-"You may want to check this link and consider removing it if it remains "
-"unavailable.\n"
-msgstr "你可能需要檢查此連結，如果仍然無法使用，請考慮將其移除。\n"
-
-#: functions.php:4125
-msgid "Just now"
-msgstr "剛剛"
-
-#: functions.php:4127
-#, php-format
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d 分鐘前"
-
-#: functions.php:4130
-#, php-format
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d 小時前"
-
-#: functions.php:4133
-#, php-format
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d 日前"
-
-#: functions.php:4136
-#, php-format
-msgid "%d week ago"
-msgid_plural "%d weeks ago"
-msgstr[0] "%d 週前"
-
-#: functions.php:4139
-#, php-format
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d 個月前"
-
-#: functions.php:4346
-msgid "Access denied."
-msgstr "拒絕訪問。"
-
-#: header.php:269 layouts/sakura_header.php:125
-msgid "Random Background"
-msgstr "隨機封面"
-
-#: inc/cache_settings.php:7 inc/cache_settings.php:8 inc/cache_settings.php:42
-msgid "Cache Settings"
-msgstr "快取設定"
-
-#: inc/cache_settings.php:39
-msgid "Cache Updated!"
-msgstr "快取已更新！"
-
-#: inc/cache_settings.php:43
-msgid "Cache settings"
-msgstr "快取設定"
-
-#: inc/cache_settings.php:44
-msgid ""
-"If your server network environment is poor, you can click the link below to "
-"manually obtain the response content and fill it in"
-msgstr "如果你的伺服器網路環境較差，你可以點選下列連結，手動取得並填寫回應內容"
-
-#: inc/cache_settings.php:45
-msgid ""
-"If the content is empty or incorrect, the server will try to automatically "
-"pull it"
-msgstr "如果內容為空或不正確，伺服器會嘗試自動將其拉出"
-
-#: inc/cache_settings.php:46
-msgid ""
-"The link target will be automatically updated after the relevant settings "
-"are saved"
-msgstr "儲存相關設定後，連結目標會自動更新"
-
-#: inc/cache_settings.php:47
-msgid ""
-"The unit is seconds. And it will take effect permanently when it was set to "
-"0."
-msgstr "單位為秒。當設定為 0 時，它將永久生效。"
-
-#: inc/cache_settings.php:55 inc/cache_settings.php:67
-msgid "Cache expire time"
-msgstr "快取記憶體過期時間"
-
-#: inc/cache_settings.php:61
-msgid "Bangumi Cache"
-msgstr "Bangumi 快取"
-
-#: inc/cache_settings.php:73
-msgid "Steam Cache"
-msgstr "Steam 快取"
-
-#: inc/categories-images.php:44 inc/categories-images.php:65
-msgid "category/tag image"
-msgstr "分類/標籤圖像"
-
-#: inc/categories-images.php:47 inc/categories-images.php:67
-#: inc/categories-images.php:196
-msgid "add image"
-msgstr "添加圖像"
-
-#: inc/categories-images.php:68 inc/categories-images.php:197
-msgid "remove image"
-msgstr "刪除圖像"
-
-#: inc/categories-images.php:213
-msgid "image"
-msgstr "圖像"
-
-#: inc/categories-images.php:222
-msgid "no image"
-msgstr "暫無"
-
-#: inc/chatgpt/aigc-manage.php:12
-msgid "System Information"
-msgstr "系統資訊"
-
-#: inc/chatgpt/aigc-manage.php:13
-msgid "ChatGPT API Settings Status"
-msgstr "ChatGPT API 設定狀態"
-
-#: inc/chatgpt/aigc-manage.php:15
-msgid "API Endpoint: "
-msgstr "API 端點： "
-
-#: inc/chatgpt/aigc-manage.php:15 inc/chatgpt/aigc-manage.php:16
-#: inc/chatgpt/aigc-manage.php:17
-msgid "Not set"
-msgstr "未設定"
-
-#: inc/chatgpt/aigc-manage.php:16
-msgid "API Key: "
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:16
-msgid "Set (Length: "
-msgstr "已设置 (長度："
-
-#: inc/chatgpt/aigc-manage.php:17
-msgid "Model: "
-msgstr "模型："
-
-#: inc/chatgpt/aigc-manage.php:29 inc/chatgpt/aigc-manage.php:30
-#: inc/chatgpt/aigc-manage.php:107
-msgid "Article Annotations Management"
-msgstr "文章註解管理"
-
-#: inc/chatgpt/aigc-manage.php:51
-msgid "Successfully generated annotations for the post!"
-msgstr "成功為文章產生註解！"
-
-#: inc/chatgpt/aigc-manage.php:54
-msgid ""
-"Failed to generate annotations. Please check API settings or view error logs."
-msgstr "產生註解失敗。請檢查 API 設定或檢視錯誤記錄。"
-
-#: inc/chatgpt/aigc-manage.php:60
-msgid "Annotations for the post have been deleted."
-msgstr "該文章的註解已被刪除。"
-
-#: inc/chatgpt/aigc-manage.php:65
-msgid "Example Term"
-msgstr "示例術語"
-
-#: inc/chatgpt/aigc-manage.php:65
-msgid "This is a example explanation"
-msgstr "這是一個範例說明"
-
-#: inc/chatgpt/aigc-manage.php:68
-#, php-format
-msgid "Attempting to save test data to post %d..."
-msgstr "嘗試儲存測試資料到 %d..."
-
-#: inc/chatgpt/aigc-manage.php:73
-msgid "Save failed!"
-msgstr "儲存失敗！"
-
-#: inc/chatgpt/aigc-manage.php:75
-#, php-format
-msgid "Save successful! Update ID: %s"
-msgstr "儲存成功！更新 ID: %s"
-
-#: inc/chatgpt/aigc-manage.php:79
-#, php-format
-msgid "Read result: %s"
-msgstr "讀取結果：%s"
-
-#: inc/chatgpt/aigc-manage.php:79
-msgid "Success (array, contains "
-msgstr "成功 (陣列，包含 "
-
-#: inc/chatgpt/aigc-manage.php:79
-msgid " items)"
-msgstr " 項目)"
-
-#: inc/chatgpt/aigc-manage.php:79
-msgid "Failed"
-msgstr "失敗"
-
-#: inc/chatgpt/aigc-manage.php:86
-#, php-format
-msgid "Database query result: %s"
-msgstr "資料庫查詢結果: %s"
-
-#: inc/chatgpt/aigc-manage.php:86
-msgid "Found "
-msgstr "發現"
-
-#: inc/chatgpt/aigc-manage.php:86
-msgid " records"
-msgstr " 記錄"
-
-#: inc/chatgpt/aigc-manage.php:86
-msgid "No records found"
-msgstr "未找到記錄"
-
-#: inc/chatgpt/aigc-manage.php:119
-msgid "About Article Annotations"
-msgstr "關於文章註釋"
-
-#: inc/chatgpt/aigc-manage.php:120
-msgid ""
-"This feature uses ChatGPT to analyze the content of the post, identify "
-"complex or specialized terms, and automatically generate explanatory "
-"annotations. The annotations will be displayed in the post, and visitors can "
-"click to view explanations."
-msgstr ""
-"此功能使用 ChatGPT 分析文章的內容、辨識複雜或專門的詞彙，並自動產生解釋性的註"
-"解。這些註解會顯示在文章中，訪客可以點選查看解釋。"
-
-#: inc/chatgpt/aigc-manage.php:121 inc/chatgpt/aigc-manage.php:665
-msgid "Note:"
-msgstr "備註："
-
-#: inc/chatgpt/aigc-manage.php:121 inc/chatgpt/aigc-manage.php:665
-msgid "This feature requires a valid OpenAI API key."
-msgstr "此功能需要有效的 OpenAI API Key。"
-
-#: inc/chatgpt/aigc-manage.php:127 inc/chatgpt/aigc-manage.php:671
-msgid ""
-"API key not set, please configure the ChatGPT API key in the theme settings "
-"first."
-msgstr "API Key未設定，請先在主題設定中設定 ChatGPT API Key。"
-
-#: inc/chatgpt/aigc-manage.php:134
-msgid "Generate Annotations for Post"
-msgstr "產生文章註解"
-
-#: inc/chatgpt/aigc-manage.php:139 inc/chatgpt/aigc-manage.php:683
-msgid "Select Post"
-msgstr "選取文章"
-
-#: inc/chatgpt/aigc-manage.php:142 inc/chatgpt/aigc-manage.php:686
-msgid "-- Select Post --"
-msgstr "-- 選取文章 --"
-
-#: inc/chatgpt/aigc-manage.php:151
-msgid "Generate Annotations"
-msgstr "產生註解"
-
-#: inc/chatgpt/aigc-manage.php:152
-msgid "Delete Annotations"
-msgstr "刪除註解"
-
-#: inc/chatgpt/aigc-manage.php:152
-msgid "Are you sure you want to delete the annotation data for this post?"
-msgstr "你確定要刪除這篇文章的註解資料嗎？"
-
-#: inc/chatgpt/aigc-manage.php:153
-msgid "Create empty data"
-msgstr "建立空資料"
-
-#: inc/chatgpt/aigc-manage.php:153
-msgid "Create empty terms for your custom article"
-msgstr "為自訂文章建立空條款"
-
-#: inc/chatgpt/aigc-manage.php:160
-msgid "Posts with Generated Annotations"
-msgstr "生成註解的文章"
-
-#: inc/chatgpt/aigc-manage.php:162
-msgid "Currently, no posts contain annotation data."
-msgstr "目前沒有文章包含註解。"
-
-#: inc/chatgpt/aigc-manage.php:167 inc/chatgpt/aigc-manage.php:711
-msgid "Post Title"
-msgstr "文章標題"
-
-#: inc/chatgpt/aigc-manage.php:168
-msgid "Number of Annotations"
+#: opt/customizer/init.php:1141 opt/customizer/init.php:1834
+msgid "Category"
+msgstr "類別"
+
+#: opt/customizer/init.php:1142 opt/customizer/init.php:1835
+#, fuzzy
+#| msgid "Number of Annotations"
+msgid "Number of Comments"
 msgstr "註解數量"
 
-#: inc/chatgpt/aigc-manage.php:169 inc/chatgpt/aigc-manage.php:261
-#: inc/chatgpt/aigc-manage.php:713 inc/link-status.php:108
-msgid "Actions"
-msgstr "操作"
-
-#: inc/chatgpt/aigc-manage.php:186
-msgid "View Annotations"
-msgstr "檢視註解"
-
-#: inc/chatgpt/aigc-manage.php:187 inc/chatgpt/aigc-manage.php:731
-msgid "Edit Post"
-msgstr "編輯文章"
-
-#: inc/chatgpt/aigc-manage.php:192
-msgid "Debug Information"
-msgstr "除錯資訊"
-
-#: inc/chatgpt/aigc-manage.php:209
-#, php-format
-msgid "Annotations Debug Information for post \"%s\" (ID: %d)"
-msgstr "文章 「%s」 的註解偵錯資訊 (ID: %d)"
-
-#: inc/chatgpt/aigc-manage.php:214
-msgid "Data Type:"
-msgstr "數據類型："
-
-#: inc/chatgpt/aigc-manage.php:217
-msgid "Number of Annotations:"
-msgstr "註解數量："
-
-#: inc/chatgpt/aigc-manage.php:218 inc/chatgpt/aigc-manage.php:223
-msgid "Annotation Data:"
-msgstr "註解數據："
-
-#: inc/chatgpt/aigc-manage.php:233
-msgid "Database Records:"
-msgstr "資料庫記錄："
-
-#: inc/chatgpt/aigc-manage.php:233
-msgid "records"
-msgstr "紀錄"
-
-#: inc/chatgpt/aigc-manage.php:237
-msgid "Record ID:"
-msgstr "記錄 ID："
-
-#: inc/chatgpt/aigc-manage.php:238
-msgid "Original Value:"
-msgstr "原始值："
-
-#: inc/chatgpt/aigc-manage.php:253 inc/chatgpt/aigc-manage.php:279
-msgid "Post Annotations: "
-msgstr "文章註釋： "
-
-#: inc/chatgpt/aigc-manage.php:259 inc/chatgpt/aigc-manage.php:564
-msgid "Term"
-msgstr "條款"
-
-#: inc/chatgpt/aigc-manage.php:260 inc/chatgpt/aigc-manage.php:564
-msgid "Explanation"
-msgstr "說明"
-
-#: inc/chatgpt/aigc-manage.php:268
-msgid "Add Annotation"
-msgstr "新增註解"
-
-#: inc/chatgpt/aigc-manage.php:269
-msgid "Save Annotations"
-msgstr "儲存註解"
-
-#: inc/chatgpt/aigc-manage.php:289 inc/chatgpt/aigc-manage.php:324
-#: inc/chatgpt/aigc-manage.php:736
-msgid "Delete"
-msgstr "刪除"
-
-#: inc/chatgpt/aigc-manage.php:359
-msgid "Annotations updated successfully."
-msgstr "註解更新成功。"
-
-#: inc/chatgpt/aigc-manage.php:362
-msgid "Update failed."
-msgstr "更新失敗。"
-
-#: inc/chatgpt/aigc-manage.php:480 inc/chatgpt/aigc-manage.php:516
-#: inc/chatgpt/aigc-manage.php:878 inc/chatgpt/aigc-manage.php:913
-msgid "Invalid post ID"
-msgstr "無效的文章ID"
-
-#: inc/chatgpt/aigc-manage.php:485 inc/chatgpt/aigc-manage.php:883
-msgid "Post not found"
-msgstr "沒有文章"
-
-#: inc/chatgpt/aigc-manage.php:492
-msgid "This post does not have any annotation data"
-msgstr "此文章沒有任何註釋資料"
-
-#: inc/chatgpt/aigc-manage.php:508 inc/chatgpt/aigc-manage.php:511
-#: inc/chatgpt/aigc-manage.php:905 inc/chatgpt/aigc-manage.php:908
-msgid "Access denied"
-msgstr "訪問被拒絕"
-
-#: inc/chatgpt/aigc-manage.php:522
-msgid "Invalid annotations data"
-msgstr "無效註解數據"
-
-#: inc/chatgpt/aigc-manage.php:528
-msgid "Failed to update annotations"
-msgstr "更新註解失敗"
-
-#: inc/chatgpt/aigc-manage.php:531
-msgid "Annotations updated successfully"
-msgstr "註釋更新成功"
-
-#: inc/chatgpt/aigc-manage.php:542
-msgid "Post Annotation Data"
-msgstr "文章註解資料"
-
-#: inc/chatgpt/aigc-manage.php:558
-#, php-format
-msgid ""
-"This post currently does not have any annotation data. You can generate "
-"annotations on the <a href=\"%s\">Article Annotations Management</a> page."
-msgstr ""
-"此文章目前沒有任何註釋資料。你可以在 <a href=\"%s\"> 文章註解管理</a>頁面產生"
-"註解。"
-
-#: inc/chatgpt/aigc-manage.php:573
-msgid "Edit in Annotations Management Page"
-msgstr "在註解管理頁面編輯"
-
-#: inc/chatgpt/aigc-manage.php:587 inc/chatgpt/aigc-manage.php:588
-#: inc/chatgpt/aigc-manage.php:652
-msgid "Article Summary Management"
-msgstr "文章總結管理"
-
-#: inc/chatgpt/aigc-manage.php:611
-msgid "Successfully generated summary for the post!"
-msgstr "成功為文章產生總結！"
-
-#: inc/chatgpt/aigc-manage.php:614
-msgid ""
-"Failed to generate summary. Please check API settings or view error logs."
-msgstr "產生總結失敗。請檢查 API 設定或檢視錯誤記錄。"
-
-#: inc/chatgpt/aigc-manage.php:620
-msgid "Summary for the post has been deleted."
-msgstr "該文章的總結已被刪除。"
-
-#: inc/chatgpt/aigc-manage.php:624
-msgid "This is a test summary content."
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:629
+#: opt/customizer/init.php:1143 opt/customizer/init.php:1836
 #, fuzzy
-#| msgid "Save failed!"
-msgid "Test save failed!"
-msgstr "儲存失敗！"
+#| msgid "Number of Annotations"
+msgid "Number of Views"
+msgstr "註解數量"
 
-#: inc/chatgpt/aigc-manage.php:632
+#: opt/customizer/init.php:1144 opt/customizer/init.php:1837
 #, fuzzy
-#| msgid "Annotations updated successfully"
-msgid "Test data saved successfully!"
-msgstr "註釋更新成功"
-
-#: inc/chatgpt/aigc-manage.php:663
-#, fuzzy
-#| msgid "About Article Annotations"
-msgid "About Article Summaries"
-msgstr "關於文章註釋"
-
-#: inc/chatgpt/aigc-manage.php:664
-msgid ""
-"This feature uses ChatGPT to generate concise summaries of your articles. "
-"The summaries are stored separately and can be used to display article "
-"excerpts."
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:678
-msgid "Generate Summary for Post"
-msgstr "產生文章總結"
-
-#: inc/chatgpt/aigc-manage.php:695
-msgid "Generate Summary"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:696
-#, fuzzy
-#| msgid "Delete"
-msgid "Delete Summary"
-msgstr "刪除"
-
-#: inc/chatgpt/aigc-manage.php:696
-msgid "Are you sure you want to delete the summary for this post?"
-msgstr "你確定要刪除這篇文章的總結資料嗎？"
-
-#: inc/chatgpt/aigc-manage.php:697
-msgid "Save Test Data"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:704
-#, fuzzy
-#| msgid "Posts with Generated Annotations"
-msgid "Posts with Generated Summaries"
-msgstr "生成註解的文章"
-
-#: inc/chatgpt/aigc-manage.php:706
-msgid "Currently, no posts contain summary data."
-msgstr "目前沒有文章包含總結。"
-
-#: inc/chatgpt/aigc-manage.php:712
-msgid "Summary Preview"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:730
-msgid "View/Edit Summary"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:735
-#, fuzzy
-#| msgid "Are you sure you want set it private?"
-msgid "Are you sure you want to delete this summary?"
-msgstr "是否確實要將其設置為專用？"
-
-#: inc/chatgpt/aigc-manage.php:751 inc/chatgpt/aigc-manage.php:778
-msgid "Post Summary: "
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:756
-msgid "Save Summary"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:799
-#, fuzzy
-#| msgid "Uploading..."
-msgid "Saving..."
-msgstr "上傳中..."
-
-#: inc/chatgpt/aigc-manage.php:810
-#, fuzzy
-#| msgid "Uploaded successfully~"
-msgid "Summary saved successfully!"
-msgstr "上傳成功～"
-
-#: inc/chatgpt/aigc-manage.php:816
-#, fuzzy
-#| msgid "Save failed!"
-msgid "Save failed"
-msgstr "儲存失敗！"
-
-#: inc/chatgpt/aigc-manage.php:820
-msgid "Error parsing response"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:825
-#, fuzzy
-#| msgid "Save failed!"
-msgid "Request failed"
-msgstr "儲存失敗！"
-
-#: inc/chatgpt/aigc-manage.php:889
-msgid "This post does not have a summary"
-msgstr "此文章沒有任何總結資料"
-
-#: inc/chatgpt/aigc-manage.php:918
-msgid "Summary cannot be empty"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:924
-msgid "Failed to update summary"
-msgstr "更新總結失敗"
-
-#: inc/chatgpt/aigc-manage.php:927
-msgid "Summary updated successfully"
-msgstr "總結更新成功"
-
-#: inc/chatgpt/aigc-manage.php:938
-msgid "Article Summary"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:954
-#, php-format
-msgid ""
-"This post currently does not have a summary. You can generate one on the <a "
-"href=\"%s\">Article Summary Management</a> page."
-msgstr ""
-"此文章目前沒有任何總結資料。你可以在 <a href=\"%s\"> 文章總結管理</a>頁面產生"
-"總結。"
-
-#: inc/chatgpt/aigc-manage.php:959
-msgid "Summary Preview:"
-msgstr ""
-
-#: inc/chatgpt/aigc-manage.php:962
-msgid "Edit in Summary Management Page"
-msgstr "在總結管理頁面編輯"
-
-#: inc/classes/Bilibili.php:49 inc/classes/BilibiliFavList.php:124
-#: inc/classes/BilibiliFavList.php:129 inc/classes/BilibiliFavList.php:141
-#: inc/classes/MyAnimeList.php:76
-msgid "Backend error"
-msgstr "後端發生了錯誤 QwQ"
-
-#: inc/classes/Bilibili.php:54 inc/classes/MyAnimeList.php:89
-msgid "Following "
-msgstr "已追蹤的新番 "
-
-#: inc/classes/Bilibili.php:54 inc/classes/MyAnimeList.php:89
-msgid " anime."
-msgstr " 動漫。"
-
-#: inc/classes/Bilibili.php:69
-msgid "The author seems to have hidden their bangumi list."
-msgstr "部落客似乎隱藏了新番追蹤列表。"
-
-#: inc/classes/Bilibili.php:99 inc/classes/BilibiliFavList.php:202
-msgid "Load More"
-msgstr "載入更多"
-
-#: inc/classes/BilibiliFavList.php:159
-msgid "Item count: "
-msgstr "項目計數： "
-
-#: inc/classes/BilibiliFavList.php:160
-msgid "Expand"
-msgstr "展開"
-
-#: inc/classes/BilibiliFavList.php:177
-msgid "All item has been loaded."
-msgstr "所有專案均已載入。"
-
-#: inc/classes/Cache.php:70 inc/theme-plus.php:682
-msgid "The comment is private"
-msgstr "這是一條私密留言"
-
-#: inc/classes/Captcha.php:174
-msgid "Bad Request."
-msgstr "錯誤的請求。"
-
-#: inc/classes/Captcha.php:178
-msgid "Look like you forgot to enter the captcha."
-msgstr "看起來你忘記輸入驗證碼。"
-
-#: inc/classes/Captcha.php:181
-msgid "Captcha timeout."
-msgstr "驗證碼超時。"
-
-#: inc/classes/Captcha.php:185
-msgid "Captcha check passed."
-msgstr "驗證碼檢查已通過。"
-
-#: inc/classes/Captcha.php:188
-msgid "Captcha incorrect."
-msgstr "驗證碼不正確。"
-
-#: inc/classes/Captcha.php:192
-msgid "An error has occurred."
-msgstr "發生錯誤。"
-
-#: inc/classes/Images.php:24
-msgid "Image Failed to Load"
-msgstr "圖像加載失敗"
-
-#: inc/classes/IpLocation.php:246 inc/classes/IpLocation.php:275
-msgid "Unknown"
-msgstr "未知"
-
-#: inc/classes/IpLocation.php:249 inc/classes/IpLocation.php:278
-msgid "Reserved Address"
-msgstr "預留地址"
-
-#: inc/classes/IpLocation.php:252 inc/classes/IpLocation.php:266
-msgid "Empty Address"
-msgstr "空地址"
-
-#: inc/classes/MyAnimeList.php:90
-msgid " Watched "
-msgstr " 已觀看 "
-
-#: inc/classes/MyAnimeList.php:90
-msgid " episodes."
-msgstr " 話。"
-
-#: inc/classes/MyAnimeList.php:128
-msgid "Finished "
-msgstr "已看完 "
-
-#: inc/classes/MyAnimeList.php:137
-msgid "Watching "
-msgstr "追番中 "
-
-#: inc/classes/MyAnimeList.php:144
-msgid "Planning to Watch "
-msgstr "打算看 "
-
-#: inc/classes/MyAnimeList.php:153
-msgid "Dropped "
-msgstr "棄坑 "
-
-#: inc/classes/MyAnimeList.php:162
-msgid "Paused "
-msgstr "暫停 "
-
-#: inc/classes/Steam.php:99
-msgid "Load more"
-msgstr "載入更多"
-
-#: inc/classes/Steam.php:150
-msgid "Not Played Yet"
-msgstr "尚未遊玩"
-
-#: inc/classes/Steam.php:154
-msgid "minute"
-msgstr "分鐘"
-
-#: inc/classes/Steam.php:157
-msgid "hour"
-msgstr "小時"
-
-#: inc/classes/bangumi.php:104
-msgid "Bangumi ID not set."
-msgstr "還未設定Bangumi帳戶ID。"
-
-#: inc/classes/bangumi.php:112
-msgid "No data"
-msgstr "沒有數據"
-
-#: inc/classes/bangumi.php:129
-msgid "Release date: "
-msgstr "上映日期："
-
-#: inc/classes/bangumi.php:135
-msgid "Watch progress: "
-msgstr "觀看進度： "
-
-#: inc/classes/bangumi.php:136
-msgid "No introduction yet"
-msgstr "暫無介紹"
-
-#: inc/classes/bangumi.php:148
-msgid "An error occured: "
-msgstr "發生錯誤:"
-
-#: inc/classes/bangumi.php:154
-msgid "Load more..."
-msgstr "載入更多..."
-
-#: inc/classes/gallery.php:79
-msgid "Successfully initialized the index."
-msgstr "重建索引成功."
-
-#: inc/classes/gallery.php:113 inc/classes/gallery.php:117
-msgid ""
-"The target directory is not accessible. Please check the permission settings."
-msgstr "目標目錄無法訪問，請檢查目錄權限。"
-
-#: inc/classes/gallery.php:120
-msgid ""
-"Successfully backed up images from the 'img' folder to the 'backup' folder."
-msgstr "成功將img資料夾內容備份至backup資料夾。"
-
-#: inc/classes/gallery.php:122
-msgid ""
-"Detected content in the 'backup' folder. Verifying and attempting to restore "
-"conversion operations."
-msgstr "偵測到backup資料夾中有內容，正在嘗試從斷點恢復進度。"
-
-#: inc/classes/gallery.php:153
-msgid ""
-"All images have been compressed to WebP format. The original files are "
-"stored in the 'backup' folder.<br> Please confirm correctness before "
-"reinitializing the index.<br>"
-msgstr ""
-"所有圖片已轉換為Webp格式，原始檔案已備份至backup資料夾。 <br>請在確認無誤後重"
-"建索引。 <br>"
-
-#: inc/classes/gallery.php:203
-msgid ""
-"No images found. Please contact the administrator to check if images exist "
-"in the 'iro_gallary' directory and ensure the directory is readable and "
-"writable."
-msgstr ""
-"沒有找到任何圖片。請聯絡網站管理員確保'iro_gallery'資料夾內有圖片並可讀寫。"
-
-#: inc/link-status.php:19 inc/link-status.php:72
-msgid "Friend Links Status"
-msgstr "友情連結狀態"
-
-#: inc/link-status.php:20 inc/link-status.php:97
-msgid "Links Status"
-msgstr "連結狀態"
-
-#: inc/link-status.php:41
-msgid ""
-"All links check has been triggered. Please refresh this page in a few "
-"moments to see the results."
-msgstr "已觸發所有連結檢查。請稍後刷新此頁面以查看結果。"
-
-#: inc/link-status.php:48
-#, php-format
-msgid "Link \"%s\" has been checked. Refresh to see the results."
-msgstr "已檢查連結 「%s」。刷新以查看結果。"
-
-#: inc/link-status.php:58
-msgid "Link status has been reset."
-msgstr "連線狀態已重設。"
-
-#: inc/link-status.php:78
-#, php-format
-msgid "Last automatic check: %s"
-msgstr "最後一次自動檢查：%s"
-
-#: inc/link-status.php:80
-msgid "No automatic check has been performed yet."
-msgstr "尚未執行自動檢查。"
-
-#: inc/link-status.php:84
-msgid ""
-"The system automatically checks a batch of links (5 links) every week to "
-"avoid overloading the server."
-msgstr "系統每週自動檢查一批連結 (5 個連結)，以避免伺服器負荷過重。"
-
-#: inc/link-status.php:90
-msgid "Check All Links Now"
-msgstr "立即檢查所有連結"
-
-#: inc/link-status.php:90
-msgid "This will check all links and may take some time. Continue?"
-msgstr "這將檢查所有連結，可能需要一些時間。繼續嗎？"
-
-#: inc/link-status.php:91
-msgid ""
-"This will check all links in batches of 5 with a delay between batches to "
-"avoid overloading the server."
-msgstr ""
-"這會以 5 個為一批檢查所有連結，每批之間會有延遲，以避免伺服器負荷過重。"
-
-#: inc/link-status.php:102
-msgid "Link Name"
-msgstr "連結名稱"
-
-#: inc/link-status.php:103
-msgid "URL"
-msgstr ""
-
-#: inc/link-status.php:104
-msgid "Status"
-msgstr "狀態"
-
-#: inc/link-status.php:105
-msgid "Last Check"
-msgstr "最後檢查時間"
-
-#: inc/link-status.php:106
-msgid "Failures"
-msgstr "錯誤"
-
-#: inc/link-status.php:107
-msgid "Details"
-msgstr "詳情"
-
-#: inc/link-status.php:114
-msgid "No links found."
-msgstr "找不到符合條件的連結。"
-
-#: inc/link-status.php:127
-msgid "Not checked"
-msgstr "未檢查"
-
-#: inc/link-status.php:129
-msgid "Success"
-msgstr "成功 "
-
-#: inc/link-status.php:131
-msgid "Failure"
-msgstr "失敗"
-
-#: inc/link-status.php:137
-#, php-format
-msgid "Status Code: %s"
-msgstr "狀態碼： %s"
-
-#: inc/link-status.php:140
-#, php-format
-msgid "Error: %s"
-msgstr "錯誤：%s"
-
-#: inc/link-status.php:147
-msgid "Not visible"
-msgstr "不可见"
-
-#: inc/link-status.php:152
-msgid "Never"
-msgstr "從未"
-
-#: inc/link-status.php:159
-msgid "Check Now"
-msgstr "立即檢查"
-
-#: inc/link-status.php:165
-msgid "Reset Status"
-msgstr "重置狀態"
-
-#: inc/link-status.php:283 inc/link-status.php:294 inc/link-status.php:306
-msgid "priority"
-msgstr "優先級"
-
-#: inc/link-status.php:285 inc/link-status.php:299
-msgid "The higher the value, the higher the priority (default is 0)."
-msgstr "數值越高，優先級越高（默認為0）"
-
-#: inc/post_metas.php:66
-msgid "Less than 1 minute"
-msgstr "少於一分鐘"
-
-#: inc/post_metas.php:69
-#, php-format
-msgid "%s Hour"
-msgid_plural "%s Hours"
-msgstr[0] "%s 小時"
-
-#: inc/post_metas.php:71
-#, php-format
-msgid "%s Minute"
-msgid_plural "%s Minutes"
-msgstr[0] "%s 分鐘"
-
-#: inc/post_metas.php:87
-#, php-format
-msgid "%s Word"
-msgid_plural "%s Words"
-msgstr[0] "%s 字"
-
-#: inc/post_metas.php:94
-msgid "1 Comment"
-msgstr "1 留言"
-
-#: inc/post_metas.php:94
-msgid "Comments"
-msgstr "條留言"
-
-#: inc/post_metas.php:94
-msgid "Comment Closed"
-msgstr "留言板已關閉"
-
-#: inc/template-tags.php:28
-#, php-format
-msgctxt "post date"
-msgid "Posted on %s"
-msgstr "發布於 %s"
-
-#: inc/template-tags.php:33
-#, php-format
-msgctxt "post author"
-msgid "by %s"
-msgstr "由 %s 寫作"
-
-#. translators: used between list items, there is a space after the comma
-#: inc/template-tags.php:50 inc/template-tags.php:56
-msgid ", "
-msgstr "， "
-
-#: inc/template-tags.php:52
-#, php-format
-msgid "Posted in %1$s"
-msgstr "在 分類%1$s中"
-
-#: inc/template-tags.php:58
-#, php-format
-msgid "Tagged %1$s"
-msgstr "在 標籤 %1$s中"
-
-#. translators: %s: post title
-#: inc/template-tags.php:65
-#, php-format
-msgid "Leave a Comment<span class=\"screen-reader-text\"> on %s</span>"
-msgstr "<span class=\"screen-reader-text\"> 在 %s</span>中留言"
-
-#. translators: %s: Name of current post
-#: inc/template-tags.php:72 tpl/content-page.php:38
-#, php-format
-msgid "Edit %s"
-msgstr "編輯 %s"
-
-#: inc/theme-plus.php:57
-msgid " days ago"
-msgstr " 天前"
-
-#: inc/theme-plus.php:58
-msgid " hours ago"
-msgstr " 小時前"
-
-#: inc/theme-plus.php:59
-msgid " minutes ago"
-msgstr " 分鐘前"
-
-#: inc/theme-plus.php:60
-msgid " seconds ago"
-msgstr " 秒前"
-
-#: inc/theme-plus.php:67
-msgid "Posted on "
-msgstr "發布於 "
-
-#: inc/theme-plus.php:147
-msgid "Please upgrade wordpress to version 4.4+"
-msgstr "請更新到 4.4 以上版本"
-
-#: inc/theme-plus.php:160
-msgid "You may post nothing"
-msgstr "你可能沒有發送任何訊息"
-
-#: inc/theme-plus.php:170
-msgid "Please fill in the captcha answer"
-msgstr "請填寫驗證問題內容"
-
-#: inc/theme-plus.php:173 inc/theme-plus.php:204
-msgid ""
-"Have you modified the captcha code data? Or refresh the captcha and try "
-"again?"
-msgstr "你修改了驗證碼資料嗎？或是刷新驗證碼試試？"
-
-#: inc/theme-plus.php:181
-msgid "Please fill in the correct captcha answer"
-msgstr "你可能沒有回答正確"
-
-#: inc/theme-plus.php:184
-msgid "Please wait for cloudflare turnstile checking..."
-msgstr ""
-
-#: inc/theme-plus.php:195 inc/theme-plus.php:199
-#, fuzzy
-#| msgid "Security verification failed."
-msgid "Captcha verification failed"
-msgstr "安全驗證失敗。"
-
-#: inc/theme-plus.php:288 inc/theme-plus.php:341
-#, php-format
-msgid "Search results for \" %s \""
-msgstr "關於“ %s ”的搜尋結果"
-
-#: inc/theme-plus.php:358 tpl/content-thumbcard.php:56
-#: tpl/content-thumbcard.php:62
-msgid "Your browser does not support HTML5 video."
-msgstr "你的瀏覽器不支援 HTML5 影片。"
-
-#: inc/theme-plus.php:389
-msgid "Signed in as"
-msgstr "當前已登入"
-
-#: inc/theme-plus.php:395 layouts/mo_toc_menu.php:30
-msgid "New post"
-msgstr "撰寫文章"
-
-#: inc/theme-plus.php:397 layouts/mo_toc_menu.php:34
-msgid "Profile"
-msgstr "個人資訊"
-
-#: inc/theme-plus.php:398 layouts/mo_toc_menu.php:35
-msgid "Sign out"
-msgstr "登出"
-
-#: inc/theme-plus.php:419 layouts/mo_toc_menu.php:66
-msgid "Log in"
-msgstr "登入"
-
-#: layouts/mo_toc_menu.php:71
-msgid "Register"
-msgstr "註冊"
-
-#: layouts/post-nextprev.php:15
-msgid "Previous Post"
-msgstr "上一篇文章"
-
-#: layouts/post-nextprev.php:24
-msgid "Next Post"
-msgstr "下一篇文章"
-
-#: search.php:45
-#, php-format
-msgid "Search result: %s"
-msgstr "搜尋結果：%s"
-
-#: search.php:76
-msgid "results found"
-msgstr "個結果"
-
-#: search.php:90
-msgid "shuoshuo"
-msgstr "說說"
-
-#: search.php:101
-msgid "If no option is selected, all results are retrieved by default"
-msgstr "如果你沒選取任何類別，預設會尋找所有結果"
-
-#: search.php:102
-msgid "Click to filter"
-msgstr "點擊篩選"
-
-#: tpl/content-none.php:14
-msgid "There is nothing here！"
-msgstr "沒有找到任何東西！"
-
-#: tpl/content-none.php:21
-#, php-format
-msgid ""
-"Ready to post your first article? <a href=\"%1$s\">Click here to start</a>."
-msgstr "準備好發佈你的第一篇文章了嗎？ <a href=\"%1$s\">請點擊此處開始</a>。"
-
-#: tpl/content-none.php:25
-msgid "Didn't find what you want, look at the other ones."
-msgstr "沒有找到你想要的，看看其他的吧。"
-
-#: tpl/content-none.php:43
-msgid "We didn't seem to find what you want. Maybe you can search for it."
-msgstr "似乎沒有找到你想要的東西，或許你可以搜尋一下試式試。"
-
-#: tpl/content-page.php:27 tpl/content-single.php:33 tpl/single-image.php:25
-msgid "Pages:"
-msgstr "頁面:"
-
-#: tpl/content-single.php:26 tpl/content-thumbcard.php:181
-msgid "AI Excerpt"
-msgstr "AI 摘錄"
-
-#: tpl/content-thumbcard.php:4
-msgid "Hit"
-msgid_plural "Hits"
-msgstr[0] "熱度"
-
-#: tpl/content-thumbcard.php:37 tpl/entry-census.php:57
+#| msgid "Number of Annotations"
+msgid "Number of Words"
+msgstr "註解數量"
+
+#: opt/customizer/init.php:1145 opt/customizer/init.php:1838
 msgid "Estimate Reading Time"
 msgstr "預期閱讀時間"
 
-#: tpl/content-thumbcard.php:167
-msgid "Sticky"
-msgstr "置頂"
-
-#: tpl/content-thumbcard.php:184
-msgid "Excerpt"
-msgstr "摘錄"
-
-#: tpl/entry-census.php:6
-msgid "EDIT"
-msgstr "編輯"
-
-#: tpl/entry-census.php:41
-msgid "View"
-msgid_plural "Views"
-msgstr[0] "次瀏覽"
-
-#: tpl/entry-census.php:73 tpl/section-article-function.php:73
-msgid "Last updated on "
-msgstr "最後更新於 "
-
-#: tpl/entry-census.php:75 tpl/entry-census.php:77
-msgid "Last updated on"
-msgstr "最後更新於"
-
-#: tpl/section-article-function.php:19 tpl/section-article-function.php:24
-#, php-format
-msgid "This article is licensed under %s"
-msgstr "本文採用 %s 创用CC授权"
-
-#: tpl/section-article-function.php:64
-msgid "This author has not provided a description."
-msgstr "此作者沒有設定個人簡介。"
-
-#: user/page-archive.php:782
-msgid "Posts"
-msgstr "篇"
-
-#: user/page-archive.php:818
-msgid "article"
+#: opt/customizer/init.php:1152 opt/customizer/init.php:1162
+msgid "Article Area Card Design"
 msgstr ""
 
-#: user/page-bangumi.php:217 user/page-bilibiliFavList.php:652
-#: user/page-followVideos.php:207
-msgid "Please fill in the Bilibili UID in Sakura Options."
-msgstr "請在後台設置填寫 Bilibili UID 後繼續。"
+#: opt/customizer/init.php:1179
+msgid "Article Area Card Information Meta Background Compatible"
+msgstr ""
 
-#: user/page-bangumi.php:224
-msgid "Please fill in the Bangumi UID in Sakura Options."
-msgstr "請在後台設置填寫 Bangumi UID 後繼續。"
+#: opt/customizer/init.php:1185
+#, fuzzy
+#| msgid "No shuoshuo found in Trash."
+msgid "Show shuoshuo on home page"
+msgstr "垃圾桶里沒有找到說說。"
 
-#: user/page-bangumi.php:230
-msgid "Please fill in the My Anime List Username in Sakura Options."
-msgstr "請在後台設置填寫 My Anime List Username 後繼續。"
+#: opt/customizer/init.php:1191
+msgid "Article Area Card Information Meta Rounded Corners"
+msgstr ""
 
-#: user/page-links.php:490
-msgid "Submit Link"
-msgstr "提交連結"
+#: opt/customizer/init.php:1210
+msgid "Article Area Card Title Meta Rounded Corners"
+msgstr ""
 
-#: user/page-links.php:542
-msgid "Submit Your Link"
-msgstr "提交你的連結"
+#: opt/customizer/init.php:1229
+msgid "Article Area Card Rounded Corners"
+msgstr ""
 
-#: user/page-links.php:543
-msgid "Please fill out the form below to submit your website link."
-msgstr "請填寫以下表格，提交你的網站連結。"
+#: opt/customizer/init.php:1248
+msgid "Article Area Title Font Size"
+msgstr ""
 
-#: user/page-links.php:549
-msgid "Site Name"
-msgstr "網站名稱"
+#: opt/customizer/init.php:1268
+#, fuzzy
+#| msgid "Random Background"
+msgid "Frontend Background"
+msgstr "隨機封面"
 
-#: user/page-links.php:554
-msgid "Site URL"
-msgstr "網站網址"
+#: opt/customizer/init.php:1278
+#, fuzzy
+#| msgid "Random Background"
+msgid "Default Frontend Background"
+msgstr "隨機封面"
 
-#: user/page-links.php:559
-msgid "Site Description"
-msgstr "網站描述"
+#: opt/customizer/init.php:1284
+msgid "Background Transparency in the Frontend"
+msgstr ""
 
-#: user/page-links.php:564
-msgid "Site Logo/Avatar URL"
-msgstr "網站標誌/頭像 URL"
+#: opt/customizer/init.php:1295
+msgid "Background Transparency Blur"
+msgstr ""
 
-#: user/page-links.php:569
-msgid "Your Email"
-msgstr "電子信箱"
+#: opt/customizer/init.php:1301
+msgid "Frontend Background Scaling Method"
+msgstr ""
 
-#: user/page-links.php:575
-msgid "Verification Code"
+#: opt/customizer/init.php:1303
+msgid "Cover"
+msgstr ""
+
+#: opt/customizer/init.php:1304
+#, fuzzy
+#| msgid "Control Panel"
+msgid "Contain"
+msgstr "控制面板"
+
+#: opt/customizer/init.php:1305
+msgid "Auto"
+msgstr ""
+
+#: opt/customizer/init.php:1320
+msgid "Global Default Font"
+msgstr ""
+
+#: opt/customizer/init.php:1321
+msgid ""
+"Fill in the font name,and you can add your customize font in Font Options of "
+"Global Options in iro-Options."
+msgstr ""
+
+#: opt/customizer/init.php:1335
+msgid "Non-Emphasis Text Weight"
+msgstr ""
+
+#: opt/customizer/init.php:1354
+msgid "Global Font Size"
+msgstr ""
+
+#: opt/customizer/init.php:1374
+msgid "Widgets Panel"
+msgstr ""
+
+#: opt/customizer/init.php:1383
+msgid "Widgets Panel Button Radius"
+msgstr ""
+
+#: opt/customizer/init.php:1402
+msgid "Widgets Panel Widget Radius"
+msgstr ""
+
+#: opt/customizer/init.php:1421
+msgid "Widgets Panel Font"
+msgstr ""
+
+#: opt/customizer/init.php:1427
+msgid "Widgets Panel WP Widget Area"
+msgstr ""
+
+#: opt/customizer/init.php:1433
+msgid "Widgets Panel Day&Night Switching"
+msgstr ""
+
+#: opt/customizer/init.php:1439
+msgid "Widgets Panel Font Switching"
+msgstr ""
+
+#: opt/customizer/init.php:1445
+msgid "Global Default Font&Widgets Panel Font Switching A"
+msgstr ""
+
+#: opt/customizer/init.php:1459
+msgid "Widgets Panel Font Switching B"
+msgstr ""
+
+#: opt/customizer/init.php:1467
+msgid "♡Option Switcher"
+msgstr ""
+
+#: opt/customizer/init.php:1474
+msgid "♡Corresponding Background"
+msgstr ""
+
+#: opt/customizer/init.php:1481
+msgid "☆Option Switcher"
+msgstr ""
+
+#: opt/customizer/init.php:1488
+msgid "☆Corresponding Background"
+msgstr ""
+
+#: opt/customizer/init.php:1495
+msgid "□Option Switcher"
+msgstr ""
+
+#: opt/customizer/init.php:1502
+msgid "□Corresponding Background"
+msgstr ""
+
+#: opt/customizer/init.php:1509
+msgid "🍋Option Switcher"
+msgstr ""
+
+#: opt/customizer/init.php:1516
+msgid "🍋Corresponding Background"
+msgstr ""
+
+#: opt/customizer/init.php:1523
+msgid "Particles"
+msgstr ""
+
+#: opt/customizer/init.php:1532
+msgid "Sakura Falling Effects"
+msgstr ""
+
+#: opt/customizer/init.php:1534 opt/theme-options.php:1754
+#: opt/theme-options.php:2014
+msgid "Off"
+msgstr ""
+
+#: opt/customizer/init.php:1535
+msgid "Native Quantity"
+msgstr ""
+
+#: opt/customizer/init.php:1536
+msgid "Quarter Quantity"
+msgstr ""
+
+#: opt/customizer/init.php:1537
+msgid "Half Quantity"
+msgstr ""
+
+#: opt/customizer/init.php:1538
+msgid "Less Quantity"
+msgstr ""
+
+#: opt/customizer/init.php:1545
+msgid "Particles Effects"
+msgstr ""
+
+#: opt/customizer/init.php:1551
+msgid "Particles JSON"
+msgstr ""
+
+#: opt/customizer/init.php:1552
+msgid "Vist \"https://vincentgarreau.com/particles.js/\" for more help"
+msgstr ""
+
+#: opt/customizer/init.php:1569 opt/customizer/init.php:1594
+msgid "Footer Info"
+msgstr ""
+
+#: opt/customizer/init.php:1578
+msgid "Footer Content Distribution"
+msgstr ""
+
+#: opt/customizer/init.php:1580
+msgid "Center"
+msgstr ""
+
+#: opt/customizer/init.php:1581
+msgid "Two Coloumns"
+msgstr ""
+
+#: opt/customizer/init.php:1588
+msgid "Footer Sakura Icon"
+msgstr ""
+
+#: opt/customizer/init.php:1610
+msgid "Footer Text Font"
+msgstr ""
+
+#: opt/customizer/init.php:1624
+msgid "Footer Load Occupancy Query"
+msgstr ""
+
+#: opt/customizer/init.php:1630
+msgid "Footer Upyun League Logo"
+msgstr ""
+
+#: opt/customizer/init.php:1636
+msgid "Footer Hitokoto"
+msgstr ""
+
+#: opt/customizer/init.php:1642
+msgid "Hitokoto API address"
+msgstr ""
+
+#: opt/customizer/init.php:1668
+msgid "NProgress Loading Progress Bar"
+msgstr ""
+
+#: opt/customizer/init.php:1669
+msgid ""
+"Enabled by default, when loading page there will be a progress bar alert"
+msgstr ""
+
+#: opt/customizer/init.php:1675
+msgid "Global Smooth Scroll"
+msgstr ""
+
+#: opt/customizer/init.php:1676
+msgid "Enabled by default, page scrolling will be smoother"
+msgstr ""
+
+#: opt/customizer/init.php:1682
+#, fuzzy
+#| msgid "Verification Code"
+msgid "Pagination Mode"
 msgstr "驗證碼"
 
-#. Theme Name of the plugin/theme
-msgid "Sakurairo"
-msgstr "桜いろ"
-
-#. Theme URI of the plugin/theme
-msgid "https://github.com/mirai-mamori/Sakurairo"
+#: opt/customizer/init.php:1684
+msgid "Ajax Load"
 msgstr ""
 
-#. Description of the plugin/theme
+#: opt/customizer/init.php:1685
+msgid "Page Up/Down"
+msgstr ""
+
+#: opt/customizer/init.php:1692
+#, fuzzy
+#| msgid "Image Failed to Load"
+msgid "Next Page Auto Load"
+msgstr "圖像加載失敗"
+
+#: opt/customizer/init.php:1694
+msgid "0 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1695
+msgid "1 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1696
+msgid "2 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1697
+msgid "3 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1698
+msgid "4 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1699
+msgid "5 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1700
+msgid "6 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1701
+msgid "7 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1702
+msgid "8 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1703
+msgid "9 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1704
+msgid "10 Sec"
+msgstr ""
+
+#: opt/customizer/init.php:1705
+msgid "Do not autoload"
+msgstr ""
+
+#: opt/customizer/init.php:1712
+msgid "Placeholder SVG when loading the next page"
+msgstr ""
+
+#: opt/customizer/init.php:1726
+#, fuzzy
+#| msgid "Comments"
+msgid "Common Options"
+msgstr "條留言"
+
+#: opt/customizer/init.php:1735
+msgid "Page Layout Style"
+msgstr ""
+
+#: opt/customizer/init.php:1737
+msgid "Default Style"
+msgstr ""
+
+#: opt/customizer/init.php:1738
+#, fuzzy
+#| msgid "Title Style"
+msgid "Github Style"
+msgstr "標題樣式"
+
+#: opt/customizer/init.php:1745
+#, fuzzy
+#| msgid "Toggle Page Background Image"
+msgid "Page Decoration Image"
+msgstr "切換頁面背景圖像"
+
+#: opt/customizer/init.php:1751
+msgid "Page Title Animation"
+msgstr ""
+
+#: opt/customizer/init.php:1757
+msgid "Page Title Animation Time"
+msgstr ""
+
+#: opt/customizer/init.php:1788
+msgid "Page Image Placeholder SVG"
+msgstr ""
+
+#: opt/customizer/init.php:1795
+#, fuzzy
+#| msgid "Posts"
+msgid "Posts Pages"
+msgstr "篇"
+
+#: opt/customizer/init.php:1804
+msgid "This option is only valid for articles with cover"
+msgstr ""
+
+#: opt/customizer/init.php:1805
+msgid "Article Page Title Font Size"
+msgstr ""
+
+#: opt/customizer/init.php:1824
+msgid "Article Page Title Underline Animation"
+msgstr ""
+
+#: opt/customizer/init.php:1839
+msgid "Publish Time (Relatively)"
+msgstr ""
+
+#: opt/customizer/init.php:1840
+msgid "Last Edit Time (Relatively)"
+msgstr ""
+
+#: opt/customizer/init.php:1841
+msgid "Action Edit (only displays while user has sufficient permissions)"
+msgstr ""
+
+#: opt/customizer/init.php:1848
+msgid "Article Page Auto Show Menu"
+msgstr ""
+
+#: opt/customizer/init.php:1854
+msgid "Inline Code Background Color"
+msgstr ""
+
+#: opt/customizer/init.php:1871
+msgid "Inline Code Background Color In Dark Mode"
+msgstr ""
+
+#: opt/customizer/init.php:1889
+msgid "Pages Extend Options"
+msgstr ""
+
+#: opt/customizer/init.php:1898
+msgid "Article Page Function Bar"
+msgstr ""
+
+#: opt/customizer/init.php:1904
+#, fuzzy
+#| msgid "License"
+msgid "Article License"
+msgstr "文章知識共享協定"
+
+#: opt/customizer/init.php:1906
+#, fuzzy
+#| msgid "Not visible"
+msgid "Not Display"
+msgstr "不可见"
+
+#: opt/customizer/init.php:1928
+msgid "Reward Button Link"
+msgstr ""
+
+#: opt/customizer/init.php:1929
+msgid "The link click the reward button will redirect to"
+msgstr ""
+
+#: opt/customizer/init.php:1943 opt/customizer/init.php:1972
+#, fuzzy
+#| msgid "add image"
+msgid "Reward Image"
+msgstr "添加圖像"
+
+#: opt/customizer/init.php:1957 opt/customizer/init.php:1986
+msgid "Reward Image Link"
+msgstr ""
+
+#: opt/customizer/init.php:1958 opt/customizer/init.php:1987
+msgid "The link click the image will redirect to"
+msgstr ""
+
+#: opt/customizer/init.php:2000
+msgid "Article Page Author Avatar"
+msgstr ""
+
+#: opt/customizer/init.php:2013
+msgid "Article Page Author Name"
+msgstr ""
+
+#: opt/customizer/init.php:2026
+msgid "Article Page Author Signature"
+msgstr ""
+
+#: opt/customizer/init.php:2039
+msgid "Article Last Update Time"
+msgstr ""
+
+#: opt/customizer/init.php:2052
+msgid "Article Tag"
+msgstr ""
+
+#: opt/customizer/init.php:2065
+msgid "Article Page Prev/Next Article Switcher"
+msgstr ""
+
+#: opt/customizer/init.php:2072
+#, fuzzy
+#| msgid "Comment Count"
+msgid "Comment Options"
+msgstr "留言數"
+
+#: opt/customizer/init.php:2081
+msgid "Page Comment Area Display"
+msgstr ""
+
+#: opt/customizer/init.php:2083
+msgid "Expand"
+msgstr "展開"
+
+#: opt/customizer/init.php:2084
+msgid "Fold"
+msgstr ""
+
+#: opt/customizer/init.php:2091
+msgid "Custom CommentBox Placeholder"
+msgstr ""
+
+#: opt/customizer/init.php:2097
+msgid "Custom Submit Button Content"
+msgstr ""
+
+#: opt/customizer/init.php:2103
+msgid "Page Comment Area Bottom Right Background Image"
+msgstr ""
+
+#: opt/customizer/init.php:2117
+#, fuzzy
+#| msgid "Comment reply notify"
+msgid "Comment Area Emoticon"
+msgstr "郵件通知"
+
+#: opt/customizer/init.php:2118
+msgid "Please go to the backend to configure your custom emoticon pack"
+msgstr ""
+
+#: opt/customizer/init.php:2121
+msgid "BiliBili Emoticon Pack"
+msgstr ""
+
+#: opt/customizer/init.php:2122
+msgid "Baidu Tieba Emoticon Pack"
+msgstr ""
+
+#: opt/customizer/init.php:2123
+msgid "Emoji"
+msgstr ""
+
+#: opt/customizer/init.php:2124
+msgid "Customized Emoticon Pack"
+msgstr ""
+
+#: opt/customizer/init.php:2130
 msgid ""
-"A WordPress theme that is built with AI-assisted reading features, colorful, "
-"user-friendly, well-rounded, and rich in functionalities. (Based on Theme "
-"Sakura)"
-msgstr ""
-"一款具有 AI 輔助閱讀功能的 WordPress 主題，多彩、友善、功能全面、體驗完善。"
-"(基於主題 Sakura)"
-
-#. Author of the plugin/theme
-msgid "Created by Fuukei"
+"For more detailed configuration of the comment area, please go to the "
+"backend configuration"
 msgstr ""
 
-#. Author URI of the plugin/theme
-msgid "https://docs.fuukei.org/"
+#: opt/theme-options.php:9
+msgid "iro主题设置"
 msgstr ""
+
+#: opt/theme-options.php:14
+msgid "欢迎！"
+msgstr ""
+
+#: opt/theme-options.php:20
+msgid "感谢每一位支持我们的人！"
+msgstr ""
+
+#: opt/theme-options.php:25
+msgid ""
+"<a href=\"https://afdian.com/a/mamori\"><img alt=\"afdian\" height=\"50\" "
+"src=\"https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/afdian.webp\"></a><a "
+"href=\"https://liberapay.com/furina/donate\"><img alt=\"liberapay\" "
+"height=\"50\" src=\"https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/"
+"liberapay.webp\"></a><a href=\"https://app.unifans.io/c/"
+"somekawahitomi\"><img alt=\"unifans\" height=\"50\" src=\"https://s.nmxc.ltd/"
+"sakurairo_vision/@3.0/readme/unifans.webp\"></a>"
+msgstr ""
+
+#: opt/theme-options.php:30
+msgid ""
+"<img src=\"https://fuukei-api.nyat.icu/api/sponsors\"  alt=\"Sponsor\" "
+"width=\"100%\" height=\"100%\" />"
+msgstr ""
+
+#: opt/theme-options.php:38 opt/theme-options.php:275
+msgid "基本设置"
+msgstr ""
+
+#: opt/theme-options.php:44
+msgid "站点图标"
+msgstr ""
+
+#: opt/theme-options.php:45
+msgid "填写链接，它将会出现在浏览器标签页的标题旁边"
+msgstr ""
+
+#: opt/theme-options.php:52
+msgid "自动SEO"
+msgstr ""
+
+#: opt/theme-options.php:54
+msgid "不使用主题SEO"
+msgstr ""
+
+#: opt/theme-options.php:55
+msgid "自动完善SEO"
+msgstr ""
+
+#: opt/theme-options.php:56
+msgid "总是加上所有SEO"
+msgstr ""
+
+#: opt/theme-options.php:58
+msgid "如果启用，主题将根据情况决定是否加上SEO相关页面meta属性"
+msgstr ""
+
+#: opt/theme-options.php:65
+msgid "站点关键词"
+msgstr ""
+
+#: opt/theme-options.php:67
+msgid "使用英文逗号分隔，并尽量控制在五个词以内"
+msgstr ""
+
+#: opt/theme-options.php:73
+msgid "站点描述"
+msgstr ""
+
+#: opt/theme-options.php:75
+msgid ""
+"提供一些关于网站内容的描述，控制在120字以内，它将出现在搜索引擎搜索结果条目的"
+"下方"
+msgstr ""
+
+#: opt/theme-options.php:83
+msgid "全局设置"
+msgstr ""
+
+#: opt/theme-options.php:89
+msgid "外观设置"
+msgstr ""
+
+#: opt/theme-options.php:94
+msgid "主题配色"
+msgstr ""
+
+#: opt/theme-options.php:116 opt/theme-options.php:182
+msgid "主要文字颜色"
+msgstr ""
+
+#: opt/theme-options.php:117 opt/theme-options.php:183
+msgid "文章标题和正文内容等文字的颜色"
+msgstr ""
+
+#: opt/theme-options.php:124 opt/theme-options.php:190
+msgid "次要文字颜色"
+msgstr ""
+
+#: opt/theme-options.php:125 opt/theme-options.php:191
+msgid "帮助和页脚等文字的颜色"
+msgstr ""
+
+#: opt/theme-options.php:132 opt/theme-options.php:198
+msgid "激活组件颜色"
+msgstr ""
+
+#: opt/theme-options.php:133 opt/theme-options.php:199
+msgid "鼠标悬浮链接以及按钮和高亮标签等部分的颜色"
+msgstr ""
+
+#: opt/theme-options.php:140 opt/theme-options.php:206
+msgid "代码块背景色"
+msgstr ""
+
+#: opt/theme-options.php:147 opt/theme-options.php:213
+msgid "组件透明度"
+msgstr ""
+
+#: opt/theme-options.php:157 opt/theme-options.php:223
+msgid "背景透明度"
+msgstr ""
+
+#: opt/theme-options.php:167
+msgid "背景模糊度"
+msgstr ""
+
+#: opt/theme-options.php:176
+msgid "深色模式"
+msgstr ""
+
+#: opt/theme-options.php:233
+msgid "深色模式图像亮度"
+msgstr ""
+
+#: opt/theme-options.php:243
+msgid "自动切换深色模式"
+msgstr ""
+
+#: opt/theme-options.php:250
+msgid ""
+"<p><strong>Client local time:</strong>Dark mode will switch on automatically "
+"from 22:00 to 7:00</p><p><strong>Follow client settings:</strong>Follow "
+"client browser settings</p><p><strong>Always on:</strong>Always on, except "
+"being configured by the client</p>"
+msgstr ""
+
+#: opt/theme-options.php:262
+msgid "纪念模式日期"
+msgstr ""
+
+#: opt/theme-options.php:263
+msgid "一行一个，例如7-21，主题会在这些日期加上黑白滤镜"
+msgstr ""
+
+#: opt/theme-options.php:270
+msgid "字体设置"
+msgstr ""
+
+#: opt/theme-options.php:281
+msgid "字体大小"
+msgstr ""
+
+#: opt/theme-options.php:282
+msgid ""
+"此处以像素为单位，主题大部分组件会以此为基础调整自身字体大小，以实现等比缩放"
+"的效果"
+msgstr ""
+
+#: opt/theme-options.php:293
+msgid "非强调文本字重"
+msgstr ""
+
+#: opt/theme-options.php:294
+msgid "Slide to adjust, the recommended value range is 300-500"
+msgstr ""
+
+#: opt/theme-options.php:304
+msgid "默认字体"
+msgstr ""
+
+#: opt/theme-options.php:309
+msgid "外部字体"
+msgstr ""
+
+#: opt/theme-options.php:315
+msgid "额外字体"
+msgstr ""
+
+#: opt/theme-options.php:320 opt/theme-options.php:480
+msgid "字体名称"
+msgstr ""
+
+#: opt/theme-options.php:325
+msgid "字体链接"
+msgstr ""
+
+#: opt/theme-options.php:340
+msgid "导航栏logo"
+msgstr ""
+
+#: opt/theme-options.php:347
+msgid "导航栏标题"
+msgstr ""
+
+#: opt/theme-options.php:353
+msgid "导航栏标题字体"
+msgstr ""
+
+#: opt/theme-options.php:359
+msgid "导航栏选项字体"
+msgstr ""
+
+#: opt/theme-options.php:365
+msgid "导航栏选项分布位置"
+msgstr ""
+
+#: opt/theme-options.php:367
+msgid "左"
+msgstr ""
+
+#: opt/theme-options.php:368
+msgid "中"
+msgstr ""
+
+#: opt/theme-options.php:369
+msgid "右"
+msgstr ""
+
+#: opt/theme-options.php:370
+msgid "均匀"
+msgstr ""
+
+#: opt/theme-options.php:378
+msgid "导航栏选项间距"
+msgstr ""
+
+#: opt/theme-options.php:388
+msgid "导航栏菜单圆角"
+msgstr ""
+
+#: opt/theme-options.php:398
+msgid "导航栏封面切换按钮"
+msgstr ""
+
+#: opt/theme-options.php:405
+msgid "导航栏用户栏"
+msgstr ""
+
+#: opt/theme-options.php:413
+msgid "前台设置"
+msgstr ""
+
+#: opt/theme-options.php:419
+msgid "工具栏"
+msgstr ""
+
+#: opt/theme-options.php:425
+msgid "工具栏按钮圆角"
+msgstr ""
+
+#: opt/theme-options.php:435
+msgid "工具栏面板圆角"
+msgstr ""
+
+#: opt/theme-options.php:445
+msgid "工具栏字体"
+msgstr ""
+
+#: opt/theme-options.php:451
+msgid "工具栏wordpress组件"
+msgstr ""
+
+#: opt/theme-options.php:452
+msgid "启用后将会显示wordpress可编辑工具栏"
+msgstr ""
+
+#: opt/theme-options.php:453
+msgid "你可以前往<a href=\"/wp-admin/widgets.php\"> 此处 </a>编辑"
+msgstr ""
+
+#: opt/theme-options.php:460
+msgid "工具栏深色模式切换按钮"
+msgstr ""
+
+#: opt/theme-options.php:467
+msgid "工具栏字体切换按钮"
+msgstr ""
+
+#: opt/theme-options.php:474
+msgid "工具栏可选字体"
+msgstr ""
+
+#: opt/theme-options.php:475 opt/theme-options.php:526
+msgid ""
+"请使用有效的字体名称，需要在全局字体设置中添加对应名称的额外字体才能生效"
+msgstr ""
+
+#: opt/theme-options.php:487
+msgid "前台背景"
+msgstr ""
+
+#: opt/theme-options.php:493
+msgid "前台默认背景"
+msgstr ""
+
+#: opt/theme-options.php:500
+msgid "前台背景填充模式"
+msgstr ""
+
+#: opt/theme-options.php:501
+msgid ""
+"根据你选择的图片类型选择合适的填充方案，插画为缩放至填充满，纹理为复制并铺满"
+msgstr ""
+
+#: opt/theme-options.php:503
+msgid "插画"
+msgstr ""
+
+#: opt/theme-options.php:504
+msgid "纹理"
+msgstr ""
+
+#: opt/theme-options.php:512
+msgid "前台背景粒子特效"
+msgstr ""
+
+#: opt/theme-options.php:514 opt/theme-options.php:617
+#: opt/theme-options.php:2214
+msgid "关闭"
+msgstr ""
+
+#: opt/theme-options.php:515
+msgid "樱花"
+msgstr ""
+
+#: opt/theme-options.php:516
+msgid "雪"
+msgstr ""
+
+#: opt/theme-options.php:517 opt/theme-options.php:1178
+#: opt/theme-options.php:1726
+msgid "自定义"
+msgstr ""
+
+#: opt/theme-options.php:525
+msgid "内建粒子特效选项"
+msgstr ""
+
+#: opt/theme-options.php:532
+msgid "粒子数量"
+msgstr ""
+
+#: opt/theme-options.php:540
+msgid "粒子最小大小"
+msgstr ""
+
+#: opt/theme-options.php:548
+msgid "粒子最大大小"
+msgstr ""
+
+#: opt/theme-options.php:556
+msgid "粒子速度"
+msgstr ""
+
+#: opt/theme-options.php:574
+msgid "自定义粒子特效实现"
+msgstr ""
+
+#: opt/theme-options.php:576
+msgid "参考tsParticle"
+msgstr ""
+
+#: opt/theme-options.php:583
+msgid "页尾设置"
+msgstr ""
+
+#: opt/theme-options.php:589
+msgid "页尾樱花"
+msgstr ""
+
+#: opt/theme-options.php:596
+msgid "页尾字体"
+msgstr ""
+
+#: opt/theme-options.php:603
+msgid "页尾html代码"
+msgstr ""
+
+#: opt/theme-options.php:604
+msgid ""
+"可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全"
+msgstr ""
+
+#: opt/theme-options.php:609
+msgid "一言"
+msgstr ""
+
+#: opt/theme-options.php:615
+msgid "页脚一言"
+msgstr ""
+
+#: opt/theme-options.php:618
+msgid "总是使用API"
+msgstr ""
+
+#: opt/theme-options.php:619
+msgid "总是自定义"
+msgstr ""
+
+#: opt/theme-options.php:620
+msgid "各一半"
+msgstr ""
+
+#: opt/theme-options.php:628
+msgid ""
+"<h4>Hitokoto API Setup Instructions</h4> <p>Fill in as the example:<code> "
+"[\"https://v1.hitokoto.cn/\", \"https://v1.hitokoto.cn/\"]</code>, where the "
+"first API will be used first and the next ones will be the backup. </p> "
+"<p><strong>Official API:</strong> See the <a href=\"https://"
+"developer.hitokoto.cn/sentence/\"> documentation</a> for how to use it, and "
+"the parameter \"return code\" should not be anything except JSON. <a "
+"href=\"https://v1.hitokoto.cn/\">https://v1.hitokoto.cn/</a></p>"
+msgstr ""
+
+#: opt/theme-options.php:636
+msgid "一言API地址"
+msgstr ""
+
+#: opt/theme-options.php:638
+msgid "填写地址，格式为 JavaScript 数组"
+msgstr ""
+
+#: opt/theme-options.php:645
+msgid "一言自定义内容"
+msgstr ""
+
+#: opt/theme-options.php:647
+msgid "一行一句，尽量不要出现特殊字符。"
+msgstr ""
+
+#: opt/theme-options.php:655
+msgid "搜索设置"
+msgstr ""
+
+#: opt/theme-options.php:662
+msgid "导航栏搜索按钮"
+msgstr ""
+
+#: opt/theme-options.php:669
+msgid "搜索页过滤栏"
+msgstr ""
+
+#: opt/theme-options.php:676
+msgid "在搜索结果中显示说说"
+msgstr ""
+
+#: opt/theme-options.php:683
+msgid "在搜索结果中显示页面"
+msgstr ""
+
+#: opt/theme-options.php:690
+msgid "只有管理员可以搜索页面"
+msgstr ""
+
+#: opt/theme-options.php:700
+msgid "在搜索结果中置顶置顶文章"
+msgstr ""
+
+#: opt/theme-options.php:707
+msgid "搜索结果排除"
+msgstr ""
+
+#: opt/theme-options.php:708
+msgid ""
+"从搜索结果中排除自定义ID内容，在使用自定义登录页面后推荐使用，你可以从编辑页"
+"的链接中获取，填写数字ID，例如“12,34”"
+msgstr ""
+
+#: opt/theme-options.php:714
+msgid "实时搜索"
+msgstr ""
+
+#: opt/theme-options.php:715
+msgid "开启后前台客户端会在搜索前加载一份索引，并实时显示键入后的相关搜索结果"
+msgstr ""
+
+#: opt/theme-options.php:724 opt/theme-options.php:1978
+msgid "其他设置"
+msgstr ""
+
+#: opt/theme-options.php:730
+msgid "效果和动画"
+msgstr ""
+
+#: opt/theme-options.php:736
+msgid "PJAX"
+msgstr ""
+
+#: opt/theme-options.php:737
+msgid ""
+"启用后前台站内跳转将不会刷新页面，体验更好，但与第三方内容可能存在兼容性问"
+"题，请按需使用"
+msgstr ""
+
+#: opt/theme-options.php:744
+msgid "Resources that still need refreshing in the footer after enabling PJAX"
+msgstr ""
+
+#: opt/theme-options.php:746
+msgid ""
+"After enabling PJAX, custom content in the footer will not be refreshed on "
+"page navigation. You can specify paths for JavaScript and stylesheet "
+"resources that need to be reloaded on each page in the footer here, one per "
+"line. These resources will be reloaded once PJAX completes content loading."
+msgstr ""
+
+#: opt/theme-options.php:752
+msgid "顶部阅读进度条"
+msgstr ""
+
+#: opt/theme-options.php:753
+msgid "开启后会在页面顶部会显示进度条，进度取决于当前页面的滚动进度"
+msgstr ""
+
+#: opt/theme-options.php:760
+msgid "顶部加载进度条"
+msgstr ""
+
+#: opt/theme-options.php:761
+msgid "开启后会在页面顶部会显示进度条，进度取决于下一页的加载进度"
+msgstr ""
+
+#: opt/theme-options.php:768
+msgid "文章列表分页导航方式"
+msgstr ""
+
+#: opt/theme-options.php:770
+msgid "滚动加载"
+msgstr ""
+
+#: opt/theme-options.php:771
+msgid "传统分页"
+msgstr ""
+
+#: opt/theme-options.php:779
+msgid "ajax自动加载等待时间"
+msgstr ""
+
+#: opt/theme-options.php:790
+msgid "站内头像占位"
+msgstr ""
+
+#: opt/theme-options.php:797
+msgid "站内图片占位"
+msgstr ""
+
+#: opt/theme-options.php:806
+msgid "首页设置"
+msgstr ""
+
+#: opt/theme-options.php:812
+msgid "封面设置"
+msgstr ""
+
+#: opt/theme-options.php:819
+msgid "封面开关"
+msgstr ""
+
+#: opt/theme-options.php:826
+msgid "封面高度"
+msgstr ""
+
+#: opt/theme-options.php:827
+msgid "封面占可视窗口的百分比"
+msgstr ""
+
+#: opt/theme-options.php:839
+msgid "封面信息栏"
+msgstr ""
+
+#: opt/theme-options.php:845
+msgid "首页聚焦显示内容"
+msgstr ""
+
+#: opt/theme-options.php:847 opt/theme-options.php:1058
+msgid "无"
+msgstr ""
+
+#: opt/theme-options.php:848
+msgid "头像"
+msgstr ""
+
+#: opt/theme-options.php:849
+msgid "文字"
+msgstr ""
+
+#: opt/theme-options.php:850
+msgid "Mashiro特效文字"
+msgstr ""
+
+#: opt/theme-options.php:861
+msgid "个人头像"
+msgstr ""
+
+#: opt/theme-options.php:862
+msgid "最佳宽高比为1:1"
+msgstr ""
+
+#: opt/theme-options.php:869
+msgid "封面文字配置"
+msgstr ""
+
+#: opt/theme-options.php:875 opt/theme-options.php:934
+#: opt/theme-options.php:1257 opt/theme-options.php:1279
+msgid "内容"
+msgstr ""
+
+#: opt/theme-options.php:880 opt/theme-options.php:939
+msgid "字体"
+msgstr ""
+
+#: opt/theme-options.php:885 opt/theme-options.php:944
+msgid "大小"
+msgstr ""
+
+#: opt/theme-options.php:894
+msgid "颜色"
+msgstr ""
+
+#: opt/theme-options.php:907
+msgid "封面信息栏开关"
+msgstr ""
+
+#: opt/theme-options.php:915
+msgid "封面信息栏圆角"
+msgstr ""
+
+#: opt/theme-options.php:929
+msgid "封面签名"
+msgstr ""
+
+#: opt/theme-options.php:960
+msgid "封面打字机效果"
+msgstr ""
+
+#: opt/theme-options.php:971
+msgid "封面打字机引号"
+msgstr ""
+
+#: opt/theme-options.php:983
+msgid "封面打字机占位符"
+msgstr ""
+
+#: opt/theme-options.php:996
+msgid "封面打字机配置"
+msgstr ""
+
+#: opt/theme-options.php:1007
+msgid "封面图片"
+msgstr ""
+
+#: opt/theme-options.php:1013
+msgid "PC封面图片地址"
+msgstr ""
+
+#: opt/theme-options.php:1014
+msgid "填写图片地址或者随机图API"
+msgstr ""
+
+#: opt/theme-options.php:1026
+msgid "移动端封面图片地址"
+msgstr ""
+
+#: opt/theme-options.php:1030
+msgid "填写图片地址或者随机图API，未填写则使用与PC图片相同的配置"
+msgstr ""
+
+#: opt/theme-options.php:1039
+msgid "前台背景一体化"
+msgstr ""
+
+#: opt/theme-options.php:1040
+msgid "开启后封面背景将会变透明，以实现前台背景与封面的一体化效果"
+msgstr ""
+
+#: opt/theme-options.php:1048
+msgid "使用特色图片作为背景"
+msgstr ""
+
+#: opt/theme-options.php:1049
+msgid "在文章页将会使用特色图片作为背景"
+msgstr ""
+
+#: opt/theme-options.php:1056
+msgid "封面图片滤镜"
+msgstr ""
+
+#: opt/theme-options.php:1059
+msgid "浅色滤镜"
+msgstr ""
+
+#: opt/theme-options.php:1060
+msgid "深色滤镜"
+msgstr ""
+
+#: opt/theme-options.php:1061
+msgid "网格滤镜"
+msgstr ""
+
+#: opt/theme-options.php:1062
+msgid "点状滤镜"
+msgstr ""
+
+#: opt/theme-options.php:1070 opt/theme-options.php:1076
+msgid "封面视频"
+msgstr ""
+
+#: opt/theme-options.php:1077
+msgid "用视频代替封面图片"
+msgstr ""
+
+#: opt/theme-options.php:1085
+msgid "封面视频循环"
+msgstr ""
+
+#: opt/theme-options.php:1090
+msgid "开启后视频将会循环播放"
+msgstr ""
+
+#: opt/theme-options.php:1097
+msgid "视频自动恢复"
+msgstr ""
+
+#: opt/theme-options.php:1102
+msgid "开启后，将在用户回到首页后自动恢复播放进度，需要开启PJAX"
+msgstr ""
+
+#: opt/theme-options.php:1109
+msgid "视频URL地址"
+msgstr ""
+
+#: opt/theme-options.php:1116
+msgid "视频的文件地址"
+msgstr ""
+
+#: opt/theme-options.php:1123
+msgid "社交区域"
+msgstr ""
+
+#: opt/theme-options.php:1130
+msgid "封面社交栏开关"
+msgstr ""
+
+#: opt/theme-options.php:1137
+msgid "社交栏图标包"
+msgstr ""
+
+#: opt/theme-options.php:1138
+msgid "选择你喜欢的图标包。图标包引用信息详见关于主题"
+msgstr ""
+
+#: opt/theme-options.php:1152
+msgid "社交区域展示内容"
+msgstr ""
+
+#: opt/theme-options.php:1158
+msgid "显示的图标"
+msgstr ""
+
+#: opt/theme-options.php:1160
+msgid "QQ"
+msgstr "QQ"
+
+#: opt/theme-options.php:1161
+msgid "微信"
+msgstr ""
+
+#: opt/theme-options.php:1162 opt/theme-options.php:1723
+msgid "bilibili"
+msgstr ""
+
+#: opt/theme-options.php:1163
+msgid "网易云音乐"
+msgstr ""
+
+#: opt/theme-options.php:1164
+msgid "新浪"
+msgstr ""
+
+#: opt/theme-options.php:1165
+msgid "Github"
+msgstr ""
+
+#: opt/theme-options.php:1166
+msgid "Telegram"
+msgstr ""
+
+#: opt/theme-options.php:1167 opt/theme-options.php:1967
+#, fuzzy
+#| msgid "Steam Cache"
+msgid "Steam"
+msgstr "Steam 快取"
+
+#: opt/theme-options.php:1168
+msgid "Youtube"
+msgstr ""
+
+#: opt/theme-options.php:1169
+msgid "instgram"
+msgstr ""
+
+#: opt/theme-options.php:1170
+msgid "抖音"
+msgstr ""
+
+#: opt/theme-options.php:1171
+msgid "小红书"
+msgstr ""
+
+#: opt/theme-options.php:1172
+msgid "Discord"
+msgstr ""
+
+#: opt/theme-options.php:1173
+msgid "知乎"
+msgstr ""
+
+#: opt/theme-options.php:1174
+msgid "领英"
+msgstr ""
+
+#: opt/theme-options.php:1175
+msgid "推特/X"
+msgstr ""
+
+#: opt/theme-options.php:1176
+msgid "facebook"
+msgstr ""
+
+#: opt/theme-options.php:1177
+msgid "邮箱"
+msgstr ""
+
+#: opt/theme-options.php:1184
+msgid "自定义图标"
+msgstr ""
+
+#: opt/theme-options.php:1189
+msgid "二维码"
+msgstr ""
+
+#: opt/theme-options.php:1194 opt/theme-options.php:1329
+msgid "标题"
+msgstr ""
+
+#: opt/theme-options.php:1199 opt/theme-options.php:1612
+#: opt/theme-options.php:1624
+msgid "链接"
+msgstr ""
+
+#: opt/theme-options.php:1208 opt/theme-options.php:1215
+msgid "首页布局"
+msgstr ""
+
+#: opt/theme-options.php:1216
+msgid ""
+"Select the homepage components you want to display. They will appear in the "
+"order above."
+msgstr ""
+
+#: opt/theme-options.php:1221 opt/theme-options.php:1312
+msgid "展示区域"
+msgstr ""
+
+#: opt/theme-options.php:1222
+msgid "最新文章"
+msgstr ""
+
+#: opt/theme-options.php:1223
+msgid "自定义页面"
+msgstr ""
+
+#: opt/theme-options.php:1240
+msgid "区域标题"
+msgstr ""
+
+#: opt/theme-options.php:1246
+msgid "展示区域标题配置"
+msgstr ""
+
+#: opt/theme-options.php:1251 opt/theme-options.php:1274
+msgid "图标"
+msgstr ""
+
+#: opt/theme-options.php:1252
+msgid ""
+"图标元素的类名，自定义前需在页面头部嵌入自定义的图标集样式，例如fontawesome,"
+"否则会不显示"
+msgstr ""
+
+#: opt/theme-options.php:1269
+msgid "文章区域标题配置"
+msgstr ""
+
+#: opt/theme-options.php:1291
+msgid "区域标题字体"
+msgstr ""
+
+#: opt/theme-options.php:1298
+msgid "首页区域标题位置"
+msgstr ""
+
+#: opt/theme-options.php:1319
+msgid "展示区域内容"
+msgstr ""
+
+#: opt/theme-options.php:1324
+msgid "图片链接"
+msgstr ""
+
+#: opt/theme-options.php:1334
+msgid "描述"
+msgstr ""
+
+#: opt/theme-options.php:1339
+msgid "跳转链接"
+msgstr ""
+
+#: opt/theme-options.php:1363
+msgid "文章区域"
+msgstr ""
+
+#: opt/theme-options.php:1370
+msgid "文章区域卡片设计"
+msgstr ""
+
+#: opt/theme-options.php:1371
+msgid "你可以选择信件设计或者票券设计"
+msgstr ""
+
+#: opt/theme-options.php:1382
+msgid "文章卡片显示信息"
+msgstr ""
+
+#: opt/theme-options.php:1387
+msgid "作者"
+msgstr ""
+
+#: opt/theme-options.php:1388
+msgid "分类"
+msgstr ""
+
+#: opt/theme-options.php:1389
+msgid "评论数量"
+msgstr ""
+
+#: opt/theme-options.php:1390
+msgid "浏览量"
+msgstr ""
+
+#: opt/theme-options.php:1398
+msgid "文章区域装饰特色图片选项"
+msgstr ""
+
+#: opt/theme-options.php:1400
+msgid "始终且使用封面API"
+msgstr ""
+
+#: opt/theme-options.php:1401
+msgid "始终且使用独立API"
+msgstr ""
+
+#: opt/theme-options.php:1402
+msgid "仅特色图片"
+msgstr ""
+
+#: opt/theme-options.php:1410
+msgid "文章封面随机图API"
+msgstr ""
+
+#: opt/theme-options.php:1418
+msgid "文章卡片设计"
+msgstr ""
+
+#: opt/theme-options.php:1423
+msgid "文章卡片圆角"
+msgstr ""
+
+#: opt/theme-options.php:1432
+msgid "文章卡片元信息圆角"
+msgstr ""
+
+#: opt/theme-options.php:1441
+msgid "文章卡片标题圆角"
+msgstr ""
+
+#: opt/theme-options.php:1450
+msgid "文章卡片标题大小"
+msgstr ""
+
+#: opt/theme-options.php:1468
+msgid "在首页显示说说"
+msgstr ""
+
+#: opt/theme-options.php:1477
+msgid "文章与页面设置"
+msgstr ""
+
+#: opt/theme-options.php:1483
+msgid "通用"
+msgstr ""
+
+#: opt/theme-options.php:1490
+msgid "使用特色图片作为头图"
+msgstr ""
+
+#: opt/theme-options.php:1491
+msgid "启用后当文章或页面有特色图片时，将会用作头图装饰"
+msgstr ""
+
+#: opt/theme-options.php:1498
+msgid "页面标题字体大小（无头图）"
+msgstr ""
+
+#: opt/theme-options.php:1509
+msgid "页面标题字体大小（有头图）"
+msgstr ""
+
+#: opt/theme-options.php:1520
+msgid "文章目录"
+msgstr ""
+
+#: opt/theme-options.php:1521
+msgid "在文章页显示目录(检测到内容有标题会自动生成大纲并显示)"
+msgstr ""
+
+#: opt/theme-options.php:1528
+msgid "页面目录"
+msgstr ""
+
+#: opt/theme-options.php:1529
+msgid "在页面显示目录"
+msgstr ""
+
+#: opt/theme-options.php:1538
+msgid "文章页面"
+msgstr ""
+
+#: opt/theme-options.php:1544
+msgid "文章拓展区域"
+msgstr ""
+
+#: opt/theme-options.php:1550
+msgid "文章功能栏"
+msgstr ""
+
+#: opt/theme-options.php:1551
+msgid "默认开启，将在文章页面显示下方启用的功能"
+msgstr ""
+
+#: opt/theme-options.php:1558
+msgid "文章版权协议"
+msgstr ""
+
+#: opt/theme-options.php:1560
+msgid ""
+"默认开启，版权协议将显示在功能栏中。也可通过文章自定义字段「license」单独指"
+"定。"
+msgstr ""
+
+#: opt/theme-options.php:1562
+msgid "不显示"
+msgstr ""
+
+#: opt/theme-options.php:1577
+msgid ""
+"<p><strong>\"BY\"</strong> 表示转载时须署名原作者</p><p><strong>\"NC\"</"
+"strong> 表示不得用于商业用途</p><p><strong>\"ND\"</strong> 表示不得演绎（不可"
+"修改后再发布）</p><p><strong>\"SA\"</strong> 表示演绎作品须以相同协议共享</"
+"p><p><strong>\"CC0\"</strong> 是公共领域贡献工具，允许创作者放弃版权，将作品"
+"投入全球公共领域。</p><p>详细说明与法律建议请访问<a href=\"https://"
+"creativecommons.org/\">官方网站</a></p><p>若想<strong>按文章</strong>单独指定"
+"协议，请把文章自定义字段 \"license\" 修改（或添加）为对应格式的协议名。</"
+"p><p>例如：</p><ul><li><code>cc0</code> 对应 CC0 1.0</li><li><code>cc-by-nc-"
+"sa</code> 对应 CC BY-NC-SA 4.0</li></ul>"
+msgstr ""
+
+#: opt/theme-options.php:1594
+msgid "打赏"
+msgstr ""
+
+#: opt/theme-options.php:1600
+msgid "按钮链接"
+msgstr ""
+
+#: opt/theme-options.php:1601
+msgid "点击打赏按钮后跳转的链接"
+msgstr ""
+
+#: opt/theme-options.php:1606 opt/theme-options.php:1618
+#: opt/theme-options.php:1776
+msgid "图片"
+msgstr ""
+
+#: opt/theme-options.php:1613 opt/theme-options.php:1625
+msgid "点击图片后跳转的链接"
+msgstr ""
+
+#: opt/theme-options.php:1633
+msgid "文章作者头像"
+msgstr ""
+
+#: opt/theme-options.php:1635
+msgid "默认开启，作者头像将显示在功能栏中"
+msgstr ""
+
+#: opt/theme-options.php:1642
+msgid "文章作者名称"
+msgstr ""
+
+#: opt/theme-options.php:1644
+msgid "开启后作者名称将显示在功能栏中"
+msgstr ""
+
+#: opt/theme-options.php:1651
+msgid "文章作者签名"
+msgstr ""
+
+#: opt/theme-options.php:1653
+msgid "默认开启，作者签名将显示在功能栏中"
+msgstr ""
+
+#: opt/theme-options.php:1660
+msgid "文章最后更新时间"
+msgstr ""
+
+#: opt/theme-options.php:1662
+msgid "开启后最后更新时间将显示在功能栏中"
+msgstr ""
+
+#: opt/theme-options.php:1669
+msgid "文章标签"
+msgstr ""
+
+#: opt/theme-options.php:1671
+msgid "默认开启，文章标签将显示在功能栏中"
+msgstr ""
+
+#: opt/theme-options.php:1678
+msgid "文章上一篇/下一篇导航"
+msgstr ""
+
+#: opt/theme-options.php:1679
+msgid "默认开启，文章页面将显示上一篇/下一篇切换"
+msgstr ""
+
+#: opt/theme-options.php:1688
+msgid "评论区设置"
+msgstr ""
+
+#: opt/theme-options.php:1694
+msgid "评论区外观"
+msgstr ""
+
+#: opt/theme-options.php:1700
+msgid "评论区输入框占位符"
+msgstr ""
+
+#: opt/theme-options.php:1701
+msgid "要来喵一句吗？"
+msgstr ""
+
+#: opt/theme-options.php:1707
+msgid "评论区提交按钮文本"
+msgstr ""
+
+#: opt/theme-options.php:1713
+msgid "评论区功能"
+msgstr ""
+
+#: opt/theme-options.php:1719
+msgid "评论区表情"
+msgstr ""
+
+#: opt/theme-options.php:1720
+msgid ""
+"选择要在评论区域输入框中显示的表情。全部取消选中可关闭评论区域输入框表情功"
+"能。"
+msgstr ""
+
+#: opt/theme-options.php:1724
+msgid "贴吧"
+msgstr ""
+
+#: opt/theme-options.php:1725
+msgid "颜文字"
+msgstr ""
+
+#: opt/theme-options.php:1734
+msgid "自定义表情包名称"
+msgstr ""
+
+#: opt/theme-options.php:1735
+msgid "建议输入少于4个汉字的内容，以免造成移动端的兼容性问题。"
+msgstr ""
+
+#: opt/theme-options.php:1743
+msgid "评论区评论UA"
+msgstr ""
+
+#: opt/theme-options.php:1744
+msgid "开启之后页面评论区域将显示用户的浏览器，操作系统信息"
+msgstr ""
+
+#: opt/theme-options.php:1751
+msgid "评论区验证码"
+msgstr ""
+
+#: opt/theme-options.php:1752
+msgid "开启后游客评论需要通过验证码验证"
+msgstr ""
+
+#: opt/theme-options.php:1755 opt/theme-options.php:2015
+msgid "主题内建验证码"
+msgstr ""
+
+#: opt/theme-options.php:1756 opt/theme-options.php:2016
+msgid "Cloudflare Turnstile"
+msgstr ""
+
+#: opt/theme-options.php:1763
+msgid "自定义表情包"
+msgstr ""
+
+#: opt/theme-options.php:1769
+msgid "自定义表情列表"
+msgstr ""
+
+#: opt/theme-options.php:1770
+msgid ""
+"表情包名称见上方「自定义表情包名称」。每行的「表情名」就是写进评论的标记，形"
+"如 {{doge}}"
+msgstr ""
+
+#: opt/theme-options.php:1777
+msgid "建议用正方形图片，尺寸接近下面的显示高度"
+msgstr ""
+
+#: opt/theme-options.php:1782
+msgid "表情名"
+msgstr ""
+
+#: opt/theme-options.php:1783
+msgid "写进评论的标记名，同一表情包内不能重复；不要带空格、花括号等符号"
+msgstr ""
+
+#: opt/theme-options.php:1789
+msgid "提示文案"
+msgstr ""
+
+#: opt/theme-options.php:1790
+msgid "鼠标悬停提示与图片 alt，留空则用表情名"
+msgstr ""
+
+#: opt/theme-options.php:1795
+msgid "显示高度"
+msgstr ""
+
+#: opt/theme-options.php:1796
+msgid "评论里渲染出来的高度"
+msgstr ""
+
+#: opt/theme-options.php:1812
+msgid "模板页面设置"
+msgstr ""
+
+#: opt/theme-options.php:1819
+msgid "模板页数据缓存"
+msgstr ""
+
+#: opt/theme-options.php:1820
+msgid ""
+"非测试环境建议开启，关闭后渲染页面模板时将实时从目标获取数据，将极大增加源站"
+"压力"
+msgstr ""
+
+#: opt/theme-options.php:1826
+msgid "追番模板设置"
+msgstr ""
+
+#: opt/theme-options.php:1832
+msgid "追番数据来源"
+msgstr ""
+
+#: opt/theme-options.php:1844
+msgid "My Anime List 用户名"
+msgstr ""
+
+#: opt/theme-options.php:1846
+msgid "https://myanimelist.net/ 上的用户名"
+msgstr ""
+
+#: opt/theme-options.php:1853
+msgid "My Anime List 顺序"
+msgstr ""
+
+#: opt/theme-options.php:1856
+msgid "状态和上次更新"
+msgstr ""
+
+#: opt/theme-options.php:1857
+msgid "上次更新"
+msgstr ""
+
+#: opt/theme-options.php:1858
+msgid "状态"
+msgstr ""
+
+#: opt/theme-options.php:1866
+msgid "Bilibili用户ID"
+msgstr ""
+
+#: opt/theme-options.php:1867
+msgid ""
+"填写你的账户ID，例如 https://space.bilibili.com/13972644/，填写数字部"
+"分“13972644”"
+msgstr ""
+
+#: opt/theme-options.php:1874
+msgid "Bilibili账户cookie"
+msgstr ""
+
+#: opt/theme-options.php:1875
+msgid ""
+"填写你的Bilibili账户cookie，如果未设置，则无法显示未公开的状态以及观看进度"
+msgstr ""
+
+#: opt/theme-options.php:1882
+msgid "bilibili收藏显示私人收藏夹"
+msgstr ""
+
+#: opt/theme-options.php:1883
+msgid "开启后将在bilibili收藏夹模板显示私人收藏夹"
+msgstr ""
+
+#: opt/theme-options.php:1890
+msgid "Bangumi 账户ID"
+msgstr ""
+
+#: opt/theme-options.php:1891
+msgid ""
+"填写你的Bangumi账户ID，例如 https://bangumi.tv/user/944883，填写数字部"
+"分“944883”"
+msgstr ""
+
+#: opt/theme-options.php:1898
+msgid "友情链接模板设置"
+msgstr ""
+
+#: opt/theme-options.php:1904
+msgid "友情链接列表排序模式"
+msgstr ""
+
+#: opt/theme-options.php:1905
+msgid "选择友情链接列表排序模式，默认使用“名称”排序。"
+msgstr ""
+
+#: opt/theme-options.php:1907
+msgid "名称"
+msgstr ""
+
+#: opt/theme-options.php:1908
+msgid "评级"
+msgstr ""
+
+#: opt/theme-options.php:1909
+msgid "更新时间"
+msgstr ""
+
+#: opt/theme-options.php:1910
+msgid "随机"
+msgstr ""
+
+#: opt/theme-options.php:1918
+msgid "升序或降序"
+msgstr ""
+
+#: opt/theme-options.php:1919
+msgid "按升序或降序排序友情链接列表"
+msgstr ""
+
+#: opt/theme-options.php:1922
+msgid "升序"
+msgstr ""
+
+#: opt/theme-options.php:1923
+msgid "降序"
+msgstr ""
+
+#: opt/theme-options.php:1930
+msgid "Steam 库模板设置"
+msgstr ""
+
+#: opt/theme-options.php:1936
+msgid "Steam 账号 64ID"
+msgstr ""
+
+#: opt/theme-options.php:1937
+msgid ""
+"填写你的帐号ID，例如：https://steamcommunity.com/profiles/"
+"76561199029689067/, 填写数字部分“76561199029689067”"
+msgstr ""
+
+#: opt/theme-options.php:1943
+msgid "Steam API 密钥"
+msgstr ""
+
+#: opt/theme-options.php:1944
+msgid "Apply at https://steamcommunity.com/dev/apikey"
+msgstr ""
+
+#: opt/theme-options.php:1950
+msgid "游戏封面 CDN"
+msgstr ""
+
+#: opt/theme-options.php:1951
+msgid "根据你的目标用户选择加载封面的CDN"
+msgstr ""
+
+#: opt/theme-options.php:1953
+#, fuzzy
+#| msgid "Steam Cache"
+msgid "Steam China"
+msgstr "Steam 快取"
+
+#: opt/theme-options.php:1954
+#, fuzzy
+#| msgid "Steam Cache"
+msgid "Steam akamai"
+msgstr "Steam 快取"
+
+#: opt/theme-options.php:1955
+#, fuzzy
+#| msgid "Steam Cache"
+msgid "Steam fastly"
+msgstr "Steam 快取"
+
+#: opt/theme-options.php:1956
+msgid "Steam cloudflare"
+msgstr ""
+
+#: opt/theme-options.php:1964
+msgid "游戏商店链接"
+msgstr ""
+
+#: opt/theme-options.php:1965
+msgid "选择要跳转到的游戏商店链接"
+msgstr ""
+
+#: opt/theme-options.php:1968
+msgid "XiaoHeiHe"
+msgstr ""
+
+#: opt/theme-options.php:1969
+msgid "SteamDB"
+msgstr ""
+
+#: opt/theme-options.php:1984
+msgid "主题定制"
+msgstr ""
+
+#: opt/theme-options.php:1990
+msgid "登录页"
+msgstr ""
+
+#: opt/theme-options.php:1996
+msgid "定制登录页"
+msgstr ""
+
+#: opt/theme-options.php:2003
+msgid "登录页Logo"
+msgstr ""
+
+#: opt/theme-options.php:2012
+msgid "登录页验证码"
+msgstr ""
+
+#: opt/theme-options.php:2024
+msgid "登录后跳转"
+msgstr ""
+
+#: opt/theme-options.php:2025
+msgid "开启之后管理员跳转至后台，用户跳转至主页。"
+msgstr ""
+
+#: opt/theme-options.php:2032
+msgid "登录界面语言选项"
+msgstr ""
+
+#: opt/theme-options.php:2033
+msgid "开启之后登录界面将显示语言选项"
+msgstr ""
+
+#: opt/theme-options.php:2039
+msgid "仪表盘"
+msgstr ""
+
+#: opt/theme-options.php:2045
+msgid "仪表盘背景图片"
+msgstr ""
+
+#: opt/theme-options.php:2046
+msgid "设置你的仪表盘背景图片，此选项留空则显示白色背景"
+msgstr ""
+
+#: opt/theme-options.php:2054
+msgid "仪表板设置菜单样式"
+msgstr ""
+
+#: opt/theme-options.php:2065
+msgid "仪表盘一级菜单颜色"
+msgstr ""
+
+#: opt/theme-options.php:2072
+msgid "仪表盘二级菜单颜色"
+msgstr ""
+
+#: opt/theme-options.php:2079
+msgid "仪表板强调颜色"
+msgstr ""
+
+#: opt/theme-options.php:2086
+msgid "仪表盘文本颜色"
+msgstr ""
+
+#: opt/theme-options.php:2095
+msgid "安全设置"
+msgstr ""
+
+#: opt/theme-options.php:2102
+msgid "内建验证码强度"
+msgstr ""
+
+#: opt/theme-options.php:2103
+msgid "改变内建验证码的图片混乱度"
+msgstr ""
+
+#: opt/theme-options.php:2113
+msgid "Turnstile Site Key"
+msgstr ""
+
+#: opt/theme-options.php:2119
+msgid "Turnstile Secret Key"
+msgstr ""
+
+#: opt/theme-options.php:2126
+msgid "Low Use Options"
+msgstr ""
+
+#: opt/theme-options.php:2133
+msgid "Statistics API"
+msgstr ""
+
+#: opt/theme-options.php:2134
+msgid ""
+"You can choose WP-Statistics plugin statistics or theme built-in statistics "
+"to display"
+msgstr ""
+
+#: opt/theme-options.php:2136
+msgid "Theme Built in Statistics"
+msgstr ""
+
+#: opt/theme-options.php:2137
+msgid "WP-Statistics Plugin Statistics"
+msgstr ""
+
+#: opt/theme-options.php:2145
+msgid "Statistics display format"
+msgstr ""
+
+#: opt/theme-options.php:2146
+msgid "You can choose from four different data display formats"
+msgstr ""
+
+#: opt/theme-options.php:2148
+msgid "23333 Visits"
+msgstr ""
+
+#: opt/theme-options.php:2149
+msgid "23,333 Visits"
+msgstr ""
+
+#: opt/theme-options.php:2150
+msgid "23 333 Visits"
+msgstr ""
+
+#: opt/theme-options.php:2151
+#, fuzzy
+#| msgid "visits"
+msgid "23K Visits"
+msgstr "次"
+
+#: opt/theme-options.php:2160
+msgid "自定义插入 Header 代码"
+msgstr ""
+
+#: opt/theme-options.php:2161
+msgid ""
+"填入需要高优先级加载的站点内容，可能会阻塞加载，如果不需要高优先级可以在页脚"
+"设置中插入"
+msgstr ""
+
+#: opt/theme-options.php:2167
+msgid "Gravatar服务代理"
+msgstr ""
+
+#: opt/theme-options.php:2168
+msgid ""
+"你可以选择多种代理作为 Gravatar 服务代理。默认使用 Weavatar 作为 Gravatar 服"
+"务代理。"
+msgstr ""
+
+#: opt/theme-options.php:2170
+msgid "Weavatar Service"
+msgstr ""
+
+#: opt/theme-options.php:2171
+msgid "Loli Net"
+msgstr ""
+
+#: opt/theme-options.php:2172
+msgid "Gravatar官方"
+msgstr ""
+
+#: opt/theme-options.php:2173
+msgid "自定义代理地址"
+msgstr ""
+
+#: opt/theme-options.php:2181
+#, fuzzy
+#| msgid "Empty Address"
+msgid "Custom Proxy Address"
+msgstr "空地址"
+
+#: opt/theme-options.php:2182
+msgid ""
+"Enter your Gravatar proxy address without starting with \"http(s)://\" and "
+"ending with \"/\". Example: gravatar.com/avatar."
+msgstr ""
+
+#: opt/theme-options.php:2189
+#, fuzzy
+#| msgid "Light Mode"
+msgid "Lightbox"
+msgstr "淺色模式"
+
+#: opt/theme-options.php:2195
+msgid "lightbox"
+msgstr ""
+
+#: opt/theme-options.php:2196
+msgid ""
+"请选择你需要使用的灯箱效果，wordpress在6.4后已正式支持灯箱效果，此处仅提供另"
+"一种可选的效果，其他的可以自行按需安装插件"
+msgstr ""
+
+#: opt/theme-options.php:2198
+msgid "off"
+msgstr ""
+
+#: opt/theme-options.php:2199
+msgid "Medium Zoom"
+msgstr ""
+
+#: opt/theme-options.php:2206
+msgid "代码高亮"
+msgstr ""
+
+#: opt/theme-options.php:2212
+msgid "Code Highlight Method"
+msgstr ""
+
+#: opt/theme-options.php:2223
+msgid "启用公式支持"
+msgstr ""
+
+#: opt/theme-options.php:2224
+msgid "启用主题公式支持，使用Katex，需要写入markdown区块才能渲染"
+msgstr ""
+
+#: opt/theme-options.php:2231
+msgid "以下设置不推荐盲目进行修改，请确保你知道它是在做什么"
+msgstr ""
+
+#: opt/theme-options.php:2237
+msgid "全站webp优化"
+msgstr ""
+
+#: opt/theme-options.php:2238
+msgid "将源站所有图片优化至webp"
+msgstr ""
+
+#: opt/theme-options.php:2245
+msgid "图片cdn"
+msgstr ""
+
+#: opt/theme-options.php:2246
+msgid "将源站所有图片域名替换为该cdn域名"
+msgstr ""
+
+#: opt/theme-options.php:2253
+msgid "Fontawesome Source"
+msgstr ""
+
+#: opt/theme-options.php:2254
+msgid "The source link of Fontawesome icons style"
+msgstr ""
+
+#: opt/theme-options.php:2261
+msgid "开发者模式"
+msgstr ""
+
+#: opt/theme-options.php:2262
+msgid "启用并配置你的vite HMR客户端来正常使用"
+msgstr ""
+
+#: opt/theme-options.php:2269
+msgid "Vite HMR客户端地址"
+msgstr ""
+
+#: opt/theme-options.php:2276
+msgid "Vite 主脚本入口地址"
+msgstr ""
+
+#: opt/theme-options.php:2283
+msgid "PHP日志过滤"
+msgstr ""
+
+#: opt/theme-options.php:2285
+msgid "使用PHP配置"
+msgstr ""
+
+#: opt/theme-options.php:2286
+msgid "只显示严重错误"
+msgstr ""
+
+#: opt/theme-options.php:2287
+msgid "过滤大部分错误"
+msgstr ""
+
+#: opt/theme-options.php:2290
+msgid "建议设置为“只显示严重错误”来防止不影响使用的php日志渲染到前端"
+msgstr ""
+
+#: opt/theme-options.php:2296
+msgid "Backup&Recovery"
+msgstr ""
+
+#: opt/theme-options.php:2298
+msgid "备份或恢复你的主题设置"
+msgstr ""
+
+#: opt/theme-options.php:2309
+msgid "About Theme"
+msgstr ""
+
+#: opt/theme-options.php:2315
+msgid "Version Info"
+msgstr ""
+
+#: opt/theme-options.php:2320
+msgid ""
+"<img src=\"https://s.nmxc.ltd/sakurairo_vision/@3.0/series/headlogo.webp\"  "
+"alt=\"Theme Information\" />"
+msgstr ""
+
+#: opt/theme-options.php:2326
+#, php-format
+msgid ""
+"Theme Sakurairo Version %s | Internal Version %s | <a href=\"https://"
+"github.com/mirai-mamori/Sakurairo\">Project Address</a>"
+msgstr ""
+
+#: opt/theme-options.php:2331
+#, fuzzy
+#| msgid "Update failed."
+msgid "Update Related"
+msgstr "更新失敗。"
+
+#: opt/theme-options.php:2337
+msgid "Theme Update Source"
+msgstr ""
+
+#: opt/theme-options.php:2343
+msgid ""
+"If you are using a server set up in mainland China, please use the Upyun "
+"source or the official theme source as your theme update source"
+msgstr ""
+
+#: opt/theme-options.php:2350
+msgid "Theme Update Test Channel Disclaimer"
+msgstr ""
+
+#: opt/theme-options.php:2352
+msgid ""
+"Please copy the text in quotes after <strong>ensure that you have carefully "
+"understood the risks associated with participating in the test and are "
+"willing to assume all consequences at your own risk</strong> (including but "
+"not limited to possible data loss) into the options text box <strong> \"I "
+"agree and am willing to bear all unexpected consequences\"</strong>"
+msgstr ""
+
+#: opt/theme-options.php:2358
+msgid "Theme Update Channel"
+msgstr ""
+
+#: opt/theme-options.php:2363
+msgid ""
+"You can toggle the update channel here to participate in the testing of the "
+"new version"
+msgstr ""
+
+#: opt/theme-options.php:2365
+msgid "Stable Channel"
+msgstr ""
+
+#: opt/theme-options.php:2366
+msgid "Beta Channel"
+msgstr ""
+
+#: opt/theme-options.php:2367
+msgid "Preview Channel"
+msgstr ""
+
+#: opt/theme-options.php:2374
+msgid "Resource Control"
+msgstr ""
+
+#: opt/theme-options.php:2380
+msgid "Vision Resource Basepath"
+msgstr ""
+
+#: opt/theme-options.php:2381
+msgid ""
+"This link directory structure needs to be consistent with the <a "
+"href=\"https://github.com/Fuukei/Sakurairo_Vision\">Sakurairo Vision</a> "
+"repositories officially provided by fuukei, otherwise some resources 404 may "
+"appear. The image source officially provided by <a href=\"https://waf.pro/"
+"\">WAFPRO</a> is adopted by default."
+msgstr ""
+
+#: opt/theme-options.php:2387
+msgid "Theme Contributors"
+msgstr ""
+
+#: opt/theme-options.php:2392
+msgid ""
+"<img src=\"https://fuukei-api.nyat.icu/api/contributors\" alt=\"Theme "
+"Contributors\" width=\"100%\" height=\"100%\" />"
+msgstr ""
+
+#: opt/theme-options.php:2397
+msgid "隐私信息"
+msgstr ""
+
+#: opt/theme-options.php:2402
+msgid ""
+"<p>主题尊重你的隐私</p>\n"
+"        <p>但是，当你使用主题预置的中国大陆服务商提供的服务时，服务商可能会收"
+"集有关你的访问者的数据并统计数据</p>\n"
+"        <p>你可以通过本地化与主题相关的资源来减少发送给第三方的信息，主题提供"
+"相关选项配置</p>"
+msgstr ""
+
+#: opt/theme-options.php:2410
+msgid "Send Theme Version to Fuukei"
+msgstr ""
+
+#: opt/theme-options.php:2411
+msgid ""
+"The theme will only send time and version information to Fuukei officials "
+"and the data will be cleaned regularly and used only to count version "
+"updates."
+msgstr ""
+
+#: opt/theme-options.php:2417
+msgid "引用信息"
+msgstr ""
+
+#: opt/theme-options.php:2422
+msgid ""
+"<p>Fluent Design Icon Referenced by Paradox Fluent Icon Pack</p>\n"
+"        <p>MUH2 Design Icon Referenced by 缄默 <a href=\"https://"
+"www.coolapk.com/apk/com.muh2.icon\">MUH2 Icon Pack</a></p>"
+msgstr ""
+
+#: opt/theme-options.php:2428
+msgid "依赖信息"
+msgstr ""
+
+#: opt/theme-options.php:2433
+msgid ""
+"<p>Options Framework Relies on the Codestar Open Source <a href=\"https://"
+"github.com/Codestar/codestar-framework\">Codestar Framework</a> Project</p>\n"
+"        <p>Update Function Relies on YahnisElsts Open Source <a "
+"href=\"https://github.com/YahnisElsts/plugin-update-checker\">Plugin Update "
+"Checker</a> Project</p>\n"
+"        <p>Visual Editor Related Functions Relies on Themeum Open Source <a "
+"href=\"https://github.com/themeum/kirki\">Kirki</a> Project</p>"
+msgstr ""
+
+#: opt/theme-options.php:2440
+msgid ""
+"<img src=\"https://img.shields.io/github/v/release/mirai-mamori/"
+"Sakurairo.svg?style=flat-square\"  alt=\"Theme latest version\" "
+"style=\"border-radius: 3px;\" />  <img src=\"https://img.shields.io/github/"
+"release-date/mirai-mamori/Sakurairo?style=flat-square\"  alt=\"Theme latest "
+"version release date\" style=\"border-radius: 3px;\" />  <img src=\"https://"
+"data.jsdelivr.com/v1/package/gh/mirai-mamori/Sakurairo/badge\"  alt=\"Theme "
+"CDN resource access\" style=\"border-radius: 3px;\" />"
+msgstr ""
+
+#~ msgid " Previous"
+#~ msgstr " 更早的文章"
+
+#~ msgid "No personal profile set yet"
+#~ msgstr "尚未設置個人資料"
+
+#~ msgid "Woooooow ヾ(≧∇≦*)ゝ"
+#~ msgstr "嘿嘿嘿 ヾ(≧∇≦*)ゝ"
+
+#~ msgid "view comments"
+#~ msgstr "查看留言"
+
+#~ msgid "NOTHING"
+#~ msgstr "什麼也沒有呀"
+
+#~ msgid " comment"
+#~ msgstr " 條留言"
+
+#~ msgid " comments"
+#~ msgstr " 條留言"
+
+#~ msgid "no comment"
+#~ msgstr "暫無留言"
+
+#~ msgid "Click here to show captcha"
+#~ msgstr "點此開始驗證"
+
+#~ msgid "Comment in private"
+#~ msgstr "私密留言"
+
+#~ msgid "Nickname"
+#~ msgstr "暱稱 或 QQ號"
+
+#~ msgid "Required* "
+#~ msgstr "必填* "
+
+#~ msgid "Enter your nickname"
+#~ msgstr "輸入QQ號碼將自動拉取暱稱和頭像"
+
+#~ msgid "For notification purposes"
+#~ msgstr "用於通知"
+
+#~ msgid "Site"
+#~ msgstr "網站"
+
+#~ msgid "Advertisement is forbidden 😀"
+#~ msgstr "禁止小廣告😀"
+
+#~ msgid "Save your private info"
+#~ msgstr "保留個人資訊"
+
+#~ msgid "Content Count"
+#~ msgstr "內容數"
+
+#~ msgid "posts"
+#~ msgstr "篇"
+
+#~ msgid "comments"
+#~ msgstr "條"
+
+#~ msgid "Link Count"
+#~ msgstr "友情連結數"
+
+#~ msgid "links"
+#~ msgstr "條"
+
+#~ msgid "authors"
+#~ msgstr "位"
+
+#~ msgid "words"
+#~ msgstr "字"
+
+#~ msgid "days"
+#~ msgstr "天"
+
+#~ msgid "Gold Blogger"
+#~ msgstr "流光遷徙"
+
+#~ msgid ""
+#~ "The string of creation has vibrated the membrane, each resonance weaving "
+#~ "the warp and weft of spacetime thoughts."
+#~ msgstr "創作之弦已振動膜層，每個諧振都在編織時空的思維經緯。"
+
+#~ msgid "Silver Blogger"
+#~ msgstr "刻入年輪"
+
+#~ msgid ""
+#~ "The wheel of creation has engaged the gears, each component calibrating "
+#~ "the temporal precision of your blog."
+#~ msgstr "創作之輪已咬合齒輪，每個零件都在校準部落格的時光精準度。"
+
+#, php-format
+#~ msgid "%s more days to next level"
+#~ msgstr "還需 %s 天達到下一級別"
+
+#~ msgid "Bronze Blogger"
+#~ msgstr "時光漣漪"
+
+#~ msgid ""
+#~ "The ship of creation has set sail, each wave carving the depth markers of "
+#~ "your blog's journey."
+#~ msgstr "創作之舟已揚帆遠航，每道浪痕都在刻寫部落格的深度航標。"
+
+#~ msgid "Gold Popularity"
+#~ msgstr "如振落葉"
+
+#~ msgid ""
+#~ "You have planted a garden of wisdom, its fragrance now discovered by "
+#~ "distant butterflies."
+#~ msgstr "你已種滿了智慧的花朵，芬芳正被遠方的蝴蝶發現。"
+
+#~ msgid "Silver Popularity"
+#~ msgstr "声聞遐迩"
+
+#~ msgid ""
+#~ "You have illuminated the star chart of reading, each piece of writing "
+#~ "flowing through the galaxy."
+#~ msgstr "你已點亮閱讀的星圖，每篇文字都在銀河中流轉。"
+
+#, php-format
+#~ msgid "%s more visits to next level"
+#~ msgstr "還需 %s 次訪問達到下一級別"
+
+#~ msgid "Bronze Popularity"
+#~ msgstr "濫觞所始"
+
+#~ msgid ""
+#~ "You have built a harbor of knowledge, the ripples of thought continuously "
+#~ "spreading."
+#~ msgstr "你已築起知識的港灣，思想的漣漪正不斷擴散。"
+
+#~ msgid "Gold Friendship"
+#~ msgstr "揮袂成雲"
+
+#~ msgid ""
+#~ "The world of friendship has no boundaries, the starry river will mark "
+#~ "your position."
+#~ msgstr "結交朋友的世界已無邊界，星河將標記你的方位。"
+
+#~ msgid "Silver Friendship"
+#~ msgstr "呼朋引伴"
+
+#~ msgid ""
+#~ "The network of friendship has been laid out, each resonance will "
+#~ "eventually echo."
+#~ msgstr "結交朋友的網絡已然鋪開，每次共鳴終將迴響。"
+
+#, php-format
+#~ msgid "%s more links to next level"
+#~ msgstr "還需 %s 條友情連結達到下一級別"
+
+#~ msgid "Bronze Friendship"
+#~ msgstr "初遇同好"
+
+#~ msgid ""
+#~ "The journey of making friends has just begun, each encounter marks a new "
+#~ "chapter."
+#~ msgstr "結交朋友的旅程才剛開始，每次遇見皆為新章。"
+
+#~ msgid "Gold Author"
+#~ msgstr "映雪囊螢"
+
+#~ msgid ""
+#~ "The power of words has blossomed in your hands, rich creations have "
+#~ "gathered into an ocean."
+#~ msgstr "文字的力量已在你手中綻放，豐富的創作匯聚成海。"
+
+#~ msgid "Silver Author"
+#~ msgstr "筆耕不輟"
+
+#~ msgid ""
+#~ "You have woven an extensive web of thoughts, the streams of inspiration "
+#~ "are rushing into rivers."
+#~ msgstr "你已織就綿延的思維之網，靈感的溪流正奔湧成河。"
+
+#, php-format
+#~ msgid "%s more words to next level"
+#~ msgstr "還需 %s 個字達到下一級別"
+
+#~ msgid "Bronze Author"
+#~ msgstr "寸楮点墨"
+
+#~ msgid ""
+#~ "Sparks of words dance at your fingertips, as the faint light of thoughts "
+#~ "quietly illuminates."
+#~ msgstr "你指尖躍動著文字的火花，思想的微光正悄然點亮。"
+
+#~ msgid "Meet my friend!"
+#~ msgstr "介紹給你"
+
+#, php-format
+#~ msgid "Load Time %.3f seconds | %d Query | RAM Usage %.2f MB "
+#~ msgstr "載入時間 %.3f 秒 | 查詢 %d 次 | 記憶體使用 %.2f MB "
+
+#~ msgid "Go to top"
+#~ msgstr "回到頂端"
+
+#~ msgid "Want to find something?"
+#~ msgstr "想要找點什麼呢？"
+
+#~ msgid "Switch To Font A"
+#~ msgstr "切換到字體 A"
+
+#~ msgid "Switch To Font B"
+#~ msgstr "切換到字體 B"
+
+#~ msgid "Copied!"
+#~ msgstr "已複製!"
+
+#~ msgid "Copy Code"
+#~ msgstr "拷貝程式碼"
+
+#~ msgid ""
+#~ "Your cover API seems to not support Cross Origin Access. In this case, "
+#~ "Cover Cache won't take effect."
+#~ msgstr "你的封面 API 似乎不支援跨來源請求。這種情況下暫存是不會生效的哦。"
+
+#~ msgid "Commiting...."
+#~ msgstr "提交中。。。"
+
+#~ msgid "Succeed"
+#~ msgstr "成功"
+
+#~ msgid "10 files max per request"
+#~ msgstr "每次上傳上限為 10 張"
+
+#~ msgid ""
+#~ "5 MB max per file.\n"
+#~ "\n"
+#~ "「{0}」\n"
+#~ "\n"
+#~ "This image is too large~Please reupload!"
+#~ msgstr ""
+#~ "圖片上傳大小限制為 5 MB。\n"
+#~ "\n"
+#~ "「{0}」\n"
+#~ "\n"
+#~ "這張圖太大啦~請重新上傳噢！"
+
+#~ msgid "Uploading..."
+#~ msgstr "上傳中..."
+
+#~ msgid "Uploaded successfully~"
+#~ msgstr "上傳成功～"
+
+#~ msgid ""
+#~ "Upload failed!\n"
+#~ "File Name=> {0}\n"
+#~ "code=> {1}\n"
+#~ "{2}"
+#~ msgstr ""
+#~ "上傳失敗！\n"
+#~ "檔案名=> {0}\n"
+#~ "錯誤碼=> {1}\n"
+#~ "{2}"
+
+#~ msgid "Upload failed, please retry."
+#~ msgstr "上傳失敗，請重試。"
+
+#~ msgid "Page Load failed. HTTP {0}"
+#~ msgstr "頁面載入出錯了。HTTP{0}"
+
+#~ msgid "Glad you come, but we've got nothing left."
+#~ msgstr "很高興你翻到這裡，但是真的沒有了..."
+
+#~ msgid "Post"
+#~ msgstr "文章"
+
+#~ msgid "Tag"
+#~ msgstr "標籤"
+
+#~ msgid "Page"
+#~ msgstr "頁面"
+
+#~ msgid "Paused..."
+#~ msgstr "暫停。。。"
+
+#~ msgid "Loading Video..."
+#~ msgstr "載入影片..."
+
+#~ msgid "Downloading fonts, be aware of your data usage."
+#~ msgstr "下載字體時，請注意你的數據使用方式。"
+
+#~ msgid "Are you sure you want set it private?"
+#~ msgstr "是否確實要將其設置為專用？"
+
+#~ msgid "You had set private comment before"
+#~ msgstr "你之前設置了私人評論"
+
+#~ msgid "Blogger"
+#~ msgstr "部落客"
+
+#~ msgid "Location"
+#~ msgstr "來自"
+
+#~ msgid "Private"
+#~ msgstr "私密"
+
+#~ msgid "Yes"
+#~ msgstr "是"
+
+#~ msgid "No"
+#~ msgstr "否"
+
+#~ msgid "Edit"
+#~ msgstr "編輯"
+
+#~ msgid "This guy is so lazy ╮(╯▽╰)╭"
+#~ msgstr "這傢伙好懶 ╮(╯▽╰)╭"
+
+#~ msgid "Pending Links"
+#~ msgstr "待處理連結"
+
+#~ msgid "Sidebar"
+#~ msgstr "側欄"
+
+#~ msgid ""
+#~ "<b> For a better experience, please do not set <a href=\"/wp-admin/"
+#~ "options-permalink.php\"> permalink </a> as plain. To do this, you may "
+#~ "need to configure <a href=\"https://www.wpdaxue.com/wordpress-"
+#~ "rewriterule.html\" target=\"_blank\"> pseudo-static </a>. </ b>"
+#~ msgstr ""
+#~ "<b> 為了更好的使用體驗，請不要將<a href=\"/wp-admin/options-"
+#~ "permalink.php\">固定連結</a>設置為樸素。為此，你可能需要配置<a "
+#~ "href=\"https://www.wpdaxue.com/wordpress-rewriterule.html\" "
+#~ "target=\"_blank\">偽靜態</a></b>"
+
+#, php-format
+#~ msgid "%s says: "
+#~ msgstr "%s 說： "
+
+#~ msgid "Expand / Collapse"
+#~ msgstr "展開 / 摺疊"
+
+#~ msgid "Invalid request method."
+#~ msgstr "請求方法無效。"
+
+#~ msgid "You are submitting too frequently. Please try again later."
+#~ msgstr "你提交的頻率太高。請稍後再試。"
+
+#~ msgid "Security verification failed."
+#~ msgstr "安全驗證失敗。"
+
+#~ msgid "Please fill in all required fields."
+#~ msgstr "請填寫所有必填字段。"
+
+#~ msgid ""
+#~ "Sorry, we are not accepting new link submissions at this time due to "
+#~ "backlog. Please try again later."
+#~ msgstr ""
+#~ "很抱歉，由於待處理連結積壓，我們暫時不接受新的連結提交。請稍後再試。"
+
+#~ msgid "Site name is too long."
+#~ msgstr "網站名稱過長。"
+
+#~ msgid "Site description is too long."
+#~ msgstr "網站描述過長。"
+
+#~ msgid "Please enter a valid URL."
+#~ msgstr "請輸入有效的 URL。"
+
+#~ msgid "Please enter a valid image URL."
+#~ msgstr "請輸入有效的圖片 URL。"
+
+#~ msgid "Please enter a valid email address."
+#~ msgstr "請輸入有效的電子郵件地址。"
+
+#~ msgid "This website URL is already in our links list."
+#~ msgstr "此網站 URL 已在我們的連結清單中。"
+
+#~ msgid "Failed to submit link. Please try again later."
+#~ msgstr "提交連結失敗。請稍後再試。"
+
+#, php-format
+#~ msgid "[%s] New Friend Link Submission"
+#~ msgstr "[%s] 提交新的朋友連結"
+
+#, php-format
+#~ msgid ""
+#~ "A new friend link has been submitted on your website %s:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "你的網站 %s 已提交新的友情連結：\n"
+#~ "\n"
+
+#, php-format
+#~ msgid "Site Name: %s\n"
+#~ msgstr "網站名稱：%s\n"
+
+#, php-format
+#~ msgid "Site URL: %s\n"
+#~ msgstr "網站 URL：%s\n"
+
+#, php-format
+#~ msgid "Site Description: %s\n"
+#~ msgstr "網站描述：%s\n"
+
+#, php-format
+#~ msgid "Site Image: %s\n"
+#~ msgstr "網站圖片：%s\n"
+
+#, php-format
+#~ msgid "Contact Email: %s\n"
+#~ msgstr "聯絡人電子郵件： %s\n"
+
+#, php-format
+#~ msgid ""
+#~ "IP Address: %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "IP 位址： %s\n"
+#~ "\n"
+
+#~ msgid "Please review this submission in your WordPress admin panel.\n"
+#~ msgstr "請在你的 WordPress 管理面板中檢查此提交。\n"
+
+#~ msgid "Thank you! Your link has been submitted for review."
+#~ msgstr "謝謝！你的連結已提交審核。"
+
+#, php-format
+#~ msgid "Site Name: %s"
+#~ msgstr "網站名稱︰ %s"
+
+#, php-format
+#~ msgid "Site URL: %s"
+#~ msgstr "網站 URL：%s"
+
+#, php-format
+#~ msgid "Site Description: %s"
+#~ msgstr "網站描述：%s"
+
+#, php-format
+#~ msgid "Site Image: %s"
+#~ msgstr "網站圖片：%s"
+
+#, php-format
+#~ msgid "Contact Email: %s"
+#~ msgstr "聯絡人電子郵件： %s"
+
+#, php-format
+#~ msgid "IP Address: %s"
+#~ msgstr "IP 位址： %s"
+
+#~ msgid "Friend Link Submission: "
+#~ msgstr "友情連結提交："
+
+#~ msgid ""
+#~ "\n"
+#~ "Please review this submission in your WordPress admin panel.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "請在你的 WordPress 管理面板中檢查此提交。\n"
+
+#~ msgid "An unexpected error occurred. Please try again later."
+#~ msgstr "發生意外錯誤。請稍後再試。"
+
+#, php-format
+#~ msgid "[%s] Friend Link Check Failure: %s"
+#~ msgstr "[%s] 友站連結檢查失敗：%s"
+
+#, php-format
+#~ msgid ""
+#~ "The friend link '%s' has failed our status check %d times.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "好友連結 '%s' 的狀態檢查 %d 次失敗。\n"
+#~ "\n"
+
+#, php-format
+#~ msgid "Link URL: %s\n"
+#~ msgstr "連結 URL：%s\n"
+
+#, php-format
+#~ msgid "HTTP Status Code: %s\n"
+#~ msgstr "HTTP 狀態碼： %s\n"
+
+#, php-format
+#~ msgid "Error Message: %s\n"
+#~ msgstr "錯誤訊息： %s\n"
+
+#, php-format
+#~ msgid ""
+#~ "\n"
+#~ "Last Check Time: %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "最後檢查時間：%s\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "You may want to check this link and consider removing it if it remains "
+#~ "unavailable.\n"
+#~ msgstr "你可能需要檢查此連結，如果仍然無法使用，請考慮將其移除。\n"
+
+#~ msgid "Just now"
+#~ msgstr "剛剛"
+
+#, php-format
+#~ msgid "%d minute ago"
+#~ msgid_plural "%d minutes ago"
+#~ msgstr[0] "%d 分鐘前"
+
+#, php-format
+#~ msgid "%d hour ago"
+#~ msgid_plural "%d hours ago"
+#~ msgstr[0] "%d 小時前"
+
+#, php-format
+#~ msgid "%d day ago"
+#~ msgid_plural "%d days ago"
+#~ msgstr[0] "%d 日前"
+
+#, php-format
+#~ msgid "%d week ago"
+#~ msgid_plural "%d weeks ago"
+#~ msgstr[0] "%d 週前"
+
+#, php-format
+#~ msgid "%d month ago"
+#~ msgid_plural "%d months ago"
+#~ msgstr[0] "%d 個月前"
+
+#~ msgid "Cache Settings"
+#~ msgstr "快取設定"
+
+#~ msgid "Cache Updated!"
+#~ msgstr "快取已更新！"
+
+#~ msgid "Cache settings"
+#~ msgstr "快取設定"
+
+#~ msgid ""
+#~ "If your server network environment is poor, you can click the link below "
+#~ "to manually obtain the response content and fill it in"
+#~ msgstr ""
+#~ "如果你的伺服器網路環境較差，你可以點選下列連結，手動取得並填寫回應內容"
+
+#~ msgid ""
+#~ "If the content is empty or incorrect, the server will try to "
+#~ "automatically pull it"
+#~ msgstr "如果內容為空或不正確，伺服器會嘗試自動將其拉出"
+
+#~ msgid ""
+#~ "The link target will be automatically updated after the relevant settings "
+#~ "are saved"
+#~ msgstr "儲存相關設定後，連結目標會自動更新"
+
+#~ msgid ""
+#~ "The unit is seconds. And it will take effect permanently when it was set "
+#~ "to 0."
+#~ msgstr "單位為秒。當設定為 0 時，它將永久生效。"
+
+#~ msgid "Cache expire time"
+#~ msgstr "快取記憶體過期時間"
+
+#~ msgid "Bangumi Cache"
+#~ msgstr "Bangumi 快取"
+
+#~ msgid "category/tag image"
+#~ msgstr "分類/標籤圖像"
+
+#~ msgid "remove image"
+#~ msgstr "刪除圖像"
+
+#~ msgid "image"
+#~ msgstr "圖像"
+
+#~ msgid "no image"
+#~ msgstr "暫無"
+
+#~ msgid "System Information"
+#~ msgstr "系統資訊"
+
+#~ msgid "ChatGPT API Settings Status"
+#~ msgstr "ChatGPT API 設定狀態"
+
+#~ msgid "API Endpoint: "
+#~ msgstr "API 端點： "
+
+#~ msgid "Not set"
+#~ msgstr "未設定"
+
+#~ msgid "Set (Length: "
+#~ msgstr "已设置 (長度："
+
+#~ msgid "Model: "
+#~ msgstr "模型："
+
+#~ msgid "Article Annotations Management"
+#~ msgstr "文章註解管理"
+
+#~ msgid "Successfully generated annotations for the post!"
+#~ msgstr "成功為文章產生註解！"
+
+#~ msgid ""
+#~ "Failed to generate annotations. Please check API settings or view error "
+#~ "logs."
+#~ msgstr "產生註解失敗。請檢查 API 設定或檢視錯誤記錄。"
+
+#~ msgid "Annotations for the post have been deleted."
+#~ msgstr "該文章的註解已被刪除。"
+
+#~ msgid "Example Term"
+#~ msgstr "示例術語"
+
+#~ msgid "This is a example explanation"
+#~ msgstr "這是一個範例說明"
+
+#, php-format
+#~ msgid "Attempting to save test data to post %d..."
+#~ msgstr "嘗試儲存測試資料到 %d..."
+
+#~ msgid "Save failed!"
+#~ msgstr "儲存失敗！"
+
+#, php-format
+#~ msgid "Save successful! Update ID: %s"
+#~ msgstr "儲存成功！更新 ID: %s"
+
+#, php-format
+#~ msgid "Read result: %s"
+#~ msgstr "讀取結果：%s"
+
+#~ msgid "Success (array, contains "
+#~ msgstr "成功 (陣列，包含 "
+
+#~ msgid " items)"
+#~ msgstr " 項目)"
+
+#~ msgid "Failed"
+#~ msgstr "失敗"
+
+#, php-format
+#~ msgid "Database query result: %s"
+#~ msgstr "資料庫查詢結果: %s"
+
+#~ msgid "Found "
+#~ msgstr "發現"
+
+#~ msgid " records"
+#~ msgstr " 記錄"
+
+#~ msgid "No records found"
+#~ msgstr "未找到記錄"
+
+#~ msgid "About Article Annotations"
+#~ msgstr "關於文章註釋"
+
+#~ msgid ""
+#~ "This feature uses ChatGPT to analyze the content of the post, identify "
+#~ "complex or specialized terms, and automatically generate explanatory "
+#~ "annotations. The annotations will be displayed in the post, and visitors "
+#~ "can click to view explanations."
+#~ msgstr ""
+#~ "此功能使用 ChatGPT 分析文章的內容、辨識複雜或專門的詞彙，並自動產生解釋性"
+#~ "的註解。這些註解會顯示在文章中，訪客可以點選查看解釋。"
+
+#~ msgid "Note:"
+#~ msgstr "備註："
+
+#~ msgid "This feature requires a valid OpenAI API key."
+#~ msgstr "此功能需要有效的 OpenAI API Key。"
+
+#~ msgid ""
+#~ "API key not set, please configure the ChatGPT API key in the theme "
+#~ "settings first."
+#~ msgstr "API Key未設定，請先在主題設定中設定 ChatGPT API Key。"
+
+#~ msgid "Generate Annotations for Post"
+#~ msgstr "產生文章註解"
+
+#~ msgid "Select Post"
+#~ msgstr "選取文章"
+
+#~ msgid "-- Select Post --"
+#~ msgstr "-- 選取文章 --"
+
+#~ msgid "Generate Annotations"
+#~ msgstr "產生註解"
+
+#~ msgid "Delete Annotations"
+#~ msgstr "刪除註解"
+
+#~ msgid "Are you sure you want to delete the annotation data for this post?"
+#~ msgstr "你確定要刪除這篇文章的註解資料嗎？"
+
+#~ msgid "Create empty data"
+#~ msgstr "建立空資料"
+
+#~ msgid "Create empty terms for your custom article"
+#~ msgstr "為自訂文章建立空條款"
+
+#~ msgid "Posts with Generated Annotations"
+#~ msgstr "生成註解的文章"
+
+#~ msgid "Currently, no posts contain annotation data."
+#~ msgstr "目前沒有文章包含註解。"
+
+#~ msgid "Actions"
+#~ msgstr "操作"
+
+#~ msgid "View Annotations"
+#~ msgstr "檢視註解"
+
+#~ msgid "Edit Post"
+#~ msgstr "編輯文章"
+
+#~ msgid "Debug Information"
+#~ msgstr "除錯資訊"
+
+#, php-format
+#~ msgid "Annotations Debug Information for post \"%s\" (ID: %d)"
+#~ msgstr "文章 「%s」 的註解偵錯資訊 (ID: %d)"
+
+#~ msgid "Data Type:"
+#~ msgstr "數據類型："
+
+#~ msgid "Number of Annotations:"
+#~ msgstr "註解數量："
+
+#~ msgid "Annotation Data:"
+#~ msgstr "註解數據："
+
+#~ msgid "Database Records:"
+#~ msgstr "資料庫記錄："
+
+#~ msgid "records"
+#~ msgstr "紀錄"
+
+#~ msgid "Record ID:"
+#~ msgstr "記錄 ID："
+
+#~ msgid "Original Value:"
+#~ msgstr "原始值："
+
+#~ msgid "Post Annotations: "
+#~ msgstr "文章註釋： "
+
+#~ msgid "Term"
+#~ msgstr "條款"
+
+#~ msgid "Explanation"
+#~ msgstr "說明"
+
+#~ msgid "Add Annotation"
+#~ msgstr "新增註解"
+
+#~ msgid "Delete"
+#~ msgstr "刪除"
+
+#~ msgid "Annotations updated successfully."
+#~ msgstr "註解更新成功。"
+
+#~ msgid "Invalid post ID"
+#~ msgstr "無效的文章ID"
+
+#~ msgid "Post not found"
+#~ msgstr "沒有文章"
+
+#~ msgid "This post does not have any annotation data"
+#~ msgstr "此文章沒有任何註釋資料"
+
+#~ msgid "Access denied"
+#~ msgstr "訪問被拒絕"
+
+#~ msgid "Invalid annotations data"
+#~ msgstr "無效註解數據"
+
+#~ msgid "Failed to update annotations"
+#~ msgstr "更新註解失敗"
+
+#~ msgid "Annotations updated successfully"
+#~ msgstr "註釋更新成功"
+
+#~ msgid "Post Annotation Data"
+#~ msgstr "文章註解資料"
+
+#, php-format
+#~ msgid ""
+#~ "This post currently does not have any annotation data. You can generate "
+#~ "annotations on the <a href=\"%s\">Article Annotations Management</a> page."
+#~ msgstr ""
+#~ "此文章目前沒有任何註釋資料。你可以在 <a href=\"%s\"> 文章註解管理</a>頁面"
+#~ "產生註解。"
+
+#~ msgid "Edit in Annotations Management Page"
+#~ msgstr "在註解管理頁面編輯"
+
+#~ msgid "Article Summary Management"
+#~ msgstr "文章總結管理"
+
+#~ msgid "Successfully generated summary for the post!"
+#~ msgstr "成功為文章產生總結！"
+
+#~ msgid ""
+#~ "Failed to generate summary. Please check API settings or view error logs."
+#~ msgstr "產生總結失敗。請檢查 API 設定或檢視錯誤記錄。"
+
+#~ msgid "Summary for the post has been deleted."
+#~ msgstr "該文章的總結已被刪除。"
+
+#, fuzzy
+#~| msgid "Save failed!"
+#~ msgid "Test save failed!"
+#~ msgstr "儲存失敗！"
+
+#, fuzzy
+#~| msgid "Annotations updated successfully"
+#~ msgid "Test data saved successfully!"
+#~ msgstr "註釋更新成功"
+
+#, fuzzy
+#~| msgid "About Article Annotations"
+#~ msgid "About Article Summaries"
+#~ msgstr "關於文章註釋"
+
+#~ msgid "Generate Summary for Post"
+#~ msgstr "產生文章總結"
+
+#, fuzzy
+#~| msgid "Delete"
+#~ msgid "Delete Summary"
+#~ msgstr "刪除"
+
+#~ msgid "Are you sure you want to delete the summary for this post?"
+#~ msgstr "你確定要刪除這篇文章的總結資料嗎？"
+
+#, fuzzy
+#~| msgid "Posts with Generated Annotations"
+#~ msgid "Posts with Generated Summaries"
+#~ msgstr "生成註解的文章"
+
+#~ msgid "Currently, no posts contain summary data."
+#~ msgstr "目前沒有文章包含總結。"
+
+#, fuzzy
+#~| msgid "Are you sure you want set it private?"
+#~ msgid "Are you sure you want to delete this summary?"
+#~ msgstr "是否確實要將其設置為專用？"
+
+#, fuzzy
+#~| msgid "Uploading..."
+#~ msgid "Saving..."
+#~ msgstr "上傳中..."
+
+#, fuzzy
+#~| msgid "Uploaded successfully~"
+#~ msgid "Summary saved successfully!"
+#~ msgstr "上傳成功～"
+
+#, fuzzy
+#~| msgid "Save failed!"
+#~ msgid "Save failed"
+#~ msgstr "儲存失敗！"
+
+#, fuzzy
+#~| msgid "Save failed!"
+#~ msgid "Request failed"
+#~ msgstr "儲存失敗！"
+
+#~ msgid "This post does not have a summary"
+#~ msgstr "此文章沒有任何總結資料"
+
+#~ msgid "Failed to update summary"
+#~ msgstr "更新總結失敗"
+
+#~ msgid "Summary updated successfully"
+#~ msgstr "總結更新成功"
+
+#, php-format
+#~ msgid ""
+#~ "This post currently does not have a summary. You can generate one on the "
+#~ "<a href=\"%s\">Article Summary Management</a> page."
+#~ msgstr ""
+#~ "此文章目前沒有任何總結資料。你可以在 <a href=\"%s\"> 文章總結管理</a>頁面"
+#~ "產生總結。"
+
+#~ msgid "Edit in Summary Management Page"
+#~ msgstr "在總結管理頁面編輯"
+
+#~ msgid "Backend error"
+#~ msgstr "後端發生了錯誤 QwQ"
+
+#~ msgid "Following "
+#~ msgstr "已追蹤的新番 "
+
+#~ msgid " anime."
+#~ msgstr " 動漫。"
+
+#~ msgid "The author seems to have hidden their bangumi list."
+#~ msgstr "部落客似乎隱藏了新番追蹤列表。"
+
+#~ msgid "Load More"
+#~ msgstr "載入更多"
+
+#~ msgid "Item count: "
+#~ msgstr "項目計數： "
+
+#~ msgid "All item has been loaded."
+#~ msgstr "所有專案均已載入。"
+
+#~ msgid "The comment is private"
+#~ msgstr "這是一條私密留言"
+
+#~ msgid "An error has occurred."
+#~ msgstr "發生錯誤。"
+
+#~ msgid "Unknown"
+#~ msgstr "未知"
+
+#~ msgid "Reserved Address"
+#~ msgstr "預留地址"
+
+#~ msgid " Watched "
+#~ msgstr " 已觀看 "
+
+#~ msgid " episodes."
+#~ msgstr " 話。"
+
+#~ msgid "Finished "
+#~ msgstr "已看完 "
+
+#~ msgid "Planning to Watch "
+#~ msgstr "打算看 "
+
+#~ msgid "Dropped "
+#~ msgstr "棄坑 "
+
+#~ msgid "Paused "
+#~ msgstr "暫停 "
+
+#~ msgid "Load more"
+#~ msgstr "載入更多"
+
+#~ msgid "Not Played Yet"
+#~ msgstr "尚未遊玩"
+
+#~ msgid "minute"
+#~ msgstr "分鐘"
+
+#~ msgid "hour"
+#~ msgstr "小時"
+
+#~ msgid "Bangumi ID not set."
+#~ msgstr "還未設定Bangumi帳戶ID。"
+
+#~ msgid "No data"
+#~ msgstr "沒有數據"
+
+#~ msgid "Release date: "
+#~ msgstr "上映日期："
+
+#~ msgid "Watch progress: "
+#~ msgstr "觀看進度： "
+
+#~ msgid "No introduction yet"
+#~ msgstr "暫無介紹"
+
+#~ msgid "An error occured: "
+#~ msgstr "發生錯誤:"
+
+#~ msgid "Load more..."
+#~ msgstr "載入更多..."
+
+#~ msgid "Successfully initialized the index."
+#~ msgstr "重建索引成功."
+
+#~ msgid ""
+#~ "The target directory is not accessible. Please check the permission "
+#~ "settings."
+#~ msgstr "目標目錄無法訪問，請檢查目錄權限。"
+
+#~ msgid ""
+#~ "Successfully backed up images from the 'img' folder to the 'backup' "
+#~ "folder."
+#~ msgstr "成功將img資料夾內容備份至backup資料夾。"
+
+#~ msgid ""
+#~ "Detected content in the 'backup' folder. Verifying and attempting to "
+#~ "restore conversion operations."
+#~ msgstr "偵測到backup資料夾中有內容，正在嘗試從斷點恢復進度。"
+
+#~ msgid ""
+#~ "All images have been compressed to WebP format. The original files are "
+#~ "stored in the 'backup' folder.<br> Please confirm correctness before "
+#~ "reinitializing the index.<br>"
+#~ msgstr ""
+#~ "所有圖片已轉換為Webp格式，原始檔案已備份至backup資料夾。 <br>請在確認無誤"
+#~ "後重建索引。 <br>"
+
+#~ msgid ""
+#~ "No images found. Please contact the administrator to check if images "
+#~ "exist in the 'iro_gallary' directory and ensure the directory is readable "
+#~ "and writable."
+#~ msgstr ""
+#~ "沒有找到任何圖片。請聯絡網站管理員確保'iro_gallery'資料夾內有圖片並可讀"
+#~ "寫。"
+
+#~ msgid "Friend Links Status"
+#~ msgstr "友情連結狀態"
+
+#~ msgid ""
+#~ "All links check has been triggered. Please refresh this page in a few "
+#~ "moments to see the results."
+#~ msgstr "已觸發所有連結檢查。請稍後刷新此頁面以查看結果。"
+
+#, php-format
+#~ msgid "Link \"%s\" has been checked. Refresh to see the results."
+#~ msgstr "已檢查連結 「%s」。刷新以查看結果。"
+
+#~ msgid "Link status has been reset."
+#~ msgstr "連線狀態已重設。"
+
+#, php-format
+#~ msgid "Last automatic check: %s"
+#~ msgstr "最後一次自動檢查：%s"
+
+#~ msgid "No automatic check has been performed yet."
+#~ msgstr "尚未執行自動檢查。"
+
+#~ msgid ""
+#~ "The system automatically checks a batch of links (5 links) every week to "
+#~ "avoid overloading the server."
+#~ msgstr "系統每週自動檢查一批連結 (5 個連結)，以避免伺服器負荷過重。"
+
+#~ msgid "Check All Links Now"
+#~ msgstr "立即檢查所有連結"
+
+#~ msgid "This will check all links and may take some time. Continue?"
+#~ msgstr "這將檢查所有連結，可能需要一些時間。繼續嗎？"
+
+#~ msgid ""
+#~ "This will check all links in batches of 5 with a delay between batches to "
+#~ "avoid overloading the server."
+#~ msgstr ""
+#~ "這會以 5 個為一批檢查所有連結，每批之間會有延遲，以避免伺服器負荷過重。"
+
+#~ msgid "Status"
+#~ msgstr "狀態"
+
+#~ msgid "Last Check"
+#~ msgstr "最後檢查時間"
+
+#~ msgid "Failures"
+#~ msgstr "錯誤"
+
+#~ msgid "Details"
+#~ msgstr "詳情"
+
+#~ msgid "No links found."
+#~ msgstr "找不到符合條件的連結。"
+
+#~ msgid "Not checked"
+#~ msgstr "未檢查"
+
+#~ msgid "Success"
+#~ msgstr "成功 "
+
+#~ msgid "Failure"
+#~ msgstr "失敗"
+
+#, php-format
+#~ msgid "Status Code: %s"
+#~ msgstr "狀態碼： %s"
+
+#, php-format
+#~ msgid "Error: %s"
+#~ msgstr "錯誤：%s"
+
+#~ msgid "Never"
+#~ msgstr "從未"
+
+#~ msgid "Check Now"
+#~ msgstr "立即檢查"
+
+#~ msgid "Reset Status"
+#~ msgstr "重置狀態"
+
+#~ msgid "priority"
+#~ msgstr "優先級"
+
+#~ msgid "The higher the value, the higher the priority (default is 0)."
+#~ msgstr "數值越高，優先級越高（默認為0）"
+
+#~ msgid "Less than 1 minute"
+#~ msgstr "少於一分鐘"
+
+#, php-format
+#~ msgid "%s Hour"
+#~ msgid_plural "%s Hours"
+#~ msgstr[0] "%s 小時"
+
+#, php-format
+#~ msgid "%s Minute"
+#~ msgid_plural "%s Minutes"
+#~ msgstr[0] "%s 分鐘"
+
+#, php-format
+#~ msgid "%s Word"
+#~ msgid_plural "%s Words"
+#~ msgstr[0] "%s 字"
+
+#~ msgid "1 Comment"
+#~ msgstr "1 留言"
+
+#, php-format
+#~ msgctxt "post date"
+#~ msgid "Posted on %s"
+#~ msgstr "發布於 %s"
+
+#, php-format
+#~ msgctxt "post author"
+#~ msgid "by %s"
+#~ msgstr "由 %s 寫作"
+
+#~ msgid ", "
+#~ msgstr "， "
+
+#, php-format
+#~ msgid "Posted in %1$s"
+#~ msgstr "在 分類%1$s中"
+
+#, php-format
+#~ msgid "Tagged %1$s"
+#~ msgstr "在 標籤 %1$s中"
+
+#, php-format
+#~ msgid "Leave a Comment<span class=\"screen-reader-text\"> on %s</span>"
+#~ msgstr "<span class=\"screen-reader-text\"> 在 %s</span>中留言"
+
+#, php-format
+#~ msgid "Edit %s"
+#~ msgstr "編輯 %s"
+
+#~ msgid " days ago"
+#~ msgstr " 天前"
+
+#~ msgid " hours ago"
+#~ msgstr " 小時前"
+
+#~ msgid " minutes ago"
+#~ msgstr " 分鐘前"
+
+#~ msgid " seconds ago"
+#~ msgstr " 秒前"
+
+#~ msgid "Please upgrade wordpress to version 4.4+"
+#~ msgstr "請更新到 4.4 以上版本"
+
+#~ msgid "You may post nothing"
+#~ msgstr "你可能沒有發送任何訊息"
+
+#~ msgid "Please fill in the captcha answer"
+#~ msgstr "請填寫驗證問題內容"
+
+#~ msgid ""
+#~ "Have you modified the captcha code data? Or refresh the captcha and try "
+#~ "again?"
+#~ msgstr "你修改了驗證碼資料嗎？或是刷新驗證碼試試？"
+
+#~ msgid "Please fill in the correct captcha answer"
+#~ msgstr "你可能沒有回答正確"
+
+#, php-format
+#~ msgid "Search results for \" %s \""
+#~ msgstr "關於“ %s ”的搜尋結果"
+
+#~ msgid "Your browser does not support HTML5 video."
+#~ msgstr "你的瀏覽器不支援 HTML5 影片。"
+
+#~ msgid "Signed in as"
+#~ msgstr "當前已登入"
+
+#~ msgid "New post"
+#~ msgstr "撰寫文章"
+
+#~ msgid "Profile"
+#~ msgstr "個人資訊"
+
+#~ msgid "Sign out"
+#~ msgstr "登出"
+
+#~ msgid "Log in"
+#~ msgstr "登入"
+
+#~ msgid "Register"
+#~ msgstr "註冊"
+
+#~ msgid "Previous Post"
+#~ msgstr "上一篇文章"
+
+#~ msgid "Next Post"
+#~ msgstr "下一篇文章"
+
+#, php-format
+#~ msgid "Search result: %s"
+#~ msgstr "搜尋結果：%s"
+
+#~ msgid "shuoshuo"
+#~ msgstr "說說"
+
+#~ msgid "If no option is selected, all results are retrieved by default"
+#~ msgstr "如果你沒選取任何類別，預設會尋找所有結果"
+
+#~ msgid "There is nothing here！"
+#~ msgstr "沒有找到任何東西！"
+
+#, php-format
+#~ msgid ""
+#~ "Ready to post your first article? <a href=\"%1$s\">Click here to start</"
+#~ "a>."
+#~ msgstr ""
+#~ "準備好發佈你的第一篇文章了嗎？ <a href=\"%1$s\">請點擊此處開始</a>。"
+
+#~ msgid "Didn't find what you want, look at the other ones."
+#~ msgstr "沒有找到你想要的，看看其他的吧。"
+
+#~ msgid "We didn't seem to find what you want. Maybe you can search for it."
+#~ msgstr "似乎沒有找到你想要的東西，或許你可以搜尋一下試式試。"
+
+#~ msgid "Pages:"
+#~ msgstr "頁面:"
+
+#~ msgid "AI Excerpt"
+#~ msgstr "AI 摘錄"
+
+#~ msgid "Hit"
+#~ msgid_plural "Hits"
+#~ msgstr[0] "熱度"
+
+#~ msgid "Sticky"
+#~ msgstr "置頂"
+
+#~ msgid "Excerpt"
+#~ msgstr "摘錄"
+
+#~ msgid "EDIT"
+#~ msgstr "編輯"
+
+#~ msgid "View"
+#~ msgid_plural "Views"
+#~ msgstr[0] "次瀏覽"
+
+#~ msgid "Last updated on"
+#~ msgstr "最後更新於"
+
+#~ msgid "Please fill in the Bilibili UID in Sakura Options."
+#~ msgstr "請在後台設置填寫 Bilibili UID 後繼續。"
+
+#~ msgid "Please fill in the Bangumi UID in Sakura Options."
+#~ msgstr "請在後台設置填寫 Bangumi UID 後繼續。"
+
+#~ msgid "Please fill in the My Anime List Username in Sakura Options."
+#~ msgstr "請在後台設置填寫 My Anime List Username 後繼續。"
+
+#~ msgid "Submit Link"
+#~ msgstr "提交連結"
+
+#~ msgid "Submit Your Link"
+#~ msgstr "提交你的連結"
+
+#~ msgid "Please fill out the form below to submit your website link."
+#~ msgstr "請填寫以下表格，提交你的網站連結。"
+
+#~ msgid "Site Name"
+#~ msgstr "網站名稱"
+
+#~ msgid "Site URL"
+#~ msgstr "網站網址"
+
+#~ msgid "Site Description"
+#~ msgstr "網站描述"
+
+#~ msgid "Site Logo/Avatar URL"
+#~ msgstr "網站標誌/頭像 URL"
+
+#~ msgid "Your Email"
+#~ msgstr "電子信箱"
+
+#~ msgid ""
+#~ "A WordPress theme that is built with AI-assisted reading features, "
+#~ "colorful, user-friendly, well-rounded, and rich in functionalities. "
+#~ "(Based on Theme Sakura)"
+#~ msgstr ""
+#~ "一款具有 AI 輔助閱讀功能的 WordPress 主題，多彩、友善、功能全面、體驗完"
+#~ "善。(基於主題 Sakura)"
 
 #~ msgid "Please do not try to use Javascript in your comments!"
 #~ msgstr "請不要嘗試在你的評論中使用Javascript！"
