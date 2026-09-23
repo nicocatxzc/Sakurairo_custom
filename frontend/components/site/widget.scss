@@ -66,6 +66,14 @@
         }
     }
 
+    .wp-widget {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        background-color: var(--widget-background-color);
+        border: var(--border-color-shine);
+        border-radius: var(--widget_panel_radius);
+    }
+
     .panel {
         position: absolute;
         right: 4rem;
@@ -73,7 +81,7 @@
         flex-direction: column;
         align-items: flex-end;
         transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        
+
         &.hide {
             transform: translateY(200%);
         }

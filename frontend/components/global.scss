@@ -17,9 +17,9 @@ html {
 }
 
 @layer rest {
-    *:not(.post-content article *),
-    *:not(.post-content article *)::before,
-    *:not(.post-content article *)::after {
+    *:not(.post-content article *,.wp-widget *),
+    *:not(.post-content article *,.wp-widget *)::before,
+    *:not(.post-content article *,.wp-widget *)::after {
         margin: 0;
         padding: 0;
         box-sizing: border-box;

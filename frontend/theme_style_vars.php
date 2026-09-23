@@ -32,6 +32,11 @@
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }
 
+    :root {
+        --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_url_pc') ?>);
+        --cover-background-img-mb: url(<?= iro_opt('cover_random_pic_url_mb') ?>);
+    }
+
     <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {
         background-image: url(<?= iro_opt('frontend_default_background') ?>);
         <?php if (iro_opt("frontend_background_fill_mode") == "texture"): ?>background-size: auto;
@@ -41,6 +46,16 @@
         background-position: center;
         background-repeat: no-repeat;
         <?php endif; ?>
+    }
+
+    <?php endif; ?><?php if (iro_opt('cover_as_background', false)): ?>body {
+        background-image: var(--cover-background-img-pc, --cover-background-img-mb);
+    }
+
+    @media (max-width: 860px) {
+        body {
+            background-image: var(--cover-background-img-mb, --cover-background-img-pc);
+        }
     }
 
     <?php endif; ?> :root.dark {

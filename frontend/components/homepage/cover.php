@@ -5,10 +5,7 @@
         <figure
             class="cover
         <?= iro_opt('cover_as_background', false) ? 'transparent' : '' ?>
-        "
-            style="
-        --background-img-pc: url(<?= iro_opt('cover_random_pic_url_pc') ?>); 
-        --background-img-mb: url(<?= iro_opt('cover_random_pic_url_mb') ?>);">
+        ">
             <div class="cover-info">
                 <div class="center">
                     <?php if (iro_opt("cover_focus_style") != "off") : ?>
