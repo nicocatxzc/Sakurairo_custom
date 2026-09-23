@@ -29,8 +29,6 @@ add_filter('the_content', 'toc_support');
 add_filter('the_excerpt_rss', 'toc_support');
 add_filter('the_content_feed', 'toc_support');
 
-// 优化相关
-require_once get_template_directory() . '/inc/functions/content/optimize.php';
 // 阅读数量
 require_once get_template_directory() . '/inc/functions/content/post_views.php';
 // wp_query干预
