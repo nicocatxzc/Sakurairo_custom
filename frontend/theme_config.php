@@ -44,8 +44,10 @@ function iro_front_theme_config()
 ?>
 
     <?php
+    $post = get_post();
     $iro_page_config = [
         "post_id" => get_the_ID(),
+        "post_image" => iro_media_optimize_image_url(get_the_post_thumbnail_url($post, 'full')),
         "is_home" => is_home(),
         "is_singular" => is_singular(),
     ];

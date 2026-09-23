@@ -1,7 +1,7 @@
 import Swup from "swup";
 
 const swup = new Swup({
-    containers: [".layout-slot", "#iro_page_config"],
+    containers: [".layout-slot", "#iro_page_config","#iro_theme_style_dymanic_vars"],
     linkSelector: "a[href]:not(.no-pjax):not(* .no-pjax)",
     animationSelector: false,
 
