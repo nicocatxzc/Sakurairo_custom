@@ -79,2058 +79,1697 @@ $vision_resource_basepath = iro_opt('vision_resource_basepath', 'https://s.nmxc.
 // 分组：每个分组至少包含 id、title、description、所属面板 panel
 // 设置项（Field）数组：每个设置项至少包含 type、settings、label、所属区块 section
 $sections = [
-	// ====================导航栏====================
-	[
-        'id'          => 'iro_nav',
-        'title'       => esc_html__( 'Nav Menu', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_global',
-
-		'fields'      =>[
-			[
-				'type'     => 'custom',
-				'settings' => 'nav_menu_notice',
-				'default'  => __('<p>You can edit your nav menu options <a href="/wp-admin/nav-menus.php">here</a></p>','sakurairo'),
-			],
-			[
-				'type'     => 'radio_image',
-				'settings' => 'choice_of_nav_style',
-				'iro_key'  => 'choice_of_nav_style',
-				'label'    => esc_html__( 'Nav Menu Style', 'sakurairo' ),
-				'choices'     => [
-					'iro' => $vision_resource_basepath . 'options/nav_menu_style_Island.webp',
-					'sakura' => $vision_resource_basepath . 'options/nav_menu_style_bar.webp',
-				],
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'nav_menu_style',
-				'iro_key'  => 'nav_menu_style',
-				'label'    => esc_html__( 'Spirit Island Nav Style', 'sakurairo' ),
-				'choices'     => [
-					'center' => __('Always centered','sakurairo'),
-					'space-between' => __('Dispersed','sakurairo'),
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'choice_of_nav_style',
-						'operator' => '==',
-						'value'    => 'iro',
-					]
-				],
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'nav_menu_cover_radius',
-				'label'    => esc_html__( 'Nav Menu Radius', 'sakurairo' ),
-				'iro_key'  => 'nav_menu_cover_radius',
-				'transport'   => 'auto',
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 50,
-					'step' => 1,
-				],
-				'output' => array(
-					array(
-						'element'  => array('.site-branding',
-										'.nav-search-wrapper',
-										'.user-menu-wrapper',
-										'.nav-search-wrapper nav ul li a',
-										'.searchbox.js-toggle-search i',
-										'.bg-switch i',
-										'.site-header'),
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				)
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'sakura_nav_style_style',
-				'label'    => esc_html__( 'Classic Nav Style', 'sakurairo' ),
-				'iro_key'  => 'sakura_nav_style',
-				'iro_subkey'  => 'style',
-				'choices'     => [
-					'sakura' => __('Loose','sakurairo'),
-					'sakurairo' => __('Standered','sakurairo'),
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'choice_of_nav_style',
-						'operator' => '!=',
-						'value'    => 'iro',
-					]
-				],
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'sakura_nav_style_distribution', //分布
-				'label'    => esc_html__( 'Nav Menu Options Display Method', 'sakurairo' ),
-				'iro_key'  => 'sakura_nav_style',
-				'iro_subkey'  => 'distribution',
-				'choices'     => [
-					'left' => __('Keep to the left','sakurairo'),
-					'right' => __('Keep to the right','sakurairo'),
-					'center' => __('Always centered','sakurairo'),
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'choice_of_nav_style',
-						'operator' => '!=',
-						'value'    => 'iro',
-					]
-				],
-				'transport'   => 'postMessage',
-				'output' => array(
-					array(
-						'element'  => '.menu-wrapper .sakura_nav .menu',
-						'property' => 'justify-content',
-						'value_pattern' => '$ !important',
-					),
-				)
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'sakura_nav_style_option_spacing',
-				'label'    => esc_html__( 'Menu option left and right spacing', 'sakurairo' ),
-				'iro_key'  => 'sakura_nav_style',
-				'iro_subkey'  => 'option_spacing',
-				'active_callback' => [
-					[
-						'setting'  => 'choice_of_nav_style',
-						'operator' => '!=',
-						'value'    => 'iro',
-					]
-				],
-				'transport'   => 'auto',
-				'choices'     => [
-					'min'  => 1,
-					'max'  => 150,
-					'step' => 1,
-				],
-				'output' => array(
-					array(
-						'element'  => 'nav ul li',
-						'property' => 'margin', 
-						'value_pattern' => '0 $px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'nav_menu_font',
-				'label'    => esc_html__( 'Nav Menu Font', 'sakurairo' ),
-				'iro_key'  => 'nav_menu_font',
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => array( '.site-header a','.header-user-name','.header-user-menu a' ),
-						'property' => 'font-family',
-					),
-				)
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'iro_logo',
-				'label'    => esc_html__( 'Navigation Menu Logo', 'sakurairo' ),
-				'iro_key'  => 'iro_logo',
-				'js_vars'   => [
-					[
-						'element'  => '.site-title-logo',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'nav_text_logo_text',
-				'label'    => esc_html__( 'Nav Menu Text Logo Text', 'sakurairo' ),
-				'iro_key'  => 'nav_text_logo',
-				'iro_subkey'  => 'text',
-				'transport'   => 'postMessage',
-				'js_vars'   => [
-					[
-						'element'  => '.site-title',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'nav_text_logo_font',
-				'label'    => esc_html__( 'Nav Menu Text Logo Font', 'sakurairo' ),
-				'iro_key'  => 'nav_text_logo',
-				'iro_subkey'  => 'font_name',
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.site-title',
-						'property' => 'font-family',
-					),
-				)
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'cover_random_graphs_switch',
-				'iro_key'  => 'cover_random_graphs_switch',
-				'label'    => esc_html__( 'Switch Button of Random Images', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'nav_user_menu',
-				'label'    => esc_html__( 'Nav User Menu', 'sakurairo' ),
-				'description' => esc_html__( 'It is on by default. The user avatar and menu will be displayed.', 'sakurairo' ),
-				'section'  => 'iro_nav',
-				'iro_key'  => 'nav_user_menu',
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'nav_menu_search',
-				'iro_key'  => 'nav_menu_search',
-				'label'    => esc_html__( 'Nav Menu Search', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'search_area_background',
-				'iro_key'  => 'search_area_background',
-				'label'    => esc_html__( 'Search Area Background Image', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => '.search-form.is-visible',
-						'property' => 'background-image',
-					),
-				),
-			],
-		],
-    ],
-	// ====================主题色部分====================
-	[
-        'id'          => 'iro_color',
-        'title'       => esc_html__( 'Theme Colors', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_global',
-
-		'fields'      =>[
-			// ====================主题色====================
-			[
-				'type'     => 'switch',
-				'settings' => 'extract_theme_skin_from_cover',
-				'iro_key'  => 'extract_theme_skin_from_cover',
-				'label'    => esc_html__( 'Extract Theme Color from Cover Image', 'sakurairo' ),
-				'description' => esc_html__('After turning on,the theme color will be taken from the homepage cover', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'extract_article_highlight_from_feature',
-				'iro_key'  => 'extract_article_highlight_from_feature',
-				'label'    => esc_html__( 'Extract Article Highlight from Featured Image', 'sakurairo' ),
-				'description' => esc_html__('After turning on,the colors displayed on the article page will be taken from the article featured image', 'sakurairo' ),
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'theme_skin',
-				'label'    => esc_html__( 'Theme Color', 'sakurairo' ),
-				'iro_key'  => 'theme_skin',
-				'choices'     => [
-					'alpha' => true,
-				],
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'theme_skin_matching',
-				'label'    => esc_html__( 'Matching Color', 'sakurairo' ),
-				'iro_key'  => 'theme_skin_matching',
-				'choices'     => [
-					'alpha' => true,
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => ':root',
-						'property' => '--theme-skin-matching',
-					),
-				),
-			],
-			// ====================深色模式====================
-			[
-				'type'     => 'color',
-				'settings' => 'theme_skin_dark',
-				'label'    => esc_html__( 'Dark Mode Theme Color', 'sakurairo' ),
-				'iro_key'  => 'theme_skin_dark',
-				'choices'     => [
-					'alpha' => true,
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => ':root',
-						'property' => '--theme-skin-dark',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'theme_darkmode_img_bright',
-				'label'    => esc_html__( 'Dark Mode Image Brightness', 'sakurairo' ),
-				'iro_key'  => 'theme_darkmode_img_bright',
-				'choices'     => [
-					'min'  => 0.4,
-					'max'  => 1,
-					'step' => 0.01,
-				],
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'theme_darkmode_widget_transparency',
-				'label'    => esc_html__( 'Dark Mode Component Transparency', 'sakurairo' ),
-				'iro_key'  => 'theme_darkmode_widget_transparency',
-				'choices'     => [
-					'min'  => 0.2,
-					'max'  => 1,
-					'step' => 0.01,
-				],
-			],
-		],
-    ],
-	// ====================封面LOGO====================
+    // ====================外观设置====================
     [
-        'id'          => 'iro_cover_logo',
-        'title'       => esc_html__( 'Logo', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_cover',
-
-		'fields'      =>[
-			[
-				'type'     => 'image',
-				'settings' => 'personal_avatar',
-				'label'    => esc_html__( 'Cover Personal Avatar', 'sakurairo' ),
-				'iro_key'  => 'personal_avatar',
-				'transport'   => 'postMessage',
-				'js_vars'   => [
-					[
-						'element'  => '.header-tou a',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'text_logo_options',
-				'label'    => esc_html__( 'Enable Mashiro Special Effects Text', 'sakurairo' ),
-				'description' => __('After turning it on, it will replace your avatar on the homepage','sakurairo'),
-				'iro_key'  => 'text_logo_options',
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'text_logo_text',
-				'label'    => esc_html__( 'Mashiro Special Effects Text', 'sakurairo' ),
-				'iro_key'  => 'text_logo',
-				'iro_subkey'  => 'text',
-				'active_callback' => [
-					[
-						'setting'  => 'text_logo_options',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'postMessage',
-				'js_vars'     => [
-					[
-						'element'  => '.center-text',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'text_logo_color',
-				'label'    => esc_html__( 'Mashiro Special Effects Text Color', 'sakurairo' ),
-				'iro_key'  => 'text_logo',
-				'iro_subkey'  => 'color',
-				'choices'     => [
-					'alpha' => true,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'text_logo_options',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => '.center-text',
-						'property' => 'color',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'text_logo_font',
-				'label'    => esc_html__( 'Mashiro Special Effects Font', 'sakurairo' ),
-				'iro_key'  => 'text_logo',
-				'iro_subkey'  => 'font',
-				'active_callback' => [
-					[
-						'setting'  => 'text_logo_options',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => '.center-text',
-						'property' => 'font-family',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'text_logo_size',
-				'label'    => esc_html__( 'Mashiro Special Effects Size', 'sakurairo' ),
-				'iro_key'  => 'text_logo',
-				'iro_subkey'  => 'size',
-				'active_callback' => [
-					[
-						'setting'  => 'text_logo_options',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'choices'     => [
-					'min'  => 40 ,
-					'max'  => 140,
-					'step' => 1,
-				],
-				'output' => array(
-					array(
-						'element'  => '.center-text',
-						'property' => 'font-size',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-		],
-    ],
-	// ====================封面外观====================
-	[
-        'id'          => 'iro_cover_display',
-        'title'       => esc_html__( 'Apperance', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_cover',
-
-		'fields'      =>[
-			[
-				'type'     => 'switch',
-				'settings' => 'cover_switch',
-				'label'    => esc_html__( 'Enable Cover', 'sakurairo' ),
-				'iro_key'  => 'cover_switch',
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'cover_full_screen',
-				'label'    => esc_html__( 'Cover Full Screen', 'sakurairo' ),
-				'iro_key'  => 'cover_full_screen',
-				'active_callback' => [
-					[
-						'setting'  => 'cover_switch',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'random_graphs_filter',
-				'iro_key'  => 'random_graphs_filter',
-				'label'    => esc_html__( 'Cover Random Images Filter', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'cover_switch',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'choices'     => [
-					'filter-nothing' => __('No filter','sakurairo'),
-					'filter-undertint' => __('Light filter','sakurairo'),
-					'filter-dim' => __('Dimmed filter','sakurairo'),
-					'filter-grid' => __('Grid filter','sakurairo'),
-					'filter-dot' => __('Dot filter','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'cover_half_screen_curve',
-				'label'    => esc_html__( 'Cover Arc Occlusion (Below)', 'sakurairo' ),
-				'iro_key'  => 'cover_half_screen_curve',
-				'active_callback' => [
-					[
-						'setting'  => 'cover_switch',
-						'operator' => '==',
-						'value'    => true,
-					],
-					[
-						'setting'  => 'cover_full_screen',
-						'operator' => '==',
-						'value'    => false,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'cover_animation',
-				'label'    => esc_html__( 'Cover Animation', 'sakurairo' ),
-				'iro_key'  => 'cover_animation',
-				'active_callback' => [
-					[
-						'setting'  => 'cover_switch',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'cover_animation_time',
-				'label'    => esc_html__( 'Cover Animation Time', 'sakurairo' ),
-				'iro_key'  => 'cover_animation_time',
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 5,
-					'step' => 0.01,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'cover_switch',
-						'operator' => '==',
-						'value'    => true,
-					],
-					[
-						'setting'  => 'cover_animation',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-		],
-    ],
-	// ====================封面信息栏====================
-	[
-        'id'          => 'iro_cover_info',
-        'title'       => esc_html__( 'Infos', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_cover',
-
-		'fields'      =>[
-			[
-				'type'     => 'switch',
-				'settings' => 'infor_bar',
-				'iro_key'  => 'infor_bar',
-				'label'    => esc_html__( 'Cover Info Bar', 'sakurairo' ),
-			],
-			[
-				'type'     => 'radio_image',
-				'settings' => 'infor_bar_style',
-				'iro_key'  => 'infor_bar_style',
-				'label'    => esc_html__( 'Cover Info Bar Style', 'sakurairo' ),
-				'transport'   => 'auto',
-				'choices'     => [
-					'v1' => $vision_resource_basepath . 'options/nav_menu_style_Island.webp',
-					'v2' => $vision_resource_basepath . 'options/infor_bar_style_v2.webp',
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'homepage_widget_transparency',
-				'iro_key'  => 'homepage_widget_transparency',
-				'label'    => esc_html__( 'Cover Widget Transparency', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0.2,
-					'max'  => 1,
-					'step' => 0.01,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => ':root',
-						'property' => '--homepage_widget_transparency',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'avatar_radius',
-				'iro_key'  => 'avatar_radius',
-				'label'    => esc_html__( 'Cover Info Bar Avatar Radius', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 100,
-					'step' => 1,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.focusinfo .header-tou img',
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'signature_radius',
-				'iro_key'  => 'signature_radius',
-				'label'    => esc_html__( 'Cover Info Bar Rounded', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 50,
-					'step' => 1,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.header-info',
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'signature_text',
-				'iro_key'  => 'signature_text',
-				'label'    => esc_html__( 'Cover Signature Field Text', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'postMessage',
-				'js_vars'     => [
-					[
-						'element'  => '.header-info p',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'signature_font',
-				'iro_key'  => 'signature_font',
-				'label'    => esc_html__( 'Cover Signature Field Text Font', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.header-info p',
-						'property' => 'font-family',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'signature_font_size',
-				'iro_key'  => 'signature_font_size',
-				'label'    => esc_html__( 'Cover Signature Field Text Font Size', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'choices'     => [
-					'min'  => 5,
-					'max'  => 20,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.header-info p',
-						'property' => 'font-size',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'signature_typing',
-				'iro_key'  => 'signature_typing',
-				'label'    => esc_html__( 'Cover Signature Bar Typing Effects', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'signature_typing_marks',
-				'iro_key'  => 'signature_typing_marks',
-				'label'    => esc_html__( 'Cover Signature Field Typing Effects Double Quotes', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					],
-					[
-						'setting'  => 'signature_typing',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'code',
-				'settings' => 'signature_typing_json',
-				'iro_key'  => 'signature_typing_json',
-				'label'    => esc_html__( 'Typed.js initial option', 'sakurairo' ),
-				'choices'     => [
-					'language' => 'json',
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'infor_bar',
-						'operator' => '==',
-						'value'    => true,
-					],
-					[
-						'setting'  => 'signature_typing',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-		],
-    ],
-	// ====================杂项====================
-	[
-        'id'          => 'iro_cover_other',
-        'title'       => esc_html__( 'Others', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_cover',
-
-		'fields'      =>[
-			[
-				'type'     => 'switch',
-				'settings' => 'site_bg_as_cover',
-				'iro_key'  => 'site_bg_as_cover',
-				'label'    => esc_html__( 'Cover and Frontend Background Integration', 'sakurairo' ),
-				'description' => esc_html__( 'When enabled, the background of the cover will be set to transparent, while the frontend background will use the cover\'s random image API', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'post_cover_as_bg',
-				'iro_key'  => 'post_cover_as_bg',
-				'label'    => esc_html__( 'Post Cover As Background', 'sakurairo' ),
-				'description' => esc_html__( 'Use post feature image as background in post pages', 'sakurairo' ),
-			    'active_callback' => [
-					[
-						'setting'  => 'site_bg_as_cover',
-						'operator' => '==',
-						'value'    => true,
-					],
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'wave_effects',
-				'iro_key'  => 'wave_effects',
-				'label'    => esc_html__( 'Cover Wave Effects', 'sakurairo' ),
-				'description' => __('It will be forced off in the dark mode','sakurairo'),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'drop_down_arrow',
-				'iro_key'  => 'drop_down_arrow',
-				'label'    => esc_html__( 'Cover Dropdown Arrow', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'drop_down_arrow_mobile',
-				'iro_key'  => 'drop_down_arrow_mobile',
-				'label'    => esc_html__( 'Cover Dropdown Arrow Display on Mobile Devices', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'drop_down_arrow',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'drop_down_arrow_color',
-				'iro_key'  => 'drop_down_arrow_color',
-				'label'    => esc_html__( 'Cover Dropdown Arrow Color', 'sakurairo' ),
-				'choices'     => [
-					'alpha' => true,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'drop_down_arrow',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => '.headertop-down svg path',
-						'property' => 'fill',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'drop_down_arrow_dark_color',
-				'iro_key'  => 'drop_down_arrow_dark_color',
-				'label'    => esc_html__( 'Cover Dropdown Arrow Color (Dark Mode)', 'sakurairo' ),
-				'choices'     => [
-					'alpha' => true,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'drop_down_arrow',
-						'operator' => '==',
-						'value'    => true,
-					],
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => 'body.dark .headertop-down svg path ',
-						'property' => 'color',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-		],
-	],
-	// ====================主页整体布局====================
-	[
-        'id'          => 'iro_homepages_sections',
-        'title'       => esc_html__( 'Overall layout', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_homepage',
-
-		'fields'      =>[
-			[
-				'type'     => 'sortable',
-				'settings' => 'homepage_components',
-				'iro_key'  => 'homepage_components',
-				'label'    => esc_html__( 'Homepage Components', 'sakurairo' ),
-				'choices'     => [
-          			'exhibition' => __('Display Area','sakurairo'),
-					'primary' => __('Article Area','sakurairo'),
-					'static_page' => __('Static Page','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'dropdown_pages',
-				'settings' => 'static_page_id',
-				'iro_key'  => 'static_page_id',
-				'label'    => esc_html__( 'Select a page', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'homepage_components',
-						'operator' => 'contains',
-						'value'    => 'static_page',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'exhibition_area_icon',
-				'iro_key'  => 'exhibition_area_icon',
-				'label'    => esc_html__( 'Display Area Icon', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'homepage_components',
-						'operator' => 'contains',
-						'value'    => 'exhibition',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'exhibition_area_title',
-				'iro_key'  => 'exhibition_area_title',
-				'label'    => esc_html__( 'Display Area Title', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'homepage_components',
-						'operator' => 'contains',
-						'value'    => 'exhibition',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'post_area_icon',
-				'iro_key'  => 'post_area_icon',
-				'label'    => esc_html__( 'Post Area Icon', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'homepage_components',
-						'operator' => 'contains',
-						'value'    => 'primary',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'post_area_title',
-				'iro_key'  => 'post_area_title',
-				'label'    => esc_html__( 'Post Area Title', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'homepage_components',
-						'operator' => 'contains',
-						'value'    => 'primary',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'area_title_font',
-				'iro_key'  => 'area_title_font',
-				'label'    => esc_html__( 'Area Title Font', 'sakurairo' ),
-				'transport'   => 'postMessage',
-				'output' => array(
-					array(
-						'element'  => array('h1.fes-title','h1.main-title'),
-						'property' => 'font-family',
-						'value_pattern' => '$ !important',
-					),
-				)
-			],
-			[
-				'type'     => 'radio_image',
-				'settings' => 'area_title_text_align',
-				'iro_key'  => 'area_title_text_align',
-				'label'    => esc_html__( 'Area Title Alignment', 'sakurairo' ),
-				'transport'   => 'auto',
-				'choices'     => [
-					'left' => $vision_resource_basepath . 'options/area_title_text_left.webp',
-					'right' => $vision_resource_basepath . 'options/area_title_text_right.webp',
-					'center' => $vision_resource_basepath . 'options/area_title_text_center.webp',
-				],
-				'output' => array(
-					array(
-						'element'  => array('h1.fes-title','h1.main-title'),
-						'property' => 'justify-content',
-						'value_pattern' => '$ !important',
-					),
-				)
-			],
-		],
-    ],
-	// ====================展示区====================
-	[
-        'id'          => 'iro_display_aera',
-        'title'       => esc_html__( 'Display Aera', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_homepage',
-		'fields'      =>[
-			[
-				'type'     => 'sortable',
-				'settings' => 'capsule_components',
-				'iro_key'  => 'capsule_components',
-				'label'    => esc_html__( 'Capsule Components', 'sakurairo' ),
-				'choices'     => [
-          			'post_count'     => __('Posts Capsule','sakurairo'),
-					'comment_count'  => __('Comments Capsule','sakurairo'),
-					'view_count'  => __('Visitors Capsule','sakurairo'),
-					'link_count'     => __('Links Capsule','sakurairo'),
-					'author_count'     => __('Authors Capsule','sakurairo'),
-					'total_words'     => __('Total Words Capsule','sakurairo'),
-					'blog_days'     => __('Blog Running Capsule','sakurairo'),
-					'admin_online'     => __('Last Online Capsule','sakurairo'),
-					'random_link'     => __('Random Link Capsule','sakurairo'),
-					'announcement'     => __('Announcement Capsule','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'show_medal_capsules',
-				'iro_key'  => 'show_medal_capsules',
-				'label'    => esc_html__( 'Show Medal Badges Style Capsule', 'sakurairo' ),
-				'default'  => true,
-				'description' => esc_html__( 'Enable to show bronze/silver/gold medal badges for blog milestones, Requires you to unlock the relevant achievement to replace the relevant capsule', 'sakurairo' ),
-			],
-			[
-				'type'     => 'textarea',
-				'settings' => 'stat_announcement_text',
-				'iro_key'  => 'stat_announcement_text',
-				'label'    => esc_html__( 'Announcement Text', 'sakurairo' ),
-				'description' => esc_html__( 'Set the text for announcement capsule. The front-end will automatically split the text into two lines, you can also use line breaks for manual line breaks', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'capsule_components',
-						'operator' => 'contains',
-						'value'    => 'announcement',
-					],
-				],
-			],
-		],
-    ],
-	// ====================文章区====================
-	[
-        'id'          => 'iro_article_aera',
-        'title'       => esc_html__( 'Article Aera', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_homepage',
-
-		'fields'      =>[
-			[
-				'type'     => 'select',
-				'settings' => 'article_meta_displays',
-				'iro_key'  => 'article_meta_displays',
-				'label'    => esc_html__( 'Article Area Meta Displays', 'sakurairo' ),
-				'multiple'    => 0, // 想选多少选多少
-				'choices'     => [
-					"author" => __("Author","Sakurairo_C"),
-					"category" => __("Category","Sakurairo_C"),
-					"comment_count" => __("Number of Comments","Sakurairo_C"),
-					"post_views" => __("Number of Views","Sakurairo_C"),
-					"post_words_count" => __("Number of Words","Sakurairo_C"),
-					"reading_time" => __("Estimate Reading Time","Sakurairo_C"),
-				],
-			],
-			[
-				'type'     => 'radio_image',
-				'settings' => 'post_list_design',
-				'iro_key'  => 'post_list_design',
-				'label'    => esc_html__( 'Article Area Card Design', 'sakurairo' ),
-				'choices'     => [
-					'letter' => $vision_resource_basepath . 'options/post_list_design_letter.webp',
-          			'ticket' => $vision_resource_basepath . 'options/post_list_design_ticket.webp',
-				],
-			],
-			[
-				'type'     => 'radio_image',
-				'settings' => 'post_list_ticket_type',
-				'iro_key'  => 'post_list_ticket_type',
-				'label'    => esc_html__( 'Article Area Card Design', 'sakurairo' ),
-				'choices'     => [
-					'card' => $vision_resource_basepath . 'options/post_list_design_ticket.webp',
-          			'non-card' => $vision_resource_basepath . 'options/post_list_design_ticket_2.webp',
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'post_list_design',
-						'operator' => '==',
-						'value'    => 'ticket',
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_meta_background_compatible',
-				'iro_key'  => 'article_meta_background_compatible',
-				'label'    => esc_html__( 'Article Area Card Information Meta Background Compatible', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'show_shuoshuo_on_home_page',
-				'iro_key'  => 'show_shuoshuo_on_home_page',
-				'label'    => esc_html__( 'Show shuoshuo on home page', 'sakurairo' ),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'post_meta_radius', //信息
-				'iro_key'  => 'post_meta_radius',
-				'label'    => esc_html__( 'Article Area Card Information Meta Rounded Corners', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 30,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => array('.post-date', '.post-meta'),
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'post_list_title_radius', //标题
-				'iro_key'  => 'post_list_title_radius',
-				'label'    => esc_html__( 'Article Area Card Title Meta Rounded Corners', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 30,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.post-title',
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'post_list_card_radius', //卡片
-				'iro_key'  => 'post_list_card_radius',
-				'label'    => esc_html__( 'Article Area Card Rounded Corners', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 5,
-					'max'  => 20,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => array('.shuoshuo-item','.post-list-thumb'),
-						'property' => 'border-radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'post_title_font_size', //字体
-				'iro_key'  => 'post_title_font_size',
-				'label'    => esc_html__( 'Article Area Title Font Size', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 1,
-					'max'  => 30,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.post-list-thumb .post-title h3',
-						'property' => 'font-size',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-		],
-    ],
-	// ====================前台背景、字体====================
-	[
-        'id'          => 'iro_front',
-        'title'       => esc_html__( 'Frontend Background', 'sakurairo' ),
+        'id'          => 'iro_appearance',
+        'title'       => esc_html__( '外观设置', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_global',
 
-		'fields'      =>[
-			[
-				'type'     => 'image',
-				'settings' => 'reception_background_img1',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'img1',
-				'label'    => esc_html__( 'Default Frontend Background', 'sakurairo' ),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'reception_background_transparency',
-				'iro_key'  => 'reception_background_transparency',
-				'label'    => esc_html__( 'Background Transparency in the Frontend', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0.2,
-					'max'  => 1,
-					'step' => 0.01,
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'reception_background_blur',
-				'iro_key'  => 'reception_background_blur',
-				'label'    => esc_html__( 'Background Transparency Blur', 'sakurairo' ),
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'reception_background_size',
-				'iro_key'  => 'reception_background_size',
-				'label'    => esc_html__( 'Frontend Background Scaling Method', 'sakurairo' ),
-				'choices'     => [
-					'cover' => __('Cover','sakurairo'),
-					'contain' => __('Contain','sakurairo'),
-					'auto' => __('Auto','sakurairo'),
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => 'body',
-						'background-size' => 'font-size',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'global_default_font',
-				'iro_key'  => 'global_default_font',
-				'label'    => esc_html__( 'Global Default Font', 'sakurairo' ),
-				'description' => esc_html__( 'Fill in the font name,and you can add your customize font in Font Options of Global Options in iro-Options.', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.serif',
-						'property' => 'font-family',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'global_font_weight',
-				'iro_key'  => 'global_font_weight',
-				'label'    => esc_html__( 'Non-Emphasis Text Weight', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 100,
-					'max'  => 700,
-					'step' => 10,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => ':root',
-						'property' => '--global-font-weight',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'global_font_size',
-				'iro_key'  => 'global_font_size',
-				'label'    => esc_html__( 'Global Font Size', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 10,
-					'max'  => 20,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => array('.serif','body'),
-						'property' => 'font-size',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-		],
+        'fields'      => [
+            [
+                'type'     => 'custom',
+                'settings' => 'iro_appearance_notice',
+                'default'  => __('<p>主题配色</p>', 'sakurairo'),
+            ],
+            [
+                'type'        => 'color',
+                'settings'    => 'word_color_first',
+                'iro_key'     => 'word_color_first',
+                'label'       => esc_html__( '主要文字颜色', 'sakurairo' ),
+                'description' => esc_html__( '文章标题和正文内容等文字的颜色', 'sakurairo' ),
+                'default'     => '#505050',
+                'transport'   => 'auto',
+                'output'      => [ [ 'element' => ':root', 'property' => '--word-color-first' ] ],
+            ],
+            [
+                'type'        => 'color',
+                'settings'    => 'word_color_second',
+                'iro_key'     => 'word_color_second',
+                'label'       => esc_html__( '次要文字颜色', 'sakurairo' ),
+                'description' => esc_html__( '帮助和页脚等文字的颜色', 'sakurairo' ),
+                'default'     => '#00000080',
+                'transport'   => 'auto',
+                'output'      => [ [ 'element' => ':root', 'property' => '--word-color-second' ] ],
+            ],
+            [
+                'type'        => 'color',
+                'settings'    => 'active_color',
+                'iro_key'     => 'active_color',
+                'label'       => esc_html__( '激活组件颜色', 'sakurairo' ),
+                'description' => esc_html__( '鼠标悬浮链接以及按钮和高亮标签等部分的颜色', 'sakurairo' ),
+                'default'     => '#00b0f0',
+                'transport'   => 'auto',
+                'output'      => [ [ 'element' => ':root', 'property' => '--active-color' ] ],
+            ],
+            [
+                'type'      => 'color',
+                'settings'  => 'code_block_background_color',
+                'iro_key'   => 'code_block_background_color',
+                'label'     => esc_html__( '代码块背景色', 'sakurairo' ),
+                'default'   => '#e1e4e8',
+                'transport' => 'auto',
+                'output'    => [ [ 'element' => ':root', 'property' => '--code-background' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'widget_transparency',
+                'iro_key'   => 'widget_transparency',
+                'label'     => esc_html__( '组件透明度', 'sakurairo' ),
+                'default'   => 0.8,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root', 'property' => '--widget-transparency' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'background_transparency',
+                'iro_key'   => 'background_transparency',
+                'label'     => esc_html__( '背景透明度', 'sakurairo' ),
+                'default'   => 0.8,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root', 'property' => '--background-transparency' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'background_blur',
+                'iro_key'   => 'background_blur',
+                'label'     => esc_html__( '背景模糊度', 'sakurairo' ),
+                'default'   => 0.7,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root', 'property' => '--background-blur' ] ],
+            ],
+
+            [
+                'type'     => 'custom',
+                'settings' => 'iro_dark_mode_notice',
+                'default'  => __('<p>深色模式</p>', 'sakurairo'),
+            ],
+            [
+                'type'        => 'color',
+                'settings'    => 'word_color_first_dark',
+                'iro_key'     => 'word_color_first_dark',
+                'label'       => esc_html__( '主要文字颜色', 'sakurairo' ),
+                'description' => esc_html__( '文章标题和正文内容等文字的颜色', 'sakurairo' ),
+                'default'     => '#CCCCCC',
+                'transport'   => 'auto',
+                'output'      => [ [ 'element' => ':root.dark', 'property' => '--word-color-first' ] ],
+            ],
+            [
+                'type'      => 'color',
+                'settings'  => 'word_color_second_dark',
+                'iro_key'   => 'word_color_second_dark',
+                'label'     => esc_html__( '次要文字颜色', 'sakurairo' ),
+                'default'   => '#7d7d7d',
+                'transport' => 'auto',
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--word-color-second' ] ],
+            ],
+            [
+                'type'      => 'color',
+                'settings'  => 'active_color_dark',
+                'iro_key'   => 'active_color_dark',
+                'label'     => esc_html__( '激活组件颜色', 'sakurairo' ),
+                'default'   => '#FCCD00',
+                'transport' => 'auto',
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--active-color' ] ],
+            ],
+            [
+                'type'      => 'color',
+                'settings'  => 'code_block_background_color_dark',
+                'iro_key'   => 'code_block_background_color_dark',
+                'label'     => esc_html__( '代码块背景色', 'sakurairo' ),
+                'default'   => '#24292e',
+                'transport' => 'auto',
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--code-background' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'widget_transparency_dark',
+                'iro_key'   => 'widget_transparency_dark',
+                'label'     => esc_html__( '组件透明度', 'sakurairo' ),
+                'default'   => 0.8,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--widget-transparency' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'background_transparency_dark',
+                'iro_key'   => 'background_transparency_dark',
+                'label'     => esc_html__( '背景透明度', 'sakurairo' ),
+                'default'   => 0.7,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--background-transparency' ] ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'image_bright_dark',
+                'iro_key'   => 'image_bright_dark',
+                'label'     => esc_html__( '深色模式图像亮度', 'sakurairo' ),
+                'default'   => 0.7,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 1, 'step' => 0.01 ],
+                'output'    => [ [ 'element' => ':root.dark', 'property' => '--image-bright' ] ],
+            ],
+            [
+                'type'        => 'textarea',
+                'settings'    => 'theme_commemorate_mode_date',
+                'iro_key'     => 'theme_commemorate_mode_date',
+                'label'       => esc_html__( '纪念模式日期', 'sakurairo' ),
+                'description' => esc_html__( '一行一个，例如7-21，主题会在这些日期加上黑白滤镜', 'sakurairo' ),
+            ],
+        ],
     ],
-	// ====================小组件====================
-	[
-        'id'          => 'iro_widgets',
-        'title'       => esc_html__( 'Widgets Panel', 'sakurairo' ),
+
+    // ====================字体设置====================
+    [
+        'id'          => 'iro_fonts',
+        'title'       => esc_html__( '字体设置', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_global',
 
-		'fields'      =>[
-			[
-				'type'     => 'slider',
-				'settings' => 'style_menu_radius',
-				'iro_key'  => 'style_menu_radius',
-				'label'    => esc_html__( 'Widgets Panel Button Radius', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 50,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => ':root',
-						'property' => '--style_menu_radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'style_menu_selection_radius',
-				'iro_key'  => 'style_menu_selection_radius',
-				'label'    => esc_html__( 'Widgets Panel Widget Radius', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 30,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => ':root',
-						'property' => '--style_menu_selection_radius',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'style_menu_font',
-				'iro_key'  => 'style_menu_font',
-				'label'    => esc_html__( 'Widgets Panel Font', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'sakura_widget',
-				'iro_key'  => 'sakura_widget',
-				'label'    => esc_html__( 'Widgets Panel WP Widget Area', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'iro_widget_daynight',
-				'iro_key'  => 'widget_daynight',
-				'label'    => esc_html__( 'Widgets Panel Day&Night Switching', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'iro_widget_font',
-				'iro_key'  => 'widget_font',
-				'label'    => esc_html__( 'Widgets Panel Font Switching', 'sakurairo' ),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'global_default_font',
-				'iro_key'  => 'global_default_font',
-				'label'    => esc_html__( 'Global Default Font&Widgets Panel Font Switching A', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.serif',
-						'property' => 'font-family',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'global_font_2',
-				'iro_key'  => 'global_font_2',
-				'label'    => esc_html__( 'Widgets Panel Font Switching B', 'sakurairo' ),
-			],
-			//四个背景按钮
-			[
-				'type'     => 'switch',
-				'settings' => 'reception_background_heart_shaped',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'heart_shaped',
-				'label'    => esc_html__( '♡Option Switcher', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reception_background_img2',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'img2',
-				'label'    => esc_html__( '♡Corresponding Background', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'reception_background_star_shaped',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'star_shaped',
-				'label'    => esc_html__( '☆Option Switcher', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reception_background_img3',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'img3',
-				'label'    => esc_html__( '☆Corresponding Background', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'reception_background_square_shaped',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'square_shaped',
-				'label'    => esc_html__( '□Option Switcher', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reception_background_img4',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'img4',
-				'label'    => esc_html__( '□Corresponding Background', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'reception_background_lemon_shaped',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'lemon_shaped',
-				'label'    => esc_html__( '🍋Option Switcher', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reception_background_img5',
-				'iro_key'  => 'reception_background',
-				'iro_subkey'  => 'img5',
-				'label'    => esc_html__( '🍋Corresponding Background', 'sakurairo' ),
-			],
-		],
+        'fields'      => [
+            [
+                'type'        => 'slider',
+                'settings'    => 'global_font_size',
+                'iro_key'     => 'global_font_size',
+                'label'       => esc_html__( '字体大小', 'sakurairo' ),
+                'description' => esc_html__( '此处以像素为单位，主题大部分组件会以此为基础调整自身字体大小，以实现等比缩放的效果', 'sakurairo' ),
+                'default'     => 16,
+                'transport'   => 'auto',
+                'choices'     => [ 'min' => 1, 'max' => 64, 'step' => 0.1 ],
+                'output'      => [
+                    [
+                        'element'       => ':root',
+                        'property'      => '--global-font-size',
+                        'value_pattern' => '$px',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'slider',
+                'settings'    => 'global_font_weight',
+                'iro_key'     => 'global_font_weight',
+                'label'       => esc_html__( '非强调文本字重', 'sakurairo' ),
+                'description' => esc_html__( '建议的取值范围为 300-500', 'sakurairo' ),
+                'default'     => 300,
+                'transport'   => 'auto',
+                'choices'     => [ 'min' => 100, 'max' => 1000, 'step' => 10 ],
+                'output'      => [ [ 'element' => ':root', 'property' => '--global-font-weight' ] ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'global_default_font',
+                'iro_key'     => 'global_default_font',
+                'label'       => esc_html__( '默认字体', 'sakurairo' ),
+                'description' => esc_html__( '填写字体名称，需在页面头部嵌入对应的字体样式', 'sakurairo' ),
+                'transport'   => 'auto',
+                'output'      => [ [ 'element' => ':root', 'property' => '--global-font-family' ] ],
+            ],
+        ],
     ],
-	// ====================粒子特效====================
-	[
-        'id'          => 'iro_particles',
-        'title'       => esc_html__( 'Particles', 'sakurairo' ),
+
+    // ====================导航栏====================
+    [
+        'id'          => 'iro_nav',
+        'title'       => esc_html__( '导航栏', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_global',
 
-		'fields'      =>[
-			[
-				'type'     => 'select',
-				'settings' => 'sakura_falling_effects',
-				'iro_key'  => 'sakura_falling_effects',
-				'label'    => esc_html__( 'Sakura Falling Effects', 'sakurairo' ),
-				'choices'     => [
-					'off' => __('Off','sakurairo'),
-					'native' => __('Native Quantity','sakurairo'),
-					'quarter' => __('Quarter Quantity','sakurairo'),
-					'half' => __('Half Quantity','sakurairo'),
-					'less' => __('Less Quantity','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'particles_effects',
-				'iro_key'  => 'particles_effects',
-				'label'    => esc_html__( 'Particles Effects', 'sakurairo' ),
-			],
-			[
-				'type'     => 'code',
-				'settings' => 'particles_json',
-				'iro_key'  => 'particles_json',
-				'label'    => esc_html__( 'Particles JSON', 'sakurairo' ),
-				'description' => esc_html__( 'Vist "https://vincentgarreau.com/particles.js/" for more help', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'particles_effects',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'choices'     => [
-					'language' => 'json',
-				],
-			],
-		],
+        'fields'      => [
+            [
+                'type'      => 'image',
+                'settings'  => 'nav_logo',
+                'iro_key'   => 'nav_logo',
+                'label'     => esc_html__( '导航栏logo', 'sakurairo' ),
+                'transport' => 'postMessage',
+                'js_vars'   => [
+                    [
+                        'element'  => '.site-branding img.logo',
+                        'function' => 'html',
+                        'attr'     => 'src',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'nav_title',
+                'iro_key'   => 'nav_title',
+                'label'     => esc_html__( '导航栏标题', 'sakurairo' ),
+                'transport' => 'postMessage',
+                'js_vars'   => [
+                    [
+                        'element'  => '.site-title',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'nav_title_font',
+                'iro_key'   => 'nav_title_font',
+                'label'     => esc_html__( '导航栏标题字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.site-title',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'nav_option_font',
+                'iro_key'   => 'nav_option_font',
+                'label'     => esc_html__( '导航栏选项字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.menu-wrapper .menu',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'select',
+                'settings'  => 'navbar_distribution',
+                'iro_key'   => 'navbar_distribution',
+                'label'     => esc_html__( '导航栏选项分布位置', 'sakurairo' ),
+                'default'   => 'right',
+                'choices'   => [
+                    'left'         => esc_html__( '左', 'sakurairo' ),
+                    'center'       => esc_html__( '中', 'sakurairo' ),
+                    'right'        => esc_html__( '右', 'sakurairo' ),
+                    'space-evenly' => esc_html__( '均匀', 'sakurairo' ),
+                ],
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.menu-wrapper .menu',
+                        'property'      => 'justify-content',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'navbar_option_margin',
+                'iro_key'   => 'navbar_option_margin',
+                'label'     => esc_html__( '导航栏选项间距', 'sakurairo' ),
+                'default'   => 0.3,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.menu-wrapper .menu > li',
+                        'property'      => 'margin',
+                        'value_pattern' => '0 $rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'nav_menu_cover_radius',
+                'iro_key'   => 'nav_menu_cover_radius',
+                'label'     => esc_html__( '导航栏菜单圆角', 'sakurairo' ),
+                'default'   => 0.6,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.menu-wrapper .sub-menu',
+                        'property'      => 'border-radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'nav_user_menu',
+                'iro_key' => 'nav_user_menu',
+                'label'   => esc_html__( '导航栏用户栏', 'sakurairo' ),
+                'description' => esc_html__( '默认开启，将显示用户头像与菜单', 'sakurairo' ),
+                'default' => true,
+            ],
+        ],
     ],
-	// ====================页脚====================
-	[
+
+    // ====================前台设置====================
+    [
+        'id'          => 'iro_frontend',
+        'title'       => esc_html__( '前台设置', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_global',
+
+        'fields'      => [
+            [
+                'type'      => 'slider',
+                'settings'  => 'widget_button_radius',
+                'iro_key'   => 'widget_button_radius',
+                'label'     => esc_html__( '工具栏按钮圆角', 'sakurairo' ),
+                'default'   => 0.6,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 3, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.site-widget',
+                        'property'      => '--widget_button_radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'widget_panel_radius',
+                'iro_key'   => 'widget_panel_radius',
+                'label'     => esc_html__( '工具栏面板圆角', 'sakurairo' ),
+                'default'   => 0.6,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.site-widget',
+                        'property'      => '--widget_panel_radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'widget_font',
+                'iro_key'   => 'widget_font',
+                'label'     => esc_html__( '工具栏字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.site-widget',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'widget_wordpress_widget',
+                'iro_key'     => 'widget_wordpress_widget',
+                'label'       => esc_html__( '工具栏wordpress组件', 'sakurairo' ),
+                'description' => esc_html__( '启用后将会显示wordpress可编辑工具栏，你可以前往「外观-小工具」编辑', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'widget_font_switch',
+                'iro_key' => 'widget_font_switch',
+                'label'   => esc_html__( '工具栏字体切换按钮', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'        => 'image',
+                'settings'    => 'frontend_default_background',
+                'iro_key'     => 'frontend_default_background',
+                'label'       => esc_html__( '前台默认背景', 'sakurairo' ),
+                'transport'   => 'auto',
+                'output'      => [
+                    [
+                        'element'       => 'body',
+                        'property'      => 'background-image',
+                        'value_pattern' => 'url($)',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'frontend_background_fill_mode',
+                'iro_key' => 'frontend_background_fill_mode',
+                'label'   => esc_html__( '前台背景填充模式', 'sakurairo' ),
+                'description' => esc_html__( '根据你选择的图片类型选择合适的填充方案，插画为缩放至填充满，纹理为复制并铺满', 'sakurairo' ),
+                'choices' => [
+                    'pattern' => esc_html__( '插画', 'sakurairo' ),
+                    'texture' => esc_html__( '纹理', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'frontend_particle',
+                'iro_key' => 'frontend_particle',
+                'label'   => esc_html__( '前台背景粒子特效', 'sakurairo' ),
+                'choices' => [
+                    'off'    => esc_html__( '关闭', 'sakurairo' ),
+                    'sakura' => esc_html__( '樱花', 'sakurairo' ),
+                    'snow'   => esc_html__( '雪', 'sakurairo' ),
+                    'custom' => esc_html__( '自定义', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'frontend_particle_builtin_amount',
+                'iro_key'   => 'frontend_particle_builtin',
+                'iro_subkey' => 'amount',
+                'label'     => esc_html__( '粒子数量', 'sakurairo' ),
+                'default'   => 30,
+                'choices'   => [ 'min' => 10, 'max' => 100, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'frontend_particle',
+                        'operator' => 'contains',
+                        'value'    => 'sakura,snow',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'frontend_particle_builtin_minsize',
+                'iro_key'   => 'frontend_particle_builtin',
+                'iro_subkey' => 'minsize',
+                'label'     => esc_html__( '粒子最小大小', 'sakurairo' ),
+                'default'   => 10,
+                'choices'   => [ 'min' => 1, 'max' => 100, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'frontend_particle',
+                        'operator' => 'contains',
+                        'value'    => 'sakura,snow',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'frontend_particle_builtin_maxsize',
+                'iro_key'   => 'frontend_particle_builtin',
+                'iro_subkey' => 'maxsize',
+                'label'     => esc_html__( '粒子最大大小', 'sakurairo' ),
+                'default'   => 30,
+                'choices'   => [ 'min' => 30, 'max' => 100, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'frontend_particle',
+                        'operator' => 'contains',
+                        'value'    => 'sakura,snow',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'frontend_particle_builtin_speed',
+                'iro_key'   => 'frontend_particle_builtin',
+                'iro_subkey' => 'speed',
+                'label'     => esc_html__( '粒子速度', 'sakurairo' ),
+                'default'   => 10,
+                'choices'   => [ 'min' => 1, 'max' => 100, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'frontend_particle',
+                        'operator' => 'contains',
+                        'value'    => 'sakura,snow',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'code',
+                'settings'    => 'particle_config',
+                'iro_key'     => 'particle_config',
+                'label'       => esc_html__( '自定义粒子特效实现', 'sakurairo' ),
+                'description' => esc_html__( '参考 tsParticle 的配置格式填写 JSON', 'sakurairo' ),
+                'choices'     => [ 'language' => 'json' ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'frontend_particle',
+                        'operator' => '==',
+                        'value'    => 'custom',
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    // ====================页尾设置====================
+    [
         'id'          => 'iro_footer',
-        'title'       => esc_html__( 'Footer Info', 'sakurairo' ),
+        'title'       => esc_html__( '页尾设置', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_global',
 
-		'fields'      =>[
-			[
-				'type'     => 'select',
-				'settings' => 'footer_direction',
-				'iro_key'  => 'footer_direction',
-				'label'    => esc_html__( 'Footer Content Distribution', 'sakurairo' ),
-				'choices'     => [
-					'center' => __('Center','sakurairo'),
-					'columns' => __('Two Coloumns','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'footer_sakura',
-				'iro_key'  => 'footer_sakura',
-				'label'    => esc_html__( 'Footer Sakura Icon', 'sakurairo' ),
-			],
-			[
-				'type'     => 'code',
-				'settings' => 'footer_info',
-				'iro_key'  => 'footer_info',
-				'label'    => esc_html__( 'Footer Info', 'sakurairo' ),
-				'choices'     => [
-					'language' => 'html',
-				],
-				'transport'   => 'postMessage',
-				'js_vars' => [
-					[
-						'element'  => '.footer_info',
-						'function' => 'html',
-					],
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'footer_text_font',
-				'iro_key'  => 'footer_text_font',
-				'label'    => esc_html__( 'Footer Text Font', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => array('.site-info','.site-info a'),
-						'property' => 'font-family',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'footer_load_occupancy',
-				'iro_key'  => 'footer_load_occupancy',
-				'label'    => esc_html__( 'Footer Load Occupancy Query', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'footer_upyun',
-				'iro_key'  => 'footer_upyun',
-				'label'    => esc_html__( 'Footer Upyun League Logo', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'footer_yiyan',
-				'iro_key'  => 'footer_yiyan',
-				'label'    => esc_html__( 'Footer Hitokoto', 'sakurairo' ),
-			],
-			[
-				'type'     => 'code',
-				'settings' => 'yiyan_api',
-				'iro_key'  => 'yiyan_api',
-				'label'    => esc_html__( 'Hitokoto API address', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'footer_yiyan',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'choices'     => [
-					'language' => 'json',
-				],
-			],
-		],
+        'fields'      => [
+            [
+                'type'    => 'switch',
+                'settings' => 'footer_sakura',
+                'iro_key' => 'footer_sakura',
+                'label'   => esc_html__( '页尾樱花', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'footer_font',
+                'iro_key'   => 'footer_font',
+                'label'     => esc_html__( '页尾字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.site-footer',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'code',
+                'settings'    => 'footer_html',
+                'iro_key'     => 'footer_html',
+                'label'       => esc_html__( '页尾html代码', 'sakurairo' ),
+                'description' => esc_html__( '可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全', 'sakurairo' ),
+                'choices'     => [ 'language' => 'html' ],
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => '.site-footer .site-info',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'footer_hitokoto_select',
+                'iro_key' => 'footer_hitokoto_select',
+                'label'   => esc_html__( '页脚一言', 'sakurairo' ),
+                'choices' => [
+                    'off'    => esc_html__( '关闭', 'sakurairo' ),
+                    'api'    => esc_html__( '总是使用API', 'sakurairo' ),
+                    'custom' => esc_html__( '总是自定义', 'sakurairo' ),
+                    'both'   => esc_html__( '各一半', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'        => 'textarea',
+                'settings'    => 'footer_hitokoto_api',
+                'iro_key'     => 'footer_hitokoto_api',
+                'label'       => esc_html__( '一言API地址', 'sakurairo' ),
+                'description' => esc_html__( '填写地址，格式为 JavaScript 数组', 'sakurairo' ),
+                'default'     => '["https://v1.hitokoto.cn/","https://v1.hitokoto.cn/"]',
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_hitokoto_select',
+                        'operator' => '!=',
+                        'value'    => 'off',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'textarea',
+                'settings'    => 'footer_hitokoto_custom',
+                'iro_key'     => 'footer_hitokoto_custom',
+                'label'       => esc_html__( '一言自定义内容', 'sakurairo' ),
+                'description' => esc_html__( '一行一句，尽量不要出现特殊字符。', 'sakurairo' ),
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_hitokoto_select',
+                        'operator' => '!=',
+                        'value'    => 'off',
+                    ],
+                ],
+            ],
+        ],
     ],
-	// ====================全局杂项====================
-	[
+
+    // ====================搜索设置====================
+    [
+        'id'          => 'iro_search',
+        'title'       => esc_html__( '搜索设置', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_global',
+
+        'fields'      => [
+            [
+                'type'    => 'switch',
+                'settings' => 'nav_menu_search_switch',
+                'iro_key' => 'nav_menu_search_switch',
+                'label'   => esc_html__( '导航栏搜索按钮', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'search_filter',
+                'iro_key' => 'search_filter',
+                'label'   => esc_html__( '搜索页过滤栏', 'sakurairo' ),
+                'default' => false,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'search_for_shuoshuo',
+                'iro_key' => 'search_for_shuoshuo',
+                'label'   => esc_html__( '在搜索结果中显示说说', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'search_for_pages',
+                'iro_key' => 'search_for_pages',
+                'label'   => esc_html__( '在搜索结果中显示页面', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'search_pages_can_only_admins',
+                'iro_key' => 'search_pages_can_only_admins',
+                'label'   => esc_html__( '只有管理员可以搜索页面', 'sakurairo' ),
+                'default' => false,
+                'active_callback' => [
+                    [
+                        'setting'  => 'search_for_pages',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'search_for_pinned_posts',
+                'iro_key' => 'search_for_pinned_posts',
+                'label'   => esc_html__( '在搜索结果中置顶置顶文章', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'search_results_custom_exclude',
+                'iro_key'     => 'search_results_custom_exclude',
+                'label'       => esc_html__( '搜索结果排除', 'sakurairo' ),
+                'description' => esc_html__( '从搜索结果中排除自定义ID内容，多个ID请使用英文逗号分隔', 'sakurairo' ),
+            ],
+        ],
+    ],
+
+    // ====================其他设置====================
+    [
         'id'          => 'iro_global_others',
-        'title'       => esc_html__( 'Others', 'sakurairo' ),
+        'title'       => esc_html__( '其他设置', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_global',
 
-		'fields'      =>[
-			[
-				'type'     => 'switch',
-				'settings' => 'nprogress_on',
-				'iro_key'  => 'nprogress_on',
-				'label'    => esc_html__( 'NProgress Loading Progress Bar', 'sakurairo' ),
-				'description' => esc_html__('Enabled by default, when loading page there will be a progress bar alert','sakurairo'),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'smoothscroll_option',
-				'iro_key'  => 'smoothscroll_option',
-				'label'    => esc_html__( 'Global Smooth Scroll', 'sakurairo' ),
-				'description' => esc_html__('Enabled by default, page scrolling will be smoother','sakurairo'),
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'pagenav_style',
-				'iro_key'  => 'pagenav_style',
-				'label'    => esc_html__( 'Pagination Mode', 'sakurairo' ),
-				'choices'     => [
-					'ajax' => __('Ajax Load','sakurairo'),
-					'np' => __('Page Up/Down','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'page_auto_load',
-				'iro_key'  => 'page_auto_load',
-				'label'    => esc_html__( 'Next Page Auto Load', 'sakurairo' ),
-				'choices'     => [
-					'0' => __('0 Sec','sakurairo'),
-					'1' => __('1 Sec','sakurairo'),
-					'2' => __('2 Sec','sakurairo'),
-					'3' => __('3 Sec','sakurairo'),
-					'4' => __('4 Sec','sakurairo'),
-					'5' => __('5 Sec','sakurairo'),
-					'6' => __('6 Sec','sakurairo'),
-					'7' => __('7 Sec','sakurairo'),
-					'8' => __('8 Sec','sakurairo'),
-					'9' => __('9 Sec','sakurairo'),
-					'10' => __('10 Sec','sakurairo'),
-					'233' => __('Do not autoload','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'load_nextpage_svg',
-				'iro_key'  => 'load_nextpage_svg',
-				'label'    => esc_html__( 'Placeholder SVG when loading the next page', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => ':root',
-						'property' => '--load_nextpage_svg',
-					),
-				),
-			],
-		],
+        'fields'      => [
+            [
+                'type'        => 'switch',
+                'settings'    => 'pjax',
+                'iro_key'     => 'pjax',
+                'label'       => esc_html__( 'PJAX', 'sakurairo' ),
+                'description' => esc_html__( '启用后前台站内跳转将不会刷新页面，体验更好，但与第三方内容可能存在兼容性问题，请按需使用', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'textarea',
+                'settings'    => 'pjax_keep_loading',
+                'iro_key'     => 'pjax_keep_loading',
+                'label'       => esc_html__( 'PJAX启用后仍需在页脚刷新的资源', 'sakurairo' ),
+                'description' => esc_html__( '启用PJAX后页脚的自定义内容不会在页面跳转时刷新，可在此处填入需要刷新的JavaScript与样式表路径，一行一个', 'sakurairo' ),
+                'active_callback' => [
+                    [
+                        'setting'  => 'pjax',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'top_scroll_progress',
+                'iro_key'     => 'top_scroll_progress',
+                'label'       => esc_html__( '顶部阅读进度条', 'sakurairo' ),
+                'description' => esc_html__( '开启后会在页面顶部显示进度条，进度取决于当前页面的滚动进度', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'top_loading_progress',
+                'iro_key'     => 'top_loading_progress',
+                'label'       => esc_html__( '顶部加载进度条', 'sakurairo' ),
+                'description' => esc_html__( '开启后会在页面顶部显示进度条，进度取决于下一页的加载进度', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'    => 'radio',
+                'settings' => 'pagination_mode',
+                'iro_key' => 'pagination_mode',
+                'label'   => esc_html__( '文章列表分页导航方式', 'sakurairo' ),
+                'default' => 'pagination',
+                'choices' => [
+                    'ajax'       => esc_html__( '滚动加载', 'sakurairo' ),
+                    'pagination' => esc_html__( '传统分页', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'pagination_ajax_wait',
+                'iro_key'   => 'pagination_ajax_wait',
+                'label'     => esc_html__( 'ajax自动加载等待时间', 'sakurairo' ),
+                'default'   => 3,
+                'choices'   => [ 'min' => 0, 'max' => 10, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'pagination_mode',
+                        'operator' => '==',
+                        'value'    => 'ajax',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'image',
+                'settings' => 'missing_avatars_placeholder',
+                'iro_key' => 'missing_avatars_placeholder',
+                'label'   => esc_html__( '站内头像占位', 'sakurairo' ),
+            ],
+            [
+                'type'    => 'image',
+                'settings' => 'missing_images_placeholder',
+                'iro_key' => 'missing_images_placeholder',
+                'label'   => esc_html__( '站内图片占位', 'sakurairo' ),
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'lightbox',
+                'iro_key' => 'lightbox',
+                'label'   => esc_html__( 'lightbox', 'sakurairo' ),
+                'description' => esc_html__( '请选择你需要使用的灯箱效果，wordpress在6.4后已正式支持灯箱效果，此处仅提供另一种可选的效果', 'sakurairo' ),
+                'default' => 'medium_zoom',
+                'choices' => [
+                    'off'         => esc_html__( 'off', 'sakurairo' ),
+                    'medium_zoom' => 'Medium Zoom',
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'code_highlight_method',
+                'iro_key' => 'code_highlight_method',
+                'label'   => esc_html__( '代码高亮方式', 'sakurairo' ),
+                'default' => 'hljs',
+                'choices' => [
+                    'off'  => esc_html__( '关闭', 'sakurairo' ),
+                    'hljs' => 'highlight.js',
+                ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'code_katex',
+                'iro_key'     => 'code_katex',
+                'label'       => esc_html__( '启用公式支持', 'sakurairo' ),
+                'description' => esc_html__( '启用主题公式支持，使用Katex，需要写入markdown区块才能渲染', 'sakurairo' ),
+                'default'     => true,
+            ],
+        ],
     ],
-	// ====================页面通用设置====================
-	[
+
+    // ====================基本设置====================
+    [
+        'id'          => 'iro_basic',
+        'title'       => esc_html__( '基本设置', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_global',
+
+        'fields'      => [
+            [
+                'type'        => 'image',
+                'settings'    => 'favicon_link',
+                'iro_key'     => 'favicon_link',
+                'label'       => esc_html__( '站点图标', 'sakurairo' ),
+                'description' => esc_html__( '填写链接，它将会出现在浏览器标签页的标题旁边', 'sakurairo' ),
+                'default'     => $vision_resource_basepath . 'basic/favicon.ico',
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => 'link[rel="shortcut icon"]',
+                        'function' => 'html',
+                        'attr'     => 'href',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'fontawesome_source',
+                'iro_key'     => 'fontawesome_source',
+                'label'       => esc_html__( 'Fontawesome源', 'sakurairo' ),
+                'description' => esc_html__( 'Fontawesome图标的加载地址，同时用于后台主题设置框架图标与前台图标', 'sakurairo' ),
+                'default'     => 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css',
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'fontawesome_source_add_to_frontend',
+                'iro_key'     => 'fontawesome_source_add_to_frontend',
+                'label'       => esc_html__( '将fontawesome源载入到前台', 'sakurairo' ),
+                'description' => esc_html__( '如果你需要使用自定义fontawesome图标，可以开启这个选项', 'sakurairo' ),
+                'default'     => false,
+            ],
+        ],
+    ],
+
+    // ====================封面设置====================
+    [
+        'id'          => 'iro_cover_display',
+        'title'       => esc_html__( '封面设置', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_cover',
+
+        'fields'      => [
+            [
+                'type'    => 'switch',
+                'settings' => 'cover_switch',
+                'iro_key' => 'cover_switch',
+                'label'   => esc_html__( '封面开关', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'        => 'slider',
+                'settings'    => 'cover_height',
+                'iro_key'     => 'cover_height',
+                'label'       => esc_html__( '封面高度', 'sakurairo' ),
+                'description' => esc_html__( '封面占可视窗口的百分比', 'sakurairo' ),
+                'default'     => 100,
+                'transport'   => 'auto',
+                'choices'     => [ 'min' => 1, 'max' => 100, 'step' => 1 ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'cover_switch',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+                'output'      => [
+                    [
+                        'element'       => '.homepage-cover',
+                        'property'      => '--cover-height',
+                        'value_pattern' => '$dvh !important',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'cover_focus_style',
+                'iro_key' => 'cover_focus_style',
+                'label'   => esc_html__( '首页聚焦显示内容', 'sakurairo' ),
+                'choices' => [
+                    'off'          => esc_html__( '无', 'sakurairo' ),
+                    'avatar'       => esc_html__( '头像', 'sakurairo' ),
+                    'text'         => esc_html__( '文字', 'sakurairo' ),
+                    'mashiro_text' => esc_html__( 'Mashiro特效文字', 'sakurairo' ),
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'cover_switch',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'image',
+                'settings'    => 'cover_avatar',
+                'iro_key'     => 'cover_avatar',
+                'label'       => esc_html__( '个人头像', 'sakurairo' ),
+                'description' => esc_html__( '最佳宽高比为1:1', 'sakurairo' ),
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'cover_title_text',
+                'iro_key'     => 'cover_title',
+                'iro_subkey'  => 'text',
+                'label'       => esc_html__( '封面文字内容', 'sakurairo' ),
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => '.cover-title',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'cover_title_font',
+                'iro_key'   => 'cover_title',
+                'iro_subkey' => 'font',
+                'label'     => esc_html__( '封面文字字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.cover-title',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'cover_title_size',
+                'iro_key'   => 'cover_title',
+                'iro_subkey' => 'size',
+                'label'     => esc_html__( '封面文字大小', 'sakurairo' ),
+                'default'   => 5,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 1, 'max' => 9, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.cover-title',
+                        'property'      => 'font-size',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'color',
+                'settings'  => 'cover_title_color',
+                'iro_key'   => 'cover_title',
+                'iro_subkey' => 'color',
+                'label'     => esc_html__( '封面文字颜色', 'sakurairo' ),
+                'default'   => '#FFF',
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.cover-title',
+                        'property'      => 'color',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'cover_infor_bar_switch',
+                'iro_key' => 'cover_infor_bar_switch',
+                'label'   => esc_html__( '封面信息栏开关', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'cover_infor_bar_radius',
+                'iro_key'   => 'cover_infor_bar_radius',
+                'label'     => esc_html__( '封面信息栏圆角', 'sakurairo' ),
+                'default'   => 1,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 5, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.homepage-cover .socials',
+                        'property'      => 'border-radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'cover_signature_text',
+                'iro_key'   => 'cover_signature',
+                'iro_subkey' => 'text',
+                'label'     => esc_html__( '封面签名内容', 'sakurairo' ),
+                'transport' => 'postMessage',
+                'js_vars'   => [
+                    [
+                        'element'  => '.homepage-cover .signature p',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'cover_signature_font',
+                'iro_key'   => 'cover_signature',
+                'iro_subkey' => 'font',
+                'label'     => esc_html__( '封面签名字体', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => '.homepage-cover .signature p',
+                        'property'      => 'font-family',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'cover_signature_size',
+                'iro_key'   => 'cover_signature',
+                'iro_subkey' => 'size',
+                'label'     => esc_html__( '封面签名大小', 'sakurairo' ),
+                'default'   => 1,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0.1, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.homepage-cover .signature p',
+                        'property'      => 'font-size',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'cover_typedjs',
+                'iro_key' => 'cover_typedjs',
+                'label'   => esc_html__( '封面打字机效果', 'sakurairo' ),
+                'default' => true,
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'cover_typedjs_mark',
+                'iro_key' => 'cover_typedjs_mark',
+                'label'   => esc_html__( '封面打字机引号', 'sakurairo' ),
+                'default' => false,
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'cover_typedjs_placeholder',
+                'iro_key'     => 'cover_typedjs_placeholder',
+                'label'       => esc_html__( '封面打字机占位符', 'sakurairo' ),
+                'default'     => '疯狂造句中......',
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => '#typed',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'code',
+                'settings'    => 'cover_typedjs_config',
+                'iro_key'     => 'cover_typedjs_config',
+                'label'       => esc_html__( '封面打字机配置', 'sakurairo' ),
+                'description' => esc_html__( '参考 typed.js 的配置格式填写 JSON', 'sakurairo' ),
+                'choices'     => [ 'language' => 'json' ],
+            ],
+        ],
+    ],
+
+    // ====================社交区域====================
+    [
+        'id'          => 'iro_cover_social',
+        'title'       => esc_html__( '社交区域', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_cover',
+
+        'fields'      => [
+            [
+                'type'    => 'radio_image',
+                'settings' => 'cover_social_icon',
+                'iro_key' => 'cover_social_icon',
+                'label'   => esc_html__( '社交栏图标包', 'sakurairo' ),
+                'description' => esc_html__( '选择你喜欢的图标包。图标包引用信息详见关于主题', 'sakurairo' ),
+                'choices' => [
+                    'fluent_design' => $vision_resource_basepath . 'options/display_icon_fd.gif',
+                    'muh2'          => $vision_resource_basepath . 'options/display_icon_h2.gif',
+                    'flat_colorful' => $vision_resource_basepath . 'options/display_icon_fc.gif',
+                ],
+            ],
+        ],
+    ],
+
+    // ====================封面其他====================
+    [
+        'id'          => 'iro_cover_other',
+        'title'       => esc_html__( '封面背景与视频', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_cover',
+
+        'fields'      => [
+            [
+                'type'        => 'text',
+                'settings'    => 'cover_random_pic_url_pc',
+                'iro_key'     => 'cover_random_pic_url_pc',
+                'label'       => esc_html__( 'PC封面图片地址', 'sakurairo' ),
+                'description' => esc_html__( '填写图片地址或者随机图API', 'sakurairo' ),
+                'transport'   => 'auto',
+                'output'      => [
+                    [
+                        'element'       => ':root',
+                        'property'      => '--cover-background-img-pc',
+                        'value_pattern' => 'url($)',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'text',
+                'settings'  => 'cover_random_pic_url_mb',
+                'iro_key'   => 'cover_random_pic_url_mb',
+                'label'     => esc_html__( '移动端封面图片地址', 'sakurairo' ),
+                'transport' => 'auto',
+                'output'    => [
+                    [
+                        'element'       => ':root',
+                        'property'      => '--cover-background-img-mb',
+                        'value_pattern' => 'url($)',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'cover_as_background',
+                'iro_key'     => 'cover_as_background',
+                'label'       => esc_html__( '前台背景一体化', 'sakurairo' ),
+                'description' => esc_html__( '开启后封面背景将会变透明，以实现前台背景与封面的一体化效果', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'post_cover_as_background',
+                'iro_key'     => 'post_cover_as_background',
+                'label'       => esc_html__( '使用特色图片作为背景', 'sakurairo' ),
+                'description' => esc_html__( '在文章页将会使用特色图片作为背景', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'cover_video',
+                'iro_key'     => 'cover_video',
+                'label'       => esc_html__( '封面视频', 'sakurairo' ),
+                'description' => esc_html__( '用视频代替封面图片', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'cover_video_loop',
+                'iro_key'     => 'cover_video_loop',
+                'label'       => esc_html__( '封面视频循环', 'sakurairo' ),
+                'description' => esc_html__( '开启后视频将会循环播放', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'upload',
+                'settings'    => 'cover_video_source',
+                'iro_key'     => 'cover_video_source',
+                'label'       => esc_html__( '视频URL地址', 'sakurairo' ),
+                'description' => esc_html__( '视频的文件地址', 'sakurairo' ),
+                'choices'     => [ 'button_label' => esc_html__( '选择视频', 'sakurairo' ) ],
+            ],
+        ],
+    ],
+
+    // ====================首页布局====================
+    [
+        'id'          => 'iro_homepages',
+        'title'       => esc_html__( '首页布局', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_homepage',
+
+        'fields'      => [
+            [
+                'type'    => 'sortable',
+                'settings' => 'homepage_components',
+                'iro_key' => 'homepage_components',
+                'label'   => esc_html__( '首页布局', 'sakurairo' ),
+                'description' => esc_html__( '选择你想在首页展示的组件，它们将按照此处的顺序显示', 'sakurairo' ),
+                'default' => [ 'show', 'post_list' ],
+                'choices' => [
+                    'show'        => esc_html__( '展示区域', 'sakurairo' ),
+                    'post_list'   => esc_html__( '最新文章', 'sakurairo' ),
+                    'static_page' => esc_html__( '自定义页面', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'    => 'dropdown_pages',
+                'settings' => 'homepage_static_page_id',
+                'iro_key' => 'homepage_static_page_id',
+                'label'   => esc_html__( '自定义页面', 'sakurairo' ),
+                'active_callback' => [
+                    [
+                        'setting'  => 'homepage_components',
+                        'operator' => 'contains',
+                        'value'    => 'static_page',
+                    ],
+                ],
+            ],
+            [
+                'type'     => 'text',
+                'settings' => 'homepage_show_title_icon',
+                'iro_key'  => 'homepage_show_title',
+                'iro_subkey' => 'icon',
+                'label'    => esc_html__( '展示区域标题图标', 'sakurairo' ),
+                'description' => esc_html__( '图标元素的类名，自定义前需在页面头部嵌入自定义的图标集样式，例如fontawesome，否则会不显示', 'sakurairo' ),
+                'default'  => 'fa-icon-solid fa-laptop',
+            ],
+            [
+                'type'     => 'text',
+                'settings' => 'homepage_show_title_text',
+                'iro_key'  => 'homepage_show_title',
+                'iro_subkey' => 'text',
+                'label'    => esc_html__( '展示区域标题内容', 'sakurairo' ),
+                'default'  => 'Display',
+            ],
+            [
+                'type'     => 'text',
+                'settings' => 'homepage_post_list_title_icon',
+                'iro_key'  => 'homepage_post_list_title',
+                'iro_subkey' => 'icon',
+                'label'    => esc_html__( '文章区域标题图标', 'sakurairo' ),
+                'default'  => 'fa-icon-regular fa-bookmark',
+            ],
+            [
+                'type'     => 'text',
+                'settings' => 'homepage_post_list_title_text',
+                'iro_key'  => 'homepage_post_list_title',
+                'iro_subkey' => 'text',
+                'label'    => esc_html__( '文章区域标题内容', 'sakurairo' ),
+                'default'  => 'Article',
+            ],
+            [
+                'type'    => 'radio_image',
+                'settings' => 'homepage_component_title_align',
+                'iro_key' => 'homepage_component_title_align',
+                'label'   => esc_html__( '首页区域标题位置', 'sakurairo' ),
+                'default' => 'left',
+                'transport' => 'auto',
+                'choices' => [
+                    'left'   => $vision_resource_basepath . 'options/area_title_text_left.webp',
+                    'right'  => $vision_resource_basepath . 'options/area_title_text_right.webp',
+                    'center' => $vision_resource_basepath . 'options/area_title_text_center.webp',
+                ],
+                'output'  => [
+                    [
+                        'element'       => '.page-home',
+                        'property'      => '--block-title-position',
+                        'value_pattern' => '$ !important',
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    // ====================文章区域====================
+    [
+        'id'          => 'iro_article_aera',
+        'title'       => esc_html__( '文章区域', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_homepage',
+
+        'fields'      => [
+            [
+                'type'    => 'radio_image',
+                'settings' => 'post_card_with_image_design',
+                'iro_key' => 'post_card_with_image_design',
+                'label'   => esc_html__( '文章区域卡片设计', 'sakurairo' ),
+                'description' => esc_html__( '你可以选择信件设计或者票券设计', 'sakurairo' ),
+                'choices' => [
+                    'letter' => $vision_resource_basepath . 'options/post_list_design_letter.webp',
+                    'ticket' => $vision_resource_basepath . 'options/post_list_design_ticket.webp',
+                ],
+            ],
+            [
+                'type'    => 'sortable',
+                'settings' => 'post_card_metas',
+                'iro_key' => 'post_card_metas',
+                'label'   => esc_html__( '文章卡片显示信息', 'sakurairo' ),
+                'default' => [ 'category', 'comment_count', 'views' ],
+                'choices' => [
+                    'author'        => esc_html__( '作者', 'sakurairo' ),
+                    'category'      => esc_html__( '分类', 'sakurairo' ),
+                    'comment_count' => esc_html__( '评论数量', 'sakurairo' ),
+                    'views'         => esc_html__( '浏览量', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'    => 'radio',
+                'settings' => 'post_card_image',
+                'iro_key' => 'post_card_image',
+                'label'   => esc_html__( '文章区域装饰特色图片选项', 'sakurairo' ),
+                'choices' => [
+                    'always_with_cover'  => esc_html__( '始终且使用封面API', 'sakurairo' ),
+                    'always_alone'       => esc_html__( '始终且使用独立API', 'sakurairo' ),
+                    'only_feather_image' => esc_html__( '仅特色图片', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'    => 'text',
+                'settings' => 'post_card_image_url',
+                'iro_key' => 'post_card_image_url',
+                'label'   => esc_html__( '文章封面随机图API', 'sakurairo' ),
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'post_card_design_card_radius',
+                'iro_key'   => 'post_card_design',
+                'iro_subkey' => 'card_radius',
+                'label'     => esc_html__( '文章卡片圆角', 'sakurairo' ),
+                'default'   => 0.7,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.post-list',
+                        'property'      => '--post-card-border-radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'post_card_design_meta_radius',
+                'iro_key'   => 'post_card_design',
+                'iro_subkey' => 'meta_radius',
+                'label'     => esc_html__( '文章卡片元信息圆角', 'sakurairo' ),
+                'default'   => 0.3,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.post-list',
+                        'property'      => '--post-card-meta-border-radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'post_card_design_title_radius',
+                'iro_key'   => 'post_card_design',
+                'iro_subkey' => 'title_radius',
+                'label'     => esc_html__( '文章卡片标题圆角', 'sakurairo' ),
+                'default'   => 0.3,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0, 'max' => 2, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.post-list',
+                        'property'      => '--post-card-title-border-radius',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'post_card_design_title_font_size',
+                'iro_key'   => 'post_card_design',
+                'iro_subkey' => 'title_font_size',
+                'label'     => esc_html__( '文章卡片标题大小', 'sakurairo' ),
+                'default'   => 1.2,
+                'transport' => 'auto',
+                'choices'   => [ 'min' => 0.5, 'max' => 3, 'step' => 0.01 ],
+                'output'    => [
+                    [
+                        'element'       => '.post-list',
+                        'property'      => '--post-card-title-font-size',
+                        'value_pattern' => '$rem !important',
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    // ====================通用====================
+    [
         'id'          => 'iro_pages_common',
-        'title'       => esc_html__( 'Common Options', 'sakurairo' ),
+        'title'       => esc_html__( '通用', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_pages',
 
-		'fields'      =>[
-			[
-				'type'     => 'radio',
-				'settings' => 'entry_content_style',
-				'iro_key'  => 'entry_content_style',
-				'label'    => esc_html__( 'Page Layout Style', 'sakurairo' ),
-				'choices'     => [
-					'sakurairo' => __('Default Style','sakurairo'),
-          			'github' => __('Github Style','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'patternimg',
-				'iro_key'  => 'patternimg',
-				'label'    => esc_html__( 'Page Decoration Image', 'sakurairo' ),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'page_title_animation',
-				'iro_key'  => 'page_title_animation',
-				'label'    => esc_html__( 'Page Title Animation', 'sakurairo' ),
-			],
-			[
-				'type'     => 'slider',
-				'settings' => 'page_title_animation_time',
-				'iro_key'  => 'page_title_animation_time',
-				'label'    => esc_html__( 'Page Title Animation Time', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 0,
-					'max'  => 5,
-					'step' => 0.01,
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'page_title_animation',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.entry-title,.single-center .entry-census,.entry-census,.p-time',
-						'property' => 'animation',
-						'value_pattern' => 'homepage-load-animation $s !important',
-					),
-					array(
-						'element'  => '.single-center .single-header h1.entry-title::after',
-						'property' => 'animation',
-						'value_pattern' => 'lineWidth 2s $s forwards !important',
-					),
-				),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'load_in_svg',
-				'iro_key'  => 'load_in_svg',
-				'label'    => esc_html__( 'Page Image Placeholder SVG', 'sakurairo' ),
-			],
-		],
+        'fields'      => [
+            [
+                'type'        => 'switch',
+                'settings'    => 'page_post_toc',
+                'iro_key'     => 'page_post_toc',
+                'label'       => esc_html__( '文章目录', 'sakurairo' ),
+                'description' => esc_html__( '在文章页显示目录(检测到内容有标题会自动生成大纲并显示)', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'page_page_toc',
+                'iro_key'     => 'page_page_toc',
+                'label'       => esc_html__( '页面目录', 'sakurairo' ),
+                'description' => esc_html__( '在页面显示目录', 'sakurairo' ),
+                'default'     => false,
+            ],
+        ],
     ],
-	// ====================文章页设置====================
-	[
-        'id'          => 'iro_pages_post',
-        'title'       => esc_html__( 'Posts Pages', 'sakurairo' ),
-        'description' => '',
-        'panel'       => 'iro_pages',
 
-		'fields'      =>[
-			[
-				'type'     => 'slider',
-				'settings' => 'article_title_font_size',
-				'iro_key'  => 'article_title_font_size',
-				'description' => esc_html__( 'This option is only valid for articles with cover', 'sakurairo' ),
-				'label'    => esc_html__( 'Article Page Title Font Size', 'sakurairo' ),
-				'choices'     => [
-					'min'  => 16,
-					'max'  => 48,
-					'step' => 1,
-				],
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.single-center .single-header h1.entry-title',
-						'property' => 'font-size',
-						'value_pattern' => '$px !important',
-					),
-				),
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_title_line',
-				'iro_key'  => 'article_title_line',
-				'label'    => esc_html__( 'Article Page Title Underline Animation', 'sakurairo' ),
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'article_meta_show_in_head',
-				'iro_key'  => 'article_meta_show_in_head',
-				'label'    => esc_html__( 'Article Area Meta Displays', 'sakurairo' ),
-				'multiple'    => 0,
-				'choices'     => [
-					"author" => __("Author","Sakurairo_C"),
-					"category" => __("Category","Sakurairo_C"),
-					"comment_count" => __("Number of Comments","Sakurairo_C"),
-					"post_views" => __("Number of Views","Sakurairo_C"),
-					"post_words_count" => __("Number of Words","Sakurairo_C"),
-					"reading_time" => __("Estimate Reading Time","Sakurairo_C"),
-					"publish_time_relative" => __("Publish Time (Relatively)","Sakurairo_C"),
-  					"last_edit_time_relative" => __("Last Edit Time (Relatively)","Sakurairo_C"),
-  					"EDIT" => __("Action Edit (only displays while user has sufficient permissions)","Sakurairo_C"),
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_auto_toc',
-				'iro_key'  => 'article_auto_toc',
-				'label'    => esc_html__( 'Article Page Auto Show Menu', 'sakurairo' ),
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'inline_code_background_color',
-				'iro_key'  => 'inline_code_background_color',
-				'label'    => esc_html__( 'Inline Code Background Color', 'sakurairo' ),
-				'choices'     => [
-					'alpha' => true,
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => ':root',
-						'property' => '--inline_code_background_color',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'color',
-				'settings' => 'inline_code_background_color_in_dark_mode',
-				'iro_key'  => 'inline_code_background_color_in_dark_mode',
-				'label'    => esc_html__( 'Inline Code Background Color In Dark Mode', 'sakurairo' ),
-				'choices'     => [
-					'alpha' => true,
-				],
-				'transport'   => 'auto',
-				'output'      => array(
-					array(
-						'element'  => ':root',
-						'property' => '--inline_code_background_color_in_dark_mode',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-		],
-    ],
-	// ====================文章扩展====================
-	[
+    // ====================文章页面====================
+    [
         'id'          => 'iro_pages_extra',
-        'title'       => esc_html__( 'Pages Extend Options', 'sakurairo' ),
+        'title'       => esc_html__( '文章页面', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_pages',
 
-		'fields'      =>[
-			[
-				'type'     => 'switch',
-				'settings' => 'article_function',
-				'iro_key'  => 'article_function',
-				'label'    => esc_html__( 'Article Page Function Bar', 'sakurairo' ),
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'article_lincenses',
-				'iro_key'  => 'article_lincenses',
-				'label'    => esc_html__( 'Article License', 'sakurairo' ),
-				'choices'     => [
-					false => __("Not Display","Sakurairo_C"),
-					"cc0" => "CC0 1.0",
-					"cc-by" => "CC BY 4.0",
-					"cc-by-nc" => "CC BY-NC 4.0",
-					"cc-by-nc-nd" => "CC BY-NC-ND 4.0",
-					true => "CC BY-NC-SA 4.0",
-					"cc-by-nd" => "CC BY-ND 4.0",
-					"cc-by-sa" => "CC BY-SA 4.0",
-				],
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'reward_area_link',
-				'iro_key'  => 'reward_area',
-				'iro_subkey' => 'link',
-				'label'    => esc_html__( 'Reward Button Link', 'sakurairo' ),
-				'description' => esc_html__( 'The link click the reward button will redirect to', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reward_area_image1',
-				'iro_key'  => 'reward_area',
-				'iro_subkey' => 'image1',
-				'label'    => esc_html__( 'Reward Image', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'reward_area_link1',
-				'iro_key'  => 'reward_area',
-				'iro_subkey' => 'link1',
-				'label'    => esc_html__( 'Reward Image Link', 'sakurairo' ),
-				'description' => esc_html__( 'The link click the image will redirect to', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'reward_area_image2',
-				'iro_key'  => 'reward_area',
-				'iro_subkey' => 'image2',
-				'label'    => esc_html__( 'Reward Image', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'reward_area_link2',
-				'iro_key'  => 'reward_area',
-				'iro_subkey' => 'link2',
-				'label'    => esc_html__( 'Reward Image Link', 'sakurairo' ),
-				'description' => esc_html__( 'The link click the image will redirect to', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'author_profile_avatar',
-				'iro_key'  => 'author_profile_avatar',
-				'label'    => esc_html__( 'Article Page Author Avatar', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'author_profile_name',
-				'iro_key'  => 'author_profile_name',
-				'label'    => esc_html__( 'Article Page Author Name', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'author_profile_quote',
-				'iro_key'  => 'author_profile_quote',
-				'label'    => esc_html__( 'Article Page Author Signature', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_modified_time',
-				'iro_key'  => 'article_modified_time',
-				'label'    => esc_html__( 'Article Last Update Time', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_tag',
-				'iro_key'  => 'article_tag',
-				'label'    => esc_html__( 'Article Tag', 'sakurairo' ),
-				'active_callback' => [
-					[
-						'setting'  => 'article_function',
-						'operator' => '==',
-						'value'    => true,
-					]
-				],
-			],
-			[
-				'type'     => 'switch',
-				'settings' => 'article_nextpre',
-				'iro_key'  => 'article_nextpre',
-				'label'    => esc_html__( 'Article Page Prev/Next Article Switcher', 'sakurairo' ),
-			],
-		],
-	],
-	// ====================评论区====================
-	[
+        'fields'      => [
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_function',
+                'iro_key'     => 'article_function',
+                'label'       => esc_html__( '文章功能栏', 'sakurairo' ),
+                'description' => esc_html__( '默认开启，将在文章页面显示下方启用的功能', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'article_licenses',
+                'iro_key'     => 'article_licenses',
+                'label'       => esc_html__( '文章版权协议', 'sakurairo' ),
+                'description' => esc_html__( '版权协议将显示在功能栏中。也可通过文章自定义字段「license」单独指定。', 'sakurairo' ),
+                'default'     => 'cc-by-nc-sa',
+                'choices'     => [
+                    ''              => esc_html__( '不显示', 'sakurairo' ),
+                    'cc0'           => 'CC0 1.0',
+                    'cc-by'         => 'CC BY 4.0',
+                    'cc-by-nc'      => 'CC BY-NC 4.0',
+                    'cc-by-nc-nd'   => 'CC BY-NC-ND 4.0',
+                    'cc-by-nc-sa'   => 'CC BY-NC-SA 4.0',
+                    'cc-by-nd'      => 'CC BY-ND 4.0',
+                    'cc-by-sa'      => 'CC BY-SA 4.0',
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'article_function',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'article_author_reward_link',
+                'iro_key'     => 'article_author_reward',
+                'iro_subkey'  => 'link',
+                'label'       => esc_html__( '打赏按钮链接', 'sakurairo' ),
+                'description' => esc_html__( '点击打赏按钮后跳转的链接', 'sakurairo' ),
+                'active_callback' => [
+                    [
+                        'setting'  => 'article_function',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'image',
+                'settings'    => 'article_author_reward_image1',
+                'iro_key'     => 'article_author_reward',
+                'iro_subkey'  => 'image1',
+                'label'       => esc_html__( '打赏图片一', 'sakurairo' ),
+                'active_callback' => [
+                    [
+                        'setting'  => 'article_function',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'article_author_reward_link1',
+                'iro_key'     => 'article_author_reward',
+                'iro_subkey'  => 'link1',
+                'label'       => esc_html__( '打赏图片一跳转链接', 'sakurairo' ),
+                'description' => esc_html__( '点击图片后跳转的链接', 'sakurairo' ),
+            ],
+            [
+                'type'        => 'image',
+                'settings'    => 'article_author_reward_image2',
+                'iro_key'     => 'article_author_reward',
+                'iro_subkey'  => 'image2',
+                'label'       => esc_html__( '打赏图片二', 'sakurairo' ),
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'article_author_reward_link2',
+                'iro_key'     => 'article_author_reward',
+                'iro_subkey'  => 'link2',
+                'label'       => esc_html__( '打赏图片二跳转链接', 'sakurairo' ),
+                'description' => esc_html__( '点击图片后跳转的链接', 'sakurairo' ),
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_author_avatar',
+                'iro_key'     => 'article_author_avatar',
+                'label'       => esc_html__( '文章作者头像', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_author_name',
+                'iro_key'     => 'article_author_name',
+                'label'       => esc_html__( '文章作者名称', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_author_quote',
+                'iro_key'     => 'article_author_quote',
+                'label'       => esc_html__( '文章作者签名', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_modified_time',
+                'iro_key'     => 'article_modified_time',
+                'label'       => esc_html__( '文章最后更新时间', 'sakurairo' ),
+                'default'     => false,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_tag',
+                'iro_key'     => 'article_tag',
+                'label'       => esc_html__( '文章标签', 'sakurairo' ),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'article_nextpre',
+                'iro_key'     => 'article_nextpre',
+                'label'       => esc_html__( '文章上一篇/下一篇导航', 'sakurairo' ),
+                'description' => esc_html__( '默认开启，文章页面将显示上一篇/下一篇切换', 'sakurairo' ),
+                'default'     => true,
+            ],
+        ],
+    ],
+
+    // ====================评论区设置====================
+    [
         'id'          => 'iro_pages_comment',
-        'title'       => esc_html__( 'Comment Options', 'sakurairo' ),
+        'title'       => esc_html__( '评论区设置', 'sakurairo' ),
         'description' => '',
         'panel'       => 'iro_pages',
 
-		'fields'      =>[
-			[
-				'type'     => 'radio',
-				'settings' => 'comment_area',
-				'iro_key'  => 'comment_area',
-				'label'    => esc_html__( 'Page Comment Area Display', 'sakurairo' ),
-				'choices'     => [
-					'unfold' => __('Expand','sakurairo'),
-          			'fold' => __('Fold','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'comment_placeholder_text',
-				'iro_key'  => 'comment_placeholder_text',
-				'label'    => esc_html__( 'Custom CommentBox Placeholder', 'sakurairo' ),
-			],
-			[
-				'type'     => 'text',
-				'settings' => 'comment_submit_button_text',
-				'iro_key'  => 'comment_submit_button_text',
-				'label'    => esc_html__( 'Custom Submit Button Content', 'sakurairo' ),
-			],
-			[
-				'type'     => 'image',
-				'settings' => 'comment_area_image',
-				'iro_key'  => 'comment_area_image',
-				'label'    => esc_html__( 'Page Comment Area Bottom Right Background Image', 'sakurairo' ),
-				'transport'   => 'auto',
-				'output' => array(
-					array(
-						'element'  => '.comment-respond textarea',
-						'property' => 'background-image',
-						'value_pattern' => '$ !important',
-					),
-				),
-			],
-			[
-				'type'     => 'select',
-				'settings' => 'smilies_list',
-				'iro_key'  => 'smilies_list',
-				'label'    => esc_html__( 'Comment Area Emoticon', 'sakurairo' ),
-				'description' => esc_html__( 'Please go to the backend to configure your custom emoticon pack', 'sakurairo' ),
-				'multiple'    => 0,
-				'choices'     => [
-					'bilibili'   => __('BiliBili Emoticon Pack','sakurairo'),
-					'tieba'   => __('Baidu Tieba Emoticon Pack','sakurairo'),
-					'yanwenzi' => __('Emoji','sakurairo'),
-					'custom' => __('Customized Emoticon Pack','sakurairo'),
-				],
-			],
-			[
-				'type'     => 'custom',
-				'settings' => 'nav_menu_notice',
-				'default'  => __('For more detailed configuration of the comment area, please go to the backend configuration','sakurairo'),
-			],
-		],
-	],
+        'fields'      => [
+            [
+                'type'        => 'text',
+                'settings'    => 'comment_input_place_holder',
+                'iro_key'     => 'comment_input_place_holder',
+                'label'       => esc_html__( '评论区输入框占位符', 'sakurairo' ),
+                'default'     => '要来喵一句吗？',
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => '.comment-form-comment .placeholder',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'comment_submit_button_text',
+                'iro_key'     => 'comment_submit_button_text',
+                'label'       => esc_html__( '评论区提交按钮文本', 'sakurairo' ),
+                'default'     => 'Submit✈️',
+                'transport'   => 'postMessage',
+                'js_vars'     => [
+                    [
+                        'element'  => '#submit',
+                        'function' => 'html',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'multicheck',
+                'settings'    => 'comment_smilies_list',
+                'iro_key'     => 'comment_smilies_list',
+                'label'       => esc_html__( '评论区表情', 'sakurairo' ),
+                'description' => esc_html__( '选择要在评论区域输入框中显示的表情。全部取消选中可关闭评论区域输入框表情功能。', 'sakurairo' ),
+                'default'     => [ 'bilibili', 'tieba', 'yanwenzi' ],
+                'choices'     => [
+                    'bilibili' => esc_html__( 'bilibili', 'sakurairo' ),
+                    'tieba'    => esc_html__( '贴吧', 'sakurairo' ),
+                    'yanwenzi' => esc_html__( '颜文字', 'sakurairo' ),
+                    'custom'   => esc_html__( '自定义', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'comment_smilies_list_custom_name',
+                'iro_key'     => 'comment_smilies_list_custom_name',
+                'label'       => esc_html__( '自定义表情包名称', 'sakurairo' ),
+                'description' => esc_html__( '建议输入少于4个汉字的内容，以免造成移动端的兼容性问题。', 'sakurairo' ),
+                'default'     => 'custom',
+                'active_callback' => [
+                    [
+                        'setting'  => 'comment_smilies_list',
+                        'operator' => 'contains',
+                        'value'    => 'custom',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'comment_captcha',
+                'iro_key'     => 'comment_captcha',
+                'label'       => esc_html__( '评论区验证码', 'sakurairo' ),
+                'description' => esc_html__( '开启后游客评论需要通过验证码验证', 'sakurairo' ),
+                'default'     => 'off',
+                'choices'     => [
+                    'off'       => esc_html__( 'Off', 'sakurairo' ),
+                    'builtin'   => esc_html__( '主题内建验证码', 'sakurairo' ),
+                    'turnstile' => 'Cloudflare Turnstile',
+                ],
+            ],
+        ],
+    ],
+
+    // ====================模板页面设置====================
+    [
+        'id'          => 'iro_pages_template',
+        'title'       => esc_html__( '模板页面设置', 'sakurairo' ),
+        'description' => '',
+        'panel'       => 'iro_pages',
+
+        'fields'      => [
+            [
+                'type'    => 'radio_image',
+                'settings' => 'bangumi_source',
+                'iro_key' => 'bangumi_source',
+                'label'   => esc_html__( '追番数据来源', 'sakurairo' ),
+                'choices' => [
+                    'bilibili' => $vision_resource_basepath . 'options/bangumi_tep_bili.webp',
+                    'mal'      => $vision_resource_basepath . 'options/bangumi_tep_mal.webp',
+                    'bangumi'  => $vision_resource_basepath . 'options/bangumi_tep_bgm.webp',
+                ],
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'friend_link_sorting_mode',
+                'iro_key'     => 'friend_link_sorting_mode',
+                'label'       => esc_html__( '友情链接列表排序模式', 'sakurairo' ),
+                'description' => esc_html__( '选择友情链接列表排序模式，默认使用“名称”排序。', 'sakurairo' ),
+                'choices'     => [
+                    'name'    => esc_html__( '名称', 'sakurairo' ),
+                    'rating'  => esc_html__( '评级', 'sakurairo' ),
+                    'updated' => esc_html__( '更新时间', 'sakurairo' ),
+                    'rand'    => esc_html__( '随机', 'sakurairo' ),
+                ],
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'friend_link_order',
+                'iro_key'     => 'friend_link_order',
+                'label'       => esc_html__( '升序或降序', 'sakurairo' ),
+                'description' => esc_html__( '按升序或降序排序友情链接列表', 'sakurairo' ),
+                'choices'     => [
+                    'ASC'  => esc_html__( '升序', 'sakurairo' ),
+                    'DESC' => esc_html__( '降序', 'sakurairo' ),
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'friend_link_sorting_mode',
+                        'operator' => '!=',
+                        'value'    => 'rand',
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];
 
 // ====================Panel注册====================
@@ -2280,7 +1919,8 @@ foreach ( $sections as $section ) {
 				$setting_id    = $args['settings'];
 				$iro_key       = $args['iro_key'];
 				$type_default  = $args['default'];
-				$iro_default   = $GLOBALS['iro_options'][$iro_key];
+				$iro_options_all = is_array( $GLOBALS['iro_options'] ?? null ) ? $GLOBALS['iro_options'] : [];
+				$iro_default   = $iro_options_all[$iro_key] ?? null;
 				$iro_subkey    = isset( $args['iro_subkey'] ) ? $args['iro_subkey'] : '';
 
 				if ( ! isset( $args['transport'] ) ) { // 没设置预览方式的默认请求php渲染
