@@ -1193,12 +1193,12 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'        => 'homepage_show_title',
                 'type'      => 'fieldset',
                 'title'     => __('展示区域标题配置', 'sakurairo_csf'),
-                'dependency' => ['cover_focus_style', 'any', 'text,mashiro_text', '', 'true'],
                 'fields'    => [
                     [
                         'id'     => 'icon',
                         'type'   => 'text',
                         'title'  => __('图标', 'sakurairo_csf'),
+                        'desc' => __('图标元素的类名，自定义前需在页面头部嵌入自定义的图标集样式，例如fontawesome,否则会不显示', 'sakurairo_csf'),
                     ],
                     [
                         'id'     => 'text',
@@ -1216,7 +1216,6 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'        => 'homepage_post_list_title',
                 'type'      => 'fieldset',
                 'title'     => __('文章区域标题配置', 'sakurairo_csf'),
-                'dependency' => ['cover_focus_style', 'any', 'text,mashiro_text', '', 'true'],
                 'fields'    => [
                     [
                         'id'     => 'icon',
@@ -1317,8 +1316,8 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id'         => 'post_card_with_image_design',
                 'type'       => 'image_select',
-                'title' => __('Article Area Card Design', 'sakurairo_csf'),
-                'desc' => __('You can choose between letter design or ticket design', 'sakurairo_csf'),
+                'title' => __('文章区域卡片设计', 'sakurairo_csf'),
+                'desc' => __('你可以选择信件设计或者票券设计', 'sakurairo_csf'),
                 'options'    => [
                     'letter' => $vision_resource_basepath . 'options/post_list_design_letter.webp',
                     'ticket' => $vision_resource_basepath . 'options/post_list_design_ticket.webp',
@@ -1345,7 +1344,7 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'post_card_image',
                 'type' => 'radio',
-                'title' => __('Article Area Featured Image Options', 'sakurairo_csf'),
+                'title' => __('文章区域装饰特色图片选项', 'sakurairo_csf'),
                 'options' => [
                     'always_with_cover' => __('始终且使用封面API', 'sakurairo_csf'),
                     'always_alone' => __('始终且使用独立API', 'sakurairo_csf'),
