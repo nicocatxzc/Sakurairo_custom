@@ -47,7 +47,7 @@ if (is_customize_preview()) {
     class="dark"
     <?php endif; ?>>
     <meta charset="<?php bloginfo('charset'); ?>">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     
     <meta http-equiv="x-dns-prefetch-control" content="on">
 
