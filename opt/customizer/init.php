@@ -2381,10 +2381,10 @@ foreach ( $sections as $section ) {
 					new \Kirki\Field\Upload( $args );
 					break;
 				case 'input_slider':
-					new \Kirki\Pro\Field\InputSlider( $args );
+					new \Kirki\Field\InputSlider( $args );
 					break;
 				case 'divider':
-					new \Kirki\Pro\Field\Divider( $args );
+					new \Kirki\Field\Divider( $args );
 					break;
 				default:
 					error_log( 'Unknown Kirki field type: ' . $field['type'] );

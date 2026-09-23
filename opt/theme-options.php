@@ -1,5 +1,5 @@
 <?php
-if (class_exists('Sakurairo1_CSF')) {
+if (class_exists('Sakurairo_CSF')) {
 
     $prefix = 'iro_options';
 
@@ -40,7 +40,8 @@ if (class_exists('Sakurairo1_CSF')) {
         'fields' => [
             [
                 'id'    => 'favicon_link',
-                'type'  => 'text',
+                'type'  => 'upload',
+                'library'      => 'image',
                 'title' => __('站点图标', 'sakurairo'),
                 'desc'   => __('填写链接，它将会出现在浏览器标签页的标题旁边', 'sakurairo'),
                 'default' => $vision_resource_basepath . 'basic/favicon.ico'
@@ -1258,7 +1259,7 @@ if (class_exists('Sakurairo1_CSF')) {
                     ],
                 ],
                 'default'        => [
-                    'icon'    => 'fa-solid fa-laptop',
+                    'icon'    => 'fa-icon-solid fa-laptop',
                     'text'    => 'Display',
                 ],
             ],
@@ -1280,7 +1281,7 @@ if (class_exists('Sakurairo1_CSF')) {
                     ],
                 ],
                 'default'        => [
-                    'icon'    => 'fa-regular fa-bookmark',
+                    'icon'    => 'fa-icon-regular fa-bookmark',
                     'text'    => 'Article',
                 ],
             ],
