@@ -1826,7 +1826,7 @@ $sections = [
                 'settings'    => 'comment_submit_button_text',
                 'iro_key'     => 'comment_submit_button_text',
                 'label'       => esc_html__('评论区提交按钮文本', 'sakurairo'),
-                'default'     => 'Submit✈️',
+                'default'     => '提交',
                 'transport'   => 'postMessage',
                 'js_vars'     => [
                     [
@@ -1888,17 +1888,6 @@ $sections = [
         'panel'       => 'iro_pages',
 
         'fields'      => [
-            [
-                'type'    => 'radio_image',
-                'settings' => 'bangumi_source',
-                'iro_key' => 'bangumi_source',
-                'label'   => esc_html__('追番数据来源', 'sakurairo'),
-                'choices' => [
-                    'bilibili' => $vision_resource_basepath . 'options/bangumi_tep_bili.webp',
-                    'mal'      => $vision_resource_basepath . 'options/bangumi_tep_mal.webp',
-                    'bangumi'  => $vision_resource_basepath . 'options/bangumi_tep_bgm.webp',
-                ],
-            ],
             [
                 'type'        => 'select',
                 'settings'    => 'friend_link_sorting_mode',
