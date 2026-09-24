@@ -4,9 +4,8 @@
     "packageManager": "pnpm@12.5.1",
     "scripts": {
         "dev": "pnpm -r --if-present run dev",
-        "build": "pnpm -r --if-present run build",
+        "build": "bash package.sh",
         "build:frontend": "pnpm --filter frontend run build",
-        "build:blocks": "pnpm --filter iro_blocks run build",
-        "package": "bash package.sh"
+        "build:blocks": "pnpm --filter iro_blocks run build"
     }
 }
