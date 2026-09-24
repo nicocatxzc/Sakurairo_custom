@@ -61,6 +61,13 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'iro_sitemap',
+                'type' => 'switcher',
+                'title' => __('使用主题提供的站点地图', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
                 'id'     => 'iro_meta_keywords',
                 'type'   => 'text',
                 'title'  => __('站点关键词', 'sakurairo'),

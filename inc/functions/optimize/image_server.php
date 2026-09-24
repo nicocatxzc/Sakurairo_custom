@@ -18,7 +18,7 @@ add_action('template_redirect', 'iro_media_dispatch', 0);
 add_action('after_switch_theme', function () {
     flush_rewrite_rules();
 });
-add_action( 'updated_option', function() {
+add_action('update_option_iro_options', function () {
     flush_rewrite_rules();
 });
 

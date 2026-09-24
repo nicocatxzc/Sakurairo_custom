@@ -86,6 +86,8 @@ require_once get_template_directory() . '/inc/functions/content/index.php';
 require_once get_template_directory() . '/inc/blocks/iro_blocks.php';
 // seo相关
 require_once get_template_directory() . '/inc/functions/seo.php';
+// 站点地图
+require_once get_template_directory() . '/inc/functions/sitemap.php';
 // 载入前台头部资源
 require_once get_template_directory() . '/inc/functions/enqueue_assets.php';
 // 前端主题配置
