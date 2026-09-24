@@ -52,41 +52,43 @@ global $iro_only_template;
             <!-- 主页封面 -->
             <?php require_once get_template_directory() . '/frontend/components/homepage/cover.php'; ?>
 
-            <!-- pjax start -->
             <div class="layout-slot">
                 <div class="background-filter"></div>
-                <?php $is_home = is_home() || is_front_page() ?>
-                <!-- content start -->
-                <?php if (!$is_home): ?>
-                    <section class="main-container">
-                    <?php endif; ?>
-                    <?php
-                    if ($is_home) {
-                        require_once get_template_directory() . '/frontend/components/page/home.php';
-                    } elseif (is_single() || is_page()) {
-                        require_once get_template_directory() . '/frontend/components/page/post.php';
-                    } elseif (is_search()) {
-                        require_once get_template_directory() . '/frontend/components/page/search.php';
-                    } elseif (is_author()) {
-                        require_once get_template_directory() . '/frontend/components/page/author.php';
-                    } elseif (is_archive()) {
-                        require_once get_template_directory() . '/frontend/components/page/archive.php';
-                        // } elseif (is_404()) {
-                        //     require_once get_template_directory() . '/components/404.php';
-                    } else {
-                        require_once get_template_directory() . '/frontend/components/default.php';
-                    }
-                    ?>
+                <!-- pjax start -->
+                <div id="pjax-main">
+                    <?php $is_home = is_home() || is_front_page() ?>
+                    <!-- content start -->
                     <?php if (!$is_home): ?>
-                    </section>
-                <?php endif; ?>
-                <!-- content end -->
+                        <section class="main-container">
+                        <?php endif; ?>
+                        <?php
+                        if ($is_home) {
+                            require_once get_template_directory() . '/frontend/components/page/home.php';
+                        } elseif (is_single() || is_page()) {
+                            require_once get_template_directory() . '/frontend/components/page/post.php';
+                        } elseif (is_search()) {
+                            require_once get_template_directory() . '/frontend/components/page/search.php';
+                        } elseif (is_author()) {
+                            require_once get_template_directory() . '/frontend/components/page/author.php';
+                        } elseif (is_archive()) {
+                            require_once get_template_directory() . '/frontend/components/page/archive.php';
+                            // } elseif (is_404()) {
+                            //     require_once get_template_directory() . '/components/404.php';
+                        } else {
+                            require_once get_template_directory() . '/frontend/components/default.php';
+                        }
+                        ?>
+                        <?php if (!$is_home): ?>
+                        </section>
+                        <!-- content end -->
+                    <?php endif; ?>
+                </div>
+                <!-- pjax end -->
                 <?php
                 get_footer();
                 require_once get_template_directory() . '/frontend/components/site/particle.php';
                 ?>
             </div>
-            <!-- pjax end -->
 
             <!-- 小组件 -->
             <?php require_once get_template_directory() . '/frontend/components/site/widget.php'; ?>
