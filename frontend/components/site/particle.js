@@ -1,10 +1,14 @@
-import { tsParticles } from "@tsparticles/engine";
-import { loadAll } from "@tsparticles/all";
 import iconSakura from "../icons/petal.png?inline";
 
+let tsParticles;
+let loadAll;
 _iro.hooks["DOMContentLoaded"].add(async () => {
     const particleContainer = document.querySelector("#particle");
     if (particleContainer) {
+        if (!tsParticles) {
+            tsParticles = (await import("@tsparticles/engine")).tsParticles;
+            loadAll = (await import("@tsparticles/all")).loadAll;
+        }
         const options = getConfig();
         if (options?.particles) {
             await loadAll(tsParticles);
