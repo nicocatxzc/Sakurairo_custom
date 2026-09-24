@@ -18,7 +18,7 @@ function iro_enqueue_scripts()
     <?php else: ?>
         <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/app.js?ver=' . INT_VERSION ?>"></script>
         <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/style.css?ver=' . INT_VERSION ?>">
-        <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css?ver=' . INT_VERSION ?>">
+        <link rel="stylesheet" media="print" onload="this.onload=null;this.media='all'" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css?ver=' . INT_VERSION ?>">
     <?php endif; ?>
 <?php
 }
