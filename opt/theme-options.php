@@ -2294,6 +2294,20 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'dev_mode_ai_hmr_client',
+                'type' => 'text',
+                'title' => __('AI Vite HMR客户端地址', 'sakurairo'),
+                'default' => 'https://wordpress:5174/@vite/client',
+            ],
+
+            [
+                'id' => 'dev_mode_ai_main_js',
+                'type' => 'text',
+                'title' => __('AI Vite 主脚本入口地址', 'sakurairo'),
+                'default' => "https://wordpress:5174/src/main.js",
+            ],
+
+            [
                 'id'    => 'dev_mode_admin_only',
                 'type'  => 'switcher',
                 'title' => __('开发者模式仅管理员', 'sakurairo'),

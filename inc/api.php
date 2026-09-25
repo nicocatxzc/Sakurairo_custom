@@ -281,4 +281,33 @@ add_action('rest_api_init', function () {
             'permission_callback' => 'iro_rest_check_permission',
         )
     );
+
+    // AI 内容管理：列表 / 单篇生成 / 应用（仅管理员，实现见 inc/api/ai.php）
+    register_rest_route(
+        'sakura/v1',
+        '/ai/posts',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_ai_rest_posts',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/ai/posts/keyword',
+        array(
+            'methods' => array('GET', 'PUT'),
+            'callback' => 'iro_ai_rest_posts_keyword',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/ai/posts/description',
+        array(
+            'methods' => array('GET', 'PUT'),
+            'callback' => 'iro_ai_rest_posts_description',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
 });

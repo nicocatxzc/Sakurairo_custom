@@ -108,6 +108,17 @@ function iro_ai_chat(array $messages, array $args = []): string|WP_Error
     return iro_ai_generate($prompt, array_merge($args, ['history' => $turns]));
 }
 
+// 转成纯文本：去短代码、去块编辑器的 HTML 注释、去标签、解码实体、压缩空白
+function iro_ai_plain_content(string $content): string
+{
+    $content = strip_shortcodes($content);
+    $content = (string) preg_replace('/<!--.*?-->/s', '', $content);
+    $content = html_entity_decode(strip_tags($content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $content = (string) preg_replace('/\s+/u', ' ', $content);
+
+    return trim($content);
+}
+
 function iro_ai_post_content(int $post_id, int $limit = 12000): string|WP_Error
 {
     $post = get_post($post_id);
@@ -118,12 +129,9 @@ function iro_ai_post_content(int $post_id, int $limit = 12000): string|WP_Error
         );
     }
 
-    // rendered 内容
-    $rendered = apply_filters('the_content', $post->post_content);
+    // 渲染 blocks/shortcode 后取纯文本，HTML 与块标记对模型没有价值
+    $text = iro_ai_plain_content(apply_filters('the_content', $post->post_content));
 
-    // 去标签、去多余空白，截断到上限
-    // $text = trim(wp_strip_all_tags($rendered));
-    $text = trim($rendered);
     if ($text === '') {
         return new WP_Error(
             'iro_ai_empty_content',

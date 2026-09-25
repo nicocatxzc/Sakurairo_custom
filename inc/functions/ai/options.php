@@ -52,10 +52,9 @@ function iro_ai_enqueue_assets(string $hook_suffix = ''): void
         . wp_json_encode(iro_ai_panel_config(), JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)
         . '</script>';
 
-    // 端口与 host 跟 inc/ai/vite.config.js 保持一致；dev 资源同样只给管理员
     if (iro_opt('dev_mode', false) && current_user_can('manage_options')) {
-        echo '<script type="module" src="https://wordpress:5174/@vite/client"></script>';
-        echo '<script type="module" src="https://wordpress:5174/src/main.js"></script>';
+        echo '<script type="module" src='.iro_opt("dev_mode_ai_hmr_client").'></script>';
+        echo '<script type="module" src='.iro_opt("dev_mode_ai_main_js").'></script>';
         return;
     }
 

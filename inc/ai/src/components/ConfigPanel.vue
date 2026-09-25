@@ -1,26 +1,32 @@
 <script setup>
-import { computed, defineComponent, h, markRaw, ref } from "vue";
-import { ElEmpty } from "element-plus";
-import { ChatDotRound, Close, Document, Monitor, Setting } from "@element-plus/icons-vue";
+import { computed, markRaw, ref } from "vue";
+import {
+    ChatDotRound,
+    Document,
+    Files,
+    Monitor,
+    Setting,
+} from "@element-plus/icons-vue";
 import PanelPost from "./PanelPost.vue";
 import PanelConfig from "./PanelConfig.vue";
 import PanelChat from "./PanelChat.vue";
 import PanelSyetem from "./PanelSystem.vue";
+import PostManagement from "./PostManagement.vue";
 
 const active = ref("chat");
 
 const panels = [
     {
-        key: "diagnose",
-        label: "系统信息",
-        icon: markRaw(Monitor),
-        component: PanelSyetem,
-    },
-    {
         key: "article",
         label: "文章内容",
         icon: markRaw(Document),
         component: PanelPost,
+    },
+    {
+        key: "management",
+        label: "文章管理",
+        icon: markRaw(Files),
+        component: PostManagement,
     },
     {
         key: "chat",
@@ -34,6 +40,12 @@ const panels = [
         icon: markRaw(Setting),
         component: PanelConfig,
     },
+    {
+        key: "diagnose",
+        label: "系统信息",
+        icon: markRaw(Monitor),
+        component: PanelSyetem,
+    },
 ];
 
 const currentPanel = computed(
@@ -42,10 +54,6 @@ const currentPanel = computed(
 
 const handleSelect = (key) => {
     active.value = key;
-};
-
-const handleClose = () => {
-    console.log("关闭面板");
 };
 </script>
 
@@ -56,24 +64,15 @@ const handleClose = () => {
                 <el-text tag="b" size="large" class="iro-ai-header__title">
                     {{ currentPanel.label }}
                 </el-text>
-                <el-button
-                    class="iro-ai-header__close"
-                    type="danger"
-                    :icon="Close"
-                    circle
-                    @click="handleClose"
-                />
             </el-header>
 
             <el-container class="iro-ai-body">
                 <el-aside class="iro-ai-aside" width="200px">
                     <el-menu :default-active="active" @select="handleSelect">
-                        <el-menu-item
-                            v-for="panel in panels"
-                            :key="panel.key"
-                            :index="panel.key"
-                        >
-                            <el-icon><component :is="panel.icon" /></el-icon>
+                        <el-menu-item v-for="panel in panels" :key="panel.key" :index="panel.key">
+                            <el-icon>
+                                <component :is="panel.icon" />
+                            </el-icon>
                             <span>{{ panel.label }}</span>
                         </el-menu-item>
                     </el-menu>
@@ -151,7 +150,7 @@ const handleClose = () => {
     overflow: hidden;
     background-color: var(--el-fill-color-blank);
 
-    > * {
+    >* {
         flex: 1;
         min-width: 0;
         min-height: 0;
