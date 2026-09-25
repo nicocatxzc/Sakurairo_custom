@@ -1115,7 +1115,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'cover_video_source',
                 'type' => 'upload',
                 'title' => __('视频URL地址', 'sakurairo'),
-                'library'=>'video',
+                'library' => 'video',
                 'dependency' => array(
                     array('cover_video', '==', 'true'),
                     array('cover_switch', '==', 'true', '', 'true'),
@@ -2313,6 +2313,37 @@ if (class_exists('Sakurairo_CSF')) {
                 "default" => "normal",
                 'desc' => __('建议设置为“只显示严重错误”来防止不影响使用的php日志渲染到前端', 'sakurairo'),
             ],
+        ]
+    ]);
+
+    Sakurairo_CSF::createSection($prefix, [
+        'parent' => 'others',
+        'title' => __('AI 摘要', 'sakurairo'),
+        'icon'        => 'fa fa-magic',
+        'fields'      => [
+
+            [
+                'id' => 'ai_api_base',
+                'type' => 'text',
+                'title' => __('接口地址', 'sakurairo'),
+                'desc' => __('OpenAI 兼容接口的 Base URL，主题会自动追加 /chat/completions', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'ai_api_key',
+                'type' => 'text',
+                'attributes' => ['type' => 'password'],
+                'title' => __('API Key', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'ai_model',
+                'type' => 'text',
+                'title' => __('模型名称', 'sakurairo'),
+                'desc' => __('例如 Qwen3.8-27B', 'sakurairo'),
+            ],
+
         ]
     ]);
 

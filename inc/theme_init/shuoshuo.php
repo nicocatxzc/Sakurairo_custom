@@ -136,7 +136,7 @@ function add_custom_meta_box()
         'render_custom_meta_box',
         'post', // 仅在post内容类型中显示
         'side',
-        'default'
+        'high'
     );
 }
 add_action('add_meta_boxes', 'add_custom_meta_box');

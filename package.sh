@@ -42,7 +42,7 @@ log "开始打包 $NAME $VERSION"
 info "主题目录: $ROOT"
 info "输出目录: $OUT_DIR"
 
-for f in frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml inc/blocks/pnpm-lock.yaml inc/blocks/pnpm-workspace.yaml; do
+for f in frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml inc/blocks/pnpm-lock.yaml inc/blocks/pnpm-workspace.yaml inc/ai/pnpm-lock.yaml inc/ai/pnpm-workspace.yaml; do
     if [[ -e "$ROOT/$f" ]]; then
         die "检测到 $f：它会让 pnpm 忽略主题根的锁文件，请先删除后再执行本脚本"
     fi
@@ -52,8 +52,8 @@ log "安装 workspace 依赖（pnpm install --frozen-lockfile）"
 (cd "$ROOT" && pnpm install --frozen-lockfile) ||
     die "依赖安装失败，如确认 lockfile 已过期可手动执行 pnpm install 后重试"
 
-log "编译 frontend 与 inc/blocks（pnpm build）"
-(cd "$ROOT" && pnpm build)
+log "编译 frontend、inc/blocks 与 inc/ai（pnpm -r build）"
+(cd "$ROOT" && pnpm -r --if-present run build)
 
 log "复制主题文件到暂存目录"
 rm -rf "$STAGE"
@@ -87,6 +87,10 @@ find "$TARGET/frontend" -mindepth 1 -type d -empty -not -path "$TARGET/frontend/
 # inc/blocks/ 只保留 PHP 与编译产物 build/
 rm -rf "$TARGET/inc/blocks/src"
 rm -f "$TARGET/inc/blocks/package.json" "$TARGET/inc/blocks/pnpm-lock.yaml" "$TARGET/inc/blocks/pnpm-workspace.yaml"
+
+# inc/ai/ 只保留编译产物 dist/
+find "$TARGET/inc/ai" -type f -not -path "$TARGET/inc/ai/dist/*" -delete
+find "$TARGET/inc/ai" -mindepth 1 -type d -empty -not -path "$TARGET/inc/ai/dist*" -delete
 
 # .po / .pot 是翻译源文件，运行时只需要编译后的 .mo
 find "$TARGET" -type f \( -name '*.po' -o -name '*.pot' \) -delete

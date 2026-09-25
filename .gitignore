@@ -2,6 +2,7 @@
 node_modules/
 frontend/dist
 inc/blocks/build
+inc/ai/build
 .codex*
 *.patch
 temp

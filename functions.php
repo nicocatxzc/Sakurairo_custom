@@ -65,8 +65,6 @@ require_once get_template_directory() . '/inc/theme_init/shuoshuo.php';
 // 工具函数
 require_once get_template_directory() . '/inc/functions/tools.php';
 require_once get_template_directory() . '/inc/functions/ip.php';
-// api
-require_once get_template_directory() . '/inc/api.php';
 // 全站优化
 require_once get_template_directory() . '/inc/functions/optimize/index.php';
 // 载入wp精简定制
@@ -88,6 +86,12 @@ require_once get_template_directory() . '/inc/blocks/iro_blocks.php';
 require_once get_template_directory() . '/inc/functions/seo.php';
 // 站点地图
 require_once get_template_directory() . '/inc/functions/sitemap.php';
+// AI 服务
+require_once get_template_directory() . '/inc/functions/ai/provider.php';
+require_once get_template_directory() . '/inc/functions/ai/tools.php';
+require_once get_template_directory() . '/inc/functions/ai/options.php';
+// api
+require_once get_template_directory() . '/inc/api.php';
 // 载入前台头部资源
 require_once get_template_directory() . '/inc/functions/enqueue_assets.php';
 // 前端主题配置
