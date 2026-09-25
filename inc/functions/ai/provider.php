@@ -39,7 +39,7 @@ function iro_ai_provider_id(): string
 
 function iro_ai_api_base(): string
 {
-    return rtrim((string) iro_opt('ai_api_base', 'https://developer.amd.com.cn/radeon/api/v1'), '/');
+    return rtrim((string) iro_opt('ai_api_base'), '/');
 }
 
 function iro_ai_default_model(): string
@@ -79,6 +79,30 @@ function iro_ai_api_key(): string
     return trim((string) get_option(iro_ai_connector_setting_name(), ''));
 }
 
+// 凭证来源，与 iro_ai_api_key() 的判断顺序保持一致（诊断用）
+function iro_ai_api_key_source(): string
+{
+    if (trim((string) iro_opt('ai_api_key', '')) !== '') {
+        return 'theme_option';
+    }
+
+    $constant = iro_ai_connector_constant_name();
+    if (defined($constant) && is_string(constant($constant)) && trim(constant($constant)) !== '') {
+        return 'constant';
+    }
+
+    $env = getenv($constant);
+    if (is_string($env) && trim($env) !== '') {
+        return 'env';
+    }
+
+    if (trim((string) get_option(iro_ai_connector_setting_name(), '')) !== '') {
+        return 'connector_option';
+    }
+
+    return 'none';
+}
+
 /*
  * 主题设置里填的 Key 要镜像到连接器槽位：Connectors 页的配置状态、官方 AI 插件的
  * 凭证门禁（has_ai_credentials）以及 core 的 Key 注入都只认那个选项。
@@ -105,6 +129,25 @@ function iro_ai_sync_connector_key(): void
 }
 
 
+// 解析 OpenAI 兼容的 /models 响应
+function iro_ai_parse_models(string $body): array
+{
+    $models = [];
+    foreach (json_decode($body, true)['data'] ?? [] as $model) {
+        if (!empty($model['id'])) {
+            $models[(string) $model['id']] = $model;
+        }
+    }
+
+    return $models;
+}
+
+// 请求失败时短缓存，避免每次调用都去打接口
+function iro_ai_cache_models(array $models): void
+{
+    set_transient('iro_ai_models_cache', $models, $models ? 6 * HOUR_IN_SECONDS : 5 * MINUTE_IN_SECONDS);
+}
+
 //可用模型：从服务的 /models 接口发现并缓存
 function iro_ai_fetch_models(): array
 {
@@ -120,13 +163,7 @@ function iro_ai_fetch_models(): array
         return [];
     }
 
-    $models = [];
-    foreach (json_decode(wp_remote_retrieve_body($response), true)['data'] ?? [] as $model) {
-        if (!empty($model['id'])) {
-            $models[(string) $model['id']] = $model;
-        }
-    }
-    return $models;
+    return iro_ai_parse_models((string) wp_remote_retrieve_body($response));
 }
 
 function iro_ai_models(bool $refresh = false): array
@@ -138,8 +175,7 @@ function iro_ai_models(bool $refresh = false): array
     $models = get_transient('iro_ai_models_cache');
     if (!is_array($models)) {
         $models = iro_ai_fetch_models();
-        // 请求失败时短缓存，避免每次调用都去打接口
-        set_transient('iro_ai_models_cache', $models, $models ? 6 * HOUR_IN_SECONDS : 5 * MINUTE_IN_SECONDS);
+        iro_ai_cache_models($models);
     }
 
     // 服务端没列出（或拉取失败）时，保证设置里选定的模型始终可用

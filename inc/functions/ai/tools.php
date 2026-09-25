@@ -1,10 +1,33 @@
 <?php
 
+use WordPress\AiClient\Messages\DTO\MessagePart;
+use WordPress\AiClient\Messages\DTO\ModelMessage;
+use WordPress\AiClient\Messages\DTO\UserMessage;
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 
-// WordPress 7.0 以下没有内置 AI Client，此时不注册 shortcode，避免调用不存在的函数
+// WordPress 7.0 以下没有内置 AI Client，AI 工具不可用
 if (!function_exists('iro_ai_register_provider')) {
     return;
+}
+
+// 对话历史转成 SDK 的消息对象，用于 with_history()
+function iro_ai_history_messages(array $history): array
+{
+    $messages = [];
+
+    foreach ($history as $turn) {
+        $content = trim((string) ($turn['content'] ?? ''));
+        if ($content === '') {
+            continue;
+        }
+
+        $part = new MessagePart($content);
+        $messages[] = ($turn['role'] ?? '') === 'assistant'
+            ? new ModelMessage([$part])
+            : new UserMessage([$part]);
+    }
+
+    return $messages;
 }
 
 function iro_ai_generate(string $prompt, array $args = []): string|WP_Error
@@ -13,6 +36,7 @@ function iro_ai_generate(string $prompt, array $args = []): string|WP_Error
         [
             'model' => iro_ai_default_model(), // 模型名称
             'system' => '', // 系统指令
+            'history' => [], // 对话历史：[['role' => 'user'|'assistant', 'content' => '...'], ...]
             'temperature' => null, // 采样温度
             'max_tokens' => null, // 最大token数
             'timeout' => null, // 超时时间
@@ -23,6 +47,10 @@ function iro_ai_generate(string $prompt, array $args = []): string|WP_Error
     iro_ai_register_provider();
 
     $builder = wp_ai_client_prompt($prompt);
+
+    if (!empty($args['history'])) {
+        $builder->with_history(...iro_ai_history_messages((array) $args['history']));
+    }
 
     if ($args['model'] !== '') {
         $builder->using_model_preference([iro_ai_provider_id(), $args['model']]);
@@ -42,6 +70,42 @@ function iro_ai_generate(string $prompt, array $args = []): string|WP_Error
     }
 
     return $builder->generate_text();
+}
+
+/*
+ * 工具：多轮对话
+ * $messages 为 OpenAI 风格的消息数组：[['role' => 'user'|'assistant', 'content' => '...'], ...]
+ * 最后一条必须是用户消息（本次提问），它之前的都作为对话历史。
+ */
+function iro_ai_chat(array $messages, array $args = []): string|WP_Error
+{
+    $turns = [];
+
+    // 只保留最近 20 条并截断单条长度，避免把超长内容整段丢给接口
+    foreach (array_slice(array_values($messages), -20) as $message) {
+        $content = trim((string) ($message['content'] ?? ''));
+        if ($content === '') {
+            continue;
+        }
+
+        $turns[] = [
+            'role' => ($message['role'] ?? '') === 'assistant' ? 'assistant' : 'user',
+            'content' => mb_substr($content, 0, 8000),
+        ];
+    }
+
+    // 提问必须是最后一条，否则模型只会续写
+    if (($turns[count($turns) - 1]['role'] ?? '') !== 'user') {
+        return new WP_Error(
+            'iro_ai_chat_invalid_last_message',
+            __('最后一条消息必须是用户的提问。', 'sakurairo'),
+            ['status' => 400]
+        );
+    }
+
+    $prompt = array_pop($turns)['content'];
+
+    return iro_ai_generate($prompt, array_merge($args, ['history' => $turns]));
 }
 
 function iro_ai_post_content(int $post_id, int $limit = 12000): string|WP_Error

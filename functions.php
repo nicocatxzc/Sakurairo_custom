@@ -89,6 +89,7 @@ require_once get_template_directory() . '/inc/functions/sitemap.php';
 // AI 服务
 require_once get_template_directory() . '/inc/functions/ai/provider.php';
 require_once get_template_directory() . '/inc/functions/ai/tools.php';
+require_once get_template_directory() . '/inc/functions/ai/selftest.php';
 require_once get_template_directory() . '/inc/functions/ai/options.php';
 // api
 require_once get_template_directory() . '/inc/api.php';

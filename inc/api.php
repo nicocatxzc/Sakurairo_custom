@@ -47,6 +47,19 @@ function iro_rest_check_nonce(WP_REST_Request $request)
     return true;
 }
 
+function iro_rest_check_permission(WP_REST_Request $request)
+{
+    if (!current_user_can('manage_options')) {
+        return new WP_Error(
+            'iro_ai_forbidden',
+            __('仅管理员可使用 AI 接口。', 'sakurairo'),
+            ['status' => 403]
+        );
+    }
+
+    return iro_rest_check_nonce($request);
+}
+
 /**
  * 自定义api接口
  */
@@ -236,6 +249,36 @@ add_action('rest_api_init', function () {
                     'minimum'  => 1,
                 ),
             ),
+        )
+    );
+
+    // AI 自检与测试对话（仅管理员，实现见 inc/api/ai.php）
+    require_once get_template_directory() . '/inc/api/ai.php';
+    register_rest_route(
+        'sakura/v1',
+        '/ai/selftest',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_ai_rest_selftest',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/ai/models',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_ai_rest_models',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/ai/chat',
+        array(
+            'methods' => 'POST',
+            'callback' => 'iro_ai_rest_chat',
+            'permission_callback' => 'iro_rest_check_permission',
         )
     );
 });

@@ -8,6 +8,6 @@
         "build": "bash package.sh",
         "build:frontend": "pnpm --filter frontend run build",
         "build:blocks": "pnpm --filter iro_blocks run build",
-        "build:ai": "pnpm --filter iro_ai run build"
+        "build:ai": "pnpm --filter ai run build"
     }
 }

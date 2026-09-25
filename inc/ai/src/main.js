@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import "@opentiny/tiny-robot/dist/style.css"
 
 import EditorButton from"./components/EditorButton.vue"
 import ConfigPanel from "./components/ConfigPanel.vue"

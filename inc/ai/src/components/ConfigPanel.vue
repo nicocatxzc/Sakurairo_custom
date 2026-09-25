@@ -1,14 +1,21 @@
 <script setup>
 import { computed, defineComponent, h, markRaw, ref } from "vue";
 import { ElEmpty } from "element-plus";
-import { Close, Document, Setting, Monitor } from "@element-plus/icons-vue";
+import { ChatDotRound, Close, Document, Monitor, Setting } from "@element-plus/icons-vue";
 import PanelPost from "./PanelPost.vue";
 import PanelConfig from "./PanelConfig.vue";
+import PanelChat from "./PanelChat.vue";
 import PanelSyetem from "./PanelSystem.vue";
 
-const active = ref("article");
+const active = ref("chat");
 
 const panels = [
+    {
+        key: "diagnose",
+        label: "系统信息",
+        icon: markRaw(Monitor),
+        component: PanelSyetem,
+    },
     {
         key: "article",
         label: "文章内容",
@@ -16,16 +23,16 @@ const panels = [
         component: PanelPost,
     },
     {
+        key: "chat",
+        label: "测试对话",
+        icon: markRaw(ChatDotRound),
+        component: PanelChat,
+    },
+    {
         key: "config",
         label: "系统配置",
         icon: markRaw(Setting),
         component: PanelConfig,
-    },
-    {
-        key: "diagnose",
-        label: "系统诊断",
-        icon: markRaw(Monitor),
-        component: PanelSyetem,
     },
 ];
 

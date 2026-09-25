@@ -38,7 +38,7 @@ export default defineConfig({
                 assetFileNames: (assetInfo) => {
                     const name = assetInfo.names?.[0] ?? "";
 
-                    if (name === "style.css") {
+                    if (name === "style.css" || name === "main.css") {
                         return "style.css";
                     }
 
