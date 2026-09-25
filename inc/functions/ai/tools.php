@@ -22,8 +22,11 @@ function iro_ai_generate(string $prompt, array $args = []): string|WP_Error
 
     iro_ai_register_provider();
 
-    $builder = wp_ai_client_prompt($prompt)
-        ->using_model_preference([iro_ai_provider_id(), $args['model']]);
+    $builder = wp_ai_client_prompt($prompt);
+
+    if ($args['model'] !== '') {
+        $builder->using_model_preference([iro_ai_provider_id(), $args['model']]);
+    }
 
     if ($args['system'] !== '') {
         $builder->using_system_instruction($args['system']);
