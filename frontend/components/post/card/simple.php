@@ -8,7 +8,7 @@
         </h3>
     </a>
     <a href="<?= esc_url(get_permalink()) ?>">
-        <span class="post-excerpt"><?= esc_html(wp_trim_words(get_the_excerpt(), 30, '...')) ?></span>
+        <span class="post-excerpt"><?= esc_html(wp_trim_words(get_the_excerpt(), 120, '...')) ?></span>
     </a>
     <div class="post-metas">
         <div class="post-meta-date">

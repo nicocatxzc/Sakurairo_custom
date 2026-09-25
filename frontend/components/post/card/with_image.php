@@ -76,6 +76,6 @@
         </a>
     </div>
     <div class="post-excerpt">
-        <span><?= esc_html(wp_trim_words(get_the_excerpt(), 30, '...')) ?></span>
+        <span><?= esc_html(wp_trim_words(get_the_excerpt(), 120, '...')) ?></span>
     </div>
 </article>
