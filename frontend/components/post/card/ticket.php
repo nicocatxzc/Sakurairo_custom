@@ -17,10 +17,10 @@
 
     <div class="post-date">
         <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
-            更新于:<?= get_the_modified_date('Y年m月d日') ?>
+            <?= __("更新于：",'sakurairo') ?><?= get_the_modified_date('Y' . __("年", "sakurairo") . 'm' . __("月", "sakurairo") . 'd' . __("日", 'sakurairo')) ?>
         </time>
         <?php if (is_sticky()) : ?>
-            <div class="sticky">&#x2605;&#xFE0E;置顶</div>
+            <div class="sticky">&#x2605;&#xFE0E;<?= __("置顶",'sakurairo') ?></div>
         <?php endif; ?>
     </div>
 
@@ -48,7 +48,7 @@
                     <?php else : ?>
                         <span>
                             <i class="fa-icon-solid fa-folder-open"></i>
-                            未分类
+                            <?= __("未分类",'sakurairo') ?>
                         </span>
                     <?php endif; ?>
                     <?php break; ?>

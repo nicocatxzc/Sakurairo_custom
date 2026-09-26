@@ -54,7 +54,7 @@ $iro_menu_options = iro_get_navigation();
         <div class="user">
             <?php if (is_user_logged_in()):
                 $current_user = wp_get_current_user();
-                $avatar = get_avatar($current_user->ID, 40, '', '用户头像', ['class' => 'avatar']);
+                $avatar = get_avatar($current_user->ID, 40, '', __("用户头像","sakurairo"), ['class' => 'avatar']);
             ?>
                 <div class="avatar-wrapper">
                     <?= $avatar ?>
@@ -65,15 +65,15 @@ $iro_menu_options = iro_get_navigation();
                     </div>
                     <div class="user-menu-option">
                         <?php if (current_user_can('manage_options')): ?>
-                            <a href="<?= esc_url(admin_url()) ?>" target="_blank">管理后台</a>
+                            <a href="<?= esc_url(admin_url()) ?>" target="_blank"><?= __("管理后台",'sakurairo') ?></a>
                         <?php endif; ?>
                         <?php if (current_user_can('administrator')): ?>
-                            <a href="<?= esc_url(admin_url('customize.php')) ?>" target="_blank">主题设置</a>
+                            <a href="<?= esc_url(admin_url('customize.php')) ?>" target="_blank"><?= __("主题设置",'sakurairo') ?></a>
                         <?php endif; ?>
                         <?php if (current_user_can('edit_posts')): ?>
-                            <a href="<?= esc_url(admin_url('post-new.php')) ?>" target="_blank">撰写文章</a>
+                            <a href="<?= esc_url(admin_url('post-new.php')) ?>" target="_blank"><?= __("撰写文章",'sakurairo') ?></a>
                         <?php endif; ?>
-                        <a href="<?= esc_url(wp_logout_url(home_url())) ?>" target="_top">退出登录</a>
+                        <a href="<?= esc_url(wp_logout_url(home_url())) ?>" target="_top"><?= __("退出登录",'sakurairo') ?></a>
                     </div>
                 </div>
             <?php else: ?>
@@ -84,10 +84,10 @@ $iro_menu_options = iro_get_navigation();
                     />
                 <div class="user-menu">
                     <div class="user-menu-info">
-                        <span class="name">游客</span>
+                        <span class="name"><?= __("游客",'sakurairo') ?></span>
                     </div>
                     <div class="user-menu-option">
-                        <a href="<?= esc_url(wp_login_url()) ?>" aria-label="点击登录">登录</a>
+                        <a href="<?= esc_url(wp_login_url()) ?>" aria-label="<?= __("点击登录",'sakurairo') ?>"><?= __("登录",'sakurairo') ?></a>
                     </div>
                 </div>
             <?php endif; ?>

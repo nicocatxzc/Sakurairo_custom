@@ -26,7 +26,7 @@
     <?php else: ?>
         <div v-else class="empty-state">
             <i name="fa-icon-solid fa-inbox"></i>
-            <p>暂时还没有内容哦</p>
+            <p><?= __("暂时还没有内容哦。",'sakurairo') ?></p>
         </div>
     <?php endif; ?>
     <?php if (!$iro_only_template): ?>

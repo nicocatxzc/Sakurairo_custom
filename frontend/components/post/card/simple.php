@@ -15,7 +15,7 @@
             <!-- Icon: fa-icon-solid:calendar -->
             <i class="fa-icon-solid fa-calendar icon"></i>
             <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
-                更新于:<?= get_the_modified_date('Y年m月d日') ?>
+                <?= __("更新于：", 'sakurairo') ?><?= get_the_modified_date('Y' . __("年", "sakurairo") . 'm' . __("月", "sakurairo") . 'd' . __("日", 'sakurairo')) ?>
             </time>
         </div>
         <div class="post-meta-categories">

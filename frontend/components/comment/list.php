@@ -3,7 +3,7 @@ global $iro_only_template;
 if (!$iro_only_template): ?>
     <h3 class="comment-list-title">
         Comments
-        <span class="comment-count"><?= number_format_i18n(get_comments_number()) ?>条评论</span>
+        <span class="comment-count"><?= number_format_i18n(get_comments_number()) ?><?= __("条评论",'sakurairo') ?></span>
     </h3>
     <ol class="comment-list">
     <?php endif ?>

@@ -79,12 +79,12 @@ $search_filters = iro_get_search_type_filters();
             <input
                 type="text"
                 class="search-input"
-                placeholder="搜索文章、标题或摘要"
+                placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
                 @keyup.enter="gotoSearch" />
 
             <button
                 class="search-button">
-                搜索
+                <?= __("搜索",'sakurairo') ?>
             </button>
         </div>
     </header>

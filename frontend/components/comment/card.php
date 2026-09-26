@@ -11,7 +11,7 @@ function iro_comment_render($comment, $args=[], $depth=[])
                 class="reply-button"
                 data-commentid="<?= $comment_id; ?>"
                 data-commentauthor="<?= esc_attr(get_comment_author()); ?>">
-                回复
+                <?= __("回复",'sakurairo') ?>
             </button>
 
             <section class="comment-infos">
@@ -22,7 +22,7 @@ function iro_comment_render($comment, $args=[], $depth=[])
                     <span class="author-name"><?php comment_author(); ?></span>
                     <div class="comment-meta-list">
                         <time datetime="<?php comment_date('c'); ?>">
-                            发布于 <?php comment_date(); ?>
+                            <?= __("发布于",'sakurairo') ?> <?php comment_date(); ?>
                         </time>
                     </div>
                 </div>

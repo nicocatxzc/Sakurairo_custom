@@ -12,7 +12,7 @@ if (!is_array($iro_menu_options)) {
         class="menu-toggle flex-center"
         data-panel-toggle="menu"
         aria-expanded="false"
-        aria-label="打开菜单">
+        aria-label="<?= __("打开菜单",'sakurairo') ?>">
         <i class="fa-icon-solid fa-bars icon"></i>
     </button>
 
@@ -33,7 +33,7 @@ if (!is_array($iro_menu_options)) {
             class="user-toggle flex-center"
             data-panel-toggle="user"
             aria-expanded="false"
-            aria-label="打开用户菜单">
+            aria-label="<?= __("打开用户菜单",'sakurairo') ?>">
             <i class="fa-icon-regular fa-bookmark icon"></i>
         </button>
     <?php endif; ?>
@@ -47,7 +47,7 @@ if (!is_array($iro_menu_options)) {
                     type="text"
                     inputmode="search"
                     autocomplete="off"
-                    placeholder="想找点什么呢?">
+                    placeholder="<?= __("想找点什么呢？",'sakurairo') ?>">
             </div>
         <?php endif; ?>
         <ul
@@ -83,36 +83,36 @@ if (!is_array($iro_menu_options)) {
                     <?php if (is_user_logged_in()):
                         $current_user = wp_get_current_user();
                     ?>
-                        <?= get_avatar($current_user->ID, 80, '', '用户头像', ['class' => 'avatar']) ?>
+                        <?= get_avatar($current_user->ID, 80, '', __("用户头像",'sakurairo'), ['class' => 'avatar']) ?>
                         <div class="user-info">
                             <span class="name"><?= esc_html($current_user->display_name) ?></span>
                         </div>
                     <?php else: ?>
                         <img
                             src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
-                            alt="用户头像"
+                            alt="<?= __("用户头像",'sakurairo') ?>"
                             class="avatar">
                         <div class="user-info">
-                            <span class="name">游客</span>
+                            <span class="name"><?= __("游客",'sakurairo') ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
                 <?php if (is_user_logged_in()): ?>
                     <div class="user-option">
                         <?php if (current_user_can('manage_options')): ?>
-                            <a href="<?= esc_url(admin_url()) ?>" target="_blank">管理后台</a>
+                            <a href="<?= esc_url(admin_url()) ?>" target="_blank"><?= __("管理后台",'sakurairo') ?></a>
                         <?php endif; ?>
                         <?php if (current_user_can('administrator')): ?>
-                            <a href="<?= esc_url(admin_url('customize.php')) ?>" target="_blank">主题设置</a>
+                            <a href="<?= esc_url(admin_url('customize.php')) ?>" target="_blank"><?= __("主题设置",'sakurairo') ?></a>
                         <?php endif; ?>
                         <?php if (current_user_can('edit_posts')): ?>
-                            <a href="<?= esc_url(admin_url('post-new.php')) ?>" target="_blank">撰写文章</a>
+                            <a href="<?= esc_url(admin_url('post-new.php')) ?>" target="_blank"><?= __("撰写文章",'sakurairo') ?></a>
                         <?php endif; ?>
-                        <a href="<?= esc_url(wp_logout_url(home_url())) ?>" target="_top">退出登录</a>
+                        <a href="<?= esc_url(wp_logout_url(home_url())) ?>" target="_top"><?= __("退出登录",'sakurairo') ?></a>
                     </div>
                 <?php else: ?>
                     <div class="visitor-option flex-center">
-                        <a href="<?= esc_url(wp_login_url()) ?>" aria-label="点击登录">登录</a>
+                        <a href="<?= esc_url(wp_login_url()) ?>" aria-label="<?= __("点击登录",'sakurairo') ?>"><?= __("登录",'sakurairo') ?></a>
                     </div>
                 <?php endif; ?>
             </div>

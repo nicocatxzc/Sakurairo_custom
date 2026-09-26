@@ -33,8 +33,8 @@ $icons_map = [
                     href="<?= $item['link'] ?? '#' ?>"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="点击访问<?= $item['title'] ?? '' ?>"
-                    title="点击访问<?= $item['title'] ?? '' ?>">
+                    aria-label="<?= __("点击访问",'sakurairo') ?><?= $item['title'] ?? '' ?>"
+                    title="<?= __("点击访问",'sakurairo') ?><?= $item['title'] ?? '' ?>">
                     <img
                         loading="lazy"
                         src="<?= iro_media_optimize_image_url(iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp') ?>"
