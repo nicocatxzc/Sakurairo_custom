@@ -39,6 +39,7 @@ export const aiApi = {
         return request(`/ai/posts?${search.toString()}`);
     },
     // 单字段资源：GET 生成（不落库，回给前端核对）、PUT 写入
+    postTitle: (id) => request(`/ai/posts/title?id=${id}`),
     postKeyword: (id) => request(`/ai/posts/keyword?id=${id}`),
     postDescription: (id) => request(`/ai/posts/description?id=${id}`),
     savePostKeyword: (id, value) =>

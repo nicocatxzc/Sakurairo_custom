@@ -176,3 +176,21 @@ function iro_ai_post_summary(int $post_id, array $args = []): string|WP_Error
         ]
     );
 }
+
+/**
+ * 工具：生成文章标题
+ */
+function iro_ai_post_title(int $post_id, array $args = []): string|WP_Error
+{
+    $text = iro_ai_post_content($post_id);
+    if (is_wp_error($text)) {
+        return $text;
+    }
+
+    return iro_ai_generate(
+        __('为下面的内容拟一个标题，要求使用与内容相同的语言，概括准确、长度在 30 字以内，不要换行、不要引号、不要 markdown、不要任何解释或前缀，只输出标题本身：', 'sakurairo') . "\n\n" . $text,
+        $args + [
+            'system' => __('你是一位专业的编辑，输出的标题简洁、准确，不使用夸张的标题党措辞。', 'sakurairo'),
+        ]
+    );
+}

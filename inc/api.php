@@ -310,4 +310,13 @@ add_action('rest_api_init', function () {
             'permission_callback' => 'iro_rest_check_permission',
         )
     );
+    register_rest_route(
+        'sakura/v1',
+        '/ai/posts/title',
+        array(
+            'methods' => array('GET', 'PUT'),
+            'callback' => 'iro_ai_rest_posts_title',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
 });

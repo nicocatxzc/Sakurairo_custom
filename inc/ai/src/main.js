@@ -4,6 +4,7 @@ import "element-plus/dist/index.css";
 import "@opentiny/tiny-robot/dist/style.css";
 
 import EditorButton from "./components/EditorButton.vue";
+import EditorPanel from "./components/EditorPanel.vue";
 import ConfigPanel from "./components/ConfigPanel.vue"
 
 const mounts = [
@@ -76,8 +77,17 @@ function mountInShadow(host, component) {
 }
 
 function mountApps() {
-    for (const [selector, component] of mounts) {
-        const host = document.querySelector(selector);
+    // 古腾堡的 transform 都会让面板里的 fixed 定位失效
+    if (document.querySelector("#iro-ai-editor")) {
+        const panelHost = document.createElement("div");
+
+        panelHost.id = "iro-ai-panel";
+        document.body.append(panelHost);
+        mounts.push([panelHost, EditorPanel]);
+    }
+
+    for (const [target, component] of mounts) {
+        const host = typeof target === "string" ? document.querySelector(target) : target;
 
         if (host && !host.shadowRoot) {
             mountInShadow(host, component);

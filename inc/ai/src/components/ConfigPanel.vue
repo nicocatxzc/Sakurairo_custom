@@ -2,26 +2,18 @@
 import { computed, markRaw, ref } from "vue";
 import {
     ChatDotRound,
-    Document,
     Files,
     Monitor,
     Setting,
 } from "@element-plus/icons-vue";
-import PanelPost from "./PanelPost.vue";
 import PanelConfig from "./PanelConfig.vue";
 import PanelChat from "./PanelChat.vue";
 import PanelSyetem from "./PanelSystem.vue";
 import PostManagement from "./PostManagement.vue";
 
-const active = ref("chat");
+const active = ref("management");
 
 const panels = [
-    {
-        key: "article",
-        label: "文章内容",
-        icon: markRaw(Document),
-        component: PanelPost,
-    },
     {
         key: "management",
         label: "文章管理",

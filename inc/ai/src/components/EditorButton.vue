@@ -1,16 +1,24 @@
 <script setup>
-const { toggle } = panel;
+import { onMounted, ref } from "vue";
+import { MagicStick } from "@element-plus/icons-vue";
+import { panel, panelTrigger } from "../panel";
+
+const buttonRef = ref(null);
+
+onMounted(() => {
+    panelTrigger.value = buttonRef.value;
+});
 </script>
 
 <template>
-    <button
-        type="button"
-        class="button button-primary iro-ai-trigger"
-        @click="toggle()"
-    >
-        <span class="dashicons dashicons-superhero" aria-hidden="true"></span>
+    <el-button ref="buttonRef" class="iro-ai-trigger" type="primary" :icon="MagicStick" :aria-expanded="panel.open"
+        @click="panel.open = !panel.open">
         打开AI工具
-    </button>
+    </el-button>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.iro-ai-trigger {
+    width: 100%;
+}
+</style>

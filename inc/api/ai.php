@@ -335,6 +335,13 @@ function iro_ai_rest_posts_description(WP_REST_Request $request)
         : iro_ai_generate_field($request, 'description');
 }
 
+function iro_ai_rest_posts_title(WP_REST_Request $request)
+{
+    return $request->get_method() === 'PUT'
+        ? iro_ai_update_field($request, 'title')
+        : iro_ai_generate_field($request, 'title');
+}
+
 // 生成只回给前端核对与编辑，是否写库由 PUT 决定
 function iro_ai_generate_field(WP_REST_Request $request, string $field)
 {
@@ -362,18 +369,27 @@ function iro_ai_generate_field(WP_REST_Request $request, string $field)
         );
     }
 
-    $result = $field === 'keyword'
-        ? iro_ai_post_keywords($post_id, ['timeout' => 120])
-        : iro_ai_post_summary($post_id, ['timeout' => 120]);
+    $result = match ($field) {
+        'keyword' => iro_ai_post_keywords($post_id, ['timeout' => 120]),
+        'title'   => iro_ai_post_title($post_id, ['timeout' => 120]),
+        default   => iro_ai_post_summary($post_id, ['timeout' => 120]),
+    };
 
     if (is_wp_error($result)) {
         return $result;
     }
 
+    // 模型输出统一清洗：关键词按逗号切分，标题与摘要都是去前缀、去换行的单段文本，标题更短
+    $value = match ($field) {
+        'keyword' => iro_ai_clean_keywords($result),
+        'title'   => iro_ai_clean_summary($result, 60),
+        default   => iro_ai_clean_summary($result),
+    };
+
     return rest_ensure_response(
         iro_ai_posts_row($post) + [
             'field'      => $field,
-            'value'      => $field === 'keyword' ? iro_ai_clean_keywords($result) : iro_ai_clean_summary($result),
+            'value'      => $value,
             'elapsed_ms' => (int) round((microtime(true) - $started) * 1000),
         ]
     );
@@ -409,6 +425,20 @@ function iro_ai_update_field(WP_REST_Request $request, string $field)
         // 覆盖写入原生标签：空值即清空；传数组避免按空格再切一次
         $tags = array_values(array_filter(array_map('trim', explode(',', $value)), static fn ($tag) => $tag !== ''));
         $result = wp_set_post_tags($post_id, $tags, false);
+
+        if (is_wp_error($result)) {
+            return $result;
+        }
+    } elseif ($field === 'title') {
+        // 标题写 post_title：与摘要同样去前缀、去换行，只是更短
+        $value = iro_ai_clean_summary($value, 60);
+        $result = wp_update_post(
+            [
+                'ID'         => $post_id,
+                'post_title' => $value,
+            ],
+            true
+        );
 
         if (is_wp_error($result)) {
             return $result;
