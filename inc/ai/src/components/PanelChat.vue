@@ -6,6 +6,7 @@ import { aiApi } from "../api";
 import { aiOptions } from "../config";
 import { clearConversations, putConversation, readConversation } from "../storage";
 
+const t = window.iroI18n.t;
 const messages = ref([]);
 const draft = ref("");
 const model = ref(aiOptions.model || "");
@@ -121,8 +122,8 @@ async function onSubmit(text) {
         replaceMessage(replyId, {
             content:
                 error.name === "AbortError"
-                    ? "（已取消）"
-                    : `请求失败：${error.message}`,
+                    ? t("（已取消）")
+                    : t("请求失败：{message}", { message: error.message }),
             loading: false,
         });
     } finally {
@@ -147,7 +148,7 @@ onMounted(async () => {
             <el-select
                 v-model="model"
                 class="iro-ai-chat__model"
-                placeholder="选择模型"
+                :placeholder="t('选择模型')"
                 filterable
                 @change="onModelChange"
             >
@@ -160,7 +161,7 @@ onMounted(async () => {
             </el-select>
             <el-button :icon="Refresh" @click="loadModels(true)" />
             <el-button type="primary" :icon="Plus" @click="newConversation">
-                开启新对话
+                {{ t("开启新对话") }}
             </el-button>
         </div>
 
@@ -169,7 +170,7 @@ onMounted(async () => {
             type="warning"
             :closable="false"
             show-icon
-            title="未配置 API Key，测试对话不可用。"
+            :title="t('未配置 API Key，测试对话不可用。')"
             class="iro-ai-chat__alert"
         />
 
@@ -182,8 +183,8 @@ onMounted(async () => {
             />
             <TrWelcome
                 v-else
-                title="AI 测试对话"
-                description="仅用于验证主题的 AI Provider 是否可用，对话只保存在本机浏览器。"
+                :title="t('AI 测试对话')"
+                :description="t('仅用于验证主题的 AI Provider 是否可用，对话只保存在本机浏览器。')"
                 align="center"
             />
         </div>
@@ -193,7 +194,7 @@ onMounted(async () => {
                 v-model="draft"
                 :loading="loading"
                 :disabled="loading || !aiOptions.configured"
-                placeholder="输入内容后按 Enter 发送"
+                :placeholder="t('输入内容后按 Enter 发送')"
                 @submit="onSubmit"
                 @cancel="onCancel"
             />

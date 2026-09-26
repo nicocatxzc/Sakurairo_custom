@@ -24,6 +24,8 @@ const FIELD_NEW = { description: "new_excerpt", keyword: "new_keywords" };
 const FIELD_OLD = { description: "excerpt", keyword: "keywords" };
 const FIELD_FLAG = { description: "has_excerpt", keyword: "has_keywords" };
 
+const t = window.iroI18n.t;
+
 const tableRef = ref(null);
 const rows = ref([]);
 // 只镜像表格自身的选中行：能勾选的永远是当前渲染出来的行，不跨页、不维护 id 集合
@@ -119,14 +121,14 @@ async function generate() {
     const targets = selection.value;
 
     if (targets.length === 0) {
-        ElMessage.warning("请先勾选要处理的文章。");
+        ElMessage.warning(t("请先勾选要处理的文章。"));
         return;
     }
 
     const wanted = FIELDS.filter((field) => fields[field]);
 
     if (wanted.length === 0) {
-        ElMessage.warning("请至少勾选一项要生成的内容。");
+        ElMessage.warning(t("请至少勾选一项要生成的内容。"));
         return;
     }
 
@@ -147,7 +149,7 @@ async function generate() {
     });
 
     if (queue.length === 0) {
-        ElMessage.warning("所选内容都不支持要生成的字段。");
+        ElMessage.warning(t("所选内容都不支持要生成的字段。"));
         return;
     }
 
@@ -184,15 +186,23 @@ async function generate() {
     generating.value = false;
 
     const skippedText =
-        skipped > 0 ? `（略过 ${skipped} 项：页面不支持标签）` : "";
+        skipped > 0
+            ? t("（略过 {count} 项：页面不支持标签）", { count: skipped })
+            : "";
 
     if (failed > 0) {
         ElMessage.warning(
-            `生成结束，其中 ${failed} 条失败（见表格内提示）。${skippedText}`,
+            t("生成结束，其中 {failed} 条失败（见表格内提示）。{skipped}", {
+                failed,
+                skipped: skippedText,
+            }),
         );
     } else if (!cancelled.value) {
         ElMessage.success(
-            `已生成 ${progress.done} 条${skippedText}，核对后可应用。`,
+            t("已生成 {done} 条{skipped}，核对后可应用。", {
+                done: progress.done,
+                skipped: skippedText,
+            }),
         );
     }
 }
@@ -250,7 +260,7 @@ async function applyRows(targets) {
     });
 
     if (queue.length === 0) {
-        ElMessage.warning("没有需要应用的修改。");
+        ElMessage.warning(t("没有需要应用的修改。"));
         return;
     }
 
@@ -299,10 +309,12 @@ async function applyRows(targets) {
     });
 
     if (failed > 0) {
-        ElMessage.warning(`已应用，其中 ${failed} 项写入失败。`);
+        ElMessage.warning(t("已应用，其中 {failed} 项写入失败。", { failed }));
     } else {
         ElMessage.success(
-            total === 1 ? "已应用到文章。" : `已应用 ${total} 项。`,
+            total === 1
+                ? t("已应用到文章。")
+                : t("已应用 {total} 项。", { total }),
         );
     }
 
@@ -319,59 +331,59 @@ onMounted(load);
     <div class="iro-ai-management">
         <div class="iro-ai-management__line">
             <el-radio-group v-model="query.type" size="small" @change="onSearch">
-                <el-radio-button value="all">全部 {{ counts.all }}</el-radio-button>
-                <el-radio-button value="post">文章 {{ counts.post }}</el-radio-button>
-                <el-radio-button value="page">页面 {{ counts.page }}</el-radio-button>
+                <el-radio-button value="all">{{ t("全部 {count}", { count: counts.all }) }}</el-radio-button>
+                <el-radio-button value="post">{{ t("文章 {count}", { count: counts.post }) }}</el-radio-button>
+                <el-radio-button value="page">{{ t("页面 {count}", { count: counts.page }) }}</el-radio-button>
             </el-radio-group>
 
             <el-radio-group v-model="query.filter" size="small" @change="onSearch">
-                <el-radio-button value="all">不筛选</el-radio-button>
-                <el-radio-button value="no_excerpt">无摘要 {{ counts.no_excerpt }}</el-radio-button>
-                <el-radio-button value="no_keywords">无关键词 {{ counts.no_keywords }}</el-radio-button>
+                <el-radio-button value="all">{{ t("不筛选") }}</el-radio-button>
+                <el-radio-button value="no_excerpt">{{ t("无摘要 {count}", { count: counts.no_excerpt }) }}</el-radio-button>
+                <el-radio-button value="no_keywords">{{ t("无关键词 {count}", { count: counts.no_keywords }) }}</el-radio-button>
             </el-radio-group>
 
             <el-checkbox v-model="query.skip_thin" size="small" @change="onSearch">
-                略过实质性内容少于 {{ MIN_LENGTH }} 字的模板页面
+                {{ t("略过实质性内容少于 {min} 字的模板页面", { min: MIN_LENGTH }) }}
             </el-checkbox>
 
             <div class="iro-ai-management__search">
-                <el-input v-model="query.search" size="small" placeholder="搜索标题或内容" clearable @keyup.enter="onSearch"
+                <el-input v-model="query.search" size="small" :placeholder="t('搜索标题或内容')" clearable @keyup.enter="onSearch"
                     @clear="onSearch" />
                 <el-button size="small" :icon="Refresh" :loading="loading" @click="onSearch" />
             </div>
         </div>
 
         <div class="iro-ai-management__line">
-            <el-text size="small">已选 {{ selection.length }} 条</el-text>
+            <el-text size="small">{{ t("已选 {count} 条", { count: selection.length }) }}</el-text>
             <!-- 全选只作用于未被屏蔽的行 -->
             <el-button size="small" @click="rows.forEach((row) => tableRef?.toggleRowSelection(row, row.matched))">
-                全选本页
+                {{ t("全选本页") }}
             </el-button>
             <el-button size="small" :disabled="selection.length === 0" @click="tableRef?.clearSelection()">
-                清空选择
+                {{ t("清空选择") }}
             </el-button>
 
             <el-divider direction="vertical" />
 
-            <el-checkbox v-model="fields.description" size="small">摘要</el-checkbox>
-            <el-checkbox v-model="fields.keyword" size="small">关键词</el-checkbox>
+            <el-checkbox v-model="fields.description" size="small">{{ t("摘要") }}</el-checkbox>
+            <el-checkbox v-model="fields.keyword" size="small">{{ t("关键词") }}</el-checkbox>
             <el-button type="primary" size="small" :icon="MagicStick" :loading="generating"
                 :disabled="selection.length === 0" @click="generate">
-                生成
+                {{ t("生成") }}
             </el-button>
-            <el-button v-if="generating" size="small" @click="cancelled = true">停止</el-button>
+            <el-button v-if="generating" size="small" @click="cancelled = true">{{ t("停止") }}</el-button>
 
             <el-button type="success" size="small" :icon="Check" :loading="applying" :disabled="dirtyRows.length === 0"
                 @click="applyRows(dirtyRows)">
-                全部应用（{{ dirtyRows.length }}）
+                {{ t("全部应用（{count}）", { count: dirtyRows.length }) }}
             </el-button>
         </div>
 
         <el-alert v-if="!aiOptions.configured" type="warning" :closable="false" show-icon
-            title="未配置 API Key，无法生成摘要与关键词。" />
+            :title="t('未配置 API Key，无法生成摘要与关键词。')" />
         <div v-if="generating || progress.done > 0" class="iro-ai-management__progress">
             <el-progress :percentage="percentage" :stroke-width="10" />
-            <el-text size="small">正在生成 {{ progress.done }} / {{ progress.total }}</el-text>
+            <el-text size="small">{{ t("正在生成 {done} / {total}", { done: progress.done, total: progress.total }) }}</el-text>
         </div>
 
         <div class="iro-ai-management__table">
@@ -382,18 +394,18 @@ onMounted(load);
                 size="small" border height="100%" @selection-change="selection = $event">
                 <el-table-column type="selection" width="40" :selectable="(row) => row.matched" />
 
-                <el-table-column label="标题" min-width="230">
+                <el-table-column :label="t('标题')" min-width="230">
                     <template #default="{ row }">
                         <a :href="row.edit_link" target="_blank" rel="noopener">{{ row.title }}</a>
                         <div class="iro-ai-management__tags">
                             <el-tag size="small" effect="plain" :type="row.type === 'page' ? 'warning' : 'info'">
-                                {{ TYPE_LABELS[row.type] ?? row.type }}
+                                {{ t(TYPE_LABELS[row.type] ?? row.type) }}
                             </el-tag>
                             <el-tag size="small" effect="plain" :type="row.content_length < MIN_LENGTH
                                 ? 'danger'
                                 : 'info'
                                 ">
-                                {{ row.content_length }} 字
+                                {{ t("{count} 字", { count: row.content_length }) }}
                             </el-tag>
                         </div>
                         <el-text v-if="row.error" size="small" type="danger">{{
@@ -401,43 +413,43 @@ onMounted(load);
                         }}</el-text>
                     </template>
                 </el-table-column>
-                <el-table-column prop="description" label="摘要" min-width="320">
+                <el-table-column prop="description" :label="t('摘要')" min-width="320">
                     <template #default="{ row }">
                         <el-text size="small" class="iro-ai-management__old" :class="{ 'is-empty': !row.has_excerpt }">
-                            旧：{{ row.excerpt || "（无）" }}
+                            {{ t("旧：{value}", { value: row.excerpt || t("（无）") }) }}
                         </el-text>
                         <el-input v-model="row.new_excerpt" type="textarea" size="small"
-                            :autosize="{ minRows: 2, maxRows: 4 }" placeholder="新的摘要" />
+                            :autosize="{ minRows: 2, maxRows: 4 }" :placeholder="t('新的摘要')" />
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="keyword" label="标签" min-width="260">
+                <el-table-column prop="keyword" :label="t('标签')" min-width="260">
                     <template #default="{ row }">
                         <el-text size="small" class="iro-ai-management__old" :class="{ 'is-empty': !row.has_keywords }">
-                            旧：{{ row.keywords || "（无）" }}
+                            {{ t("旧：{value}", { value: row.keywords || t("（无）") }) }}
                         </el-text>
                         <el-input v-model="row.new_keywords" size="small" :disabled="!row.tags_supported" :placeholder="row.tags_supported
-                            ? '写入文章标签，用英文逗号分隔'
-                            : '该内容类型不支持标签'
+                            ? t('写入文章标签，用英文逗号分隔')
+                            : t('该内容类型不支持标签')
                             " />
                     </template>
                 </el-table-column>
 
-                <el-table-column label="操作" width="176" fixed="right">
+                <el-table-column :label="t('操作')" width="176" fixed="right">
                     <template #default="{ row }">
-                        <el-tooltip content="生成摘要" placement="top">
+                        <el-tooltip :content="t('生成摘要')" placement="top">
                             <el-button size="small" :icon="Document" :loading="row.generating === 'description'"
                                 :disabled="generating" @click="generateRow(row, 'description')" />
                         </el-tooltip>
-                        <el-tooltip content="生成标签" placement="top">
+                        <el-tooltip :content="t('生成标签')" placement="top">
                             <el-button size="small" :icon="PriceTag" :loading="row.generating === 'keyword'"
                                 :disabled="generating || !row.tags_supported" @click="generateRow(row, 'keyword')" />
                         </el-tooltip>
-                        <el-tooltip content="应用" placement="top">
+                        <el-tooltip :content="t('应用')" placement="top">
                             <el-button type="primary" size="small" :icon="Check" :loading="row.applying"
                                 :disabled="!isDirty(row)" @click="applyRows([row])" />
                         </el-tooltip>
-                        <el-tooltip content="还原为已保存的值" placement="top">
+                        <el-tooltip :content="t('还原为已保存的值')" placement="top">
                             <el-button size="small" :icon="RefreshLeft" :disabled="!isDirty(row)"
                                 @click="row.new_excerpt = row.excerpt; row.new_keywords = row.keywords; row.error = ''" />
                         </el-tooltip>
@@ -448,12 +460,12 @@ onMounted(load);
 
         <div class="iro-ai-management__footer">
             <el-text size="small">
-                共 {{ pagination.total }} 条
+                {{ t("共 {total} 条", { total: pagination.total }) }}
                 <template v-if="pagination.skipped > 0">
-                    （本页已略过 {{ pagination.skipped }} 个内容过短的页面）
+                    {{ t("（本页已略过 {count} 个内容过短的页面）", { count: pagination.skipped }) }}
                 </template>
                 <template v-if="maskedCount > 0">
-                    （已屏蔽 {{ maskedCount }} 条不符合当前筛选）
+                    {{ t("（已屏蔽 {count} 条不符合当前筛选）", { count: maskedCount }) }}
                 </template>
             </el-text>
             <el-pagination :current-page="query.page" :page-size="query.per_page" :total="pagination.total"

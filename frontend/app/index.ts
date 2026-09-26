@@ -1,7 +1,12 @@
+import i18n from "../i18n";
+
 // _iro 及其成员的类型声明见 types/iro.d.ts
 window._iro = window._iro || ({} as IroNamespace);
 
 _iro.utils = {};
+
+// 全局翻译对象，语言在运行时惰性读取 _iro.config.language
+_iro.i18n = i18n;
 
 const domReadyHooks: IroHookItem[] = [];
 

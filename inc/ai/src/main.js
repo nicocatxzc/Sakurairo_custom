@@ -3,6 +3,8 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "@opentiny/tiny-robot/dist/style.css";
 
+import "../i18n";
+
 import EditorButton from "./components/EditorButton.vue";
 import EditorPanel from "./components/EditorPanel.vue";
 import ConfigPanel from "./components/ConfigPanel.vue"

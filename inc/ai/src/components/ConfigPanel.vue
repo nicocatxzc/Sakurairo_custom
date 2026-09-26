@@ -11,30 +11,31 @@ import PanelChat from "./PanelChat.vue";
 import PanelSyetem from "./PanelSystem.vue";
 import PostManagement from "./PostManagement.vue";
 
+const t = window.iroI18n.t;
 const active = ref("management");
 
 const panels = [
     {
         key: "management",
-        label: "文章管理",
+        label: t("文章管理"),
         icon: markRaw(Files),
         component: PostManagement,
     },
     {
         key: "chat",
-        label: "测试对话",
+        label: t("测试对话"),
         icon: markRaw(ChatDotRound),
         component: PanelChat,
     },
     {
         key: "config",
-        label: "系统配置",
+        label: t("系统配置"),
         icon: markRaw(Setting),
         component: PanelConfig,
     },
     {
         key: "diagnose",
-        label: "系统信息",
+        label: t("系统信息"),
         icon: markRaw(Monitor),
         component: PanelSyetem,
     },

@@ -86,18 +86,21 @@ function enhanceCodeBlock(pre) {
     const button = document.createElement("button");
     button.className = "copy-button";
     button.type = "button";
-    button.setAttribute("aria-label", "复制代码");
+    button.setAttribute("aria-label", _iro.i18n.t("复制代码"));
     button.innerHTML = COPY_ICON_SVG;
 
     button.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(code.textContent);
-            _iro.message?.("代码已复制到剪贴板！", "success");
+            _iro.message?.(_iro.i18n.t("代码已复制到剪贴板！"), "success");
             button.classList.add("copied");
             setTimeout(() => button.classList.remove("copied"), 1500);
         } catch (err) {
             console.error("剪贴板写入失败:", err);
-            _iro.message?.("复制失败，请检查剪贴板相关权限", "error");
+            _iro.message?.(
+                _iro.i18n.t("复制失败，请检查剪贴板相关权限"),
+                "error",
+            );
         }
     });
 

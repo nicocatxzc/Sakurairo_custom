@@ -8,11 +8,13 @@ import { aiApi } from "../api";
 import { aiOptions } from "../config";
 import { panel, panelTrigger } from "../panel";
 
+const t = window.iroI18n.t;
+
 // 三栏共用一套版式
 const SECTIONS = [
-    { field: "title", label: "标题", placeholder: "输入新的标题" },
-    { field: "excerpt", label: "摘要", placeholder: "输入新的摘要", textarea: true },
-    { field: "tags", label: "标签", placeholder: "用英文逗号分隔" },
+    { field: "title", label: t("标题"), placeholder: t("输入新的标题") },
+    { field: "excerpt", label: t("摘要"), placeholder: t("输入新的摘要"), textarea: true },
+    { field: "tags", label: t("标签"), placeholder: t("用英文逗号分隔") },
 ];
 // 字段 → 单字段接口：GET 只生成不落库，写回由 wp.data 完成
 const GENERATORS = {
@@ -119,7 +121,7 @@ async function resolveTagIds(names) {
 
 async function generate(field) {
     if (!postId.value) {
-        ElMessage.warning("文章保存后才能生成内容。");
+        ElMessage.warning(t("文章保存后才能生成内容。"));
         return;
     }
 
@@ -154,7 +156,7 @@ async function apply(field) {
             window.wp.data.dispatch("core/editor").editPost({ [field]: draft[field] });
         }
 
-        ElMessage.success("已应用到编辑器。");
+        ElMessage.success(t("已应用到编辑器。"));
     } catch (error) {
         ElMessage.error(error.message);
     } finally {
@@ -218,24 +220,24 @@ onBeforeUnmount(() => unsubscribe?.());
         :z="1000000" :resizable="false" drag-handle=".iro-ai-editor-panel__header" :onDrag="clampDrag"
         :onDragStart="rememberAnchor">
         <div class="iro-ai-editor-panel__header">
-            <el-text tag="b">AI 内容助手</el-text>
-            <el-button size="small" :icon="Close" circle text aria-label="关闭面板" @click="panel.open = false" />
+            <el-text tag="b">{{ t("AI 内容助手") }}</el-text>
+            <el-button size="small" :icon="Close" circle text :aria-label="t('关闭面板')" @click="panel.open = false" />
         </div>
 
         <div class="iro-ai-editor-panel__body">
             <el-alert v-if="!aiOptions.configured" class="iro-ai-editor-panel__alert" type="warning"
-                :closable="false" show-icon title="未配置 API Key，无法生成内容。" />
+                :closable="false" show-icon :title="t('未配置 API Key，无法生成内容。')" />
 
             <div v-for="section in SECTIONS" :key="section.field" class="iro-ai-editor-panel__field">
                 <div class="iro-ai-editor-panel__label">
                     <el-text tag="b" size="small">{{ section.label }}</el-text>
                     <el-text v-if="section.field === 'tags' && !tagsSupported" size="small" type="info">
-                        该内容类型不支持标签
+                        {{ t("该内容类型不支持标签") }}
                     </el-text>
                 </div>
 
                 <el-text size="small" class="iro-ai-editor-panel__old" :class="{ 'is-empty': !old[section.field] }">
-                    旧：{{ old[section.field] || "（无）" }}
+                    {{ t("旧：{value}", { value: old[section.field] || t("（无）") }) }}
                 </el-text>
 
                 <el-input v-if="section.field === 'tags'" v-model="draft[section.field]" size="small"
@@ -249,12 +251,12 @@ onBeforeUnmount(() => unsubscribe?.());
                     <el-button size="small" :icon="MagicStick" :loading="busy[section.field] === 'generate'"
                         :disabled="busy[section.field] === 'apply' || !postId || (section.field === 'tags' && !tagsSupported)"
                         @click="generate(section.field)">
-                        生成
+                        {{ t("生成") }}
                     </el-button>
                     <el-button type="primary" size="small" :icon="Check" :loading="busy[section.field] === 'apply'"
                         :disabled="busy[section.field] === 'generate' || draft[section.field] === old[section.field] || (section.field === 'tags' && !tagsSupported)"
                         @click="apply(section.field)">
-                        应用
+                        {{ t("应用") }}
                     </el-button>
                 </div>
             </div>

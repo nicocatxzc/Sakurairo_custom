@@ -5,6 +5,7 @@ import { Refresh } from "@element-plus/icons-vue";
 import { aiApi } from "../api";
 import { aiOptions } from "../config";
 
+const t = window.iroI18n.t;
 const loading = ref(false);
 const saving = ref(false);
 const models = ref([]);
@@ -55,7 +56,7 @@ async function save() {
     try {
         applySettings(await aiApi.saveSettings({ ...form.value }));
         await loadModels(true);
-        ElMessage.success("配置已保存");
+        ElMessage.success(t("配置已保存"));
     } catch (error) {
         ElMessage.error(error.message);
     } finally {
@@ -70,41 +71,41 @@ onMounted(async () => {
 
 <template>
     <div v-loading="loading" class="iro-ai-config">
-        <el-alert v-if="!hasKey" type="warning" :closable="false" show-icon title="尚未配置 API Key，AI 功能不可用。"
+        <el-alert v-if="!hasKey" type="warning" :closable="false" show-icon :title="t('尚未配置 API Key，AI 功能不可用。')"
             class="iro-ai-config__alert" />
 
         <el-form label-position="top" class="iro-ai-config__form">
-            <el-form-item label="接口地址">
+            <el-form-item :label="t('接口地址')">
                 <el-input v-model="form.ai_api_base" placeholder="https://api.deepseek.com/v1" clearable />
                 <div class="iro-ai-config__hint">
-                    OpenAI 兼容接口的 Base URL，主题会自动追加 /chat/completions
+                    {{ t("OpenAI 兼容接口的 Base URL，主题会自动追加 /chat/completions") }}
                 </div>
             </el-form-item>
 
             <el-form-item label="API Key">
                 <el-input v-model="form.ai_api_key" type="password" show-password placeholder="sk-..." clearable />
                 <div class="iro-ai-config__hint">
-                    留空即清除；保存后会同步到 WordPress Connectors 的凭证槽位
+                    {{ t("留空即清除；保存后会同步到 WordPress Connectors 的凭证槽位") }}
                 </div>
             </el-form-item>
 
-            <el-form-item label="模型名称">
-                <el-select v-model="form.ai_model" filterable allow-create default-first-option placeholder="选择或输入模型名称"
+            <el-form-item :label="t('模型名称')">
+                <el-select v-model="form.ai_model" filterable allow-create default-first-option :placeholder="t('选择或输入模型名称')"
                     class="iro-ai-config__model">
                     <el-option v-for="item in models" :key="item.id" :label="item.name || item.id" :value="item.id" />
                 </el-select>
                 <div class="iro-ai-config__hint">
-                    可从接口返回的模型中选择，也可手动输入
+                    {{ t("可从接口返回的模型中选择，也可手动输入") }}
                 </div>
             </el-form-item>
         </el-form>
 
         <div class="iro-ai-config__actions">
             <el-button :icon="Refresh" @click="loadModels(true)">
-                刷新模型
+                {{ t("刷新模型") }}
             </el-button>
             <el-button type="primary" :loading="saving" @click="save">
-                保存配置
+                {{ t("保存配置") }}
             </el-button>
         </div>
     </div>

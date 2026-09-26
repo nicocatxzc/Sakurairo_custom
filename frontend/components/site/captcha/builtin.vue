@@ -5,6 +5,7 @@ let id = ref("");
 let image = ref("");
 let answer = ref("");
 let inputRef = useTemplateRef("captchaInput");
+const t = _iro.i18n.t;
 
 onMounted(async () => {
     await getCaptcha();
@@ -24,9 +25,9 @@ const { start: startHideTimer, stop: stopHideTimer } = useTimeoutFn(
 function setImageShow(stat) {
     stopHideTimer();
     if (stat) {
-        inputRef.value.placeholder = "点击图片可以刷新";
+        inputRef.value.placeholder = t("点击图片可以刷新");
     } else {
-        inputRef.value.placeholder = "点击显示验证码";
+        inputRef.value.placeholder = t("点击显示验证码");
     }
     imageShow.value = stat;
 }
@@ -61,8 +62,8 @@ async function getCaptcha() {
                 :class="{
                     show: imageShow,
                 }"
-                alt="验证码"
-                title="点击刷新"
+                :alt="t('验证码')"
+                :title="t('点击刷新')"
                 @click="getCaptcha"
                 @mouseleave="startHideTimer"
             />
@@ -80,7 +81,7 @@ async function getCaptcha() {
             name="captcha_text"
             type="text"
             class="input"
-            placeholder="点击显示验证码"
+            :placeholder="t('点击显示验证码')"
             autocomplete="off"
             @click="setImageShow(true)"
             @focus="setImageShow(true)"

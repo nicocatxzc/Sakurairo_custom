@@ -1,9 +1,13 @@
 import { createApp } from "vue";
 import Builtin from "./builtin.vue";
 import Turnstile from "./turnstile.vue";
+import i18n from "../../../i18n";
 import "../../login.scss"
 
 window._iro = window._iro || {};
+
+// 登录页会单独加载 captcha 入口，此时 app/index.ts 尚未执行，需要自行挂载 i18n
+_iro.i18n = _iro.i18n || i18n;
 
 const CAPTCHAS = [
     [".captcha.builtin", Builtin],
