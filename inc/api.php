@@ -252,7 +252,7 @@ add_action('rest_api_init', function () {
         )
     );
 
-    // AI 自检与测试对话（仅管理员，实现见 inc/api/ai.php）
+    // AI
     require_once get_template_directory() . '/inc/api/ai.php';
     register_rest_route(
         'sakura/v1',
@@ -274,6 +274,15 @@ add_action('rest_api_init', function () {
     );
     register_rest_route(
         'sakura/v1',
+        '/ai/settings',
+        array(
+            'methods' => array('GET', 'POST'),
+            'callback' => 'iro_ai_rest_settings',
+            'permission_callback' => 'iro_rest_check_permission',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
         '/ai/chat',
         array(
             'methods' => 'POST',
@@ -281,8 +290,6 @@ add_action('rest_api_init', function () {
             'permission_callback' => 'iro_rest_check_permission',
         )
     );
-
-    // AI 内容管理：列表 / 单篇生成 / 应用（仅管理员，实现见 inc/api/ai.php）
     register_rest_route(
         'sakura/v1',
         '/ai/posts',

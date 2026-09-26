@@ -24,6 +24,9 @@ export async function request(path, { method = "GET", data, signal } = {}) {
 export const aiApi = {
     selftest: () => request("/ai/selftest"),
     models: (refresh = false) => request(`/ai/models${refresh ? "?refresh=1" : ""}`),
+    settings: () => request("/ai/settings"),
+    saveSettings: (settings) =>
+        request("/ai/settings", { method: "POST", data: settings }),
     chat: (messages, model, signal) =>
         request("/ai/chat", { method: "POST", data: { messages, model }, signal }),
     posts: (params = {}) => {

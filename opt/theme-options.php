@@ -2355,7 +2355,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'ai_model',
                 'type' => 'text',
                 'title' => __('模型名称', 'sakurairo'),
-                'desc' => __('例如 Qwen3.8-27B', 'sakurairo'),
+                'desc' => __('例如 deepseek-flash', 'sakurairo'),
             ],
 
         ]

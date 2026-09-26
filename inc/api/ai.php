@@ -23,6 +23,70 @@ function iro_ai_rest_models(WP_REST_Request $request): WP_REST_Response
     ]);
 }
 
+/* ---------- 系统配置 ---------- */
+
+// 面板可编辑的三个设置项，GET 读取、POST 保存
+function iro_ai_rest_settings(WP_REST_Request $request)
+{
+    return $request->get_method() === 'POST'
+        ? iro_ai_save_settings($request)
+        : rest_ensure_response(iro_ai_settings_payload());
+}
+
+function iro_ai_settings_payload(): array
+{
+    return [
+        'ai_api_base' => iro_ai_api_base(),
+        'ai_api_key'  => trim((string) iro_opt('ai_api_key', '')),
+        'ai_model'    => trim((string) iro_opt('ai_model', '')),
+        // Key 可能来自常量/环境变量，面板据此提示是否可用
+        'configured'  => iro_ai_api_key() !== '',
+    ];
+}
+
+// 只接受白名单内的字段，逐个清洗后写回 iro_options
+function iro_ai_save_settings(WP_REST_Request $request)
+{
+    $fields = [
+        'ai_api_base' => static fn($value): string => esc_url_raw(trim((string) $value)),
+        'ai_api_key'  => static fn($value): string => sanitize_text_field(trim((string) $value)),
+        'ai_model'    => static fn($value): string => sanitize_text_field(trim((string) $value)),
+    ];
+
+    $base_changed = false;
+
+    foreach ($fields as $option => $sanitize) {
+        if (!$request->has_param($option)) {
+            continue;
+        }
+
+        $value = $sanitize($request->get_param($option));
+
+        if ($option === 'ai_api_base' && $value !== '' && !wp_http_validate_url($value)) {
+            return new WP_Error(
+                'iro_ai_invalid_api_base',
+                __('接口地址不是有效的 URL。', 'sakurairo'),
+                ['status' => 400]
+            );
+        }
+
+        if ($option !== 'ai_model' && $value !== trim((string) iro_opt($option, ''))) {
+            $base_changed = true;
+        }
+
+        iro_opt_update($option, $value);
+    }
+
+    // iro_opt() 读的是请求开始时载入的旧数组，保存后从数据库重新载入
+    $GLOBALS['iro_options'] = get_option('iro_options');
+
+    if ($base_changed) {
+        delete_transient('iro_ai_models_cache');
+    }
+
+    return rest_ensure_response(iro_ai_settings_payload());
+}
+
 // 测试对话，messages 为 OpenAI 风格消息数组
 function iro_ai_rest_chat(WP_REST_Request $request)
 {
