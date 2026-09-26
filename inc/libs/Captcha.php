@@ -248,7 +248,7 @@ class IroCaptcha
             return [
                 'stat' => false,
                 'data' => '',
-                'msg'  => __('Look like you forgot to enter the captcha.', 'sakurairo'),
+                'msg'  => __('你貌似没有填写验证码。', 'sakurairo'),
             ];
         }
 
@@ -262,7 +262,7 @@ class IroCaptcha
             return [
                 'stat' => false,
                 'data' => '',
-                'msg'  => __('Bad Request.', 'sakurairo'),
+                'msg'  => __('处理错误。', 'sakurairo'),
             ];
         }
 
@@ -274,7 +274,7 @@ class IroCaptcha
             return [
                 'stat' => false,
                 'data' => '',
-                'msg'  => __('Captcha timeout.', 'sakurairo'),
+                'msg'  => __('验证码已过期。', 'sakurairo'),
             ];
         }
 
@@ -286,14 +286,14 @@ class IroCaptcha
             return [
                 'stat' => true,
                 'data' => '',
-                'msg'  => __('Captcha check passed.', 'sakurairo'),
+                'msg'  => __('验证码查验失败。', 'sakurairo'),
             ];
         }
 
         return [
             'stat' => false,
             'data' => '',
-            'msg'  => __('Captcha incorrect.', 'sakurairo'),
+            'msg'  => __('验证码不正确。', 'sakurairo'),
         ];
     }
 }

@@ -7,7 +7,7 @@ function iro_action_operator()
     }
 
     if (!is_admin() || !current_user_can('manage_options')) {
-        echo __("Access denied.", "sakurairo");
+        echo __("拒绝访问。", "sakurairo");
         return;
     }
 

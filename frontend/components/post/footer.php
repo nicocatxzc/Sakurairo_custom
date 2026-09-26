@@ -18,7 +18,7 @@ $reward = iro_opt('article_author_reward', []);
             href="https://creativecommons.org/<?= $license === 'cc0' ? 'publicdomain/zero/1.0' : 'licenses/' . $license_variant . '/4.0' ?>/deed.<?= get_user_locale() ?>"
             target="_blank"
             rel="nofollow"
-            title="<?= esc_attr(sprintf(__('This article is licensed under %s', 'sakurairo'), $license_name)) ?>">
+            title="<?= esc_attr(sprintf(__('本文采用 %s 协议授权', 'sakurairo'), $license_name)) ?>">
             <i class="fa-brands fa-creative-commons"></i>
             <?php foreach (explode('-', $license_variant) as $variant): ?>
                 <i class="fa-brands fa-creative-commons-<?= $variant ?>"></i>
@@ -84,13 +84,13 @@ $reward = iro_opt('article_author_reward', []);
 
     <?php if (iro_opt('article_author_quote', true)): ?>
         <div class="desc flex-center">
-            <i class="fa-icon-solid fa-feather" aria-hidden="true"></i><?= esc_html(get_the_author_meta('description') ?: __('This author has not provided a description.', 'sakurairo')) ?>
+            <i class="fa-icon-solid fa-feather" aria-hidden="true"></i><?= esc_html(get_the_author_meta('description') ?: __('这个作者没有留下自述。', 'sakurairo')) ?>
         </div>
     <?php endif; ?>
 
     <?php if (iro_opt('article_modified_time', false)): ?>
         <div class="post-modified-time flex-center">
-            <i class="fa-icon-solid fa-calendar-day" aria-hidden="true"></i><?= esc_html__('Last updated on ', 'sakurairo') . get_the_modified_time('Y-m-d') ?>
+            <i class="fa-icon-solid fa-calendar-day" aria-hidden="true"></i><?= esc_html__('最后更新于', 'sakurairo') . get_the_modified_time('Y-m-d') ?>
         </div>
     <?php endif; ?>
 
