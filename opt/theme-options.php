@@ -27,7 +27,7 @@ if (class_exists('Sakurairo_CSF')) {
 
             [
                 'type'    => 'content',
-                'content' => __('<img src="https://fuukei-api.nyat.icu/api/sponsors"  alt="Sponsor" width="100%" height="100%" />', 'sakurairo'),
+                'content' => __('<img src="https://fuukei-api.nyat.icu/api/sponsors"  alt="赞助者" width="100%" height="100%" />', 'sakurairo'),
             ],
 
         ]
@@ -105,16 +105,16 @@ if (class_exists('Sakurairo_CSF')) {
             // [
             //     'id' => 'extract_theme_skin_from_cover',
             //     'type' => 'switcher',
-            //     'title' => __('Extract Theme Color from Cover Image', 'sakurairo'),
-            //     'label' => __('Default on, Following options will be used as fallback (while cover image cannot be read by scripts)', 'sakurairo'),
+            //     'title' => __('从封面图提取主题色', 'sakurairo'),
+            //     'label' => __('默认开启，以下选项将作为兜底（当封面图无法被脚本读取时）', 'sakurairo'),
             //     'default' => true
             // ],
 
             // [
             //     'id' => 'extract_article_highlight_from_feature',
             //     'type' => 'switcher',
-            //     'title' => __('Extract Article Highlight from Featured Image', 'sakurairo'),
-            //     'label' => __('Default on, The colors displayed on the article page will be taken from the article featured image', 'sakurairo'),
+            //     'title' => __('从特色图片提取文章强调色', 'sakurairo'),
+            //     'label' => __('默认开启，文章页展示的颜色将取自文章特色图片', 'sakurairo'),
             //     'default' => true
             // ],
 
@@ -255,9 +255,9 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'type'    => 'content',
                 'content' => __(
-                    '<p><strong>Client local time:</strong>Dark mode will switch on automatically from 22:00 to 7:00</p>'
-                        . '<p><strong>Follow client settings:</strong>Follow client browser settings</p>'
-                        . '<p><strong>Always on:</strong>Always on, except being configured by the client</p>',
+                    '<p><strong>跟随客户端本地时间：</strong>每天 22:00 至次日 7:00 自动开启深色模式</p>'
+                        . '<p><strong>跟随客户端设置：</strong>遵循客户端浏览器的设置</p>'
+                        . '<p><strong>始终开启：</strong>始终开启，客户端设置除外</p>',
                     'sakurairo'
                 ),
                 'dependency' => ['theme_darkmode_auto', '==', 'true', '', 'true'],
@@ -299,7 +299,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'     => 'global_font_weight',
                 'type'   => 'slider',
                 'title'  => __('非强调文本字重', 'sakurairo'),
-                'desc'   => __('Slide to adjust, the recommended value range is 300-500', 'sakurairo'),
+                'desc'   => __('拖动滑块调整，推荐取值范围为 300-500', 'sakurairo'),
                 'step'   => '10',
                 'min'   => '100',
                 'max'   => '1000',
@@ -633,9 +633,9 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'type' => 'content',
                 'dependency' => ['footer_hitokoto_select', '!=', 'off', '', 'true'],
-                'content' => __('<h4>Hitokoto API Setup Instructions</h4>'
-                    . ' <p>Fill in as the example:<code> ["https://v1.hitokoto.cn/", "https://v1.hitokoto.cn/"]</code>, where the first API will be used first and the next ones will be the backup. </p>'
-                    . ' <p><strong>Official API:</strong> See the <a href="https://developer.hitokoto.cn/sentence/"> documentation</a> for how to use it, and the parameter "return code" should not be anything except JSON. <a href="https://v1.hitokoto.cn/">https://v1.hitokoto.cn/</a></p>', 'sakurairo'),
+                'content' => __('<h4>一言 API 填写说明</h4>'
+                    . ' <p>按示例填写：<code> ["https://v1.hitokoto.cn/", "https://v1.hitokoto.cn/"]</code>，其中第一个 API 会被优先使用，后面的作为备用。</p>'
+                    . ' <p><strong>官方 API：</strong>使用方法见<a href="https://developer.hitokoto.cn/sentence/">文档</a>，其中「返回格式」参数除 JSON 外不要填其他值。<a href="https://v1.hitokoto.cn/">https://v1.hitokoto.cn/</a></p>', 'sakurairo'),
             ],
 
             [
@@ -749,9 +749,9 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'pjax_keep_loading',
                 'type' => 'textarea',
-                'title' => __('Resources that still need refreshing in the footer after enabling PJAX', 'sakurairo'),
+                'title' => __('开启 PJAX 后仍需在页脚刷新的资源', 'sakurairo'),
                 'dependency' => ['pjax', '==', 'true', '', 'true'],
-                'desc' => __('After enabling PJAX, custom content in the footer will not be refreshed on page navigation. You can specify paths for JavaScript and stylesheet resources that need to be reloaded on each page in the footer here, one per line. These resources will be reloaded once PJAX completes content loading.', 'sakurairo'),
+                'desc' => __('开启 PJAX 后，页脚中的自定义内容在页面跳转时不会刷新。可以在这里指定每次跳转都需要重新加载的 JavaScript 与样式表资源路径，一行一个。PJAX 完成内容加载后，这些资源会被重新加载一次。', 'sakurairo'),
             ],
 
             [
@@ -1167,21 +1167,21 @@ if (class_exists('Sakurairo_CSF')) {
                         'options' => [
                             'qq' => __('QQ', 'sakurairo'),
                             'wechat' => __('微信', 'sakurairo'),
-                            'bilibili' => __('bilibili', 'sakurairo'),
+                            'bilibili' => __('哔哩哔哩', 'sakurairo'),
                             'netease_music' => __('网易云音乐', 'sakurairo'),
                             'sina' => __('新浪', 'sakurairo'),
                             'github' => __('Github', 'sakurairo'),
                             'telegram' => __('Telegram', 'sakurairo'),
                             'steam' => __('Steam', 'sakurairo'),
                             'youtube' => __('Youtube', 'sakurairo'),
-                            'instgram' => __('instgram', 'sakurairo'),
+                            'instgram' => __('Instagram', 'sakurairo'),
                             'tiktok' => __('抖音', 'sakurairo'),
                             'xiaohongshu' => __('小红书', 'sakurairo'),
                             'discord' => __('Discord', 'sakurairo'),
                             'zhihu' => __('知乎', 'sakurairo'),
                             'linkedin' => __('领英', 'sakurairo'),
                             'twitter' => __('推特/X', 'sakurairo'),
-                            'facebook' => __('facebook', 'sakurairo'),
+                            'facebook' => __('Facebook', 'sakurairo'),
                             'email' => __('邮箱', 'sakurairo'),
                             'custom' => __('自定义', 'sakurairo'),
                         ],
@@ -1221,7 +1221,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'homepage_components',
                 "type" => "select",
                 "title" => __("首页布局", "sakurairo_csf"),
-                'desc' => __('Select the homepage components you want to display. They will appear in the order above.', 'sakurairo'),
+                'desc' => __('选择你想要展示的首页组件，它们会按上方列表的顺序显示。', 'sakurairo'),
                 "chosen" => true,
                 "multiple" => true,
                 "sortable" => true,
@@ -1236,8 +1236,8 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id'          => 'homepage_static_page_id',
                 'type'        => 'select',
-                'title'       => __('Static Page', 'sakurairo'),
-                'placeholder' => __('Select a page', 'sakurairo'),
+                'title'       => __('静态页面', 'sakurairo'),
+                'placeholder' => __('选择一个页面', 'sakurairo'),
                 'chosen'      => true,
                 'options'     => 'pages',
                 'dependency'  => ['homepage_components', 'any', 'static_page', '', 'true'],
@@ -1713,7 +1713,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'comment_submit_button_text',
                 'type' => 'text',
                 'title' => __('评论区提交按钮文本', 'sakurairo'),
-                'default' => __('Submit✈️', 'sakurairo')
+                'default' => __('提交✈️', 'sakurairo')
             ],
 
             [
@@ -1728,7 +1728,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('选择要在评论区域输入框中显示的表情。全部取消选中可关闭评论区域输入框表情功能。', 'sakurairo'),
                 'multiple' => true,
                 'options'  => [
-                    'bilibili'   => __('bilibili', 'sakurairo'),
+                    'bilibili'   => __('哔哩哔哩', 'sakurairo'),
                     'tieba'   => __('贴吧', 'sakurairo'),
                     'yanwenzi' => __('颜文字', 'sakurairo'),
                     'custom' => __('自定义', 'sakurairo'),
@@ -1759,7 +1759,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('评论区验证码', 'sakurairo'),
                 'label' => __('开启后游客评论需要通过验证码验证', 'sakurairo'),
                 'options' => [
-                    'off' => __('Off', 'sakurairo'),
+                    'off' => __('关闭', 'sakurairo'),
                     'builtin' => __('主题内建验证码', 'sakurairo'),
                     'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
                 ],
@@ -1949,7 +1949,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'steam_key',
                 'type' => 'text',
                 'title' => __('Steam API 密钥', 'sakurairo'),
-                'desc' => __('Apply at https://steamcommunity.com/dev/apikey', 'sakurairo'),
+                'desc' => __('前往 https://steamcommunity.com/dev/apikey 申请', 'sakurairo'),
             ],
 
             [
@@ -1959,9 +1959,9 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('根据你的目标用户选择加载封面的CDN', 'sakurairo'),
                 'options' => [
                     'steamchina' => __('Steam China', 'sakurairo'),
-                    'steamakamai'  => __('Steam akamai', 'sakurairo'),
-                    'steamfastly'  => __('Steam fastly', 'sakurairo'),
-                    'steamcloudflare'  => __('Steam cloudflare', 'sakurairo'),
+                    'steamakamai'  => __('Steam Akamai', 'sakurairo'),
+                    'steamfastly'  => __('Steam Fastly', 'sakurairo'),
+                    'steamcloudflare'  => __('Steam Cloudflare', 'sakurairo'),
                 ],
                 'default'     => 'steamakamai'
             ],
@@ -1973,7 +1973,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('选择要跳转到的游戏商店链接', 'sakurairo'),
                 'options' => [
                     'steam' => __('Steam', 'sakurairo'),
-                    'xiaoheihe'  => __('XiaoHeiHe', 'sakurairo'),
+                    'xiaoheihe'  => __('小黑盒', 'sakurairo'),
                     'steamdb'  => __('SteamDB', 'sakurairo'),
                 ],
                 'default'     => 'steam'
@@ -2019,7 +2019,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'select',
                 'title' => __('登录页验证码', 'sakurairo'),
                 'options' => [
-                    'off' => __('Off', 'sakurairo'),
+                    'off' => __('关闭', 'sakurairo'),
                     'builtin' => __('主题内建验证码', 'sakurairo'),
                     'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
                 ],
@@ -2131,18 +2131,18 @@ if (class_exists('Sakurairo_CSF')) {
 
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'others',
-        'title' => __('Low Use Options', 'sakurairo'),
+        'title' => __('低使用选项', 'sakurairo'),
         'icon' => 'fa fa-low-vision',
         'fields' => [
 
             [
                 'id' => 'statistics_api',
                 'type' => 'radio',
-                'title' => __('Statistics API', 'sakurairo'),
-                'desc' => __('You can choose WP-Statistics plugin statistics or theme built-in statistics to display', 'sakurairo'),
+                'title' => __('统计接口', 'sakurairo'),
+                'desc' => __('可以选择使用 WP-Statistics 插件统计或主题内置统计来展示', 'sakurairo'),
                 'options' => [
-                    'theme_build_in' => __('Theme Built in Statistics', 'sakurairo'),
-                    'wp_statistics' => __('WP-Statistics Plugin Statistics', 'sakurairo'),
+                    'theme_build_in' => __('主题内置统计', 'sakurairo'),
+                    'wp_statistics' => __('WP-Statistics 插件统计', 'sakurairo'),
                 ],
                 'default' => 'theme_build_in'
             ],
@@ -2150,13 +2150,13 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'statistics_format',
                 'type' => 'select',
-                'title' => __('Statistics display format', 'sakurairo'),
-                'desc' => __('You can choose from four different data display formats', 'sakurairo'),
+                'title' => __('统计数据显示格式', 'sakurairo'),
+                'desc' => __('可以从四种不同的数据展示格式中选择', 'sakurairo'),
                 'options' => [
-                    'type_1' => __('23333 Visits', 'sakurairo'),
-                    'type_2' => __('23,333 Visits', 'sakurairo'),
-                    'type_3' => __('23 333 Visits', 'sakurairo'),
-                    'type_4' => __('23K Visits', 'sakurairo'),
+                    'type_1' => __('23333 次访问', 'sakurairo'),
+                    'type_2' => __('23,333 次访问', 'sakurairo'),
+                    'type_3' => __('23 333 次访问', 'sakurairo'),
+                    'type_4' => __('23K 次访问', 'sakurairo'),
                 ],
                 'default' => 'type_1'
             ],
@@ -2175,7 +2175,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('Gravatar服务代理', 'sakurairo'),
                 'desc' => __('你可以选择多种代理作为 Gravatar 服务代理。默认使用 Weavatar 作为 Gravatar 服务代理。', 'sakurairo'),
                 'options'     => [
-                    'weavatar.com/avatar'  => __('Weavatar Service', 'sakurairo'),
+                    'weavatar.com/avatar'  => __('Weavatar', 'sakurairo'),
                     'gravatar.loli.net/avatar'  => __('Loli Net', 'sakurairo'),
                     'gravatar.com/avatar'  => __('Gravatar官方', 'sakurairo'),
                     'custom_proxy_address_of_gravatar' => __('自定义代理地址', 'sakurairo'),
@@ -2186,24 +2186,24 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'custom_proxy_address_of_gravatar',
                 'type' => 'text',
-                'title' => __('Custom Proxy Address', 'sakurairo'),
-                'desc' => __('Enter your Gravatar proxy address without starting with "http(s)://" and ending with "/". Example: gravatar.com/avatar.', 'sakurairo'),
+                'title' => __('自定义代理地址', 'sakurairo'),
+                'desc' => __('填写你的 Gravatar 代理地址，不要以「http(s)://」开头，也不要以「/」结尾。例如：gravatar.com/avatar。', 'sakurairo'),
                 'dependency' => ['gravatar_proxy', '==', 'custom_proxy_address_of_gravatar', '', 'true'],
                 'default'     => 'gravatar.com/avatar'
             ],
 
             [
                 'type' => 'subheading',
-                'content' => __('Lightbox', 'sakurairo'),
+                'content' => __('灯箱', 'sakurairo'),
             ],
 
             [
                 'id' => 'lightbox',
                 'type' => 'select',
-                'title' => __('lightbox', 'sakurairo'),
+                'title' => __('灯箱效果', 'sakurairo'),
                 'desc' => __('请选择你需要使用的灯箱效果，wordpress在6.4后已正式支持灯箱效果，此处仅提供另一种可选的效果，其他的可以自行按需安装插件', 'sakurairo'),
                 'options'     => [
-                    'off'  => __('off', 'sakurairo'),
+                    'off'  => __('关闭', 'sakurairo'),
                     'medium_zoom'  => __('Medium Zoom', 'sakurairo'),
                 ],
                 'default'     => 'off'
@@ -2217,7 +2217,7 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'code_highlight_method',
                 'type' => 'select',
-                'title' => __('Code Highlight Method', 'sakurairo'),
+                'title' => __('代码高亮方式', 'sakurairo'),
                 'options' => [
                     'off' => __('关闭', 'sakurairo'),
                     'hljs' => 'highlight.js',
@@ -2337,6 +2337,13 @@ if (class_exists('Sakurairo_CSF')) {
         'fields'      => [
 
             [
+                'type'    => 'content',
+                'content' => __('<p>目前WordPress官方AI插件正在开发中，相关功能更加全面，在官方完成正式版的开发后主题相关功能也许会停止维护。</p>
+                <p>主题的AI实现完全对应WordPress的原生字段，即使后续移除了，你也不会丢失你所创作的内容</p>
+                <a href="https://wordpress/wp-admin/plugin-install.php?tab=plugin-information&amp;plugin=ai&amp;TB_iframe=true&amp;width=772&amp;height=789">点击查看</a>', 'sakurairo'),
+            ],
+
+            [
                 'id' => 'ai_api_base',
                 'type' => 'text',
                 'title' => __('接口地址', 'sakurairo'),
@@ -2347,7 +2354,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'ai_api_key',
                 'type' => 'text',
                 'attributes' => ['type' => 'password'],
-                'title' => __('API Key', 'sakurairo'),
+                'title' => __('API 密钥', 'sakurairo'),
                 'default' => '',
             ],
 
@@ -2362,7 +2369,7 @@ if (class_exists('Sakurairo_CSF')) {
     ]);
 
     Sakurairo_CSF::createSection($prefix, [
-        'title' => __('Backup&Recovery', 'sakurairo'),
+        'title' => __('备份与恢复', 'sakurairo'),
         'icon'        => 'fa fa-shield',
         'description' => __('备份或恢复你的主题设置', 'sakurairo'),
         'fields'      => [
@@ -2375,90 +2382,90 @@ if (class_exists('Sakurairo_CSF')) {
     ]);
 
     Sakurairo_CSF::createSection($prefix, [
-        'title' => __('About Theme', 'sakurairo'),
+        'title' => __('关于主题', 'sakurairo'),
         'icon'        => 'fa fa-paperclip',
         'fields'      => [
 
             [
                 'type'    => 'subheading',
-                'content' => __('Version Info', 'sakurairo'),
+                'content' => __('版本信息', 'sakurairo'),
             ],
 
             [
                 'type'    => 'content',
-                'content' => __('<img src="https://s.nmxc.ltd/sakurairo_vision/@3.0/series/headlogo.webp"  alt="Theme Information" />', 'sakurairo'),
+                'content' => __('<img src="https://s.nmxc.ltd/sakurairo_vision/@3.0/series/headlogo.webp"  alt="主题信息" />', 'sakurairo'),
             ],
 
             [
                 'type'    => 'submessage',
                 'style'   => 'normal',
-                'content' => sprintf(__('Theme Sakurairo Version %s | Internal Version %s | <a href="https://github.com/mirai-mamori/Sakurairo">Project Address</a>', 'sakurairo'), IRO_VERSION, INT_VERSION),
+                'content' => sprintf(__('Sakurairo 主题版本 %s | 内部版本 %s | <a href="https://github.com/mirai-mamori/Sakurairo">项目地址</a>', 'sakurairo'), IRO_VERSION, INT_VERSION),
             ],
 
             [
                 'type'    => 'subheading',
-                'content' => __('Update Related', 'sakurairo'),
+                'content' => __('更新相关', 'sakurairo'),
             ],
 
             [
                 'id'          => 'iro_update_source',
                 'type'        => 'image_select',
-                'title' => __('Theme Update Source', 'sakurairo'),
+                'title' => __('主题更新源', 'sakurairo'),
                 'options'     => [
                     'github'  => $vision_resource_basepath . 'options/update_source_github.webp',
                     'upyun'  => $vision_resource_basepath . 'options/update_source_wafpro.webp',
                     'official_building'  => $vision_resource_basepath . 'options/update_source_iro.webp',
                 ],
-                'desc' => __('If you are using a server set up in mainland China, please use the Upyun source or the official theme source as your theme update source', 'sakurairo'),
+                'desc' => __('如果你使用中国大陆境内的服务器，请使用又拍云源或主题官方源作为主题更新源', 'sakurairo'),
                 'default'     => 'github'
             ],
 
             [
                 'id' => 'channel_validate_value',
                 'type' => 'text',
-                'title' => __('Theme Update Test Channel Disclaimer', 'sakurairo'),
+                'title' => __('主题更新测试通道免责声明', 'sakurairo'),
                 'dependency' => ['iro_update_source', '==', 'official_building'],
-                'desc' => __('Please copy the text in quotes after <strong>ensure that you have carefully understood the risks associated with participating in the test and are willing to assume all consequences at your own risk</strong> (including but not limited to possible data loss) into the options text box <strong> "I agree and am willing to bear all unexpected consequences"</strong>', 'sakurairo'),
+                'desc' => __('请将 <strong>确保你已经充分了解参与测试的风险，并愿意自行承担一切后果</strong>（包括但不限于可能的数据丢失）之后引号中的文字复制到选项文本框中：<strong>「我同意并愿意承担一切意外后果」</strong>', 'sakurairo'),
             ],
 
             [
                 'id' => 'iro_update_channel',
                 'type' => 'radio',
-                'title' => __('Theme Update Channel', 'sakurairo'),
+                'title' => __('主题更新通道', 'sakurairo'),
                 'dependency' => [
                     ['channel_validate_value', '==', 'I agree and am willing to bear all unexpected consequences'],
                     ['iro_update_source', '==', 'official_building'],
                 ],
-                'desc' => __('You can toggle the update channel here to participate in the testing of the new version', 'sakurairo'),
+                'desc' => __('可以在这里切换更新通道，以参与新版本的测试', 'sakurairo'),
                 'options' => [
-                    'stable' => __('Stable Channel', 'sakurairo'),
-                    'beta' => __('Beta Channel', 'sakurairo'),
-                    'preview' => __('Preview Channel', 'sakurairo'),
+                    'stable' => __('稳定版通道', 'sakurairo'),
+                    'beta' => __('测试版通道', 'sakurairo'),
+                    'preview' => __('预览版通道', 'sakurairo'),
                 ],
                 'default' => 'stable'
             ],
 
             [
                 'type' => 'subheading',
-                'content' => __('Resource Control', 'sakurairo'),
+                'content' => __('资源控制', 'sakurairo'),
             ],
 
             [
                 'id' => 'vision_resource_basepath',
                 'type' => 'text',
-                'title' => __('Vision Resource Basepath', 'sakurairo'),
-                'desc' => __('This link directory structure needs to be consistent with the <a href="https://github.com/Fuukei/Sakurairo_Vision">Sakurairo Vision</a> repositories officially provided by fuukei, otherwise some resources 404 may appear. The image source officially provided by <a href="https://waf.pro/">WAFPRO</a> is adopted by default.', 'sakurairo'),
+                'title' => __('静态资源基础路径', 'sakurairo'),
+                'desc' => __('该链接的目录结构需要与 fuukei 官方提供的 <a href="https://github.com/Fuukei/Sakurairo_Vision">Sakurairo Vision</a> 仓库保持一致，否则部分资源可能会出现 404。默认采用 <a href="https://waf.pro/">WAFPRO</a> 官方提供的图源。', 'sakurairo'),
                 'default' => "https://s.nmxc.ltd/sakurairo_vision/@3.0/"
             ],
 
             [
                 'type' => 'subheading',
-                'content' => __('Theme Contributors', 'sakurairo'),
+                'content' => __('主题贡献者', 'sakurairo'),
             ],
 
             [
                 'type'    => 'content',
-                'content' => __('<img src="https://fuukei-api.nyat.icu/api/contributors" alt="Theme Contributors" width="100%" height="100%" />', 'sakurairo'),
+                'content' => __('<img src="https://fuukei-api.nyat.icu/api/contributors" alt="主题贡献者" width="100%" height="100%" />', 'sakurairo'),
             ],
 
             [
@@ -2476,8 +2483,8 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'send_theme_version',
                 'type' => 'switcher',
-                'title' => __('Send Theme Version to Fuukei', 'sakurairo'),
-                'label' => __('The theme will only send time and version information to Fuukei officials and the data will be cleaned regularly and used only to count version updates.', 'sakurairo'),
+                'title' => __('向 Fuukei 发送主题版本', 'sakurairo'),
+                'label' => __('主题只会向 Fuukei 官方发送时间与版本信息，数据会被定期清理，且仅用于统计版本更新情况。', 'sakurairo'),
                 'default' => false
             ],
 
@@ -2488,8 +2495,8 @@ if (class_exists('Sakurairo_CSF')) {
 
             [
                 'type'    => 'content',
-                'content' => __('<p>Fluent Design Icon Referenced by Paradox Fluent Icon Pack</p>
-        <p>MUH2 Design Icon Referenced by 缄默 <a href="https://www.coolapk.com/apk/com.muh2.icon">MUH2 Icon Pack</a></p>', 'sakurairo'),
+                'content' => __('<p>Fluent Design 图标参考自 Paradox Fluent Icon Pack</p>
+        <p>MUH2 Design 图标参考自缄默的 <a href="https://www.coolapk.com/apk/com.muh2.icon">MUH2 Icon Pack</a></p>', 'sakurairo'),
             ],
 
             [
@@ -2499,14 +2506,14 @@ if (class_exists('Sakurairo_CSF')) {
 
             [
                 'type'    => 'content',
-                'content' => __('<p>Options Framework Relies on the Codestar Open Source <a href="https://github.com/Codestar/codestar-framework">Codestar Framework</a> Project</p>
-        <p>Update Function Relies on YahnisElsts Open Source <a href="https://github.com/YahnisElsts/plugin-update-checker">Plugin Update Checker</a> Project</p>
-        <p>Visual Editor Related Functions Relies on Themeum Open Source <a href="https://github.com/themeum/kirki">Kirki</a> Project</p>', 'sakurairo'),
+                'content' => __('<p>选项框架依赖 Codestar 开源的 <a href="https://github.com/Codestar/codestar-framework">Codestar Framework</a> 项目</p>
+        <p>更新功能依赖 YahnisElsts 开源的 <a href="https://github.com/YahnisElsts/plugin-update-checker">Plugin Update Checker</a> 项目</p>
+        <p>可视化编辑器相关功能依赖 Themeum 开源的 <a href="https://github.com/themeum/kirki">Kirki</a> 项目</p>', 'sakurairo'),
             ],
 
             [
                 'type'    => 'content',
-                'content' => __('<img src="https://img.shields.io/github/v/release/mirai-mamori/Sakurairo.svg?style=flat-square"  alt="Theme latest version" style="border-radius: 3px;" />  <img src="https://img.shields.io/github/release-date/mirai-mamori/Sakurairo?style=flat-square"  alt="Theme latest version release date" style="border-radius: 3px;" />  <img src="https://data.jsdelivr.com/v1/package/gh/mirai-mamori/Sakurairo/badge"  alt="Theme CDN resource access" style="border-radius: 3px;" />', 'sakurairo'),
+                'content' => __('<img src="https://img.shields.io/github/v/release/mirai-mamori/Sakurairo.svg?style=flat-square"  alt="主题最新版本" style="border-radius: 3px;" />  <img src="https://img.shields.io/github/release-date/mirai-mamori/Sakurairo?style=flat-square"  alt="主题最新版本发布日期" style="border-radius: 3px;" />  <img src="https://data.jsdelivr.com/v1/package/gh/mirai-mamori/Sakurairo/badge"  alt="主题 CDN 资源访问量" style="border-radius: 3px;" />', 'sakurairo'),
             ],
 
         ]
