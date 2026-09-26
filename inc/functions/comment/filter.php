@@ -76,7 +76,7 @@ function iro_comment_filter_content(string $content, bool $enable_markdown)
         if (preg_match($pattern, $content)) {
             return new WP_Error(
                 'comment_content_invalid',
-                __("For security reasons, JavaScript is not allowed in comments.", 'sakurairo'),
+                __("评论中不允许使用Javascript。.", 'sakurairo'),
                 array('status' => 403)
             );
         }

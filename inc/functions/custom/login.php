@@ -220,7 +220,7 @@ function iro_login_captcha_validate()
 
         if (!$id || !$code) {
             return iro_login_captcha_error(
-                __('Captcha verification required.', 'sakurairo')
+                __('请填写验证码。', 'sakurairo')
             );
         }
 
@@ -251,7 +251,7 @@ function iro_login_captcha_validate()
 
         if (!$token) {
             return iro_login_captcha_error(
-                __('Captcha verification required.', 'sakurairo')
+                __('请填写验证码。', 'sakurairo')
             );
         }
 

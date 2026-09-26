@@ -9,7 +9,7 @@ if (!function_exists('akina_setup')) {
         // 注册导航菜单
         register_nav_menus(
             array(
-                'primary' => __('Nav Menus', 'sakurairo'), //导航菜单
+                'primary' => __('导航栏', 'sakurairo'), //导航菜单
             )
         );
 

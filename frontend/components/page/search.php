@@ -92,7 +92,7 @@ $search_filters = iro_get_search_type_filters();
         <!-- 筛选器部分 -->
         <div id="filter-container">
             <div class="filter-count">
-                <?= $wp_query->found_posts ?> <?= __('results found', 'sakurairo'); ?>
+                <?= $wp_query->found_posts ?> <?= __('个结果', 'sakurairo'); ?>
             </div>
 
             <div id="search-filter-form" action="" method="GET">

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sakurairo\n"
-"POT-Creation-Date: 2026-09-27 00:59+0800\n"
-"PO-Revision-Date: 2026-09-27 01:00+0800\n"
+"POT-Creation-Date: 2026-09-27 01:11+0800\n"
+"PO-Revision-Date: 2026-09-27 01:12+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -205,8 +205,8 @@ msgid "搜索"
 msgstr ""
 
 #: frontend/components/page/search.php:95
-msgid "results found"
-msgstr "件の結果"
+msgid "个结果"
+msgstr ""
 
 #: frontend/components/page/template/archive.php:20
 #: frontend/components/post/card/simple.php:18
@@ -367,10 +367,8 @@ msgstr ""
 
 #: inc/api/comments.php:48 inc/api/comments.php:53
 #: inc/functions/custom/login.php:223 inc/functions/custom/login.php:254
-#, fuzzy
-#| msgid "Security verification failed."
-msgid "Captcha verification required."
-msgstr "セキュリティ検証に失敗しました。"
+msgid "请填写验证码。"
+msgstr ""
 
 #: inc/api/comments.php:72 inc/api/comments.php:78 inc/api/comments.php:98
 #: inc/api/comments.php:104 inc/functions/custom/login.php:186
@@ -463,7 +461,7 @@ msgid "你是一位专业的编辑，输出的标题简洁、准确，不使用�
 msgstr ""
 
 #: inc/functions/comment/filter.php:79
-msgid "For security reasons, JavaScript is not allowed in comments."
+msgid "评论中不允许使用Javascript。."
 msgstr ""
 
 #: inc/functions/cust_wp.php:31 inc/functions/cust_wp.php:34
@@ -474,141 +472,131 @@ msgstr "ダッシュボード"
 msgid "验证码配置错误，请联系管理员。"
 msgstr ""
 
-#: inc/functions/nav_bar.php:12 opt/customizer/init.php:324
-#: opt/theme-options.php:342
+#: inc/functions/nav_bar.php:12 inc/theme_init/support.php:12
+#: opt/customizer/init.php:324 opt/theme-options.php:342
 msgid "导航栏"
 msgstr ""
 
 #: inc/functions/operator.php:10
-msgid "Access denied."
-msgstr "アクセス拒否"
+msgid "拒绝访问。"
+msgstr ""
 
 #: inc/libs/Captcha.php:251
-msgid "Look like you forgot to enter the captcha."
-msgstr "キャプチャを入力するのを忘れたようです。"
+msgid "你貌似没有填写验证码。"
+msgstr ""
 
 #: inc/libs/Captcha.php:265
-msgid "Bad Request."
-msgstr "要求が正しくありません。"
+msgid "处理错误。"
+msgstr ""
 
 #: inc/libs/Captcha.php:277
-msgid "Captcha timeout."
-msgstr "キャプチャのタイムアウト。"
+msgid "验证码已过期。"
+msgstr ""
 
 #: inc/libs/Captcha.php:289
-msgid "Captcha check passed."
-msgstr "キャプチャ チェックに合格しました。"
+msgid "验证码查验失败。"
+msgstr ""
 
 #: inc/libs/Captcha.php:296
-msgid "Captcha incorrect."
-msgstr "キャプチャが正しくありません。"
+msgid "验证码不正确。"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:5
 msgctxt "post type general name"
-msgid "Shuoshuo"
-msgstr "ツイート"
+msgid "说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:6
 msgctxt "post type singular name"
-msgid "Shuoshuo"
-msgstr "ツイート"
+msgid "说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:7
 msgctxt "admin menu"
-msgid "Shuoshuo"
-msgstr "ツイート"
+msgid "说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:8
 msgctxt "add new on admin bar"
-msgid "Shuoshuo"
-msgstr "ツイート"
+msgid "说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:9
 msgctxt "shuoshuo"
-msgid "Add New"
-msgstr "新規追加"
+msgid "新建"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:10
-msgid "Add New Shuoshuo"
-msgstr "新しいツイートを追加"
+msgid "新建说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:11
-msgid "New Shuoshuo"
-msgstr "新しいツイート"
+msgid "新说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:12
-msgid "Edit Shuoshuo"
-msgstr "ツイートを編集"
+msgid "编辑说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:13
-msgid "View Shuoshuo"
-msgstr "ツイートを見る"
+msgid "查看说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:14
-msgid "All Shuoshuo"
-msgstr "すべてのツイート"
+msgid "所有说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:15
-msgid "Search Shuoshuo"
-msgstr "ツイートを検索"
+msgid "搜索说说"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:16
-msgid "Parent Shuoshuo:"
-msgstr "ペアレントツイート"
+msgid "父级说说："
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:17
-msgid "No shuoshuo found."
-msgstr "ツイートは見つからなかった。"
+msgid "未找到说说。"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:18
-msgid "No shuoshuo found in Trash."
-msgstr "ゴミ箱にツイートは見つからなかった。"
+msgid "回收站中未找到说说。"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:67
-msgid "Emotion Meta Box"
-msgstr "エモーションメタボックス"
+msgid "情绪选项"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:81
-msgid "Emotion"
-msgstr "エモーション"
+msgid "情绪图标"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:84
-msgid "Emotion Color"
-msgstr "エモーションカラー"
+msgid "情绪颜色"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:87
 msgid ""
-"For the Emotion, please fill in the Unicode value of the Fontawesome icon, "
-"and for the Emotion Color, please fill in the RGBA or hexadecimal color."
+"情绪图标请填写 FontAwesome 图标的 Unicode 值，情绪颜色请填写 RGBA 或十六进制"
+"颜色值。"
 msgstr ""
-"エモーションには、Fontawesome アイコンの Unicode 値を、エモーションカラーに"
-"は、RGBA または 16 進数の色を記入してください。"
 
 #: inc/theme_init/shuoshuo.php:135
-msgid "Custom Meta Box"
-msgstr "カスタム・メタ・ボックス"
+msgid "自定义选项"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:149
-msgid "Title Style"
-msgstr "タイトル・スタイル"
+msgid "标题样式"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:152
-msgid "License"
-msgstr "ライセンス"
+msgid "许可协议"
+msgstr ""
 
 #: inc/theme_init/shuoshuo.php:155
 msgid ""
-"For the Title Style, Please fill in the css style, part of the style need to "
-"add !important effective, and for the License, please go to Theme Options to "
-"learn how to set it up."
+"标题样式请填写 CSS 样式，部分样式需要加 !important 才能生效；许可协议请前往主"
+"题设置查看设置方法。"
 msgstr ""
-"タイトルのスタイルについては、cssスタイルに記入してください。スタイルの一部に"
-"は、!important effectiveを追加する必要があります。ライセンスについては、テー"
-"マオプションで設定方法をご確認ください。"
-
-#: inc/theme_init/support.php:12
-msgid "Nav Menus"
-msgstr "メニュー"
 
 #: inc/theme_init/support.php:170
 #, fuzzy
@@ -2830,6 +2818,117 @@ msgid ""
 "package/gh/mirai-mamori/Sakurairo/badge\"  alt=\"主题 CDN 资源访问量\" "
 "style=\"border-radius: 3px;\" />"
 msgstr ""
+
+#~ msgid "Nav Menus"
+#~ msgstr "メニュー"
+
+#~ msgid "results found"
+#~ msgstr "件の結果"
+
+#, fuzzy
+#~| msgid "Security verification failed."
+#~ msgid "Captcha verification required."
+#~ msgstr "セキュリティ検証に失敗しました。"
+
+#~ msgid "Access denied."
+#~ msgstr "アクセス拒否"
+
+#~ msgid "Look like you forgot to enter the captcha."
+#~ msgstr "キャプチャを入力するのを忘れたようです。"
+
+#~ msgid "Bad Request."
+#~ msgstr "要求が正しくありません。"
+
+#~ msgid "Captcha timeout."
+#~ msgstr "キャプチャのタイムアウト。"
+
+#~ msgid "Captcha check passed."
+#~ msgstr "キャプチャ チェックに合格しました。"
+
+#~ msgid "Captcha incorrect."
+#~ msgstr "キャプチャが正しくありません。"
+
+#~ msgctxt "post type general name"
+#~ msgid "Shuoshuo"
+#~ msgstr "ツイート"
+
+#~ msgctxt "post type singular name"
+#~ msgid "Shuoshuo"
+#~ msgstr "ツイート"
+
+#~ msgctxt "admin menu"
+#~ msgid "Shuoshuo"
+#~ msgstr "ツイート"
+
+#~ msgctxt "add new on admin bar"
+#~ msgid "Shuoshuo"
+#~ msgstr "ツイート"
+
+#~ msgctxt "shuoshuo"
+#~ msgid "Add New"
+#~ msgstr "新規追加"
+
+#~ msgid "Add New Shuoshuo"
+#~ msgstr "新しいツイートを追加"
+
+#~ msgid "New Shuoshuo"
+#~ msgstr "新しいツイート"
+
+#~ msgid "Edit Shuoshuo"
+#~ msgstr "ツイートを編集"
+
+#~ msgid "View Shuoshuo"
+#~ msgstr "ツイートを見る"
+
+#~ msgid "All Shuoshuo"
+#~ msgstr "すべてのツイート"
+
+#~ msgid "Search Shuoshuo"
+#~ msgstr "ツイートを検索"
+
+#~ msgid "Parent Shuoshuo:"
+#~ msgstr "ペアレントツイート"
+
+#~ msgid "No shuoshuo found."
+#~ msgstr "ツイートは見つからなかった。"
+
+#~ msgid "No shuoshuo found in Trash."
+#~ msgstr "ゴミ箱にツイートは見つからなかった。"
+
+#~ msgid "Emotion Meta Box"
+#~ msgstr "エモーションメタボックス"
+
+#~ msgid "Emotion"
+#~ msgstr "エモーション"
+
+#~ msgid "Emotion Color"
+#~ msgstr "エモーションカラー"
+
+#~ msgid ""
+#~ "For the Emotion, please fill in the Unicode value of the Fontawesome "
+#~ "icon, and for the Emotion Color, please fill in the RGBA or hexadecimal "
+#~ "color."
+#~ msgstr ""
+#~ "エモーションには、Fontawesome アイコンの Unicode 値を、エモーションカラー"
+#~ "には、RGBA または 16 進数の色を記入してください。"
+
+#~ msgid "Custom Meta Box"
+#~ msgstr "カスタム・メタ・ボックス"
+
+#~ msgid "Title Style"
+#~ msgstr "タイトル・スタイル"
+
+#~ msgid "License"
+#~ msgstr "ライセンス"
+
+#~ msgid ""
+#~ "For the Title Style, Please fill in the css style, part of the style need "
+#~ "to add !important effective, and for the License, please go to Theme "
+#~ "Options to learn how to set it up."
+#~ msgstr ""
+#~ "タイトルのスタイルについては、cssスタイルに記入してください。スタイルの一"
+#~ "部には、!important effectiveを追加する必要があります。ライセンスについて"
+#~ "は、テーマオプションで設定方法をご確認ください。"
 
 #, php-format
 #~ msgid "This article is licensed under %s"

@@ -45,12 +45,12 @@ function iro_rest_comment_captcha_check(
         if (!$id || !$captchaCode) {
             return new WP_Error(
                 'captcha_required',
-                __('Captcha verification required.', 'sakurairo'),
+                __('请填写验证码。', 'sakurairo'),
                 [
                     'status' => 400,
                     'code'   => 5,
                     'data'   => '',
-                    'msg'    => __('Captcha verification required.', 'sakurairo'),
+                    'msg'    => __('请填写验证码。', 'sakurairo'),
                 ]
             );
         }
