@@ -41,11 +41,11 @@ $bangumi_pagination = $bangumi_response->get_data()["pagination"];
                             <?= $item["name"] ?>
                         </h3>
                         <div class="anime-publish-date">
-                            上映日期：<?= $item["date"] ?>
+                            <?= __("上映日期：","sakurairo") ?><?= $item["date"] ?>
                         </div>
                         <?php if ($item["progress"] != ""): ?>
                             <div class="bangumi-status">
-                                <p class="status-desc">观看进度：</p>
+                                <p class="status-desc"> <?= __("观看进度：","sakurairo") ?></p>
                                 <div class="progress"
                                     style="--progress:<?= $item["progress"] ?>%;">
                                     <div class="progress-bar" data-progress="<?= esc_attr($item['progress']) ?>%"></div>

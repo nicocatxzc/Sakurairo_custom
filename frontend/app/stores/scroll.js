@@ -1,4 +1,4 @@
-import bus from '../bus'
+import bus from "../bus";
 import { throttle } from "lodash-es";
 
 export const emitter = bus;

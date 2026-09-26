@@ -99,8 +99,8 @@ if ($current_category) {
                         </div>
                     </div>
                     <div class="fav-desc">
-                        <span class="desc" title="<?= $item["intro"] ?? "暂无简介" ?>">
-                            <?= $item["intro"] ?? "暂无简介" ?>
+                        <span class="desc" title="<?= $item["intro"] ??  __("暂无简介","sakurairo") ?>">
+                            <?= $item["intro"] ??  __("暂无简介","sakurairo") ?>
                         </span>
                     </div>
                 </a>

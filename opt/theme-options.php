@@ -1989,6 +1989,44 @@ if (class_exists('Sakurairo_CSF')) {
 
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'others',
+        'title' => __('AI 配置', 'sakurairo'),
+        'icon'        => 'fa fa-magic',
+        'fields'      => [
+
+            [
+                'type'    => 'content',
+                'content' => __('<p>目前WordPress官方AI插件正在开发中，相关功能更加全面，在官方完成正式版的开发后主题相关功能也许会停止维护。</p>
+                <p>主题的AI实现完全对应WordPress的原生字段，即使后续移除了，你也不会丢失你所创作的内容</p>
+                <a href="https://wordpress/wp-admin/plugin-install.php?tab=plugin-information&amp;plugin=ai&amp;TB_iframe=true&amp;width=772&amp;height=789">点击查看</a>', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'ai_api_base',
+                'type' => 'text',
+                'title' => __('接口地址', 'sakurairo'),
+                'desc' => __('OpenAI 兼容接口的 Base URL，主题会自动追加 /chat/completions', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'ai_api_key',
+                'type' => 'text',
+                'attributes' => ['type' => 'password'],
+                'title' => __('API 密钥', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'ai_model',
+                'type' => 'text',
+                'title' => __('模型名称', 'sakurairo'),
+                'desc' => __('例如 deepseek-flash', 'sakurairo'),
+            ],
+
+        ]
+    ]);
+
+    Sakurairo_CSF::createSection($prefix, [
+        'parent' => 'others',
         'title' => __('主题定制', 'sakurairo'),
         'icon' => 'fa fa-sign-in',
         'fields' => [
@@ -2327,44 +2365,6 @@ if (class_exists('Sakurairo_CSF')) {
                 "default" => "normal",
                 'desc' => __('建议设置为“只显示严重错误”来防止不影响使用的php日志渲染到前端', 'sakurairo'),
             ],
-        ]
-    ]);
-
-    Sakurairo_CSF::createSection($prefix, [
-        'parent' => 'others',
-        'title' => __('AI 摘要', 'sakurairo'),
-        'icon'        => 'fa fa-magic',
-        'fields'      => [
-
-            [
-                'type'    => 'content',
-                'content' => __('<p>目前WordPress官方AI插件正在开发中，相关功能更加全面，在官方完成正式版的开发后主题相关功能也许会停止维护。</p>
-                <p>主题的AI实现完全对应WordPress的原生字段，即使后续移除了，你也不会丢失你所创作的内容</p>
-                <a href="https://wordpress/wp-admin/plugin-install.php?tab=plugin-information&amp;plugin=ai&amp;TB_iframe=true&amp;width=772&amp;height=789">点击查看</a>', 'sakurairo'),
-            ],
-
-            [
-                'id' => 'ai_api_base',
-                'type' => 'text',
-                'title' => __('接口地址', 'sakurairo'),
-                'desc' => __('OpenAI 兼容接口的 Base URL，主题会自动追加 /chat/completions', 'sakurairo'),
-            ],
-
-            [
-                'id' => 'ai_api_key',
-                'type' => 'text',
-                'attributes' => ['type' => 'password'],
-                'title' => __('API 密钥', 'sakurairo'),
-                'default' => '',
-            ],
-
-            [
-                'id' => 'ai_model',
-                'type' => 'text',
-                'title' => __('模型名称', 'sakurairo'),
-                'desc' => __('例如 deepseek-flash', 'sakurairo'),
-            ],
-
         ]
     ]);
 

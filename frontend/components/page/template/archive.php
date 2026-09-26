@@ -17,7 +17,7 @@ $archive_posts = get_posts([
                     <?= esc_html(get_the_title($post)) ?>
                 </a>
                 <time datetime="<?= esc_attr($post->post_date_gmt) ?>">
-                    <?= esc_html(get_the_date('Y年n月j日', $post)) ?>
+                    <?= esc_html(get_the_date('Y' . __("年", "sakurairo") . 'n' . __("月", "sakurairo") . 'j' . __("日", "sakurairo") . '', $post)) ?>
                 </time>
             </li>
         <?php endforeach; ?>
