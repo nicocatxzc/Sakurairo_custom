@@ -22,8 +22,11 @@
         --widget-shadow-shine-color: rgb(232, 232, 232);
         --widget-shadow-shining-color: rgb(232, 232, 232);
         --widget-shadow-shadow-color: rgba(0, 0, 0, 0.1);
+        /* shining 的几何与颜色分开定义：颜色可能在卡片上被内联覆盖，
+           组合式必须写在卡片自身才会用卡片的颜色重新求值，详见 components/post/index.scss */
+        --widget-shadow-shining-geometry: 0 0.1rem 1.8rem 0.7rem;
         --widget-shadow-shine: 0 0.1rem 1.8rem -0.25rem var(--widget-shadow-shine-color);
-        --widget-shadow-shining: 0 0.1rem 1.8rem 0.7rem var(--widget-shadow-shining-color);
+        --widget-shadow-shining: var(--widget-shadow-shining-geometry) var(--widget-shadow-shining-color);
         --widget-shadow-shadow: 0 0.3rem 1rem var(--widget-shadow-shadow-color);
 
         --border-color-sketch: 0, 0, 0;
@@ -78,8 +81,9 @@
         --widget-shadow-shine-color: rgba(26, 26, 26, 0.8);
         --widget-shadow-shining-color: var(--active-color);
         --widget-shadow-shadow-color: rgba(0, 0, 0, 0.2);
+        --widget-shadow-shining-geometry: 0 0.1rem 2rem -0.25rem;
         --widget-shadow-shine: 0 0.1rem 1.2rem -0.25rem var(--widget-shadow-shine-color);
-        --widget-shadow-shining: 0 0.1rem 2rem -0.25rem var(--widget-shadow-shining-color);
+        --widget-shadow-shining: var(--widget-shadow-shining-geometry) var(--widget-shadow-shining-color);
         --widget-shadow-shadow: 0 0.3rem 1rem var(--widget-shadow-shadow-color);
 
         --border-color-sketch: rgba(255, 255, 255, 0.1);

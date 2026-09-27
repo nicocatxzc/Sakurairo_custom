@@ -1,8 +1,8 @@
-import { getColorSync } from "colorthief";
+import { getPaletteSync } from "colorthief";
 
 /**
  * 取色后需要覆盖的 CSS 变量。
- * --border-color-shine 存的是 rgb 分量，--widget-shadow-shine-color 存的是完整颜色。
+ * --border-color-sketch 存的是 rgb 分量，--widget-shadow-shining-color 存的是完整颜色。
  */
 export const THEME_COLOR_VARS = [
     "--active-color",
@@ -53,16 +53,44 @@ async function fetchObjectUrl(url) {
     return URL.createObjectURL(await response.blob());
 }
 
+// HSL 取色区间：亮度、饱和度，优先取区间内占比最高的颜色
+const LIGHTNESS_RANGE = [20, 100];
+const SATURATION_RANGE = [5, 90];
+const PALETTE_SIZE = 20;
+
+/** 颜色到目标区间的 HSL 距离，0 表示落在区间内 */
+function distanceToRange(color) {
+    const { s, l } = color.hsl();
+    const dLightness =
+        l < LIGHTNESS_RANGE[0] ? LIGHTNESS_RANGE[0] - l : l > LIGHTNESS_RANGE[1] ? l - LIGHTNESS_RANGE[1] : 0;
+    const dSaturation =
+        s < SATURATION_RANGE[0] ? SATURATION_RANGE[0] - s : s > SATURATION_RANGE[1] ? s - SATURATION_RANGE[1] : 0;
+    return dLightness + dSaturation;
+}
+
+// ColorThief 只能按最低饱和度（HSV）粗筛像素，亮度、饱和度上限需在取完色板后自行过滤
 function pickColor(image) {
     try {
-        return getColorSync(image);
+        const palette = getPaletteSync(image, {
+            colorCount: PALETTE_SIZE,
+            minSaturation: SATURATION_RANGE[0] / 100,
+        });
+        if (!palette || palette.length === 0) {
+            return null;
+        }
+        const candidates = palette.filter((color) => distanceToRange(color) === 0);
+        if (candidates.length > 0) {
+            return candidates.reduce((best, color) => (color.population > best.population ? color : best));
+        }
+        // 整张图都没有落在区间内的颜色时，退而取最接近区间的颜色
+        return palette.reduce((best, color) => (distanceToRange(color) < distanceToRange(best) ? color : best));
     } catch (error) {
-        console.warn("[iro] 图片取色失败", error);
+        console.warn("图片取色失败", error);
         return null;
     }
 }
 
-/** 把主色写入目标元素（默认根元素）的内联 CSS 变量 */
+/** 把主色写入目标元素的内联 CSS 变量 */
 export function applyExtractedColor(color, target = document.documentElement) {
     if (!color || !target) {
         return;
@@ -98,7 +126,7 @@ export async function extractColorFromImageElement(image) {
             await waitForImage(image);
             return pickColor(image);
         } catch (error) {
-            console.warn("[iro] 图片取色失败", error);
+            console.warn("图片取色失败", error);
             return null;
         }
     }
@@ -110,7 +138,7 @@ export async function extractColorFromImageElement(image) {
         await waitForImage(image);
         return pickColor(image);
     } catch (error) {
-        console.warn("[iro] 跨域图片取色失败，沿用兜底色", error);
+        console.warn("跨域图片取色失败，沿用兜底色", error);
         if (objectUrl) {
             URL.revokeObjectURL(objectUrl);
         }
@@ -134,7 +162,7 @@ export async function loadColorFromUrl(url) {
         await waitForImage(image);
         return { color: pickColor(image), objectUrl };
     } catch (error) {
-        console.warn("[iro] 封面取色失败，沿用兜底色", error);
+        console.warn("封面取色失败，沿用兜底色", error);
         if (objectUrl) {
             URL.revokeObjectURL(objectUrl);
         }

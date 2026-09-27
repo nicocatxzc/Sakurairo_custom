@@ -7,3 +7,9 @@
 @use "./footer.scss";
 @use "./navigator.scss";
 @use "./hljs.scss";
+// 取色时会在卡片上内联覆盖 --widget-shadow-shining-color，
+// 但 --widget-shadow-shining 在 :root 已把颜色代入并随继承固定下来，
+// 因此要在卡片自身重新组合，hover 光晕才会跟随该卡片的主色。
+.post-card {
+    --widget-shadow-shining: var(--widget-shadow-shining-geometry) var(--widget-shadow-shining-color);
+}

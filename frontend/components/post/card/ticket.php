@@ -1,26 +1,19 @@
 <article class="post-card post-card-ticket">
     <div class="post-thumb">
         <a href="<?= esc_url(get_permalink()) ?>">
-            <?php if (has_post_thumbnail()) : ?>
-                <img
-                    src="<?= iro_media_optimize_image_url(esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large'))) ?>"
-                    alt="<?= esc_attr(sprintf('featured image for post %s', get_the_title())) ?>"
-                    loading="lazy">
-            <?php else : ?>
-                <img
-                    src="<?= iro_media_optimize_image_url(esc_url(get_template_directory_uri() . '/assets/images/default-thumb.jpg')) ?>"
-                    alt="<?= esc_attr(sprintf('default image for post %s', get_the_title())) ?>"
-                    loading="lazy">
-            <?php endif; ?>
+            <img
+                src="<?= has_post_thumbnail() ? iro_media_optimize_image_url(esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large'))) : DEFAULT_FEATURE_IMAGE() ?>"
+                alt="<?= esc_attr(sprintf('featured image for post %s', get_the_title())) ?>"
+                loading="lazy">
         </a>
     </div>
 
     <div class="post-date">
         <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
-            <?= __("更新于：",'sakurairo') ?><?= get_the_modified_date('Y' . __("年", "sakurairo") . 'm' . __("月", "sakurairo") . 'd' . __("日", 'sakurairo')) ?>
+            <?= __("更新于：", 'sakurairo') ?><?= get_the_modified_date('Y' . __("年", "sakurairo") . 'm' . __("月", "sakurairo") . 'd' . __("日", 'sakurairo')) ?>
         </time>
         <?php if (is_sticky()) : ?>
-            <div class="sticky">&#x2605;&#xFE0E;<?= __("置顶",'sakurairo') ?></div>
+            <div class="sticky">&#x2605;&#xFE0E;<?= __("置顶", 'sakurairo') ?></div>
         <?php endif; ?>
     </div>
 
@@ -48,7 +41,7 @@
                     <?php else : ?>
                         <span>
                             <i class="fa-icon-solid fa-folder-open"></i>
-                            <?= __("未分类",'sakurairo') ?>
+                            <?= __("未分类", 'sakurairo') ?>
                         </span>
                     <?php endif; ?>
                     <?php break; ?>
@@ -79,4 +72,3 @@
         <span><?= esc_html(wp_trim_words(get_the_excerpt(), 120, '...')) ?></span>
     </div>
 </article>
-
