@@ -34,9 +34,19 @@ function classicPagination(
             // 会导致swup混乱
             // history.pushState({}, "", link.href);
 
-            replaceTarget.scrollIntoView({
+            // 固定导航栏会遮住目标顶部，滚动时减去其高度
+            const headerHeight = Math.max(
+                0,
+                ...[...document.querySelectorAll(".site-header")].map(
+                    (header) => header.getBoundingClientRect().height,
+                ),
+            );
+            window.scrollTo({
+                top:
+                    replaceTarget.getBoundingClientRect().top +
+                    window.scrollY -
+                    headerHeight,
                 behavior: "smooth",
-                block: "start",
             });
         } catch (err) {
             console.error("翻页失败:", err);
