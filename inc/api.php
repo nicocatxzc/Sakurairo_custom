@@ -326,4 +326,25 @@ add_action('rest_api_init', function () {
             'permission_callback' => 'iro_rest_check_permission',
         )
     );
+
+    // 页脚播放器
+    require_once get_template_directory() . '/inc/api/player.php';
+    register_rest_route(
+        'sakura/v1',
+        '/player/playlist',
+        array(
+            'methods' => 'GET',
+            'callback' => 'footer_player_rest_playlist',
+            'permission_callback' => 'iro_rest_check_nonce',
+        )
+    );
+    register_rest_route(
+        'sakura/v1',
+        '/player/meting',
+        array(
+            'methods' => 'GET',
+            'callback' => 'footer_player_rest_meting',
+            'permission_callback' => '__return_true',
+        )
+    );
 });

@@ -1,0 +1,74 @@
+// 页脚悬浮播放器：APlayer 自带样式之上补足旧主题的定位与外观覆盖
+#aplayer-float.aplayer.aplayer-fixed {
+    margin: 0;
+    background: rgba(255, 255, 255, 1);
+    z-index: 1001;
+
+    .aplayer-list {
+        max-height: 40vh;
+    }
+
+    // 迷你态贴左隐藏，hover 时滑入预览
+    .aplayer-body.ap-hover {
+        left: -66px !important;
+    }
+
+    .aplayer-body.ap-hover:hover {
+        left: 0 !important;
+    }
+
+    .aplayer-info
+        .aplayer-controller
+        .aplayer-bar-wrap
+        .aplayer-bar
+        .aplayer-played
+        .aplayer-thumb {
+        width: 12px;
+        height: 12px;
+        right: 3px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.18);
+    }
+
+    .aplayer-info
+        .aplayer-controller
+        .aplayer-volume-wrap
+        .aplayer-volume-bar-wrap
+        .aplayer-volume-bar,
+    .aplayer-info
+        .aplayer-controller
+        .aplayer-volume-wrap
+        .aplayer-volume-bar-wrap
+        .aplayer-volume-bar
+        .aplayer-volume {
+        width: 6px;
+        border-radius: 10px;
+    }
+
+    .aplayer-info
+        .aplayer-controller
+        .aplayer-volume-wrap
+        .aplayer-volume-bar-wrap
+        .aplayer-volume-bar {
+        right: 10.5px;
+    }
+
+    .aplayer-lrc {
+        pointer-events: none;
+    }
+
+    .aplayer-lrc-current {
+        color: var(--theme-skin-matching);
+        font-size: 15px;
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 768px) {
+    #aplayer-float.aplayer.aplayer-fixed {
+        bottom: env(safe-area-inset-bottom, 0);
+
+        .aplayer-list {
+            max-height: 50vh;
+        }
+    }
+}

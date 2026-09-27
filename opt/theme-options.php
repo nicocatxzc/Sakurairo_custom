@@ -653,6 +653,142 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('一行一句，尽量不要出现特殊字符。', 'sakurairo'),
             ],
 
+            [
+                'type' => 'subheading',
+                'content' => __('播放器', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'footer_player_mode',
+                'type' => 'select',
+                'title' => __('页脚播放器', 'sakurairo'),
+                'desc' => __('开启后页脚出现悬浮播放器。歌单由服务端解析，前端只接收接口地址；非同源音频、封面、歌词会经由服务端代理，避免跨域被拦截。', 'sakurairo'),
+                'options' => [
+                    'off' => __('关闭', 'sakurairo'),
+                    'netease' => __('网易云（内置 Meting）', 'sakurairo'),
+                    'custom' => __('自定义 API', 'sakurairo'),
+                    'static' => __('静态歌单', 'sakurairo'),
+                ],
+                'default' => 'off',
+            ],
+
+            [
+                'id' => 'footer_player_netease_playlist',
+                'type' => 'text',
+                'title' => __('网易云歌单 ID', 'sakurairo'),
+                'dependency' => ['footer_player_mode', '==', 'netease', '', 'true'],
+                'desc' => __('例如 https://music.163.com/#/playlist?id=5380675133 中的 5380675133', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'footer_player_netease_cookie',
+                'type' => 'textarea',
+                'title' => __('网易云 Cookie', 'sakurairo'),
+                'dependency' => ['footer_player_mode', '==', 'netease', '', 'true'],
+                'desc' => __('播放 VIP 歌曲时需要填写账号 Cookie，留空则仅能解析普通歌曲。', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'footer_player_custom_api',
+                'type' => 'text',
+                'title' => __('自定义 API 地址', 'sakurairo'),
+                'dependency' => ['footer_player_mode', '==', 'custom', '', 'true'],
+                'desc' => __('返回歌单 JSON 的接口地址。支持 {data:[...]}、{songs:[...]} 或直接数组，字段兼容 name/title、artist/author、url/src、cover/pic、lrc/lyric。', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'footer_player_auto_scan',
+                'type' => 'switcher',
+                'title' => __('自动扫描上传目录', 'sakurairo'),
+                'desc' => __('自动收录 wp-content/uploads/ 中所有带封面的音乐，结果带缓存。', 'sakurairo'),
+                'dependency' => ['footer_player_mode', '==', 'static', '', 'true'],
+                'default' => false,
+            ],
+
+            [
+                'type' => 'content',
+                'dependency' => ['footer_player_mode', '==', 'static', '', 'true'],
+                'content' => sprintf(
+                    __('<p>点击<a href="%s" target="_blank" rel="noopener">这里</a>在新窗口执行手动扫描，把当前找到的带封面音乐追加进下方列表。扫描结果以音频地址去重。</p>', 'sakurairo'),
+                    esc_url(admin_url('admin.php?iro_act=player_scan'))
+                ),
+            ],
+
+            [
+                'id' => 'footer_player_order',
+                'type' => 'select',
+                'title' => __('播放顺序', 'sakurairo'),
+                'options' => [
+                    'list' => __('列表', 'sakurairo'),
+                    'random' => __('随机', 'sakurairo'),
+                ],
+                'default' => 'list',
+            ],
+
+            [
+                'id' => 'footer_player_preload',
+                'type' => 'select',
+                'title' => __('预加载', 'sakurairo'),
+                'options' => [
+                    'none' => __('不预加载', 'sakurairo'),
+                    'metadata' => __('预加载元数据', 'sakurairo'),
+                    'auto' => __('自动', 'sakurairo'),
+                ],
+                'default' => 'metadata',
+            ],
+
+            [
+                'id' => 'footer_player_volume',
+                'type' => 'slider',
+                'title' => __('默认音量', 'sakurairo'),
+                'step' => '0.01',
+                'max' => '1',
+                'min' => '0',
+                'default' => '0.5',
+            ],
+
+            [
+                'id' => 'footer_player_static',
+                'type' => 'repeater',
+                'title' => __('静态歌单', 'sakurairo'),
+                'dependency' => ['footer_player_mode', '==', 'static', '', 'true'],
+                'button_title' => __('添加歌曲', 'sakurairo'),
+                'desc' => __('手动维护歌曲列表，音频地址为必填。', 'sakurairo'),
+                'fields' => [
+                    [
+                        'id' => 'name',
+                        'type' => 'text',
+                        'title' => __('名称', 'sakurairo'),
+                    ],
+                    [
+                        'id' => 'artist',
+                        'type' => 'text',
+                        'title' => __('艺术家', 'sakurairo'),
+                    ],
+                    [
+                        'id' => 'url',
+                        'type' => 'text',
+                        'title' => __('音频地址', 'sakurairo'),
+                    ],
+                    [
+                        'id' => 'cover',
+                        'type' => 'text',
+                        'title' => __('封面地址', 'sakurairo'),
+                    ],
+                    [
+                        'id' => 'lrc',
+                        'type' => 'text',
+                        'title' => __('歌词地址', 'sakurairo'),
+                    ],
+                    [
+                        'id' => 'type',
+                        'type' => 'text',
+                        'title' => __('类型', 'sakurairo'),
+                        'desc' => __('如 mp3、flac，留空则按扩展名判断。', 'sakurairo'),
+                    ],
+                ],
+            ],
+
         ]
     ]);
 

@@ -4,3 +4,4 @@ import "./captcha/captcha";
 import "./search_form";
 import "./progress_bar";
 import "./hitokoto";
+import "./player";

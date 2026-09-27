@@ -44,6 +44,51 @@ function iro_action_operator()
             $direct_url = rest_url('sakura/v1/meting/aplayer') . '?_wpnonce=' . wp_create_nonce('wp_rest') . '&server=' . (iro_opt('aplayer_server') ?: 'netease') . '&type=playlist&id=' . (iro_opt('aplayer_playlistid') ?: '5380675133');
             header("Location: $direct_url", true, 302);
             break;
+
+        case 'player_scan':
+            $scanned = footer_player_scan_uploads();
+            $existing = iro_opt('footer_player_static');
+            if (!is_array($existing)) {
+                $existing = [];
+            }
+
+            $seen = [];
+            foreach ($existing as $item) {
+                if (is_array($item) && isset($item['url'])) {
+                    $seen[(string) $item['url']] = true;
+                }
+            }
+
+            $added = 0;
+            $added_names = [];
+            foreach ($scanned as $item) {
+                if (!is_array($item) || empty($item['url']) || isset($seen[(string) $item['url']])) {
+                    continue;
+                }
+                $existing[] = $item;
+                $seen[(string) $item['url']] = true;
+                $added++;
+                $added_names[] = isset($item['name']) && $item['name'] !== '' ? (string) $item['name'] : (string) $item['url'];
+            }
+
+            iro_opt_update('footer_player_static', $existing);
+            /* 手动扫描后让自动扫描缓存立即失效 */
+            delete_transient('iro_player_uploads_scan_10M');
+            delete_transient('iro_player_uploads_scan_30D');
+
+            /* 设置页是前端路由，跳转回去没有意义；直接在打开的窗口里打印结果 */
+            echo '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>' . esc_html__('上传目录扫描结果', 'sakurairo') . '</title></head><body>';
+            echo '<p>' . sprintf(esc_html__('扫描完成：本次新增 %d 首，上传目录共发现 %d 首带封面的音乐。', 'sakurairo'), $added, count($scanned)) . '</p>';
+            if ($added_names !== []) {
+                echo '<ul>';
+                foreach ($added_names as $name) {
+                    echo '<li>' . esc_html($name) . '</li>';
+                }
+                echo '</ul>';
+            }
+            echo '</body></html>';
+            exit;
+
         case 'smtp_test':
             if (!iro_opt('smtp_switch')) {
                 echo esc_html__('主题 SMTP 选项尚未开启，请先启用后再发送测试邮件。', 'sakurairo');

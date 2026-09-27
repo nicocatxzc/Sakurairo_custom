@@ -22,6 +22,8 @@ const VENDOR_GROUPS = [
     // 不单独拆出来会被 element-plus 一起卷进入口静态链，让 element-plus 失去懒加载
     ["vendor-lodash", ["lodash-es"]],
     ["vendor-swup", ["swup"]],
+    // aplayer 只在页脚播放器里按需加载，单独成 chunk，避免被 vendor-misc 卷入首屏静态链
+    ["vendor-aplayer", ["aplayer"]],
 ];
 
 // pnpm 的真实路径是 node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>/...

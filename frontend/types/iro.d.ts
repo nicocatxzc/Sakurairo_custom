@@ -37,6 +37,16 @@ interface IroParticleBuiltin {
     [key: string]: unknown;
 }
 
+/** 页脚播放器前端配置，对应 theme_config.php 的 player 字段 */
+interface IroPlayerConfig {
+    enabled?: boolean;
+    playlist?: string;
+    order?: "list" | "random";
+    preload?: "none" | "metadata" | "auto";
+    volume?: number;
+    theme?: string;
+}
+
 /** 对应 theme_config.php 中 #iro_theme_config 的输出，供收紧 config 类型时使用 */
 interface IroThemeConfig {
     language?: string;
@@ -65,6 +75,7 @@ interface IroThemeConfig {
     post_cover_as_background?: boolean;
     cover_random_pic_url_pc?: string;
     cover_random_pic_url_mb?: string;
+    player?: IroPlayerConfig | null;
     [key: string]: unknown;
 }
 
