@@ -18,11 +18,14 @@ function comment_mail_notify($comment_id)
 
     // 获取评论的审核状态，如果评论无需审核则直接发送
     $comment_approved = $comment->comment_approved;
-    $admin_notify = (isset(get_comment($parent_id)->comment_author_email) && get_comment($parent_id)->comment_author_email) != get_bloginfo('admin_email') ? '1' : '0';
+    // 被回复评论的作者邮箱；父评论不存在或邮箱为空则没有投递目标
+    $parent_comment = $parent_id != '' ? get_comment($parent_id) : null;
+    $parent_author_email = $parent_comment ? trim((string) $parent_comment->comment_author_email) : '';
 
-    if (($parent_id != '') && ($comment_approved === '1' || $comment_approved === 1) && ($admin_notify != '0')) {
+    // 始终发送回复通知：只要求评论已通过审核，且父级评论有可用邮箱
+    if (($parent_id != '') && ($comment_approved === '1' || $comment_approved === 1) && is_email($parent_author_email)) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
-        $to = trim(get_comment($parent_id)->comment_author_email);
+        $to = $parent_author_email;
 
         // 主题主色调
         $theme_color = iro_opt('active_color') ?: '#FE9600';
@@ -150,7 +153,9 @@ function comment_mail_notify($comment_id)
         wp_mail($to, $subject, $message, $headers);
     }
 }
-add_action('comment_post', 'comment_mail_notify');
+// REST（wp/v2/comments）直接调用 wp_insert_comment，不会触发 comment_post；
+// 挂到 wp_insert_comment 上即可同时覆盖 wp-comment 与 wp-json 两条提交路径
+add_action('wp_insert_comment', 'comment_mail_notify', 10, 1);
 
 /*
  * 评论通过审核时发送通知
