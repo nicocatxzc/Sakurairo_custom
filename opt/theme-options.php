@@ -1765,6 +1765,14 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'comment_mail_notify',
+                'type' => 'switcher',
+                'title' => __('评论邮件通知', 'sakurairo_csf'),
+                'label' => __('开启后由主题发送评论回复通知，用户可选择是否接收；关闭后主题不介入，仅保留 WordPress 默认通知。', 'sakurairo_csf'),
+                'default' => false
+            ],
+
+            [
                 'type'    => 'subheading',
                 'content' => __('自定义表情包', 'sakurairo'),
             ],

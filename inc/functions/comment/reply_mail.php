@@ -1,17 +1,30 @@
 <?php
-//评论回复
+// 评论回复通知：仅在主题开关开启时介入，关闭时完全交回 WordPress 默认通知
+add_action('comment_post', 'sakura_comment_notify');
+
 function sakura_comment_notify($comment_id)
 {
-    if (!isset($_POST['mail-notify'])) {
-        update_comment_meta($comment_id, 'mail_notify', 'false');
+    if (!iro_opt('comment_mail_notify', false)) {
+        return;
     }
+
+    // 登录用户不展示勾选框，保持默认接收
+    if (is_user_logged_in()) {
+        return;
+    }
+
+    update_comment_meta($comment_id, 'mail_notify', isset($_POST['mail-notify']) ? 'true' : 'false');
 }
-add_action('comment_post', 'sakura_comment_notify');
 /*
  * 评论邮件回复
  */
 function comment_mail_notify($comment_id)
 {
+    // 主题开关关闭时不介入，仅保留 WordPress 默认通知
+    if (!iro_opt('comment_mail_notify', false)) {
+        return;
+    }
+
     $mail_user_name = iro_opt('mail_user_name') ? iro_opt('mail_user_name') : 'no-reply';
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ?: '';
@@ -22,8 +35,13 @@ function comment_mail_notify($comment_id)
     $parent_comment = $parent_id != '' ? get_comment($parent_id) : null;
     $parent_author_email = $parent_comment ? trim((string) $parent_comment->comment_author_email) : '';
 
-    // 始终发送回复通知：只要求评论已通过审核，且父级评论有可用邮箱
-    if (($parent_id != '') && ($comment_approved === '1' || $comment_approved === 1) && is_email($parent_author_email)) {
+    // 主题开关开启时发送：评论已通过审核、父级评论有可用邮箱，且被回复者未选择拒收
+    if (
+        ($parent_id != '')
+        && ($comment_approved === '1' || $comment_approved === 1)
+        && is_email($parent_author_email)
+        && get_comment_meta($parent_id, 'mail_notify', true) !== 'false'
+    ) {
         $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
         $to = $parent_author_email;
 

@@ -114,16 +114,22 @@ $post_comment_args = iro_comment_form_data();
                 <?php endif; ?>
 
                 <!-- 其他字段 -->
-                <?php if (!is_user_logged_in()): ?>
-                    <div class="checks flex-center">
+                <div class="checks flex-center">
+                    <?php if (!is_user_logged_in()): ?>
                         <?php if (iro_opt("comment_captcha", "builtin") != "off"): ?>
                             <div class="captcha <?= iro_opt("comment_captcha", "builtin") ?>"></div>
+                        <?php endif; ?>
+                        <?php if (iro_opt("comment_mail_notify", false) == true): ?>
+                            <label class="comment-notify">
+                                <input type="checkbox" name="mail-notify">
+                                <?= __('回复邮件通知', 'sakurairo') ?>
+                            </label>
                         <?php endif; ?>
                         <?php foreach ($check_fields as $name => $field) : ?>
                             <?= $field ?>
                         <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
 
 
                 <!-- 其他附加字段 -->

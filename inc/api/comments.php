@@ -176,6 +176,46 @@ function iro_rest_comment_force_current_user($prepared_comment, WP_REST_Request 
     return $prepared_comment;
 }
 
+// 记录回复邮件通知勾选状态
+add_filter(
+    'rest_pre_insert_comment',
+    'iro_rest_comment_mail_notify_meta',
+    10,
+    2
+);
+
+/**
+ * 把评论表单里的 mail-notify 勾选写入评论 meta。
+ *
+ * REST 只接受注册过的参数，且 JSON body 不会填充 $_POST，
+ * 因此必须在 rest_pre_insert_comment 里显式读取请求参数。
+ * wp_insert_comment() 原生支持 comment_meta 字段，无需二次写入。
+ *
+ * @param array|WP_Error  $prepared_comment 待入库的评论数据。
+ * @param WP_REST_Request $request          当前请求。
+ * @return array|WP_Error
+ */
+function iro_rest_comment_mail_notify_meta($prepared_comment, WP_REST_Request $request)
+{
+    if (!is_array($prepared_comment) || '/wp/v2/comments' !== $request->get_route()) {
+        return $prepared_comment;
+    }
+
+    // 未开启选项
+    if (!iro_opt('comment_mail_notify', false)) {
+        return $prepared_comment;
+    }
+
+    // 登录用户不展示勾选框，保持默认接收
+    if (is_user_logged_in()) {
+        return $prepared_comment;
+    }
+
+    $prepared_comment['comment_meta']['mail_notify'] = $request->get_param('mail-notify') ? 'true' : 'false';
+
+    return $prepared_comment;
+}
+
 // ajax评论
 add_filter(
     'rest_prepare_comment',
