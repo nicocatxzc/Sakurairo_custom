@@ -2152,7 +2152,6 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'ai_api_key',
                 'type' => 'text',
-                'attributes' => ['type' => 'password'],
                 'title' => __('API 密钥', 'sakurairo'),
                 'default' => '',
             ],
@@ -2350,7 +2349,6 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id' => 'smtp_key',
                 'type' => 'text',
-                'attributes' => ['type' => 'password'],
                 'title' => __('smtp密钥', 'sakurairo'),
                 'default' => '',
             ],
