@@ -8,6 +8,8 @@ export const THEME_COLOR_VARS = [
     "--active-color",
     "--border-color-sketch",
     "--widget-shadow-shining-color",
+    // 复合阴影只在局部目标上由 applyExtractedColor 重新拼写，列在这里以便一并清除
+    "--widget-shadow-shining",
 ];
 
 function isSameOrigin(url) {
@@ -96,9 +98,27 @@ export function applyExtractedColor(color, target = document.documentElement) {
         return;
     }
     const [r, g, b] = color.array();
+    const rgbColor = `rgb(${r}, ${g}, ${b})`;
+
+    // --widget-shadow-shining 只在 :root 声明，颜色在 :root 就完成代入并随继承固定，
+    // 局部覆盖 --widget-shadow-shining-color 无法改变已继承的复合阴影。
+    // 因此非根目标要先读出继承到的几何，再用新颜色拼一份内联值覆盖。
+    let composedShadow = null;
+    if (target !== document.documentElement) {
+        const computed = getComputedStyle(target);
+        const inheritedShadow = computed.getPropertyValue("--widget-shadow-shining").trim();
+        const inheritedColor = computed.getPropertyValue("--widget-shadow-shining-color").trim();
+        if (inheritedShadow && inheritedColor && inheritedShadow.includes(inheritedColor)) {
+            composedShadow = inheritedShadow.replace(inheritedColor, rgbColor);
+        }
+    }
+
     target.style.setProperty("--active-color", color.hex());
     target.style.setProperty("--border-color-sketch", `${r}, ${g}, ${b}`);
-    target.style.setProperty("--widget-shadow-shining-color", `rgb(${r}, ${g}, ${b})`);
+    target.style.setProperty("--widget-shadow-shining-color", rgbColor);
+    if (composedShadow) {
+        target.style.setProperty("--widget-shadow-shining", composedShadow);
+    }
 }
 
 /** 移除目标元素上由取色写入的内联变量，恢复到样式表定义的兜底值 */
