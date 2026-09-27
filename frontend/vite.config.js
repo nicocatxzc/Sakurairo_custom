@@ -10,18 +10,16 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 // 只要「入口 chunk 被别的 chunk 反向引用」，浏览器就会把 app.js?ver=... 与 ./app.js 当成两个模块图，整包下载并执行两次。
 // 因此被多处共享的代码必须落在独立 chunk：这里只拆 package.json 里直接依赖的大件，
 // 链式依赖统一并入 vendor-misc。
+// 首屏一定会用到的运行时与网络层合并成 vendor-core：拆得太碎会产生大量几 KB 的往返请求，
+// 而它们几乎同时被入口用到。其余大件都是非首屏 / 按需加载，各自独立成 chunk，
+// 避免被并进 vendor-core 而重新绑上首屏静态链。
 const VENDOR_GROUPS = [
-    // @vue / @vueuse 与 vue 同属一套运行时，拆开会在 chunk 之间产生互相引用
+    ["vendor-core", ["axios", "axios-cache-interceptor", "swup", "lodash-es"]],
     ["vendor-vue", ["vue", "@vue", "@vueuse"]],
-    ["vendor-http", ["axios", "axios-cache-interceptor"]],
     ["vendor-particles", ["@tsparticles"]],
     ["vendor-highlight", ["highlight\\.js"]],
     ["vendor-markdown", ["markdown-it", "markdown-it-texmath", "katex"]],
     ["vendor-element", ["element-plus"]],
-    // element-plus 依赖 lodash-es，主题侧（throttle）也要用：
-    // 不单独拆出来会被 element-plus 一起卷进入口静态链，让 element-plus 失去懒加载
-    ["vendor-lodash", ["lodash-es"]],
-    ["vendor-swup", ["swup"]],
     // aplayer 只在页脚播放器里按需加载，单独成 chunk，避免被 vendor-misc 卷入首屏静态链
     ["vendor-aplayer", ["aplayer"]],
 ];
@@ -138,18 +136,30 @@ export default defineConfig(() => {
                     },
                     codeSplitting: {
                         groups: [
-                            ...VENDOR_GROUPS.map(([name, names], index) => ({
-                                name,
-                                test: pkgTest(names),
-                                priority: 100 - index,
-                            })),
+                            ...VENDOR_GROUPS.map(([name, names], index) => {
+                                const pkg = pkgTest(names);
+                                return {
+                                    name,
+                                    // Vite 注入的动态 import 预加载 helper（__vitePreload）没有真实模块 id 规律，
+                                    // 不显式接管时会被 Rolldown 随便塞进某个 vendor chunk（实测是 vendor-particles），
+                                    // 让入口静态 import 整个 tsparticles。这里把它并进首屏的 vendor-core。
+                                    test:
+                                        name === "vendor-core"
+                                            ? (id) =>
+                                                  pkg.test(id) ||
+                                                  id.includes(
+                                                      "vite/preload-helper",
+                                                  )
+                                            : pkg,
+                                    priority: 100 - index,
+                                };
+                            }),
                             // 主题侧共享运行时：动态 chunk（pjax / 滚动 / 阅读量 / 表情包 / 粒子插件）都要用 _iro 与 api，
-                            // 一旦留在入口 chunk 就会反向引用 app.js。message.js 保持独立以让 element-plus 维持懒加载。
+                            // 一旦留在入口 chunk 就会反向引用 app.js。message.js 内部再动态 import element-plus，仍保持懒加载。
                             {
                                 name: "iro-core",
                                 test: (id) =>
                                     id.includes("/frontend/app/") &&
-                                    !id.includes("/app/utils/message.js") &&
                                     !/\.s?css$/.test(id),
                                 priority: 60,
                             },

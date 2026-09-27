@@ -2,12 +2,39 @@ import { onClickOutside } from "@vueuse/core";
 import api from "../../app/utils/api";
 import LocalSearch from "../../app/utils/localsearch";
 
-_iro.hooks["DOMContentLoaded"].add(async () => {
+// 首次呼出后异步请求索引
+let searchIndex = null;
+let searchIndexPromise = null;
+function ensureSearchIndex() {
+    if (searchIndex) return Promise.resolve(searchIndex);
+    if (!searchIndexPromise) {
+        searchIndexPromise = (async () => {
+            try {
+                const { data } = await api.get(
+                    `${_iro.config.iro_api}/search_index`,
+                );
+                if (!data) return null;
+                searchIndex = await LocalSearch(data);
+                return searchIndex;
+            } catch (error) {
+                // 失败后允许下次呼出重试
+                searchIndexPromise = null;
+                return null;
+            }
+        })();
+    }
+    return searchIndexPromise;
+}
+
+_iro.hooks["DOMContentLoaded"].add(() => {
     const searchButton = document.querySelector(".site-header .button.search");
     if (searchButton) {
         const searchForm = document.querySelector(".search-model");
         searchButton.addEventListener("click", () => {
             searchForm.classList.toggle("show");
+            if (searchForm.classList.contains("show")) {
+                void ensureSearchIndex();
+            }
         });
         onClickOutside(
             searchForm,
@@ -33,27 +60,20 @@ _iro.hooks["DOMContentLoaded"].add(async () => {
 
         const searchList = searchForm.querySelector(".search-list");
         if (searchList) {
-            try {
-                const { data } = await api.get(
-                    `${_iro.config.iro_api}/search_index`,
-                );
-                if (data) {
-                    const index = await LocalSearch(data);
-                    searchInput.addEventListener("change", async () => {
-                        const result = await index.search(searchInput.value);
-                        console.log(result);
-                        let html = "";
-                        (result ?? []).forEach((post) => {
-                            html += renderSearchItem(
-                                post?.url,
-                                post?.title,
-                                post?.snip,
-                            );
-                        });
-                        searchList.querySelector(".post-list").innerHTML = html;
-                    });
-                }
-            } catch (error) {}
+            searchInput.addEventListener("change", async () => {
+                const index = await ensureSearchIndex();
+                if (!index) return;
+                const result = await index.search(searchInput.value);
+                let html = "";
+                (result ?? []).forEach((post) => {
+                    html += renderSearchItem(
+                        post?.url,
+                        post?.title,
+                        post?.snip,
+                    );
+                });
+                searchList.querySelector(".post-list").innerHTML = html;
+            });
         }
     }
 });

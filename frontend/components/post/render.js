@@ -1,12 +1,8 @@
-import mediumZoom from "medium-zoom";
-import "medium-zoom/dist/style.css";
-import hljs from "highlight.js";
-
 // 全局存储当前 zoom 实例
 let zoomInstance = null;
 
 // 初始化灯箱
-function initLightbox() {
+async function initLightbox() {
     // 销毁旧实例
     if (zoomInstance) {
         zoomInstance.detach();
@@ -35,8 +31,10 @@ function initLightbox() {
         }
     });
 
-    // 初始化 medium-zoom
+    // 初始化 medium-zoom（按需加载，避免首屏下载）
     if (images.length) {
+        const { default: mediumZoom } = await import("medium-zoom");
+        await import("medium-zoom/dist/style.css");
         zoomInstance = mediumZoom(images, {
             background: "rgba(0, 0, 0, 0.85)", // 深色背景
             margin: 24,
@@ -50,7 +48,7 @@ const COPY_ICON_SVG = /* html */ `
 `;
 
 // 处理pre标签
-function enhanceCodeBlock(pre) {
+function enhanceCodeBlock(pre, hljs) {
     // 防止重复处理
     if (pre.dataset.enhanced === "1") return;
     pre.dataset.enhanced = "1";
@@ -107,18 +105,23 @@ function enhanceCodeBlock(pre) {
     pre.insertBefore(button, pre.firstChild);
 }
 
-function initCodeHighlight() {
+async function initCodeHighlight() {
     const container = document.querySelector(".post-content");
     if (!container) return;
 
-    container.querySelectorAll("pre").forEach(enhanceCodeBlock);
+    const codeBlocks = container.querySelectorAll("pre");
+    if (!codeBlocks.length) return;
+
+    // highlight.js 全量包体积很大，只有页面上真的有代码块时才加载
+    const { default: hljs } = await import("highlight.js");
+    codeBlocks.forEach((pre) => enhanceCodeBlock(pre, hljs));
 }
 
 _iro.hooks.onPageLoaded(() => {
     if (_iro.config.lightbox == "medium_zoom") {
-        initLightbox();
+        void initLightbox();
     }
     if (_iro.config.code_highlight) {
-        initCodeHighlight();
+        void initCodeHighlight();
     }
 });

@@ -1,8 +1,8 @@
-import tocbot from "tocbot";
-
-_iro.hooks.onPageLoaded(() => {
+_iro.hooks.onPageLoaded(async () => {
     const toc = document.querySelector(".toc");
     if (toc) {
+        // tocbot 只在存在目录的文章页按需加载
+        const { default: tocbot } = await import("tocbot");
         tocbot.init({
             tocSelector: "#toc",
             contentSelector: ".post-content",

@@ -1,4 +1,3 @@
-import Typed from "typed.js";
 import {
     applyExtractedColor,
     clearExtractedColor,
@@ -91,7 +90,7 @@ async function applyArticleBackgroundColor() {
     }
 }
 
-_iro.hooks.onPageLoaded(() => {
+_iro.hooks.onPageLoaded(async () => {
     const cover = document.querySelector(".homepage-cover");
     const isHome = isHomePage();
     const config = _iro?.config ?? {};
@@ -140,7 +139,11 @@ _iro.hooks.onPageLoaded(() => {
         const typed_el = document.querySelector("#typed");
         if (typed_el) {
             typed_el.innerHTML = "";
-            typedInstance = new Typed(typed_el, config);
+            // typed.js 仅首页封面需要，按需加载
+            const { default: Typed } = await import("typed.js");
+            if (document.querySelector("#typed") === typed_el) {
+                typedInstance = new Typed(typed_el, config);
+            }
         }
     }
 

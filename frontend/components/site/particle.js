@@ -4,23 +4,25 @@ let tsParticles;
 let loadAll;
 _iro.hooks["DOMContentLoaded"].add(async () => {
     const particleContainer = document.querySelector("#particle");
-    if (particleContainer) {
-        if (!tsParticles) {
-            tsParticles = (await import("@tsparticles/engine")).tsParticles;
-            loadAll = (await import("@tsparticles/all")).loadAll;
-        }
-        const options = getConfig();
-        if (options?.particles) {
-            await loadAll(tsParticles);
-            const particle = await tsParticles.load({
-                id: "particle",
-                options,
-            });
-            return particle;
-        } else {
-            return {};
-        }
+    if (!particleContainer) {
+        return {};
     }
+
+    // 先读配置再决定是否加载：tsparticles 整包很大，select=off 时不应产生任何下载
+    const options = getConfig();
+    if (!options?.particles) {
+        return {};
+    }
+
+    if (!tsParticles) {
+        tsParticles = (await import("@tsparticles/engine")).tsParticles;
+        loadAll = (await import("@tsparticles/all")).loadAll;
+    }
+    await loadAll(tsParticles);
+    return tsParticles.load({
+        id: "particle",
+        options,
+    });
 });
 
 function getConfig(
