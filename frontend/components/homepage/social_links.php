@@ -22,7 +22,7 @@ $icons_map = [
 ]
 ?>
 <div class="social-links">
-    <button class="pagination prev flex-center">
+    <button class="pagination prev flex-center hide">
         <i class="fa-icon-solid fa-angle-left icon"></i>
     </button>
     <div class="page-container">
@@ -49,7 +49,7 @@ $icons_map = [
             </div>
         <?php endforeach; ?>
     </div>
-    <button class="pagination next flex-center">
+    <button class="pagination next flex-center hide">
         <i class="fa-icon-solid fa-angle-right icon"></i>
     </button>
 </div>
