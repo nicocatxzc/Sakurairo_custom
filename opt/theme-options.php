@@ -2100,10 +2100,10 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('游戏封面 CDN', 'sakurairo'),
                 'desc' => __('根据你的目标用户选择加载封面的CDN', 'sakurairo'),
                 'options' => [
-                    'steamchina' => __('Steam China', 'sakurairo'),
-                    'steamakamai'  => __('Steam Akamai', 'sakurairo'),
-                    'steamfastly'  => __('Steam Fastly', 'sakurairo'),
-                    'steamcloudflare'  => __('Steam Cloudflare', 'sakurairo'),
+                    'steamchina' => 'Steam China',
+                    'steamakamai'  => 'Steam Akamai',
+                    'steamfastly'  => 'Steam Fastly',
+                    'steamcloudflare'  => 'Steam Cloudflare',
                 ],
                 'default'     => 'steamakamai'
             ],
