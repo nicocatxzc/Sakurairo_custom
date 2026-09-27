@@ -31,7 +31,7 @@ if (!is_array($iro_menu_options)) {
         <button
             type="button"
             class="cover-toggle flex-center"
-            aria-label="<?= __("切换封面", 'sakurairo') ?>">
+            title="<?= __("切换封面", 'sakurairo') ?>">
             <i class="fa-icon-solid fa-dice icon"></i>
         </button>
     <?php endif; ?>

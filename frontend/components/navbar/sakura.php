@@ -53,7 +53,7 @@ $iro_menu_options = iro_get_navigation();
     <?php if (iro_opt("nav_menu_cover_switch", true) && is_home()): ?>
         <div
             class="button cover-toggle flex-center"
-            aria-label="<?= __("切换封面", 'sakurairo') ?>">
+            title="<?= __("切换封面", 'sakurairo') ?>">
             <i class="fa-icon-solid fa-dice icon"></i>
         </div>
     <?php endif; ?>
