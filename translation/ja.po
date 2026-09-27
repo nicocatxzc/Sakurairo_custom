@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sakurairo\n"
-"POT-Creation-Date: 2026-09-28 00:51+0800\n"
-"PO-Revision-Date: 2026-09-27 01:12+0800\n"
+"POT-Creation-Date: 2026-09-28 01:06+0800\n"
+"PO-Revision-Date: 2026-09-28 01:06+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -16,6 +16,8 @@ msgstr ""
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-WPHeader: style.css\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: frontend/dist\n"
 "X-Poedit-SearchPathExcluded-1: inc/blocks/build\n"
@@ -28,8 +30,6 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-8: frontend/dist\n"
 "X-Poedit-SearchPathExcluded-9: inc/blocks/build\n"
 "X-Poedit-SearchPathExcluded-10: inc/ai/dist\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-WPHeader: style.css\n"
 
 #: 404.php:196
 msgid "页面不存在"
@@ -475,7 +475,9 @@ msgstr ""
 #: inc/functions/ai/tools.php:175
 msgid ""
 "你是一位专业的SEO编辑，输出简洁、准确、可直接用于 meta description 的纯文本。"
-msgstr "あなたはプロのSEO編集者です。簡潔で正確、meta description にそのまま使用できるプレーンテキストを出力してください。"
+msgstr ""
+"あなたはプロのSEO編集者です。簡潔で正確、meta description にそのまま使用でき"
+"るプレーンテキストを出力してください。"
 
 #: inc/functions/ai/tools.php:191
 msgid ""
@@ -520,16 +522,22 @@ msgstr "アップロードディレクトリのスキャン結果"
 #: inc/functions/operator.php:81
 #, php-format
 msgid "扫描完成：本次新增 %d 首，上传目录共发现 %d 首带封面的音乐。"
-msgstr "スキャン完了：今回 %d 曲を追加、アップロードディレクトリではカバー付きの音楽が合計 %d 曲見つかりました。"
+msgstr ""
+"スキャン完了：今回 %d 曲を追加、アップロードディレクトリではカバー付きの音楽"
+"が合計 %d 曲見つかりました。"
 
 #: inc/functions/operator.php:94
 msgid "主题 SMTP 选项尚未开启，请先启用后再发送测试邮件。"
-msgstr "テーマの SMTP オプションがまだ有効になっていません。先に有効にしてからテストメールを送信してください。"
+msgstr ""
+"テーマの SMTP オプションがまだ有効になっていません。先に有効にしてからテスト"
+"メールを送信してください。"
 
 #: inc/functions/operator.php:111
 #, php-format
 msgid "测试邮件已发送至 %s，请查收（也请留意垃圾邮件箱）。"
-msgstr "%s にテストメールを送信しました。ご確認ください（迷惑メールフォルダもご確認ください）。"
+msgstr ""
+"%s にテストメールを送信しました。ご確認ください（迷惑メールフォルダもご確認く"
+"ださい）。"
 
 #: inc/functions/operator.php:113
 msgid "测试邮件发送失败："
@@ -580,7 +588,8 @@ msgstr "【%s】SMTP テストメール"
 
 #: inc/functions/smtp.php:313
 msgid "邮件发送失败，请查看 temp/smtp.log.php 中的详细原因。"
-msgstr "メールの送信に失敗しました。詳細な原因は temp/smtp.log.php をご確認ください。"
+msgstr ""
+"メールの送信に失敗しました。詳細な原因は temp/smtp.log.php をご確認ください。"
 
 #: inc/libs/Captcha.php:251
 msgid "你貌似没有填写验证码。"
@@ -700,8 +709,9 @@ msgid ""
 "标题样式请填写 CSS 样式，部分样式需要加 !important 才能生效；许可协议请前往主"
 "题设置查看设置方法。"
 msgstr ""
-"タイトルスタイルには CSS スタイルを入力してください。一部のスタイルは !important を付けないと有効になりません。ライセンス"
-"についてはテーマ設定で設定方法をご確認ください。"
+"タイトルスタイルには CSS スタイルを入力してください。一部のスタイルは !"
+"important を付けないと有効になりません。ライセンスについてはテーマ設定で設定"
+"方法をご確認ください。"
 
 #: inc/theme_init/support.php:170
 msgid "Sakurairo工具栏"
@@ -831,7 +841,9 @@ msgstr "デフォルトフォント"
 
 #: opt/customizer/init.php:291
 msgid "填写字体名称，需在页面头部嵌入对应的字体样式"
-msgstr "フォント名を入力してください。対応するフォントスタイルをページのヘッダーに埋め込む必要があります"
+msgstr ""
+"フォント名を入力してください。対応するフォントスタイルをページのヘッダーに埋"
+"め込む必要があります"
 
 #: opt/customizer/init.php:299 opt/theme-options.php:321
 msgid "额外字体"
@@ -839,7 +851,9 @@ msgstr "追加フォント"
 
 #: opt/customizer/init.php:300
 msgid "在此处添加外部字体，添加后即可在字体设置中使用对应的字体名称"
-msgstr "ここで外部フォントを追加します。追加するとフォント設定で対応するフォント名を使用できます"
+msgstr ""
+"ここで外部フォントを追加します。追加するとフォント設定で対応するフォント名を"
+"使用できます"
 
 #: opt/customizer/init.php:304 opt/customizer/init.php:526
 #: opt/theme-options.php:1022 opt/theme-options.php:1081
@@ -933,7 +947,9 @@ msgstr "ツールバーWordPressコンポーネント"
 
 #: opt/customizer/init.php:507
 msgid "启用后将会显示wordpress可编辑工具栏，你可以前往「外观-小工具」编辑"
-msgstr "有効にすると WordPress の編集可能なツールバーが表示されます。「外観 - ウィジェット」から編集できます"
+msgstr ""
+"有効にすると WordPress の編集可能なツールバーが表示されます。「外観 - ウィ"
+"ジェット」から編集できます"
 
 #: opt/customizer/init.php:514 opt/theme-options.php:473
 msgid "工具栏字体切换按钮"
@@ -1163,7 +1179,9 @@ msgstr "トップの読み込みプログレスバー"
 
 #: opt/customizer/init.php:860
 msgid "开启后会在页面顶部显示进度条，进度取决于下一页的加载进度"
-msgstr "有効にするとページ上部にプログレスバーが表示され、進捗は次のページの読み込み状況に応じて変化します"
+msgstr ""
+"有効にするとページ上部にプログレスバーが表示され、進捗は次のページの読み込み"
+"状況に応じて変化します"
 
 #: opt/customizer/init.php:867 opt/theme-options.php:910
 msgid "文章列表分页导航方式"
@@ -1360,7 +1378,9 @@ msgstr "ソーシャル欄のアイコンパック"
 
 #: opt/customizer/init.php:1226 opt/theme-options.php:1280
 msgid "选择你喜欢的图标包。图标包引用信息详见关于主题"
-msgstr "お好みのアイコンパックを選択してください。アイコンパックの引用情報はテーマについてをご覧ください"
+msgstr ""
+"お好みのアイコンパックを選択してください。アイコンパックの引用情報はテーマに"
+"ついてをご覧ください"
 
 #: opt/customizer/init.php:1237 opt/theme-options.php:1294
 msgid "社交区域展示内容"
@@ -1566,8 +1586,9 @@ msgid ""
 "图标元素的类名，自定义前需在页面头部嵌入自定义的图标集样式，例如fontawesome，"
 "否则会不显示"
 msgstr ""
-"アイコン要素のクラス名です。カスタマイズする前に、fontawesome などのカスタムアイコンセットのスタイルをページのヘッダーに埋め込"
-"む必要があります。そうしないと表示されません"
+"アイコン要素のクラス名です。カスタマイズする前に、fontawesome などのカスタム"
+"アイコンセットのスタイルをページのヘッダーに埋め込む必要があります。そうしな"
+"いと表示されません"
 
 #: opt/customizer/init.php:1419
 msgid "展示区域标题内容"
@@ -1851,7 +1872,9 @@ msgstr "友情リンク一覧の並び替えモード"
 
 #: opt/customizer/init.php:1896 opt/theme-options.php:2055
 msgid "选择友情链接列表排序模式，默认使用“名称”排序。"
-msgstr "友情リンク一覧の並び替えモードを選択してください。デフォルトでは「名前」で並び替えます。"
+msgstr ""
+"友情リンク一覧の並び替えモードを選択してください。デフォルトでは「名前」で並"
+"び替えます。"
 
 #: opt/customizer/init.php:1898 opt/theme-options.php:761
 #: opt/theme-options.php:2057
@@ -2076,8 +2099,10 @@ msgid ""
 "开启后页脚出现悬浮播放器。歌单由服务端解析，前端只接收接口地址；非同源音频、"
 "封面、歌词会经由服务端代理，避免跨域被拦截。"
 msgstr ""
-"有効にするとフッターにフローティングプレイヤーが表示されます。プレイリストはサーバー側で解析され、フロントエンドはインターフェースのアドレ"
-"スのみを受け取ります。同一生成元でない音声・カバー・歌詞はサーバー側のプロキシを経由するため、クロスドメインによるブロックを回避できます。"
+"有効にするとフッターにフローティングプレイヤーが表示されます。プレイリストは"
+"サーバー側で解析され、フロントエンドはインターフェースのアドレスのみを受け取"
+"ります。同一生成元でない音声・カバー・歌詞はサーバー側のプロキシを経由するた"
+"め、クロスドメインによるブロックを回避できます。"
 
 #: opt/theme-options.php:668
 msgid "网易云（内置 Meting）"
@@ -2105,7 +2130,9 @@ msgstr "NetEase Cloud Music Cookie"
 
 #: opt/theme-options.php:688
 msgid "播放 VIP 歌曲时需要填写账号 Cookie，留空则仅能解析普通歌曲。"
-msgstr "VIP 楽曲を再生するにはアカウントの Cookie を入力してください。空欄の場合は通常の楽曲のみ解析できます。"
+msgstr ""
+"VIP 楽曲を再生するにはアカウントの Cookie を入力してください。空欄の場合は通"
+"常の楽曲のみ解析できます。"
 
 #: opt/theme-options.php:694
 msgid "自定义 API 地址"
@@ -2116,9 +2143,9 @@ msgid ""
 "返回歌单 JSON 的接口地址。支持 {data:[...]}、{songs:[...]} 或直接数组，字段兼"
 "容 name/title、artist/author、url/src、cover/pic、lrc/lyric。"
 msgstr ""
-"プレイリストの JSON を返すインターフェースのアドレスです。{data:[...]}、{songs:[...]} または直接配列に対応"
-"しており、フィールドは name/title、artist/author、url/src、cover/pic、lrc/lyric と互換性"
-"があります。"
+"プレイリストの JSON を返すインターフェースのアドレスです。{data:[...]}、"
+"{songs:[...]} または直接配列に対応しており、フィールドは name/title、artist/"
+"author、url/src、cover/pic、lrc/lyric と互換性があります。"
 
 #: opt/theme-options.php:702
 msgid "自动扫描上传目录"
@@ -2126,7 +2153,9 @@ msgstr "アップロードディレクトリの自動スキャン"
 
 #: opt/theme-options.php:703
 msgid "自动收录 wp-content/uploads/ 中所有带封面的音乐，结果带缓存。"
-msgstr "wp-content/uploads/ 内のカバー付きの音楽をすべて自動的に取り込みます。結果はキャッシュされます。"
+msgstr ""
+"wp-content/uploads/ 内のカバー付きの音楽をすべて自動的に取り込みます。結果は"
+"キャッシュされます。"
 
 #: opt/theme-options.php:712
 #, php-format
@@ -2134,9 +2163,9 @@ msgid ""
 "<p>点击<a href=\"%s\" target=\"_blank\" rel=\"noopener\">这里</a>在新窗口执行"
 "手动扫描，把当前找到的带封面音乐追加进下方列表。扫描结果以音频地址去重。</p>"
 msgstr ""
-"<p><a href=\"%s\" target=\"_blank\" rel=\"noopener\">こちら</a>をクリックすると、"
-"新しいウィンドウで手動スキャンを実行し、現在見つかったカバー付きの音楽を下のリストに追加します。スキャン結果は音声アドレスで重複を排除しま"
-"す。</p>"
+"<p><a href=\"%s\" target=\"_blank\" rel=\"noopener\">こちら</a>をクリックする"
+"と、新しいウィンドウで手動スキャンを実行し、現在見つかったカバー付きの音楽を"
+"下のリストに追加します。スキャン結果は音声アドレスで重複を排除します。</p>"
 
 #: opt/theme-options.php:720
 msgid "播放顺序"
@@ -2312,7 +2341,9 @@ msgstr "動画の自動復元"
 
 #: opt/theme-options.php:1244
 msgid "开启后，将在用户回到首页后自动恢复播放进度，需要开启PJAX"
-msgstr "有効にすると、ユーザーがホームページに戻った後に再生位置が自動的に復元されます。PJAXを有効にする必要があります"
+msgstr ""
+"有効にすると、ユーザーがホームページに戻った後に再生位置が自動的に復元されま"
+"す。PJAXを有効にする必要があります"
 
 #: opt/theme-options.php:1272
 msgid "封面社交栏开关"
@@ -2510,8 +2541,9 @@ msgid ""
 "开启后由主题发送评论回复通知，用户可选择是否接收；关闭后主题不介入，仅保留 "
 "WordPress 默认通知。"
 msgstr ""
-"有効にするとテーマからコメント返信の通知を送信し、ユーザーは受信するかどうかを選択できます。無効にするとテーマは関与せず、WordPres"
-"s のデフォルト通知のみが残ります。"
+"有効にするとテーマからコメント返信の通知を送信し、ユーザーは受信するかどうか"
+"を選択できます。無効にするとテーマは関与せず、WordPress のデフォルト通知のみ"
+"が残ります。"
 
 #: opt/theme-options.php:1913
 msgid "自定义表情包"
@@ -2526,8 +2558,8 @@ msgid ""
 "表情包名称见上方「自定义表情包名称」。每行的「表情名」就是写进评论的标记，形"
 "如 {{doge}}"
 msgstr ""
-"スタンプの名称は上記の「カスタムスタンプ名」をご覧ください。各行の「スタンプ名」がコメントに書き込まれるマークで、{{doge}} のよう"
-"な形式です"
+"スタンプの名称は上記の「カスタムスタンプ名」をご覧ください。各行の「スタンプ"
+"名」がコメントに書き込まれるマークで、{{doge}} のような形式です"
 
 #: opt/theme-options.php:1927
 msgid "建议用正方形图片，尺寸接近下面的显示高度"
@@ -2551,7 +2583,9 @@ msgstr "ツールチップのテキスト"
 
 #: opt/theme-options.php:1940
 msgid "鼠标悬停提示与图片 alt，留空则用表情名"
-msgstr "マウスオーバー時のツールチップと画像の alt。空欄の場合はスタンプ名を使用します"
+msgstr ""
+"マウスオーバー時のツールチップと画像の alt。空欄の場合はスタンプ名を使用しま"
+"す"
 
 #: opt/theme-options.php:1945
 msgid "显示高度"
@@ -2635,7 +2669,9 @@ msgstr "bilibiliコレクションのプライベート表示"
 
 #: opt/theme-options.php:2033
 msgid "开启后将在bilibili收藏夹模板显示私人收藏夹"
-msgstr "有効にすると、bilibili お気に入りテンプレートでプライベートお気に入りが表示されます"
+msgstr ""
+"有効にすると、bilibili お気に入りテンプレートでプライベートお気に入りが表示さ"
+"れます"
 
 #: opt/theme-options.php:2040
 msgid "Bangumi 账户ID"
@@ -2666,8 +2702,9 @@ msgid ""
 "填写你的帐号ID，例如：https://steamcommunity.com/profiles/"
 "76561199029689067/, 填写数字部分“76561199029689067”"
 msgstr ""
-"あなたのアカウントIDを入力してください。例：https://steamcommunity.com/profiles/7656119902"
-"9689067/ の場合は、数字部分の「76561199029689067」を入力します"
+"あなたのアカウントIDを入力してください。例：https://steamcommunity.com/"
+"profiles/76561199029689067/ の場合は、数字部分の「76561199029689067」を入力し"
+"ます"
 
 #: opt/theme-options.php:2093
 msgid "Steam API 密钥"
@@ -2775,7 +2812,9 @@ msgstr "ログイン後のリダイレクト"
 
 #: opt/theme-options.php:2213
 msgid "开启之后管理员跳转至后台，用户跳转至主页。"
-msgstr "有効にすると、管理者は管理画面へ、ユーザーはホームページへリダイレクトされます。"
+msgstr ""
+"有効にすると、管理者は管理画面へ、ユーザーはホームページへリダイレクトされま"
+"す。"
 
 #: opt/theme-options.php:2220
 msgid "登录界面语言选项"
@@ -2848,8 +2887,8 @@ msgid ""
 "主题提供了一个简易的smtp支持配置以支持通过第三方发送邮件，也许你应该用更专业"
 "的插件"
 msgstr ""
-"テーマには、サードパーティ経由でメールを送信するための簡単なsmtp対応設定が用意されていますが、より専門的なプラグインを使用することをお"
-"すすめします"
+"テーマには、サードパーティ経由でメールを送信するための簡単なsmtp対応設定が用"
+"意されていますが、より専門的なプラグインを使用することをおすすめします"
 
 #: opt/theme-options.php:2326
 msgid "使用主题提供的smtp选项"
@@ -2913,11 +2952,14 @@ msgstr "テストメールの送信先アドレス"
 
 #: opt/theme-options.php:2387
 msgid "留空时发送到当前登录账号的邮箱"
-msgstr "空欄の場合は現在ログインしているアカウントのメールアドレスに送信されます"
+msgstr ""
+"空欄の場合は現在ログインしているアカウントのメールアドレスに送信されます"
 
 #: opt/theme-options.php:2394
 msgid "保存选项后，可向收件地址发送一封测试邮件，以确认 SMTP 配置是否可用。"
-msgstr "オプションを保存した後、送信先アドレスにテストメールを送信して、SMTP 設定が利用可能かどうかを確認できます。"
+msgstr ""
+"オプションを保存した後、送信先アドレスにテストメールを送信して、SMTP 設定が利"
+"用可能かどうかを確認できます。"
 
 #: opt/theme-options.php:2397
 msgid "发送测试邮件"
@@ -3183,9 +3225,10 @@ msgid ""
 "strong>（包括但不限于可能的数据丢失）之后引号中的文字复制到选项文本框中："
 "<strong>「我同意并愿意承担一切意外后果」</strong>"
 msgstr ""
-"<strong>テストに参加するリスクを十分に理解し、一切の結果を自ら負うことに同意する</strong>（可能なデータの損失を含みますが"
-"これに限りません）ことを確認したうえで、その後ろの引用符内のテキストをオプションのテキストボックスにコピーしてください：<strong>「"
-"我同意并愿意承担一切意外后果」</strong>"
+"<strong>テストに参加するリスクを十分に理解し、一切の結果を自ら負うことに同意"
+"する</strong>（可能なデータの損失を含みますがこれに限りません）ことを確認した"
+"うえで、その後ろの引用符内のテキストをオプションのテキストボックスにコピーし"
+"てください：<strong>「我同意并愿意承担一切意外后果」</strong>"
 
 #: opt/theme-options.php:2669
 msgid "主题更新通道"
@@ -3221,10 +3264,11 @@ msgid ""
 "Sakurairo_Vision\">Sakurairo Vision</a> 仓库保持一致，否则部分资源可能会出现 "
 "404。默认采用 <a href=\"https://waf.pro/\">WAFPRO</a> 官方提供的图源。"
 msgstr ""
-"このリンクのディレクトリ構造は、fuukei 公式が提供する <a href=\"https://github.com/Fuukei/Sa"
-"kurairo_Vision\">Sakurairo Vision</a> リポジトリと一致している必要があります。一致していない場合、一"
-"部のリソースが 404 になることがあります。デフォルトでは <a href=\"https://waf.pro/\">WAFPRO</a"
-"> 公式が提供する画像ソースを使用します。"
+"このリンクのディレクトリ構造は、fuukei 公式が提供する <a href=\"https://"
+"github.com/Fuukei/Sakurairo_Vision\">Sakurairo Vision</a> リポジトリと一致し"
+"ている必要があります。一致していない場合、一部のリソースが 404 になることがあ"
+"ります。デフォルトでは <a href=\"https://waf.pro/\">WAFPRO</a> 公式が提供する"
+"画像ソースを使用します。"
 
 #: opt/theme-options.php:2698
 msgid "主题贡献者"
