@@ -16,6 +16,7 @@
         background: var(--cover-background-img-pc, --cover-background-img-mb);
         background-size: cover;
         position: relative;
+        background-position: center center;
 
         &.transparent {
             background: transparent;
