@@ -107,5 +107,7 @@ require_once get_template_directory() . '/inc/functions/comment/index.php';
 require_once get_template_directory() . '/inc/functions/nav_bar.php';
 // 主题安装后检查及后台通知
 require_once get_template_directory() . '/inc/theme_init/check.php';
+// SMTP 邮件支持
+require_once get_template_directory() . '/inc/functions/smtp.php';
 // 操作触发
 require_once get_template_directory() . '/inc/functions/operator.php';

@@ -44,6 +44,31 @@ function iro_action_operator()
             $direct_url = rest_url('sakura/v1/meting/aplayer') . '?_wpnonce=' . wp_create_nonce('wp_rest') . '&server=' . (iro_opt('aplayer_server') ?: 'netease') . '&type=playlist&id=' . (iro_opt('aplayer_playlistid') ?: '5380675133');
             header("Location: $direct_url", true, 302);
             break;
+        case 'smtp_test':
+            if (!iro_opt('smtp_switch')) {
+                echo esc_html__('主题 SMTP 选项尚未开启，请先启用后再发送测试邮件。', 'sakurairo');
+                exit;
+            }
+
+            $to = isset($_GET['to']) ? sanitize_email(wp_unslash($_GET['to'])) : '';
+            if (!$to) {
+                $to = sanitize_email((string) iro_opt('smtp_test_to'));
+            }
+            if (!$to) {
+                $to = sanitize_email((string) wp_get_current_user()->user_email);
+            }
+            if (!$to) {
+                $to = sanitize_email((string) get_option('admin_email'));
+            }
+
+            $result = iro_smtp_test($to);
+            if ($result['success']) {
+                echo esc_html(sprintf(__('测试邮件已发送至 %s，请查收（也请留意垃圾邮件箱）。', 'sakurairo'), $result['to']));
+            } else {
+                echo esc_html__('测试邮件发送失败：', 'sakurairo') . esc_html($result['error']);
+            }
+            exit;
+
         case 'del_exist_theme':
             $current_theme_folder = basename(get_template_directory());
             if ($current_theme_folder != 'Sakurairo') {

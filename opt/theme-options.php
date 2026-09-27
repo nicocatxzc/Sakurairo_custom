@@ -2137,7 +2137,7 @@ if (class_exists('Sakurairo_CSF')) {
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'others',
         'title' => __('安全设置', 'sakurairo'),
-        'icon' => 'fa-solid fa-shield-halved',
+        'icon' => 'fa fa-shield',
         'fields' => [
 
             [
@@ -2162,6 +2162,99 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'text',
                 'title' => __('Turnstile Secret Key', "sakurairo_csf"),
             ],
+        ]
+    ]);
+
+    Sakurairo_CSF::createSection($prefix, [
+        'parent' => 'others',
+        'title' => __('邮件选项', 'sakurairo'),
+        'icon'        => 'fab fa-mailchimp',
+        'fields'      => [
+
+            [
+                'type'    => 'content',
+                'content' => __('主题提供了一个简易的smtp支持配置以支持通过第三方发送邮件，也许你应该用更专业的插件', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_switch',
+                'type' => 'switcher',
+                'title' => __('使用主题提供的smtp选项', 'sakurairo'),
+                'default' => true
+            ],
+
+            [
+                'id' => 'smtp_host',
+                'type' => 'text',
+                'title' => __('smtp接口地址', 'sakurairo'),
+                'desc' => __('例如smtp.163.com', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_port',
+                'type' => 'text',
+                'title' => __('smtp接口端口', 'sakurairo'),
+                'desc' => __('填写服务器的目标端口，比如465', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_username',
+                'type' => 'text',
+                'title' => __('用户名', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_key',
+                'type' => 'text',
+                'attributes' => ['type' => 'password'],
+                'title' => __('smtp密钥', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'smtp_crypt',
+                'type' => 'select',
+                'title' => __('smtp接口加密方式', 'sakurairo'),
+                'options' => [
+                    'none' => __('不加密', 'sakurairo'),
+                    'TLS' => __('TLS', 'sakurairo'),
+                    'SSL' => __('SSL', 'sakurairo'),
+                ],
+                'default' => 'SSL'
+            ],
+
+            [
+                'id' => 'smtp_from_name',
+                'type' => 'text',
+                'title' => __('邮件落款签名', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_from_address',
+                'type' => 'text',
+                'title' => __('邮件落款地址', 'sakurairo'),
+                'desc' => __('此处填写发送用邮箱的完整地址', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'smtp_test_to',
+                'type' => 'text',
+                'title' => __('测试邮件收件地址', 'sakurairo'),
+                'desc' => __('留空时发送到当前登录账号的邮箱', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => '<p style="margin:0 0 10px;color:#666;">'
+                    . esc_html__('保存选项后，可向收件地址发送一封测试邮件，以确认 SMTP 配置是否可用。', 'sakurairo')
+                    . '</p>'
+                    . '<a href="' . esc_url(admin_url('admin.php?iro_act=smtp_test')) . '" target="_blank" class="button button-primary">'
+                    . esc_html__('发送测试邮件', 'sakurairo')
+                    . '</a>',
+            ],
+
+
         ]
     ]);
 
