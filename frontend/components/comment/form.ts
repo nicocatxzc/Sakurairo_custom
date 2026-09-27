@@ -1,5 +1,6 @@
 import { checkEmail } from "../../app/utils/check";
 import md5 from "md5";
+import POWERMODE from "activate-power-mode";
 
 _iro.hooks.onPageLoaded(() => {
     const commentForm = document.querySelector(
@@ -8,8 +9,12 @@ _iro.hooks.onPageLoaded(() => {
     if (!commentForm) return;
 
     // 未登录时表单里没有头像，取不到就跳过，别让后面的监听全部失效
-    const avatar = commentForm.querySelector(".avatar") as HTMLImageElement | null;
-    const email = commentForm.querySelector("#email") as HTMLInputElement | null;
+    const avatar = commentForm.querySelector(
+        ".avatar",
+    ) as HTMLImageElement | null;
+    const email = commentForm.querySelector(
+        "#email",
+    ) as HTMLInputElement | null;
 
     if (avatar && email) {
         const originAvatar = avatar.src;
@@ -38,6 +43,11 @@ _iro.hooks.onPageLoaded(() => {
     const commentParent = document.getElementById(
         "comment_parent",
     ) as HTMLInputElement;
+
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    textarea.addEventListener("input", POWERMODE);
+    console.log(POWERMODE)
 
     // 回复目标
     let replyTarget: any = {};
@@ -92,9 +102,9 @@ _iro.hooks.onPageLoaded(() => {
 
     // 监听回复点击
     commentList.addEventListener("click", (event) => {
-        const replyButton = (event.target as HTMLElement | null)?.closest<HTMLElement>(
-            ".reply-button",
-        );
+        const replyButton = (
+            event.target as HTMLElement | null
+        )?.closest<HTMLElement>(".reply-button");
 
         if (!replyButton || !commentList.contains(replyButton)) {
             return;
@@ -115,9 +125,9 @@ _iro.hooks.onPageLoaded(() => {
     // 取消回复
 
     replyContext.addEventListener("click", (event) => {
-        const cancelButton = (event.target as HTMLElement | null)?.closest<HTMLElement>(
-            ".cancel-reply",
-        );
+        const cancelButton = (
+            event.target as HTMLElement | null
+        )?.closest<HTMLElement>(".cancel-reply");
 
         if (!cancelButton) {
             return;

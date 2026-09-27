@@ -41,6 +41,8 @@
     "vue": "^3.5.42",
     "vue-cloudflare-turnstile": "^1.0.3",
     "vue-draggable-resizable": "^3.0.0",
-    "colorthief": "^3.5.0"
+    "colorthief": "^3.5.0",
+    "activate-power-mode": "github:Fuukei/activate-power-mode",
+    "aplayer": "github:Fuukei/APlayer"
   }
 }
