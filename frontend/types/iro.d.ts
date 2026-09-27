@@ -60,12 +60,18 @@ interface IroThemeConfig {
     code_katex?: boolean;
     turnstile_site_key?: string;
     hitokoto_apis?:Array[string];
+    extract_theme_skin_from_cover?: boolean;
+    extract_article_highlight_from_feature?: boolean;
+    post_cover_as_background?: boolean;
+    cover_random_pic_url_pc?: string;
+    cover_random_pic_url_mb?: string;
     [key: string]: unknown;
 }
 
 /** 对应 #iro_page_config */
 interface IroPageConfig {
     post_id?: number;
+    post_image?: string;
     is_home?: boolean;
     is_singular?: boolean;
     [key: string]: unknown;

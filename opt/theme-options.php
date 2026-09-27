@@ -102,21 +102,21 @@ if (class_exists('Sakurairo_CSF')) {
                 'content' => __('主题配色', 'sakurairo'),
             ],
 
-            // [
-            //     'id' => 'extract_theme_skin_from_cover',
-            //     'type' => 'switcher',
-            //     'title' => __('从封面图提取主题色', 'sakurairo'),
-            //     'label' => __('默认开启，以下选项将作为兜底（当封面图无法被脚本读取时）', 'sakurairo'),
-            //     'default' => true
-            // ],
+            [
+                'id' => 'extract_theme_skin_from_cover',
+                'type' => 'switcher',
+                'title' => __('从封面图提取主题色', 'sakurairo'),
+                'label' => __('默认开启，以下选项将作为兜底（当封面图无法被脚本读取时）', 'sakurairo'),
+                'default' => true
+            ],
 
-            // [
-            //     'id' => 'extract_article_highlight_from_feature',
-            //     'type' => 'switcher',
-            //     'title' => __('从特色图片提取文章强调色', 'sakurairo'),
-            //     'label' => __('默认开启，文章页展示的颜色将取自文章特色图片', 'sakurairo'),
-            //     'default' => true
-            // ],
+            [
+                'id' => 'extract_article_highlight_from_feature',
+                'type' => 'switcher',
+                'title' => __('从特色图片提取文章强调色', 'sakurairo'),
+                'label' => __('默认开启，文章页展示的颜色将取自文章特色图片', 'sakurairo'),
+                'default' => true
+            ],
 
             [
                 'id'      => 'word_color_first',

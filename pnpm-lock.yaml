@@ -186,6 +186,9 @@ importers:
       axios-cache-interceptor:
         specifier: ^1.12.3
         version: 1.12.3(axios@1.20.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))
+      colorthief:
+        specifier: ^3.5.0
+        version: 3.5.0
       element-plus:
         specifier: ^2.14.5
         version: 2.14.6(vue@3.5.43(typescript@7.0.2))
@@ -5363,6 +5366,15 @@ packages:
 
   colorjs.io@0.7.1:
     resolution: {integrity: sha512-LY7OHnJZxHwT5UlzNa9bbhHHDbzB6yE5+3MIPwJEQKRvSCt/T4G7epsj+9j2BExUIIfXFIJGsIXUKdfrK9Q5tA==}
+
+  colorthief@3.5.0:
+    resolution: {integrity: sha512-wV/6Rnkqdx07CAuv8O3WYKBU/j5QdSXbYUfGp26seMIqze5Q40C9ovBSZB9PeVV6XkGe3VWb4zUEtQCYzCfyEA==}
+    hasBin: true
+    peerDependencies:
+      sharp: '>=0.33.0'
+    peerDependenciesMeta:
+      sharp:
+        optional: true
 
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -17552,6 +17564,8 @@ snapshots:
   colorjs.io@0.6.1: {}
 
   colorjs.io@0.7.1: {}
+
+  colorthief@3.5.0: {}
 
   combined-stream@1.0.8:
     dependencies:

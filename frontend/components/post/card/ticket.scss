@@ -114,7 +114,7 @@
         background-color: rgba(var(--widget-background), 0.74);
         border: var(--border-shine);
         border-radius: var(--post-card-title-border-radius, 0.4rem);
-        box-shadow: var(--widget-shadow-shine);
+        // box-shadow: var(--widget-shadow-shine);
         backdrop-filter: saturate(180%) blur(10px);
         overflow: hidden;
 

@@ -27,6 +27,15 @@ if (!is_array($iro_menu_options)) {
         </a>
     </div>
 
+    <?php if (iro_opt("nav_menu_cover_switch", true) && is_home()): ?>
+        <button
+            type="button"
+            class="cover-toggle flex-center"
+            aria-label="<?= __("切换封面", 'sakurairo') ?>">
+            <i class="fa-icon-solid fa-dice icon"></i>
+        </button>
+    <?php endif; ?>
+
     <?php if (iro_opt('nav_user_menu', true)): ?>
         <button
             type="button"

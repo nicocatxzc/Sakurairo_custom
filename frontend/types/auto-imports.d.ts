@@ -9,17 +9,21 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const THEME_COLOR_VARS: typeof import('../app/utils/themeColor.js').THEME_COLOR_VARS
   const _: typeof import('lodash-es').default
   const api: typeof import('../app/utils/api.js').default
+  const applyExtractedColor: typeof import('../app/utils/themeColor.js').applyExtractedColor
   const axios: typeof import('axios').default
   const checkEmail: typeof import('../app/utils/check').checkEmail
   const classicPagination: typeof import('../app/utils/classicPagination.js').default
+  const clearExtractedColor: typeof import('../app/utils/themeColor.js').clearExtractedColor
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
+  const extractColorFromImageElement: typeof import('../app/utils/themeColor.js').extractColorFromImageElement
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
@@ -30,6 +34,7 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const loadColorFromUrl: typeof import('../app/utils/themeColor.js').loadColorFromUrl
   const localsearch: typeof import('../app/utils/localsearch').default
   const markRaw: typeof import('vue').markRaw
   const nextTick: typeof import('vue').nextTick

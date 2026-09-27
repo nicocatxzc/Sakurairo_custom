@@ -3,7 +3,7 @@
     "private": true,
     "packageManager": "pnpm@12.5.1",
     "scripts": {
-        "dev": "pnpm -r --if-present run dev",
+        "dev": "pnpm --filter frontend run dev",
         "dev:ai": "pnpm --filter ai run dev",
         "build": "bash package.sh",
         "build:frontend": "pnpm --filter frontend run build",

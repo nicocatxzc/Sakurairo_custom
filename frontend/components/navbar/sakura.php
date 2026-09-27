@@ -50,6 +50,13 @@ $iro_menu_options = iro_get_navigation();
             <i class="fa-icon-solid fa-search icon"></i>
         </div>
     <?php endif; ?>
+    <?php if (iro_opt("nav_menu_cover_switch", true) && is_home()): ?>
+        <div
+            class="button cover-toggle flex-center"
+            aria-label="<?= __("切换封面", 'sakurairo') ?>">
+            <i class="fa-icon-solid fa-dice icon"></i>
+        </div>
+    <?php endif; ?>
     <?php if (iro_opt('nav_user_menu', true)): ?>
         <div class="user">
             <?php if (is_user_logged_in()):
