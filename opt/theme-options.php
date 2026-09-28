@@ -2514,8 +2514,19 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'    => 'iro_image_optimize',
                 'type'  => 'switcher',
                 'title' => __('全站webp优化', 'sakurairo'),
-                'label'   => __('将源站所有图片优化至webp', 'sakurairo'),
+                'label'   => __('将源站所有图片优化至webp，你的原图不会丢失', 'sakurairo'),
                 'default' => false,
+            ],
+            
+            [
+                'id'    => 'iro_image_quality',
+                'type' => 'slider',
+                'title' => __('webp优化图像质量', 'sakurairo'),
+                'label'   => __('质量越高图片越清晰，但体积也越大，首屏速度也越慢', 'sakurairo'),
+                'step' => '1',
+                'min' => '70',
+                'max' => '100',
+                'default' => '100'
             ],
 
             [
@@ -2524,6 +2535,16 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('图片cdn', 'sakurairo'),
                 'desc' => __('将源站所有图片域名替换为该cdn域名', 'sakurairo'),
                 'default' => ''
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => '<p style="margin:0 0 10px;color:#666;">'
+                    . esc_html__('调整优化质量会按新参数重新生成缓存，旧缓存文件不会自动清理，可点击下方链接清理。', 'sakurairo')
+                    . '</p>'
+                    . '<a href="' . esc_url(admin_url('admin.php?iro_act=clear_media_cache')) . '" target="_blank" class="button">'
+                    . esc_html__('一键清除图片缓存', 'sakurairo')
+                    . '</a>',
             ],
 
             [

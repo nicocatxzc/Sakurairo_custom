@@ -114,6 +114,31 @@ function iro_action_operator()
             }
             exit;
 
+        case 'clear_media_cache':
+            $cache_dir = trailingslashit(WP_CONTENT_DIR) . 'cache/theme-gd-media';
+            $deleted = 0;
+            $failed = 0;
+
+            if (is_dir($cache_dir)) {
+                foreach ((array) glob(trailingslashit($cache_dir) . '*') as $file) {
+                    if (!is_file($file)) {
+                        continue;
+                    }
+
+                    if (@unlink($file)) {
+                        $deleted++;
+                    } else {
+                        $failed++;
+                    }
+                }
+            }
+
+            /* 设置页是前端路由，跳转回去没有意义；直接在打开的窗口里打印结果 */
+            echo '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>' . esc_html__('图片缓存清理结果', 'sakurairo') . '</title></head><body>';
+            echo '<p>' . sprintf(esc_html__('清理完成：已删除 %d 个缓存文件，失败 %d 个。', 'sakurairo'), $deleted, $failed) . '</p>';
+            echo '</body></html>';
+            exit;
+
         case 'del_exist_theme':
             $current_theme_folder = basename(get_template_directory());
             if ($current_theme_folder != 'Sakurairo') {

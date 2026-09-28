@@ -187,8 +187,20 @@ function iro_media_optimize_image_url(
             $route = $original;
         } else {
             // 构造优化路由
+            // 默认质量取主题选项，兜底 100（即无损 WebP）
+            $default_quality = iro_opt('iro_image_quality', 100);
+
+            if (!is_numeric($default_quality)) {
+                $default_quality = 100;
+            }
+
+            $default_quality = max(
+                0,
+                min(100, (int) $default_quality)
+            );
+
             $options = [
-                'quality' => null,
+                'quality' => $default_quality,
                 'format'  => 'webp',
                 'width'   => null,
                 'height'  => null,
@@ -409,10 +421,20 @@ function iro_media_build_modifier_segment(
     }
 
     /*
+     * q_100 + f_webp 与服务端默认的无损 WebP 完全等价，
+     * 先去重，避免默认质量额外产生一份缓存。
+     */
+    if (in_array('f_webp', $items, true)) {
+        $items = array_values(
+            array_diff($items, ['q_100'])
+        );
+    }
+
+    /*
      * f_webp 本身就等价于默认模式，
      * 所以不需要把它放进 URL。
      */
-    if ($items === ['f_webp']) {
+    if ($items === [] || $items === ['f_webp']) {
         return '';
     }
 
