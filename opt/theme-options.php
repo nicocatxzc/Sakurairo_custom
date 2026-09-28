@@ -321,7 +321,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'title'     => __('额外字体', 'sakurairo'),
                 'fields'    => [
                     [
-                        'id'    => 'font_name',
+                        'id'    => 'name',
                         'type'  => 'text',
                         'title' => __('字体名称', 'sakurairo'),
                     ],

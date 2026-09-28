@@ -1,5 +1,13 @@
 <style>
-    :root {
+    <?php foreach (iro_opt("extra_fonts") as $font): ?>@font-face {
+        font-family: '<?= $font["name"] ?>';
+        src: url('<?= $font["link"] ?>');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    <?php endforeach ?> :root {
         --global-font-size: <?= iro_opt('global_font_size', 16) ?>;
         --global-font-weight: <?= iro_opt('global_font_weight', 300) ?>;
 
