@@ -1,7 +1,9 @@
 <?php if (iro_opt("cover_switch", true) != false && iro_opt('cover_height', 100) != 0) : ?>
     <div class="homepage-cover <?= is_home() ? '' : 'hide' ?>"
         style="
-        --cover-height: <?= iro_opt('cover_height', 100) ?>dvh; ">
+        --cover-height: <?= iro_opt('cover_height', 100) ?>dvh; 
+        --cover-filter-grid: url(<?= iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') ?>basic/grid.png);
+        --cover-filter-dot: url(<?= iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') ?>basic/dot.gif);">
         <?php if (iro_opt("cover_video", false)): ?>
             <video class="cover-video" src="<?= iro_opt("cover_video_source") ?>" <?= iro_opt("cover_video_loop", false) ? "loop" : "" ?> muted autoplay></video>
         <?php endif; ?>
@@ -10,6 +12,7 @@
         <?= iro_opt('cover_as_background', false) ? 'transparent' : '' ?>
         <?= iro_opt('cover_video', false) ? 'transparent' : '' ?>
         ">
+            <div class="cover-filter <?= esc_attr(iro_opt('cover_pic_filter', 'filter-nothing')) ?>"></div>
             <div class="cover-info">
                 <div class="center">
                     <?php if (iro_opt("cover_focus_style") != "off") : ?>

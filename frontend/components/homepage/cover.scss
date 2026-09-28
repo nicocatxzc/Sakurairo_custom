@@ -31,8 +31,36 @@
         }
     }
 
+    .cover-filter {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        background-attachment: fixed;
+        pointer-events: none;
+
+        &.filter-undertint {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &.filter-dim {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        &.filter-grid {
+            background-image: var(--cover-filter-grid);
+        }
+
+        &.filter-dot {
+            background-image: var(--cover-filter-dot);
+        }
+    }
+
     .cover-info {
         position: absolute;
+        z-index: 2;
         top: 0;
         left: 0;
         width: 100%;

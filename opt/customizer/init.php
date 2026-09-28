@@ -1015,6 +1015,27 @@ $sections = [
                 ],
             ],
             [
+                'type'     => 'select',
+                'settings' => 'cover_pic_filter',
+                'iro_key'  => 'cover_pic_filter',
+                'label'    => esc_html__('封面图片滤镜', 'sakurairo'),
+                'default'  => 'filter-nothing',
+                'choices'  => [
+                    'filter-nothing'   => esc_html__('无', 'sakurairo'),
+                    'filter-undertint' => esc_html__('浅色滤镜', 'sakurairo'),
+                    'filter-dim'       => esc_html__('深色滤镜', 'sakurairo'),
+                    'filter-grid'      => esc_html__('网格滤镜', 'sakurairo'),
+                    'filter-dot'       => esc_html__('点状滤镜', 'sakurairo'),
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'cover_switch',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
                 'type'    => 'select',
                 'settings' => 'cover_focus_style',
                 'iro_key' => 'cover_focus_style',
