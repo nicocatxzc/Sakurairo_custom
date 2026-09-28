@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sakurairo\n"
-"POT-Creation-Date: 2026-09-28 01:06+0800\n"
-"PO-Revision-Date: 2026-09-28 01:06+0800\n"
+"POT-Creation-Date: 2026-09-28 12:06+0800\n"
+"PO-Revision-Date: 2026-09-28 12:11+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -543,12 +543,23 @@ msgstr ""
 msgid "测试邮件发送失败："
 msgstr "テストメールの送信に失敗しました："
 
+#: inc/functions/operator.php:137
+msgid "图片缓存清理结果"
+msgstr "画像キャッシュのクリア結果"
+
+#: inc/functions/operator.php:138
+#, php-format
+msgid "清理完成：已删除 %d 个缓存文件，失败 %d 个。"
+msgstr ""
+"クリア完了：%d 個のキャッシュファイルを削除しました。%d 個失敗しました。"
+
 #: inc/functions/player.php:229 inc/functions/player.php:320
 msgid "未知歌曲"
 msgstr "不明な楽曲"
 
-#: inc/functions/smtp.php:176 opt/customizer/init.php:1023
-#: opt/theme-options.php:989 opt/theme-options.php:1200
+#: inc/functions/smtp.php:176 opt/customizer/init.php:1024
+#: opt/customizer/init.php:1044 opt/theme-options.php:989
+#: opt/theme-options.php:1200
 msgid "无"
 msgstr "なし"
 
@@ -997,8 +1008,8 @@ msgstr "フロントエンド背景パーティクルエフェクト"
 #: opt/customizer/init.php:574 opt/customizer/init.php:712
 #: opt/customizer/init.php:920 opt/theme-options.php:520
 #: opt/theme-options.php:623 opt/theme-options.php:667
-#: opt/theme-options.php:1896 opt/theme-options.php:2202
-#: opt/theme-options.php:2479 opt/theme-options.php:2495
+#: opt/theme-options.php:1896 opt/theme-options.php:2201
+#: opt/theme-options.php:2477 opt/theme-options.php:2493
 msgid "关闭"
 msgstr "閉じる"
 
@@ -1010,8 +1021,8 @@ msgstr "桜"
 msgid "雪"
 msgstr "雪"
 
-#: opt/customizer/init.php:577 opt/customizer/init.php:1267
-#: opt/customizer/init.php:1849 opt/theme-options.php:523
+#: opt/customizer/init.php:577 opt/customizer/init.php:1288
+#: opt/customizer/init.php:1870 opt/theme-options.php:523
 #: opt/theme-options.php:1320 opt/theme-options.php:1868
 msgid "自定义"
 msgstr "カスタム"
@@ -1224,15 +1235,15 @@ msgstr ""
 msgid "off"
 msgstr "オフ"
 
-#: opt/customizer/init.php:917 opt/theme-options.php:2493
+#: opt/customizer/init.php:917 opt/theme-options.php:2491
 msgid "代码高亮方式"
 msgstr "コードハイライト方式"
 
-#: opt/customizer/init.php:928 opt/theme-options.php:2504
+#: opt/customizer/init.php:928 opt/theme-options.php:2502
 msgid "启用公式支持"
 msgstr "数式サポートを有効にする"
 
-#: opt/customizer/init.php:929 opt/theme-options.php:2505
+#: opt/customizer/init.php:929 opt/theme-options.php:2503
 msgid "启用主题公式支持，使用Katex，需要写入markdown区块才能渲染"
 msgstr ""
 "テーマ数式サポートを有効にする、Katexを使用、markdownブロックに記述してレンダ"
@@ -1252,7 +1263,7 @@ msgid "填写链接，它将会出现在浏览器标签页的标题旁边"
 msgstr ""
 "リンクを入力してください。ブラウザのタブページのタイトルの横に表示されます。"
 
-#: opt/customizer/init.php:963 opt/theme-options.php:2534
+#: opt/customizer/init.php:963 opt/theme-options.php:2553
 msgid "Fontawesome源"
 msgstr "Fontawesomeソース"
 
@@ -1262,11 +1273,11 @@ msgstr ""
 "Fontawesomeアイコンの読み込み先。バックエンドのテーマ設定フレームワークのアイ"
 "コンとフロントエンドのアイコンの両方に使用されます。"
 
-#: opt/customizer/init.php:971 opt/theme-options.php:2542
+#: opt/customizer/init.php:971 opt/theme-options.php:2561
 msgid "将fontawesome源载入到前台"
 msgstr "フロントエンドにFont Awesomeを読み込む"
 
-#: opt/customizer/init.php:972 opt/theme-options.php:2543
+#: opt/customizer/init.php:972 opt/theme-options.php:2562
 msgid "如果你需要使用自定义fontawesome图标，可以开启这个选项"
 msgstr ""
 "カスタムFontawesomeアイコンを使用する必要がある場合は、このオプションを有効に"
@@ -1288,300 +1299,320 @@ msgstr "カバーの高さ"
 msgid "封面占可视窗口的百分比"
 msgstr "カバーが表示領域に占める割合"
 
-#: opt/customizer/init.php:1021 opt/theme-options.php:987
+#: opt/customizer/init.php:1021 opt/theme-options.php:1198
+msgid "封面图片滤镜"
+msgstr "カバー画像フィルター"
+
+#: opt/customizer/init.php:1025 opt/theme-options.php:1201
+msgid "浅色滤镜"
+msgstr "薄色フィルター"
+
+#: opt/customizer/init.php:1026 opt/theme-options.php:1202
+msgid "深色滤镜"
+msgstr "ダークフィルター"
+
+#: opt/customizer/init.php:1027 opt/theme-options.php:1203
+msgid "网格滤镜"
+msgstr "グリッドフィルター"
+
+#: opt/customizer/init.php:1028 opt/theme-options.php:1204
+msgid "点状滤镜"
+msgstr "ポイントフィルター"
+
+#: opt/customizer/init.php:1042 opt/theme-options.php:987
 msgid "首页聚焦显示内容"
 msgstr "ホームページのフォーカス表示内容"
 
-#: opt/customizer/init.php:1024 opt/theme-options.php:990
+#: opt/customizer/init.php:1045 opt/theme-options.php:990
 msgid "头像"
 msgstr "プロフィール画像"
 
-#: opt/customizer/init.php:1025 opt/theme-options.php:991
+#: opt/customizer/init.php:1046 opt/theme-options.php:991
 msgid "文字"
 msgstr "文字"
 
-#: opt/customizer/init.php:1026 opt/theme-options.php:992
+#: opt/customizer/init.php:1047 opt/theme-options.php:992
 msgid "Mashiro特效文字"
 msgstr "Mashiroエフェクト文字"
 
-#: opt/customizer/init.php:1040 opt/theme-options.php:1003
+#: opt/customizer/init.php:1061 opt/theme-options.php:1003
 msgid "个人头像"
 msgstr "個人アバター"
 
-#: opt/customizer/init.php:1041 opt/theme-options.php:1004
+#: opt/customizer/init.php:1062 opt/theme-options.php:1004
 msgid "最佳宽高比为1:1"
 msgstr "最適なアスペクト比は1:1です"
 
-#: opt/customizer/init.php:1048
+#: opt/customizer/init.php:1069
 msgid "封面文字内容"
 msgstr "表紙テキスト内容"
 
-#: opt/customizer/init.php:1062
+#: opt/customizer/init.php:1083
 msgid "封面文字字体"
 msgstr "表紙文字フォント"
 
-#: opt/customizer/init.php:1077
+#: opt/customizer/init.php:1098
 msgid "封面文字大小"
 msgstr "表紙の文字サイズ"
 
-#: opt/customizer/init.php:1094
+#: opt/customizer/init.php:1115
 msgid "封面文字颜色"
 msgstr "表紙テキストの色"
 
-#: opt/customizer/init.php:1109 opt/theme-options.php:1049
+#: opt/customizer/init.php:1130 opt/theme-options.php:1049
 msgid "封面信息栏开关"
 msgstr "表紙情報バーのスイッチ"
 
-#: opt/customizer/init.php:1116 opt/theme-options.php:1057
+#: opt/customizer/init.php:1137 opt/theme-options.php:1057
 msgid "封面信息栏圆角"
 msgstr "表紙情報欄の角丸"
 
-#: opt/customizer/init.php:1133
+#: opt/customizer/init.php:1154
 msgid "封面签名内容"
 msgstr "カバーの署名内容"
 
-#: opt/customizer/init.php:1147
+#: opt/customizer/init.php:1168
 msgid "封面签名字体"
 msgstr "表紙署名フォント"
 
-#: opt/customizer/init.php:1162
+#: opt/customizer/init.php:1183
 msgid "封面签名大小"
 msgstr "表紙署名サイズ"
 
-#: opt/customizer/init.php:1178 opt/theme-options.php:1102
+#: opt/customizer/init.php:1199 opt/theme-options.php:1102
 msgid "封面打字机效果"
 msgstr "表紙タイプライター効果"
 
-#: opt/customizer/init.php:1185 opt/theme-options.php:1113
+#: opt/customizer/init.php:1206 opt/theme-options.php:1113
 msgid "封面打字机引号"
 msgstr "表紙タイプライター引用符"
 
-#: opt/customizer/init.php:1192 opt/theme-options.php:1125
+#: opt/customizer/init.php:1213 opt/theme-options.php:1125
 msgid "封面打字机占位符"
 msgstr "表紙タイプライター占位符"
 
-#: opt/customizer/init.php:1206 opt/theme-options.php:1138
+#: opt/customizer/init.php:1227 opt/theme-options.php:1138
 msgid "封面打字机配置"
 msgstr "表紙タイプライター設定"
 
-#: opt/customizer/init.php:1207
+#: opt/customizer/init.php:1228
 msgid "参考 typed.js 的配置格式填写 JSON"
 msgstr "typed.js の設定形式を参考にして JSON を入力してください"
 
-#: opt/customizer/init.php:1216 opt/theme-options.php:1265
+#: opt/customizer/init.php:1237 opt/theme-options.php:1265
 msgid "社交区域"
 msgstr "ソーシャルエリア"
 
-#: opt/customizer/init.php:1225 opt/theme-options.php:1279
+#: opt/customizer/init.php:1246 opt/theme-options.php:1279
 msgid "社交栏图标包"
 msgstr "ソーシャル欄のアイコンパック"
 
-#: opt/customizer/init.php:1226 opt/theme-options.php:1280
+#: opt/customizer/init.php:1247 opt/theme-options.php:1280
 msgid "选择你喜欢的图标包。图标包引用信息详见关于主题"
 msgstr ""
 "お好みのアイコンパックを選択してください。アイコンパックの引用情報はテーマに"
 "ついてをご覧ください"
 
-#: opt/customizer/init.php:1237 opt/theme-options.php:1294
+#: opt/customizer/init.php:1258 opt/theme-options.php:1294
 msgid "社交区域展示内容"
 msgstr "ソーシャルエリアの表示内容"
 
-#: opt/customizer/init.php:1241
+#: opt/customizer/init.php:1262
 msgid "社交条目"
 msgstr "ソーシャル項目"
 
-#: opt/customizer/init.php:1243
+#: opt/customizer/init.php:1264
 msgid "添加社交条目"
 msgstr "ソーシャル項目を追加"
 
-#: opt/customizer/init.php:1247 opt/theme-options.php:1300
+#: opt/customizer/init.php:1268 opt/theme-options.php:1300
 msgid "显示的图标"
 msgstr "表示されたアイコン"
 
-#: opt/customizer/init.php:1249 opt/theme-options.php:1302
+#: opt/customizer/init.php:1270 opt/theme-options.php:1302
 msgid "QQ"
 msgstr "QQ"
 
-#: opt/customizer/init.php:1250 opt/theme-options.php:1303
+#: opt/customizer/init.php:1271 opt/theme-options.php:1303
 msgid "微信"
 msgstr "微信"
 
-#: opt/customizer/init.php:1251 opt/customizer/init.php:1846
+#: opt/customizer/init.php:1272 opt/customizer/init.php:1867
 msgid "bilibili"
 msgstr "bilibili"
 
-#: opt/customizer/init.php:1252 opt/theme-options.php:1305
+#: opt/customizer/init.php:1273 opt/theme-options.php:1305
 msgid "网易云音乐"
 msgstr "ネットイースクラウドミュージック"
 
-#: opt/customizer/init.php:1253 opt/theme-options.php:1306
+#: opt/customizer/init.php:1274 opt/theme-options.php:1306
 msgid "新浪"
 msgstr "新浪"
 
-#: opt/customizer/init.php:1254 opt/theme-options.php:1307
+#: opt/customizer/init.php:1275 opt/theme-options.php:1307
 msgid "Github"
 msgstr "Github"
 
-#: opt/customizer/init.php:1255 opt/theme-options.php:1308
+#: opt/customizer/init.php:1276 opt/theme-options.php:1308
 msgid "Telegram"
 msgstr "Telegram"
 
-#: opt/customizer/init.php:1256 opt/theme-options.php:1309
+#: opt/customizer/init.php:1277 opt/theme-options.php:1309
 #: opt/theme-options.php:2117
 msgid "Steam"
 msgstr "Steam"
 
-#: opt/customizer/init.php:1257 opt/theme-options.php:1310
+#: opt/customizer/init.php:1278 opt/theme-options.php:1310
 msgid "Youtube"
 msgstr "Youtube"
 
-#: opt/customizer/init.php:1258
+#: opt/customizer/init.php:1279
 msgid "instgram"
 msgstr "Instagram"
 
-#: opt/customizer/init.php:1259 opt/theme-options.php:1312
+#: opt/customizer/init.php:1280 opt/theme-options.php:1312
 msgid "抖音"
 msgstr "TikTok"
 
-#: opt/customizer/init.php:1260 opt/theme-options.php:1313
+#: opt/customizer/init.php:1281 opt/theme-options.php:1313
 msgid "小红书"
 msgstr "小紅書"
 
-#: opt/customizer/init.php:1261 opt/theme-options.php:1314
+#: opt/customizer/init.php:1282 opt/theme-options.php:1314
 msgid "Discord"
 msgstr "Discord"
 
-#: opt/customizer/init.php:1262 opt/theme-options.php:1315
+#: opt/customizer/init.php:1283 opt/theme-options.php:1315
 msgid "知乎"
 msgstr "知恵"
 
-#: opt/customizer/init.php:1263 opt/theme-options.php:1316
+#: opt/customizer/init.php:1284 opt/theme-options.php:1316
 msgid "领英"
 msgstr "領英"
 
-#: opt/customizer/init.php:1264 opt/theme-options.php:1317
+#: opt/customizer/init.php:1285 opt/theme-options.php:1317
 msgid "推特/X"
 msgstr "ツイッター/X"
 
-#: opt/customizer/init.php:1265
+#: opt/customizer/init.php:1286
 msgid "facebook"
 msgstr "Facebook"
 
-#: opt/customizer/init.php:1266 opt/theme-options.php:1319
+#: opt/customizer/init.php:1287 opt/theme-options.php:1319
 msgid "邮箱"
 msgstr "メールボックス"
 
-#: opt/customizer/init.php:1272 opt/theme-options.php:1326
+#: opt/customizer/init.php:1293 opt/theme-options.php:1326
 msgid "自定义图标"
 msgstr "カスタムアイコン"
 
-#: opt/customizer/init.php:1276 opt/theme-options.php:1331
+#: opt/customizer/init.php:1297 opt/theme-options.php:1331
 msgid "二维码"
 msgstr "QR コード"
 
-#: opt/customizer/init.php:1280 opt/customizer/init.php:1487
+#: opt/customizer/init.php:1301 opt/customizer/init.php:1508
 #: opt/theme-options.php:1336 opt/theme-options.php:1471
 msgid "标题"
 msgstr "タイトル"
 
-#: opt/customizer/init.php:1284 opt/theme-options.php:1341
+#: opt/customizer/init.php:1305 opt/theme-options.php:1341
 #: opt/theme-options.php:1754 opt/theme-options.php:1766
 msgid "链接"
 msgstr "リンク"
 
-#: opt/customizer/init.php:1294
+#: opt/customizer/init.php:1315
 msgid "封面背景与视频"
 msgstr "表紙背景と動画"
 
-#: opt/customizer/init.php:1303 opt/theme-options.php:1155
+#: opt/customizer/init.php:1324 opt/theme-options.php:1155
 msgid "PC封面图片地址"
 msgstr "PC向け画像アドレス"
 
-#: opt/customizer/init.php:1304 opt/theme-options.php:1156
+#: opt/customizer/init.php:1325 opt/theme-options.php:1156
 msgid "填写图片地址或者随机图API"
 msgstr "画像URLまたはランダム画像APIを入力"
 
-#: opt/customizer/init.php:1318 opt/theme-options.php:1168
+#: opt/customizer/init.php:1339 opt/theme-options.php:1168
 msgid "移动端封面图片地址"
 msgstr "モバイル端末のカバー画像URL"
 
-#: opt/customizer/init.php:1332 opt/theme-options.php:1181
+#: opt/customizer/init.php:1353 opt/theme-options.php:1181
 msgid "前台背景一体化"
 msgstr "フロントエンド背景一体化"
 
-#: opt/customizer/init.php:1333 opt/theme-options.php:1182
+#: opt/customizer/init.php:1354 opt/theme-options.php:1182
 msgid "开启后封面背景将会变透明，以实现前台背景与封面的一体化效果"
 msgstr ""
 "有効にすると、表紙の背景が透明になり、前面の背景と表紙が一体化した効果を実現"
 "します。"
 
-#: opt/customizer/init.php:1340 opt/theme-options.php:1190
+#: opt/customizer/init.php:1361 opt/theme-options.php:1190
 msgid "使用特色图片作为背景"
 msgstr "特色画像を背景として使用"
 
-#: opt/customizer/init.php:1341 opt/theme-options.php:1191
+#: opt/customizer/init.php:1362 opt/theme-options.php:1191
 msgid "在文章页将会使用特色图片作为背景"
 msgstr "記事ページでは特色画像を背景として使用します"
 
-#: opt/customizer/init.php:1348 opt/theme-options.php:1212
+#: opt/customizer/init.php:1369 opt/theme-options.php:1212
 #: opt/theme-options.php:1218
 msgid "封面视频"
 msgstr "カバー動画"
 
-#: opt/customizer/init.php:1349 opt/theme-options.php:1219
+#: opt/customizer/init.php:1370 opt/theme-options.php:1219
 msgid "用视频代替封面图片"
 msgstr "動画を表紙画像の代わりに使用"
 
-#: opt/customizer/init.php:1356 opt/theme-options.php:1227
+#: opt/customizer/init.php:1377 opt/theme-options.php:1227
 msgid "封面视频循环"
 msgstr "カバー動画ループ"
 
-#: opt/customizer/init.php:1357 opt/theme-options.php:1232
+#: opt/customizer/init.php:1378 opt/theme-options.php:1232
 msgid "开启后视频将会循环播放"
 msgstr "再生を有効にすると、動画がループ再生されます"
 
-#: opt/customizer/init.php:1364 opt/theme-options.php:1251
+#: opt/customizer/init.php:1385 opt/theme-options.php:1251
 msgid "视频URL地址"
 msgstr "動画URLアドレス"
 
-#: opt/customizer/init.php:1365 opt/theme-options.php:1258
+#: opt/customizer/init.php:1386 opt/theme-options.php:1258
 msgid "视频的文件地址"
 msgstr "動画のファイルアドレス"
 
-#: opt/customizer/init.php:1366
+#: opt/customizer/init.php:1387
 msgid "选择视频"
 msgstr "動画を選択"
 
-#: opt/customizer/init.php:1374 opt/customizer/init.php:1383
+#: opt/customizer/init.php:1395 opt/customizer/init.php:1404
 #: opt/theme-options.php:1350 opt/theme-options.php:1357
 msgid "首页布局"
 msgstr "ホームページレイアウト"
 
-#: opt/customizer/init.php:1384
+#: opt/customizer/init.php:1405
 msgid "选择你想在首页展示的组件，它们将按照此处的顺序显示"
 msgstr ""
 "ホームページに表示したいコンポーネントを選択してください。これらはここでの順"
 "序に従って表示されます。"
 
-#: opt/customizer/init.php:1387 opt/customizer/init.php:1464
+#: opt/customizer/init.php:1408 opt/customizer/init.php:1485
 #: opt/theme-options.php:1363 opt/theme-options.php:1454
 msgid "展示区域"
 msgstr "表示エリア"
 
-#: opt/customizer/init.php:1388 opt/theme-options.php:1364
+#: opt/customizer/init.php:1409 opt/theme-options.php:1364
 msgid "最新文章"
 msgstr "最新の記事"
 
-#: opt/customizer/init.php:1389 opt/customizer/init.php:1396
+#: opt/customizer/init.php:1410 opt/customizer/init.php:1417
 #: opt/theme-options.php:1365
 msgid "自定义页面"
 msgstr "カスタムページ"
 
-#: opt/customizer/init.php:1410
+#: opt/customizer/init.php:1431
 msgid "展示区域标题图标"
 msgstr "表示エリアのタイトルアイコン"
 
-#: opt/customizer/init.php:1411
+#: opt/customizer/init.php:1432
 msgid ""
 "图标元素的类名，自定义前需在页面头部嵌入自定义的图标集样式，例如fontawesome，"
 "否则会不显示"
@@ -1590,236 +1621,236 @@ msgstr ""
 "アイコンセットのスタイルをページのヘッダーに埋め込む必要があります。そうしな"
 "いと表示されません"
 
-#: opt/customizer/init.php:1419
+#: opt/customizer/init.php:1440
 msgid "展示区域标题内容"
 msgstr "表示エリアのタイトル内容"
 
-#: opt/customizer/init.php:1427
+#: opt/customizer/init.php:1448
 msgid "文章区域标题图标"
 msgstr "記事エリア見出しアイコン"
 
-#: opt/customizer/init.php:1435
+#: opt/customizer/init.php:1456
 msgid "文章区域标题内容"
 msgstr "記事エリア見出し内容"
 
-#: opt/customizer/init.php:1442 opt/theme-options.php:1440
+#: opt/customizer/init.php:1463 opt/theme-options.php:1440
 msgid "首页区域标题位置"
 msgstr "ホームページ領域タイトル位置"
 
-#: opt/customizer/init.php:1473 opt/theme-options.php:1461
+#: opt/customizer/init.php:1494 opt/theme-options.php:1461
 msgid "展示区域内容"
 msgstr "展示エリアの内容"
 
-#: opt/customizer/init.php:1477
+#: opt/customizer/init.php:1498
 msgid "展示卡片"
 msgstr "カードを表示"
 
-#: opt/customizer/init.php:1479
+#: opt/customizer/init.php:1500
 msgid "添加展示卡片"
 msgstr "展示カードを追加"
 
-#: opt/customizer/init.php:1483 opt/theme-options.php:1466
+#: opt/customizer/init.php:1504 opt/theme-options.php:1466
 msgid "图片链接"
 msgstr "画像リンク"
 
-#: opt/customizer/init.php:1491 opt/theme-options.php:1476
+#: opt/customizer/init.php:1512 opt/theme-options.php:1476
 msgid "描述"
 msgstr "説明"
 
-#: opt/customizer/init.php:1495 opt/theme-options.php:1481
+#: opt/customizer/init.php:1516 opt/theme-options.php:1481
 msgid "跳转链接"
 msgstr "ジャンプリンク"
 
-#: opt/customizer/init.php:1519 opt/theme-options.php:1505
+#: opt/customizer/init.php:1540 opt/theme-options.php:1505
 msgid "文章区域"
 msgstr "記事領域"
 
-#: opt/customizer/init.php:1528 opt/theme-options.php:1512
+#: opt/customizer/init.php:1549 opt/theme-options.php:1512
 msgid "文章区域卡片设计"
 msgstr "記事エリアカードデザイン"
 
-#: opt/customizer/init.php:1529 opt/theme-options.php:1513
+#: opt/customizer/init.php:1550 opt/theme-options.php:1513
 msgid "你可以选择信件设计或者票券设计"
 msgstr "メールデザインまたはチケットデザインを選択できます"
 
-#: opt/customizer/init.php:1539 opt/theme-options.php:1524
+#: opt/customizer/init.php:1560 opt/theme-options.php:1524
 msgid "文章卡片显示信息"
 msgstr "記事カード表示情報"
 
-#: opt/customizer/init.php:1542 opt/theme-options.php:1529
+#: opt/customizer/init.php:1563 opt/theme-options.php:1529
 msgid "作者"
 msgstr "著者"
 
-#: opt/customizer/init.php:1543 opt/theme-options.php:1530
+#: opt/customizer/init.php:1564 opt/theme-options.php:1530
 msgid "分类"
 msgstr "カテゴリ"
 
-#: opt/customizer/init.php:1544 opt/theme-options.php:1531
+#: opt/customizer/init.php:1565 opt/theme-options.php:1531
 msgid "评论数量"
 msgstr "コメント数"
 
-#: opt/customizer/init.php:1545 opt/theme-options.php:1532
+#: opt/customizer/init.php:1566 opt/theme-options.php:1532
 msgid "浏览量"
 msgstr "閲覧量"
 
-#: opt/customizer/init.php:1552 opt/theme-options.php:1540
+#: opt/customizer/init.php:1573 opt/theme-options.php:1540
 msgid "文章区域装饰特色图片选项"
 msgstr "記事領域装飾特色画像オプション"
 
-#: opt/customizer/init.php:1554 opt/theme-options.php:1542
+#: opt/customizer/init.php:1575 opt/theme-options.php:1542
 msgid "始终且使用封面API"
 msgstr "常に表紙APIを使用"
 
-#: opt/customizer/init.php:1555 opt/theme-options.php:1543
+#: opt/customizer/init.php:1576 opt/theme-options.php:1543
 msgid "始终且使用独立API"
 msgstr "終始かつ独立APIを使用"
 
-#: opt/customizer/init.php:1556 opt/theme-options.php:1544
+#: opt/customizer/init.php:1577 opt/theme-options.php:1544
 msgid "仅特色图片"
 msgstr "アイキャッチ画像のみ"
 
-#: opt/customizer/init.php:1563 opt/theme-options.php:1552
+#: opt/customizer/init.php:1584 opt/theme-options.php:1552
 msgid "文章封面随机图API"
 msgstr "記事カバーのランダム画像 API"
 
-#: opt/customizer/init.php:1570 opt/theme-options.php:1565
+#: opt/customizer/init.php:1591 opt/theme-options.php:1565
 msgid "文章卡片圆角"
 msgstr "記事カードの角丸"
 
-#: opt/customizer/init.php:1587 opt/theme-options.php:1574
+#: opt/customizer/init.php:1608 opt/theme-options.php:1574
 msgid "文章卡片元信息圆角"
 msgstr "文章カード要素情報の角丸"
 
-#: opt/customizer/init.php:1604 opt/theme-options.php:1583
+#: opt/customizer/init.php:1625 opt/theme-options.php:1583
 msgid "文章卡片标题圆角"
 msgstr "記事カードのタイトル角丸"
 
-#: opt/customizer/init.php:1621 opt/theme-options.php:1592
+#: opt/customizer/init.php:1642 opt/theme-options.php:1592
 msgid "文章卡片标题大小"
 msgstr "記事カードタイトルサイズ"
 
-#: opt/customizer/init.php:1639 opt/theme-options.php:1625
+#: opt/customizer/init.php:1660 opt/theme-options.php:1625
 msgid "通用"
 msgstr "汎用"
 
-#: opt/customizer/init.php:1648 opt/theme-options.php:1662
+#: opt/customizer/init.php:1669 opt/theme-options.php:1662
 msgid "文章目录"
 msgstr "記事目次"
 
-#: opt/customizer/init.php:1649 opt/theme-options.php:1663
+#: opt/customizer/init.php:1670 opt/theme-options.php:1663
 msgid "在文章页显示目录(检测到内容有标题会自动生成大纲并显示)"
 msgstr ""
 "記事ページに目次を表示（見出しがあるコンテンツを検出すると自動的にアウトライ"
 "ンが生成され表示されます）"
 
-#: opt/customizer/init.php:1656 opt/theme-options.php:1670
+#: opt/customizer/init.php:1677 opt/theme-options.php:1670
 msgid "页面目录"
 msgstr "ページ目次"
 
-#: opt/customizer/init.php:1657 opt/theme-options.php:1671
+#: opt/customizer/init.php:1678 opt/theme-options.php:1671
 msgid "在页面显示目录"
 msgstr "ページに目次を表示"
 
-#: opt/customizer/init.php:1666 opt/theme-options.php:1680
+#: opt/customizer/init.php:1687 opt/theme-options.php:1680
 msgid "文章页面"
 msgstr "記事ページ"
 
-#: opt/customizer/init.php:1675 opt/theme-options.php:1692
+#: opt/customizer/init.php:1696 opt/theme-options.php:1692
 msgid "文章功能栏"
 msgstr "記事機能バー"
 
-#: opt/customizer/init.php:1676 opt/theme-options.php:1693
+#: opt/customizer/init.php:1697 opt/theme-options.php:1693
 msgid "默认开启，将在文章页面显示下方启用的功能"
 msgstr "デフォルトで有効、記事ページの下部に有効な機能を表示します"
 
-#: opt/customizer/init.php:1683 opt/theme-options.php:1700
+#: opt/customizer/init.php:1704 opt/theme-options.php:1700
 msgid "文章版权协议"
 msgstr "記事の著作権契約"
 
-#: opt/customizer/init.php:1684
+#: opt/customizer/init.php:1705
 msgid "版权协议将显示在功能栏中。也可通过文章自定义字段「license」单独指定。"
 msgstr ""
 "著作権協定は機能バーに表示されます。記事のカスタムフィールド「license」から個"
 "別に指定することもできます。"
 
-#: opt/customizer/init.php:1687 opt/theme-options.php:1704
+#: opt/customizer/init.php:1708 opt/theme-options.php:1704
 msgid "不显示"
 msgstr "非表示"
 
-#: opt/customizer/init.php:1709
+#: opt/customizer/init.php:1730
 msgid "打赏按钮链接"
 msgstr "投げ銭ボタンリンク"
 
-#: opt/customizer/init.php:1710 opt/theme-options.php:1743
+#: opt/customizer/init.php:1731 opt/theme-options.php:1743
 msgid "点击打赏按钮后跳转的链接"
 msgstr "「点击打赏按钮后跳转的链接」"
 
-#: opt/customizer/init.php:1724
+#: opt/customizer/init.php:1745
 msgid "打赏图片一"
 msgstr "画像をいいねする一"
 
-#: opt/customizer/init.php:1738
+#: opt/customizer/init.php:1759
 msgid "打赏图片一跳转链接"
 msgstr "チップ画像へのジャンプリンク"
 
-#: opt/customizer/init.php:1739 opt/customizer/init.php:1754
+#: opt/customizer/init.php:1760 opt/customizer/init.php:1775
 #: opt/theme-options.php:1755 opt/theme-options.php:1767
 msgid "点击图片后跳转的链接"
 msgstr "画像クリック後にジャンプするリンク"
 
-#: opt/customizer/init.php:1746
+#: opt/customizer/init.php:1767
 msgid "打赏图片二"
 msgstr "画像2をいいね"
 
-#: opt/customizer/init.php:1753
+#: opt/customizer/init.php:1774
 msgid "打赏图片二跳转链接"
 msgstr "投げ銭画像 2 のリンク先"
 
-#: opt/customizer/init.php:1760 opt/theme-options.php:1775
+#: opt/customizer/init.php:1781 opt/theme-options.php:1775
 msgid "文章作者头像"
 msgstr "記事著者のアバター"
 
-#: opt/customizer/init.php:1767 opt/theme-options.php:1784
+#: opt/customizer/init.php:1788 opt/theme-options.php:1784
 msgid "文章作者名称"
 msgstr "記事著者名"
 
-#: opt/customizer/init.php:1774 opt/theme-options.php:1793
+#: opt/customizer/init.php:1795 opt/theme-options.php:1793
 msgid "文章作者签名"
 msgstr "記事著者署名"
 
-#: opt/customizer/init.php:1781 opt/theme-options.php:1802
+#: opt/customizer/init.php:1802 opt/theme-options.php:1802
 msgid "文章最后更新时间"
 msgstr "記事の最終更新日時"
 
-#: opt/customizer/init.php:1788 opt/theme-options.php:1811
+#: opt/customizer/init.php:1809 opt/theme-options.php:1811
 msgid "文章标签"
 msgstr "記事タグ"
 
-#: opt/customizer/init.php:1795 opt/theme-options.php:1820
+#: opt/customizer/init.php:1816 opt/theme-options.php:1820
 msgid "文章上一篇/下一篇导航"
 msgstr "記事の前へ/次へナビゲーション"
 
-#: opt/customizer/init.php:1796 opt/theme-options.php:1821
+#: opt/customizer/init.php:1817 opt/theme-options.php:1821
 msgid "默认开启，文章页面将显示上一篇/下一篇切换"
 msgstr "デフォルトで有効、記事ページに前へ/次への切り替えを表示"
 
-#: opt/customizer/init.php:1805 opt/theme-options.php:1830
+#: opt/customizer/init.php:1826 opt/theme-options.php:1830
 msgid "评论区设置"
 msgstr "コメント欄設定"
 
-#: opt/customizer/init.php:1814 opt/theme-options.php:1842
+#: opt/customizer/init.php:1835 opt/theme-options.php:1842
 msgid "评论区输入框占位符"
 msgstr "コメント入力欄プレースホルダー"
 
-#: opt/customizer/init.php:1828 opt/theme-options.php:1849
+#: opt/customizer/init.php:1849 opt/theme-options.php:1849
 msgid "评论区提交按钮文本"
 msgstr "コメント欄送信ボタンのテキスト"
 
-#: opt/customizer/init.php:1842 opt/theme-options.php:1861
+#: opt/customizer/init.php:1863 opt/theme-options.php:1861
 msgid "评论区表情"
 msgstr "コメント欄の絵文字"
 
-#: opt/customizer/init.php:1843 opt/theme-options.php:1862
+#: opt/customizer/init.php:1864 opt/theme-options.php:1862
 msgid ""
 "选择要在评论区域输入框中显示的表情。全部取消选中可关闭评论区域输入框表情功"
 "能。"
@@ -1827,86 +1858,86 @@ msgstr ""
 "コメント欄の入力ボックスに表示する絵文字を選択します。すべての選択を解除する"
 "と、コメント欄の入力ボックスの絵文字機能をオフにできます。"
 
-#: opt/customizer/init.php:1847 opt/theme-options.php:1866
+#: opt/customizer/init.php:1868 opt/theme-options.php:1866
 msgid "贴吧"
 msgstr "掲示板"
 
-#: opt/customizer/init.php:1848 opt/theme-options.php:1867
+#: opt/customizer/init.php:1869 opt/theme-options.php:1867
 msgid "颜文字"
 msgstr "顔文字"
 
-#: opt/customizer/init.php:1856 opt/theme-options.php:1876
+#: opt/customizer/init.php:1877 opt/theme-options.php:1876
 msgid "自定义表情包名称"
 msgstr "カスタム絵文字の名前"
 
-#: opt/customizer/init.php:1857 opt/theme-options.php:1877
+#: opt/customizer/init.php:1878 opt/theme-options.php:1877
 msgid "建议输入少于4个汉字的内容，以免造成移动端的兼容性问题。"
 msgstr ""
 "4文字未満の漢字内容を入力することを推奨します。モバイル端末の互換性問題を避け"
 "るためです。"
 
-#: opt/customizer/init.php:1871 opt/theme-options.php:1893
+#: opt/customizer/init.php:1892 opt/theme-options.php:1893
 msgid "评论区验证码"
 msgstr "コメント欄認証コード"
 
-#: opt/customizer/init.php:1872 opt/theme-options.php:1894
+#: opt/customizer/init.php:1893 opt/theme-options.php:1894
 msgid "开启后游客评论需要通过验证码验证"
 msgstr "有効にすると、訪問者のコメントには認証コードによる検証が必要になります"
 
-#: opt/customizer/init.php:1875
+#: opt/customizer/init.php:1896
 msgid "Off"
 msgstr "オフ"
 
-#: opt/customizer/init.php:1876 opt/theme-options.php:1897
-#: opt/theme-options.php:2203
+#: opt/customizer/init.php:1897 opt/theme-options.php:1897
+#: opt/theme-options.php:2202
 msgid "主题内建验证码"
 msgstr "テーマ内蔵検証コード"
 
-#: opt/customizer/init.php:1886 opt/theme-options.php:1962
+#: opt/customizer/init.php:1907 opt/theme-options.php:1962
 msgid "模板页面设置"
 msgstr "テンプレートページ設定"
 
-#: opt/customizer/init.php:1895 opt/theme-options.php:2054
+#: opt/customizer/init.php:1916 opt/theme-options.php:2054
 msgid "友情链接列表排序模式"
 msgstr "友情リンク一覧の並び替えモード"
 
-#: opt/customizer/init.php:1896 opt/theme-options.php:2055
+#: opt/customizer/init.php:1917 opt/theme-options.php:2055
 msgid "选择友情链接列表排序模式，默认使用“名称”排序。"
 msgstr ""
 "友情リンク一覧の並び替えモードを選択してください。デフォルトでは「名前」で並"
 "び替えます。"
 
-#: opt/customizer/init.php:1898 opt/theme-options.php:761
+#: opt/customizer/init.php:1919 opt/theme-options.php:761
 #: opt/theme-options.php:2057
 msgid "名称"
 msgstr "名前"
 
-#: opt/customizer/init.php:1899 opt/theme-options.php:2058
+#: opt/customizer/init.php:1920 opt/theme-options.php:2058
 msgid "评级"
 msgstr "評価"
 
-#: opt/customizer/init.php:1900 opt/theme-options.php:2059
+#: opt/customizer/init.php:1921 opt/theme-options.php:2059
 msgid "更新时间"
 msgstr "更新時間"
 
-#: opt/customizer/init.php:1901 opt/theme-options.php:723
+#: opt/customizer/init.php:1922 opt/theme-options.php:723
 #: opt/theme-options.php:2060
 msgid "随机"
 msgstr "ランダム"
 
-#: opt/customizer/init.php:1908 opt/theme-options.php:2068
+#: opt/customizer/init.php:1929 opt/theme-options.php:2068
 msgid "升序或降序"
 msgstr "昇順または降順"
 
-#: opt/customizer/init.php:1909 opt/theme-options.php:2069
+#: opt/customizer/init.php:1930 opt/theme-options.php:2069
 msgid "按升序或降序排序友情链接列表"
 msgstr "友情リンク一覧を昇順または降順で並べ替える"
 
-#: opt/customizer/init.php:1911 opt/theme-options.php:2072
+#: opt/customizer/init.php:1932 opt/theme-options.php:2072
 msgid "升序"
 msgstr "昇順"
 
-#: opt/customizer/init.php:1912 opt/theme-options.php:2073
+#: opt/customizer/init.php:1933 opt/theme-options.php:2073
 msgid "降序"
 msgstr "降順"
 
@@ -2315,26 +2346,6 @@ msgid "填写图片地址或者随机图API，未填写则使用与PC图片相�
 msgstr ""
 "画像URLまたはランダム画像APIを入力、未入力の場合はPC画像と同じ設定を使用"
 
-#: opt/theme-options.php:1198
-msgid "封面图片滤镜"
-msgstr "カバー画像フィルター"
-
-#: opt/theme-options.php:1201
-msgid "浅色滤镜"
-msgstr "薄色フィルター"
-
-#: opt/theme-options.php:1202
-msgid "深色滤镜"
-msgstr "ダークフィルター"
-
-#: opt/theme-options.php:1203
-msgid "网格滤镜"
-msgstr "グリッドフィルター"
-
-#: opt/theme-options.php:1204
-msgid "点状滤镜"
-msgstr "ポイントフィルター"
-
 #: opt/theme-options.php:1239
 msgid "视频自动恢复"
 msgstr "動画の自動復元"
@@ -2528,7 +2539,7 @@ msgid "开启之后页面评论区域将显示用户的浏览器，操作系统�
 msgstr ""
 "有効にすると、ページのコメント欄にユーザーのブラウザとOS情報が表示されます。"
 
-#: opt/theme-options.php:1898 opt/theme-options.php:2204
+#: opt/theme-options.php:1898 opt/theme-options.php:2203
 msgid "Cloudflare Turnstile"
 msgstr "Cloudflare Turnstile"
 
@@ -2774,115 +2785,115 @@ msgstr ""
 "OpenAI互換インターフェースのBase URL。テーマが自動的に/chat/completionsを追加"
 "します"
 
-#: opt/theme-options.php:2156
+#: opt/theme-options.php:2155
 msgid "API 密钥"
 msgstr "API キー"
 
-#: opt/theme-options.php:2163
+#: opt/theme-options.php:2162
 msgid "模型名称"
 msgstr "モデル名"
 
-#: opt/theme-options.php:2164
+#: opt/theme-options.php:2163
 msgid "例如 deepseek-flash"
 msgstr "例: deepseek-flash"
 
-#: opt/theme-options.php:2172
+#: opt/theme-options.php:2171
 msgid "主题定制"
 msgstr "テーマカスタマイズ"
 
-#: opt/theme-options.php:2178
+#: opt/theme-options.php:2177
 msgid "登录页"
 msgstr "ログインページ"
 
-#: opt/theme-options.php:2184
+#: opt/theme-options.php:2183
 msgid "定制登录页"
 msgstr "カスタムログインページ"
 
-#: opt/theme-options.php:2191
+#: opt/theme-options.php:2190
 msgid "登录页Logo"
 msgstr "ログインページのロゴ"
 
-#: opt/theme-options.php:2200
+#: opt/theme-options.php:2199
 msgid "登录页验证码"
 msgstr "ログインページ認証コード"
 
-#: opt/theme-options.php:2212
+#: opt/theme-options.php:2211
 msgid "登录后跳转"
 msgstr "ログイン後のリダイレクト"
 
-#: opt/theme-options.php:2213
+#: opt/theme-options.php:2212
 msgid "开启之后管理员跳转至后台，用户跳转至主页。"
 msgstr ""
 "有効にすると、管理者は管理画面へ、ユーザーはホームページへリダイレクトされま"
 "す。"
 
-#: opt/theme-options.php:2220
+#: opt/theme-options.php:2219
 msgid "登录界面语言选项"
 msgstr "ログイン画面の言語オプション"
 
-#: opt/theme-options.php:2221
+#: opt/theme-options.php:2220
 msgid "开启之后登录界面将显示语言选项"
 msgstr "起動後、ログイン画面に言語オプションが表示されます"
 
-#: opt/theme-options.php:2227
+#: opt/theme-options.php:2226
 msgid "仪表盘"
 msgstr "計器盤"
 
-#: opt/theme-options.php:2233
+#: opt/theme-options.php:2232
 msgid "仪表盘背景图片"
 msgstr "計器盤背景画像"
 
-#: opt/theme-options.php:2234
+#: opt/theme-options.php:2233
 msgid "设置你的仪表盘背景图片，此选项留空则显示白色背景"
 msgstr ""
 "ダッシュボードの背景画像を設定します。このオプションを空白にすると白い背景が"
 "表示されます。"
 
-#: opt/theme-options.php:2242
+#: opt/theme-options.php:2241
 msgid "仪表板设置菜单样式"
 msgstr "ダッシュボード設定メニュースタイル"
 
-#: opt/theme-options.php:2253
+#: opt/theme-options.php:2252
 msgid "仪表盘一级菜单颜色"
 msgstr "計器盤一次メニューの色"
 
-#: opt/theme-options.php:2260
+#: opt/theme-options.php:2259
 msgid "仪表盘二级菜单颜色"
 msgstr "ダッシュボードのセカンダリメニュー色"
 
-#: opt/theme-options.php:2267
+#: opt/theme-options.php:2266
 msgid "仪表板强调颜色"
 msgstr "ダッシュボードの強調色"
 
-#: opt/theme-options.php:2274
+#: opt/theme-options.php:2273
 msgid "仪表盘文本颜色"
 msgstr "計器盤テキスト色"
 
-#: opt/theme-options.php:2283
+#: opt/theme-options.php:2282
 msgid "安全设置"
 msgstr "セキュリティ設定"
 
-#: opt/theme-options.php:2290
+#: opt/theme-options.php:2289
 msgid "内建验证码强度"
 msgstr "内蔵認証コードの強度"
 
-#: opt/theme-options.php:2291
+#: opt/theme-options.php:2290
 msgid "改变内建验证码的图片混乱度"
 msgstr "内蔵認証コードの画像の複雑さを変更します"
 
-#: opt/theme-options.php:2301
+#: opt/theme-options.php:2300
 msgid "Turnstile Site Key"
 msgstr "回転扉サイトキー"
 
-#: opt/theme-options.php:2307
+#: opt/theme-options.php:2306
 msgid "Turnstile Secret Key"
 msgstr "改札機の秘密鍵"
 
-#: opt/theme-options.php:2314
+#: opt/theme-options.php:2313
 msgid "邮件选项"
 msgstr "メールオプション"
 
-#: opt/theme-options.php:2320
+#: opt/theme-options.php:2319
 msgid ""
 "主题提供了一个简易的smtp支持配置以支持通过第三方发送邮件，也许你应该用更专业"
 "的插件"
@@ -2890,132 +2901,132 @@ msgstr ""
 "テーマには、サードパーティ経由でメールを送信するための簡単なsmtp対応設定が用"
 "意されていますが、より専門的なプラグインを使用することをおすすめします"
 
-#: opt/theme-options.php:2326
+#: opt/theme-options.php:2325
 msgid "使用主题提供的smtp选项"
 msgstr "テーマが提供するsmtpオプションを使用する"
 
-#: opt/theme-options.php:2333
+#: opt/theme-options.php:2332
 msgid "smtp接口地址"
 msgstr "smtpインターフェースアドレス"
 
-#: opt/theme-options.php:2334
+#: opt/theme-options.php:2333
 msgid "例如smtp.163.com"
 msgstr "例：smtp.163.com"
 
-#: opt/theme-options.php:2340
+#: opt/theme-options.php:2339
 msgid "smtp接口端口"
 msgstr "smtpインターフェースポート"
 
-#: opt/theme-options.php:2341
+#: opt/theme-options.php:2340
 msgid "填写服务器的目标端口，比如465"
 msgstr "サーバーの宛先ポートを入力してください。例：465"
 
-#: opt/theme-options.php:2347
+#: opt/theme-options.php:2346
 msgid "用户名"
 msgstr "ユーザー名"
 
-#: opt/theme-options.php:2354
+#: opt/theme-options.php:2352
 msgid "smtp密钥"
 msgstr "smtpキー"
 
-#: opt/theme-options.php:2361
+#: opt/theme-options.php:2359
 msgid "smtp接口加密方式"
 msgstr "smtpインターフェースの暗号化方式"
 
-#: opt/theme-options.php:2363
+#: opt/theme-options.php:2361
 msgid "不加密"
 msgstr "暗号化なし"
 
-#: opt/theme-options.php:2364
+#: opt/theme-options.php:2362
 msgid "TLS"
 msgstr "TLS"
 
-#: opt/theme-options.php:2365
+#: opt/theme-options.php:2363
 msgid "SSL"
 msgstr "SSL"
 
-#: opt/theme-options.php:2373
+#: opt/theme-options.php:2371
 msgid "邮件落款签名"
 msgstr "メールの署名"
 
-#: opt/theme-options.php:2379
+#: opt/theme-options.php:2377
 msgid "邮件落款地址"
 msgstr "メールの送信元アドレス"
 
-#: opt/theme-options.php:2380
+#: opt/theme-options.php:2378
 msgid "此处填写发送用邮箱的完整地址"
 msgstr "ここには送信用メールアドレスの完全なアドレスを入力してください"
 
-#: opt/theme-options.php:2386
+#: opt/theme-options.php:2384
 msgid "测试邮件收件地址"
 msgstr "テストメールの送信先アドレス"
 
-#: opt/theme-options.php:2387
+#: opt/theme-options.php:2385
 msgid "留空时发送到当前登录账号的邮箱"
 msgstr ""
 "空欄の場合は現在ログインしているアカウントのメールアドレスに送信されます"
 
-#: opt/theme-options.php:2394
+#: opt/theme-options.php:2392
 msgid "保存选项后，可向收件地址发送一封测试邮件，以确认 SMTP 配置是否可用。"
 msgstr ""
 "オプションを保存した後、送信先アドレスにテストメールを送信して、SMTP 設定が利"
 "用可能かどうかを確認できます。"
 
-#: opt/theme-options.php:2397
+#: opt/theme-options.php:2395
 msgid "发送测试邮件"
 msgstr "テストメールを送信"
 
-#: opt/theme-options.php:2407
+#: opt/theme-options.php:2405
 msgid "低使用选项"
 msgstr "低使用オプション"
 
-#: opt/theme-options.php:2414
+#: opt/theme-options.php:2412
 msgid "统计接口"
 msgstr "統計インターフェース"
 
-#: opt/theme-options.php:2415
+#: opt/theme-options.php:2413
 msgid "可以选择使用 WP-Statistics 插件统计或主题内置统计来展示"
 msgstr ""
 "WP-Statisticsプラグインの統計またはテーマ内蔵の統計を使用して表示することがで"
 "きます"
 
-#: opt/theme-options.php:2417
+#: opt/theme-options.php:2415
 msgid "主题内置统计"
 msgstr "テーマ内蔵統計"
 
-#: opt/theme-options.php:2418
+#: opt/theme-options.php:2416
 msgid "WP-Statistics 插件统计"
 msgstr "WP-Statistics プラグイン統計"
 
-#: opt/theme-options.php:2426
+#: opt/theme-options.php:2424
 msgid "统计数据显示格式"
 msgstr "統計データ表示形式"
 
-#: opt/theme-options.php:2427
+#: opt/theme-options.php:2425
 msgid "可以从四种不同的数据展示格式中选择"
 msgstr "4つの異なるデータ表示形式から選択できます"
 
-#: opt/theme-options.php:2429
+#: opt/theme-options.php:2427
 msgid "23333 次访问"
 msgstr "23333 回アクセス"
 
-#: opt/theme-options.php:2430
+#: opt/theme-options.php:2428
 msgid "23,333 次访问"
 msgstr "23,333 回のアクセス"
 
-#: opt/theme-options.php:2431
+#: opt/theme-options.php:2429
 msgid "23 333 次访问"
 msgstr "23 333 回のアクセス"
 
-#: opt/theme-options.php:2432
+#: opt/theme-options.php:2430
 msgid "23K 次访问"
 msgstr "23K 回のアクセス"
 
-#: opt/theme-options.php:2441
+#: opt/theme-options.php:2439
 msgid "自定义插入 Header 代码"
 msgstr "カスタム挿入ヘッダーコード"
 
-#: opt/theme-options.php:2442
+#: opt/theme-options.php:2440
 msgid ""
 "填入需要高优先级加载的站点内容，可能会阻塞加载，如果不需要高优先级可以在页脚"
 "设置中插入"
@@ -3024,11 +3035,11 @@ msgstr ""
 "妨げられる可能性があります。優先度が不要な場合は、フッター設定で挿入できま"
 "す。"
 
-#: opt/theme-options.php:2448
+#: opt/theme-options.php:2446
 msgid "Gravatar服务代理"
 msgstr "Gravatarサービスプロキシ"
 
-#: opt/theme-options.php:2449
+#: opt/theme-options.php:2447
 msgid ""
 "你可以选择多种代理作为 Gravatar 服务代理。默认使用 Weavatar 作为 Gravatar 服"
 "务代理。"
@@ -3036,23 +3047,23 @@ msgstr ""
 "Gravatarサービスのプロキシとして、複数のプロキシを選択できます。デフォルトで"
 "はWeavatarがGravatarサービスのプロキシとして使用されます。"
 
-#: opt/theme-options.php:2451
+#: opt/theme-options.php:2449
 msgid "Weavatar"
 msgstr "Weavatar"
 
-#: opt/theme-options.php:2452
+#: opt/theme-options.php:2450
 msgid "Loli Net"
 msgstr "Loli Net"
 
-#: opt/theme-options.php:2453
+#: opt/theme-options.php:2451
 msgid "Gravatar官方"
 msgstr "Gravatar公式"
 
-#: opt/theme-options.php:2454 opt/theme-options.php:2462
+#: opt/theme-options.php:2452 opt/theme-options.php:2460
 msgid "自定义代理地址"
 msgstr "カスタムプロキシアドレス"
 
-#: opt/theme-options.php:2463
+#: opt/theme-options.php:2461
 msgid ""
 "填写你的 Gravatar 代理地址，不要以「http(s)://」开头，也不要以「/」结尾。例"
 "如：gravatar.com/avatar。"
@@ -3060,15 +3071,15 @@ msgstr ""
 "Gravatarプロキシアドレスを入力してください。http(s):// で始めず、/ で終わらな"
 "いようにしてください。例：gravatar.com/avatar"
 
-#: opt/theme-options.php:2470
+#: opt/theme-options.php:2468
 msgid "灯箱"
 msgstr "ライトボックス"
 
-#: opt/theme-options.php:2476
+#: opt/theme-options.php:2474
 msgid "灯箱效果"
 msgstr "ライトボックス効果"
 
-#: opt/theme-options.php:2477
+#: opt/theme-options.php:2475
 msgid ""
 "请选择你需要使用的灯箱效果，wordpress在6.4后已正式支持灯箱效果，此处仅提供另"
 "一种可选的效果，其他的可以自行按需安装插件"
@@ -3077,113 +3088,137 @@ msgstr ""
 "クス効果を正式にサポートしています。ここでは別の選択可能な効果のみを提供して"
 "おり、その他のものは必要に応じてプラグインをインストールできます。"
 
-#: opt/theme-options.php:2480
+#: opt/theme-options.php:2478
 msgid "Medium Zoom"
 msgstr "ミディアムズーム"
 
-#: opt/theme-options.php:2487
+#: opt/theme-options.php:2485
 msgid "代码高亮"
 msgstr "コードハイライト"
 
-#: opt/theme-options.php:2512
+#: opt/theme-options.php:2510
 msgid "以下设置不推荐盲目进行修改，请确保你知道它是在做什么"
 msgstr ""
 "以下の設定は盲目的に変更することは推奨されません。何を行うか理解していること"
 "を確認してください。"
 
-#: opt/theme-options.php:2518
+#: opt/theme-options.php:2516
 msgid "全站webp优化"
 msgstr "サイト全体のWebP最適化"
 
-#: opt/theme-options.php:2519
-msgid "将源站所有图片优化至webp"
-msgstr "ソースサイトのすべての画像をWebPに最適化する"
+#: opt/theme-options.php:2517
+msgid "将源站所有图片优化至webp，你的原图不会丢失"
+msgstr ""
+"オリジンサイトのすべての画像を WebP に最適化します。元の画像は失われません"
 
-#: opt/theme-options.php:2526
+#: opt/theme-options.php:2524
+msgid "webp优化图像质量"
+msgstr "WebP 画像最適化品質"
+
+#: opt/theme-options.php:2525
+msgid "质量越高图片越清晰，但体积也越大，首屏速度也越慢"
+msgstr ""
+"品質が高いほど画像は鮮明になりますが、ファイルサイズも大きくなり、ファースト"
+"ビューの速度も遅くなります"
+
+#: opt/theme-options.php:2535
 msgid "图片cdn"
 msgstr "画像CDN"
 
-#: opt/theme-options.php:2527
+#: opt/theme-options.php:2536
 msgid "将源站所有图片域名替换为该cdn域名"
 msgstr "将源站所有图片域名替换为该cdn域名"
 
-#: opt/theme-options.php:2535
+#: opt/theme-options.php:2543
+msgid ""
+"调整优化质量会按新参数重新生成缓存，旧缓存文件不会自动清理，可点击下方链接清"
+"理。"
+msgstr ""
+"最適化品質を調整すると、新しいパラメータでキャッシュが再生成されます。古い"
+"キャッシュファイルは自動的に削除されません。下のリンクをクリックして削除でき"
+"ます。"
+
+#: opt/theme-options.php:2546
+msgid "一键清除图片缓存"
+msgstr "画像キャッシュをワンクリックでクリア"
+
+#: opt/theme-options.php:2554
 msgid "Fontawesome图标的加载地址，仅用于后台主题设置框架图标正常显示"
 msgstr ""
 "Fontawesomeアイコンの読み込みアドレス。バックエンドテーマ設定フレームワークの"
 "アイコンが正常に表示されるためにのみ使用されます。"
 
-#: opt/theme-options.php:2550
+#: opt/theme-options.php:2569
 msgid "开发者模式"
 msgstr "開発者モード"
 
-#: opt/theme-options.php:2551
+#: opt/theme-options.php:2570
 msgid "启用并配置你的vite HMR客户端来正常使用"
 msgstr "使用するにはvite HMRクライアントを有効にして設定してください"
 
-#: opt/theme-options.php:2558
+#: opt/theme-options.php:2577
 msgid "Vite HMR客户端地址"
 msgstr "Vite HMRクライアントアドレス"
 
-#: opt/theme-options.php:2565
+#: opt/theme-options.php:2584
 msgid "Vite 主脚本入口地址"
 msgstr "Vite メインスクリプトのエントリポイントアドレス"
 
-#: opt/theme-options.php:2572
+#: opt/theme-options.php:2591
 msgid "AI Vite HMR客户端地址"
 msgstr "AI Vite HMRクライアントアドレス"
 
-#: opt/theme-options.php:2579
+#: opt/theme-options.php:2598
 msgid "AI Vite 主脚本入口地址"
 msgstr "AI Vite メインスクリプトエントリアドレス"
 
-#: opt/theme-options.php:2586
+#: opt/theme-options.php:2605
 msgid "开发者模式仅管理员"
 msgstr "開発者モードのみ管理者"
 
-#: opt/theme-options.php:2587
+#: opt/theme-options.php:2606
 msgid "启用后只有登陆为管理员的用户才会进入开发模式，游客不受影响"
 msgstr ""
 "有効にすると、管理者としてログインしているユーザーのみが開発モードに入りま"
 "す。ゲストには影響ありません。"
 
-#: opt/theme-options.php:2594
+#: opt/theme-options.php:2613
 msgid "PHP日志过滤"
 msgstr "PHP日記フィルタ"
 
-#: opt/theme-options.php:2596
+#: opt/theme-options.php:2615
 msgid "使用PHP配置"
 msgstr "PHP設定を使用"
 
-#: opt/theme-options.php:2597
+#: opt/theme-options.php:2616
 msgid "只显示严重错误"
 msgstr "重大なエラーのみ表示"
 
-#: opt/theme-options.php:2598
+#: opt/theme-options.php:2617
 msgid "过滤大部分错误"
 msgstr "大部分のエラーをフィルタリング"
 
-#: opt/theme-options.php:2601
+#: opt/theme-options.php:2620
 msgid "建议设置为“只显示严重错误”来防止不影响使用的php日志渲染到前端"
 msgstr "建议设置为“只显示严重错误”来防止不影响使用的php日志渲染到前端"
 
-#: opt/theme-options.php:2607
+#: opt/theme-options.php:2626
 msgid "备份与恢复"
 msgstr "バックアップと復元"
 
-#: opt/theme-options.php:2609
+#: opt/theme-options.php:2628
 msgid "备份或恢复你的主题设置"
 msgstr "テーマ設定のバックアップまたは復元"
 
-#: opt/theme-options.php:2620
+#: opt/theme-options.php:2639
 msgid "关于主题"
 msgstr "テーマについて"
 
-#: opt/theme-options.php:2626
+#: opt/theme-options.php:2645
 msgid "版本信息"
 msgstr "バージョン情報"
 
-#: opt/theme-options.php:2631
+#: opt/theme-options.php:2650
 msgid ""
 "<img src=\"https://s.nmxc.ltd/sakurairo_vision/@3.0/series/headlogo.webp\"  "
 "alt=\"主题信息\" />"
@@ -3191,7 +3226,7 @@ msgstr ""
 "<img src=\"https://s.nmxc.ltd/sakurairo_vision/@3.0/series/headlogo.webp\"  "
 "alt=\"テーマ情報\" />"
 
-#: opt/theme-options.php:2637
+#: opt/theme-options.php:2656
 #, php-format
 msgid ""
 "Sakurairo 主题版本 %s | 内部版本 %s | <a href=\"https://github.com/mirai-"
@@ -3200,26 +3235,26 @@ msgstr ""
 "Sakurairo テーマバージョン %s | 内部バージョン %s | <a href=\"https://"
 "github.com/mirai-mamori/Sakurairo\">プロジェクトURL</a>"
 
-#: opt/theme-options.php:2642
+#: opt/theme-options.php:2661
 msgid "更新相关"
 msgstr "更新関連"
 
-#: opt/theme-options.php:2648
+#: opt/theme-options.php:2667
 msgid "主题更新源"
 msgstr "テーマ更新ソース"
 
-#: opt/theme-options.php:2654
+#: opt/theme-options.php:2673
 msgid ""
 "如果你使用中国大陆境内的服务器，请使用又拍云源或主题官方源作为主题更新源"
 msgstr ""
 "中国大陆内のサーバーを使用する場合は、又拍云源またはテーマ公式源をテーマ更新"
 "源として使用してください。"
 
-#: opt/theme-options.php:2661
+#: opt/theme-options.php:2680
 msgid "主题更新测试通道免责声明"
 msgstr "テーマ更新テストチャンネル免責事項"
 
-#: opt/theme-options.php:2663
+#: opt/theme-options.php:2682
 msgid ""
 "请将 <strong>确保你已经充分了解参与测试的风险，并愿意自行承担一切后果</"
 "strong>（包括但不限于可能的数据丢失）之后引号中的文字复制到选项文本框中："
@@ -3230,35 +3265,35 @@ msgstr ""
 "うえで、その後ろの引用符内のテキストをオプションのテキストボックスにコピーし"
 "てください：<strong>「我同意并愿意承担一切意外后果」</strong>"
 
-#: opt/theme-options.php:2669
+#: opt/theme-options.php:2688
 msgid "主题更新通道"
 msgstr "テーマ更新チャンネル"
 
-#: opt/theme-options.php:2674
+#: opt/theme-options.php:2693
 msgid "可以在这里切换更新通道，以参与新版本的测试"
 msgstr "ここで更新チャンネルを切り替えて、新バージョンのテストに参加できます"
 
-#: opt/theme-options.php:2676
+#: opt/theme-options.php:2695
 msgid "稳定版通道"
 msgstr "安定版チャンネル"
 
-#: opt/theme-options.php:2677
+#: opt/theme-options.php:2696
 msgid "测试版通道"
 msgstr "テスト版チャンネル"
 
-#: opt/theme-options.php:2678
+#: opt/theme-options.php:2697
 msgid "预览版通道"
 msgstr "プレビューチャンネル"
 
-#: opt/theme-options.php:2685
+#: opt/theme-options.php:2704
 msgid "资源控制"
 msgstr "リソース制御"
 
-#: opt/theme-options.php:2691
+#: opt/theme-options.php:2710
 msgid "静态资源基础路径"
 msgstr "静的リソースのベースパス"
 
-#: opt/theme-options.php:2692
+#: opt/theme-options.php:2711
 msgid ""
 "该链接的目录结构需要与 fuukei 官方提供的 <a href=\"https://github.com/Fuukei/"
 "Sakurairo_Vision\">Sakurairo Vision</a> 仓库保持一致，否则部分资源可能会出现 "
@@ -3270,11 +3305,11 @@ msgstr ""
 "ります。デフォルトでは <a href=\"https://waf.pro/\">WAFPRO</a> 公式が提供する"
 "画像ソースを使用します。"
 
-#: opt/theme-options.php:2698
+#: opt/theme-options.php:2717
 msgid "主题贡献者"
 msgstr "テーマ貢献者"
 
-#: opt/theme-options.php:2703
+#: opt/theme-options.php:2722
 msgid ""
 "<img src=\"https://fuukei-api.nyat.icu/api/contributors\" alt=\"主题贡献者\" "
 "width=\"100%\" height=\"100%\" />"
@@ -3282,11 +3317,11 @@ msgstr ""
 "<img src=\"https://fuukei-api.nyat.icu/api/contributors\" alt=\"テーマ貢献者"
 "\" width=\"100%\" height=\"100%\" />"
 
-#: opt/theme-options.php:2708
+#: opt/theme-options.php:2727
 msgid "隐私信息"
 msgstr "プライバシー情報"
 
-#: opt/theme-options.php:2713
+#: opt/theme-options.php:2732
 msgid ""
 "<p>主题尊重你的隐私</p>\n"
 "        <p>但是，当你使用主题预置的中国大陆服务商提供的服务时，服务商可能会收"
@@ -3302,11 +3337,11 @@ msgstr ""
 "る情報を減らすことができます。テーマには関連するオプション設定が用意されてい"
 "ます</p>"
 
-#: opt/theme-options.php:2721
+#: opt/theme-options.php:2740
 msgid "向 Fuukei 发送主题版本"
 msgstr "Fuukeiにテーマバージョンを送信"
 
-#: opt/theme-options.php:2722
+#: opt/theme-options.php:2741
 msgid ""
 "主题只会向 Fuukei 官方发送时间与版本信息，数据会被定期清理，且仅用于统计版本"
 "更新情况。"
@@ -3314,11 +3349,11 @@ msgstr ""
 "主题只会向 Fuukei 官方发送时间与版本信息，数据会被定期清理，且仅用于统计版本"
 "更新情况。"
 
-#: opt/theme-options.php:2728
+#: opt/theme-options.php:2747
 msgid "引用信息"
 msgstr "引用情報"
 
-#: opt/theme-options.php:2733
+#: opt/theme-options.php:2752
 msgid ""
 "<p>Fluent Design 图标参考自 Paradox Fluent Icon Pack</p>\n"
 "        <p>MUH2 Design 图标参考自缄默的 <a href=\"https://www.coolapk.com/"
@@ -3328,11 +3363,11 @@ msgstr ""
 "        <p>MUH2 Design アイコンは編默の <a href=\"https://www.coolapk.com/"
 "apk/com.muh2.icon\">MUH2 Icon Pack</a> を参照しています</p>"
 
-#: opt/theme-options.php:2739
+#: opt/theme-options.php:2758
 msgid "依赖信息"
 msgstr "依存情報"
 
-#: opt/theme-options.php:2744
+#: opt/theme-options.php:2763
 msgid ""
 "<p>选项框架依赖 Codestar 开源的 <a href=\"https://github.com/Codestar/"
 "codestar-framework\">Codestar Framework</a> 项目</p>\n"
@@ -3351,7 +3386,7 @@ msgstr ""
 "href=\"https://github.com/themeum/kirki\">Kirki</a> プロジェクトに依存してい"
 "ます</p>"
 
-#: opt/theme-options.php:2751
+#: opt/theme-options.php:2770
 msgid ""
 "<img src=\"https://img.shields.io/github/v/release/mirai-mamori/"
 "Sakurairo.svg?style=flat-square\"  alt=\"主题最新版本\" style=\"border-"
