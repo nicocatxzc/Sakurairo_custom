@@ -21,7 +21,7 @@ $iro_menu_options = iro_get_navigation();
                 class="menu"
                 style="
                         justify-content: <?= iro_opt("navbar_distribution", "right") ?>;
-                        font-family: <?= iro_opt("nav_option_font") ?>,
+                        font-family: <?= iro_opt("nav_option_font") ?>;
                     ">
                 <?php foreach ($iro_menu_options as $item): ?>
                     <?php if (!empty($item['children'])): ?>
