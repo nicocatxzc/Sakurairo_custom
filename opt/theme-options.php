@@ -1150,16 +1150,26 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'cover_random_pic_select',
+                'type' => 'select',
+                'title' => __('封面随机图API', 'sakurairo'),
+                'options' => [
+                    'custom' => __('自定义', 'sakurairo'),
+                    'builtin' => __('主题内建', 'sakurairo'),
+                ],
+                'dependency' => ['cover_switch', '==', 'true', '', 'true'],
+                'default' => 'custom'
+            ],
+
+            [
                 'id' => 'cover_random_pic_url_pc',
                 'type' => 'text',
-                'title' => __('PC封面图片地址', 'sakurairo'),
+                'title' => __('桌面端封面图片地址', 'sakurairo'),
                 'desc' => __('填写图片地址或者随机图API', 'sakurairo'),
                 'dependency' => [
                     ['cover_switch', '==', 'true', '', 'true'],
                 ],
                 'default' => 'https://api.fuukei.org/random-img/default/pc.php',
-                'sanitize' => false,
-                'validate' => 'csf_validate_url',
             ],
 
             [
@@ -1171,8 +1181,26 @@ if (class_exists('Sakurairo_CSF')) {
                 ],
                 'desc' => __('填写图片地址或者随机图API，未填写则使用与PC图片相同的配置', 'sakurairo'),
                 'default' => 'https://api.fuukei.org/random-img/default/mobile.php',
-                'sanitize' => false,
-                'validate' => 'csf_validate_url',
+            ],
+
+            [
+                'id' => 'iro_builtin_gallery_path',
+                'type' => 'text',
+                'title' => __('主题内建随机图API路径', 'sakurairo'),
+                'dependency' => [
+                    ['cover_switch', '==', 'true', '', 'true'],
+                ],
+                'desc' => __('填写网站内存放图片的文件夹相对路径，例如/wp-content/gallery', 'sakurairo'),
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => '<p style="margin:0 0 10px;color:#666;">'
+                    . esc_html__('调整优化质量会按新参数重新生成缓存，旧缓存文件不会自动清理，可点击下方链接清理。', 'sakurairo')
+                    . '</p>'
+                    . '<a href="' . esc_url(admin_url('admin.php?iro_act=clear_media_cache')) . '" target="_blank" class="button">'
+                    . esc_html__('一键清除图片缓存', 'sakurairo')
+                    . '</a>',
             ],
 
             [
@@ -2517,7 +2545,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'label'   => __('将源站所有图片优化至webp，你的原图不会丢失', 'sakurairo'),
                 'default' => false,
             ],
-            
+
             [
                 'id'    => 'iro_image_quality',
                 'type' => 'slider',
