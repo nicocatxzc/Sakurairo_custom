@@ -126,7 +126,7 @@ export default function conversationBlock() {
     }
 
     registerBlockType("sakurairo/conversation", {
-        apiVersion: 2,
+        apiVersion: 3,
         title: lang.blockTitle,
         icon: createElement("i", { className: "fa-regular fa-comments" }),
         category: "sakurairo",

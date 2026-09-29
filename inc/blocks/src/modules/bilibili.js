@@ -110,7 +110,7 @@ export default function bilibiliBlock() {
         );
     }
     registerBlockType("sakurairo/vbilibili", {
-        apiVersion: 2,
+        apiVersion: 3,
         title: lang.blockTitle,
         icon: createElement("i", { className: "fa-brands fa-bilibili" }),
         category: "sakurairo",

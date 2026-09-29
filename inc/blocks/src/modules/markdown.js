@@ -15,6 +15,7 @@ export default function markdownBlock() {
     registerBlockType("hachimi/markdown", {
         title: "Markdown",
         icon: createElement("i", { className: "fa-brands fa-markdown" }),
+        apiVersion: 3,
         category: "sakurairo",
 
         attributes: {

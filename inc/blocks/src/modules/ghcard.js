@@ -29,7 +29,7 @@ let lang = createI18n({
 
 export default function () {
     registerBlockType("sakurairo/ghcard", {
-        apiVersion: 2,
+        apiVersion: 3,
         title: lang.blockTitle,
         icon: createElement("i", { className: "fa-brands fa-github" }),
         category: "sakurairo",

@@ -6,6 +6,7 @@ function createTemplateBlock({ name, title, nodeId, icon = "layout" }) {
     registerBlockType(`sakurairo/${name}`, {
         title,
         icon: icon,
+        apiVersion: 3,
         category: "sakurairo",
 
         supports: {
