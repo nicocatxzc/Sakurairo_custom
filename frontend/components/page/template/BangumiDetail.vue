@@ -87,7 +87,7 @@ onMounted(() => {
 
         border-radius: 1rem;
         border: var(--border-shine);
-        background-color: var(--widget-background-color);
+        background-color: var(--widget-background,0.95);
 
         overflow: hidden;
     }
