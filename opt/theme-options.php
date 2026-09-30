@@ -1700,6 +1700,17 @@ if (class_exists('Sakurairo_CSF')) {
                 'default' => false
             ],
 
+            [
+                'id' => 'page_style',
+                'type' => 'select',
+                'title' => __('文章排版样式', 'sakurairo'),
+                'options' => [
+                    'wordpress' => 'WordPress',
+                    'sakura'  => 'Sakura'
+                ],
+                'default'     => 'sakura'
+            ],
+
         ]
     ]);
 

@@ -1,0 +1,314 @@
+.post-content {
+    position: relative;
+
+    // ---------- 标题 ----------
+    h1 {
+        margin: 0.67em 0;
+        clear: both;
+        font-size: 2em;
+        font-weight: var(--global-font-weight);
+    }
+
+    h2 {
+        position: relative;
+        display: inline-block;
+        padding: 0;
+
+        &::after {
+            position: absolute;
+            bottom: -0.1rem;
+            left: 30%;
+            z-index: 0;
+            width: 70%;
+            height: 0.7em;
+            background-color: var(--active-color);
+            border-radius: 1.8rem;
+            opacity: 0.4;
+            content: "";
+            transition: all 0.3s ease;
+        }
+
+        &:hover::after {
+            left: 15%;
+            width: 85%;
+            opacity: 0.7;
+        }
+    }
+
+    h3,
+    h4,
+    h5 {
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    h3 {
+        padding-bottom: 0.6rem;
+    }
+
+    h3::after,
+    h4::after,
+    h5::after {
+        position: absolute;
+        left: 0;
+    }
+
+    h3::after {
+        content: "#";
+    }
+
+    h4::after {
+        content: ">";
+    }
+
+    h5::after {
+        content: "~";
+    }
+
+    // ---------- 段落与行内元素 ----------
+    p {
+        margin-bottom: 1.5em;
+        color: var(--word-color-first);
+    }
+
+    a {
+        color: var(--active-color, #00b0f0);
+        text-decoration: none;
+        word-break: break-word;
+        transition: color 0.2s ease-in-out;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: var(--active-color-reverse, #fccd00);
+            text-decoration: underline;
+        }
+    }
+
+    sub,
+    sup {
+        position: relative;
+        font-size: 75%;
+        line-height: 0;
+        font-weight: var(--global-font-weight);
+    }
+
+    sub {
+        bottom: -0.25em;
+    }
+
+    strong,
+    b,
+    dt {
+        font-weight: 700;
+    }
+
+    small {
+        font-size: 80%;
+        font-weight: var(--global-font-weight);
+    }
+
+    big {
+        font-size: 125%;
+    }
+
+    mark,
+    ins {
+        color: #000;
+        background: #fff9c0; // 主题暂无高亮色变量，保留固定高亮色
+        text-decoration: none;
+    }
+
+    abbr[title] {
+        border-bottom: 0.1rem dotted;
+        cursor: help;
+    }
+
+    code,
+    kbd,
+    samp,
+    tt,
+    var {
+        font-family: monospace, monospace;
+        font-size: 0.9375rem;
+        font-weight: var(--global-font-weight);
+    }
+
+    // ---------- 分割线 ----------
+    hr:not(.wp-block-separator) {
+        margin: 2.5em 0;
+        border: 0;
+        border-top: var(--border-sketch);
+    }
+
+    // ---------- 引用 ----------
+    blockquote {
+        position: relative;
+        margin: 0;
+        padding: 1.8rem 3.5rem;
+        quotes: "" "";
+
+        p {
+            margin: 0.3rem 0;
+        }
+
+        &::before,
+        &::after {
+            position: absolute;
+            width: 1rem;
+            height: 1rem;
+            color: var(--active-color);
+            background-color: currentColor;
+            content: "";
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+
+            -webkit-mask-image: var(--svg);
+            mask-image: var(--svg);
+        }
+
+        &::before {
+            top: 0.5em;
+            left: 0.5em;
+            --svg: url("../icons/fa/quote-left-solid-full.svg");
+        }
+
+        &::after {
+            right: 0.5em;
+            bottom: 0.5em;
+            --svg: url("../icons/fa/quote-right-solid-full.svg");
+        }
+
+        blockquote::before,
+        blockquote::after {
+            display: none;
+        }
+    }
+
+    // Gutenberg 引用块的内边距比普通引用小
+    .wp-block-quote {
+        padding: 0.8rem 1.6rem;
+    }
+
+    // ---------- 列表 ----------
+    ul,
+    ol {
+        margin-left: 0;
+        padding: 0.8rem 0.5rem 1.8rem 3rem;
+        color: var(--word-color-first);
+        border: var(--border-sketch);
+        border-radius: 0.6rem;
+    }
+
+    ul {
+        list-style: disc;
+    }
+
+    ol {
+        list-style: decimal;
+    }
+
+    ul ul {
+        padding: 0.8rem 0.5rem 0.8rem 1.8rem;
+        border: none;
+    }
+
+    li > ul,
+    li > ol {
+        margin: 0;
+        padding: 0 0 0 1rem;
+        border: none;
+    }
+
+    li {
+        padding: 1rem 0 0;
+    }
+
+    dd {
+        margin: 0 1.5em 1.5em;
+    }
+
+    address {
+        margin: 0 0 1.5em;
+    }
+
+    // ---------- 表格 ----------
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 0.3rem;
+    }
+
+    th,
+    td {
+        padding: 0.5rem;
+    }
+
+    th {
+        color: #fff;
+        background-color: var(--active-color);
+    }
+
+    tr {
+        border-bottom: var(--border-sketch);
+    }
+
+    // ---------- 媒体 ----------
+    figure {
+        margin: 1em 0;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border: 0;
+    }
+
+    embed,
+    iframe,
+    object {
+        max-width: 100%;
+    }
+
+    svg:not(:root) {
+        overflow: hidden;
+    }
+
+    // ---------- WordPress 生成内容 ----------
+    .wp-block-image .aligncenter > figcaption {
+        text-align: center;
+    }
+
+    .wp-caption {
+        max-width: 100%;
+        margin-bottom: 1.5em;
+    }
+
+    .wp-caption img[class*="wp-image-"] {
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .wp-caption .wp-caption-text {
+        margin: 0.8075em 0;
+    }
+
+    .wp-smiley {
+        height: 2em !important;
+        max-height: 2em !important;
+        margin: 0;
+        padding: 0;
+        border: none;
+        vertical-align: bottom;
+    }
+
+    // 文本选中
+    ::selection,
+    ::-moz-selection {
+        color: #fff;
+        background: #444;
+    }
+}

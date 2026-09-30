@@ -117,6 +117,11 @@ export default defineConfig(() => {
                         import.meta.dirname,
                         "components/site/captcha/captcha.js",
                     ),
+                    // 文章排版样式入口
+                    "post-sakura": resolve(
+                        import.meta.dirname,
+                        "components/post/post-sakura.js",
+                    ),
                 },
                 output: {
                     entryFileNames: "[name].js",
@@ -130,6 +135,10 @@ export default defineConfig(() => {
 
                         if (name === "captcha.css") {
                             return "captcha.css";
+                        }
+
+                        if (name === "post-sakura.css") {
+                            return "post-sakura.css";
                         }
 
                         return "assets/[name]-[hash][extname]";
