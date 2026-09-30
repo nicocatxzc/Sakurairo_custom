@@ -8,9 +8,9 @@
             }
             ?>
             <?php iro_content_container_start() ?>
-            <div class="post-content">
+            <article class="post-content">
                 <?php require get_template_directory() . '/frontend/components/post/render.php'; ?>
-            </div>
+            </article>
             <?php if ((is_single() && iro_opt("page_post_toc", true)) || (is_page() && iro_opt("page_page_toc", false))): ?>
                 <div class="toc-container toc">
                     <div id="toc"></div>
