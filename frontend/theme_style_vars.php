@@ -75,7 +75,7 @@
         --widget-transparency: <?= iro_opt('widget_transparency_dark', 0.8) ?>;
         --background-transparency: <?= iro_opt('background_transparency_dark', 0.7) ?>;
         --word-color-first: <?= iro_opt('word_color_first_dark', '#CCCCCC') ?>;
-        --word-color-second: <?= iro_opt('word_color_second_dark', '#7d7d7d') ?>;
+        --word-color-second: <?= iro_opt('word_color_second_dark', '#999999') ?>;
         --word-color-third: #7d7d7d;
         --word-color-first-reverse: <?= iro_opt('word_color_first', '#505050') ?>;
 

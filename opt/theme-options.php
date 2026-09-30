@@ -195,7 +195,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type'    => 'color',
                 'title'   => __('次要文字颜色', 'sakurairo'),
                 'desc'    => __('帮助和页脚等文字的颜色', 'sakurairo'),
-                'default' => '#7d7d7d'
+                'default' => '#999999'
             ],
 
             [
