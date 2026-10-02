@@ -9,6 +9,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const ElMessage: typeof import('element-plus/es').ElMessage
   const THEME_COLOR_VARS: typeof import('../app/utils/themeColor.js').THEME_COLOR_VARS
   const _: typeof import('lodash-es').default
   const api: typeof import('../app/utils/api.js').default

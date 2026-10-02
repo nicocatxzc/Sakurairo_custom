@@ -8,19 +8,19 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // 入口文件在 PHP 里以 app.js?ver=INT_VERSION 引用，chunk 之间却是相对路径互相 import。
 // 只要「入口 chunk 被别的 chunk 反向引用」，浏览器就会把 app.js?ver=... 与 ./app.js 当成两个模块图，整包下载并执行两次。
-// 因此被多处共享的代码必须落在独立 chunk：这里只拆 package.json 里直接依赖的大件，
-// 链式依赖统一并入 vendor-misc。
-// 首屏一定会用到的运行时与网络层合并成 vendor-core：拆得太碎会产生大量几 KB 的往返请求，
-// 而它们几乎同时被入口用到。其余大件都是非首屏 / 按需加载，各自独立成 chunk，
-// 避免被并进 vendor-core 而重新绑上首屏静态链。
-const VENDOR_GROUPS = [
-    ["vendor-core", ["axios", "axios-cache-interceptor", "swup", "lodash-es"]],
-    ["vendor-vue", ["vue", "@vue", "@vueuse"]],
-    ["vendor-particles", ["@tsparticles"]],
+// 因此被多处共享的代码必须落在独立 chunk。
+//
+// 首屏用不到的大件各自独立成 chunk，只在对应场景按需加载；
+// 其余启动链上的东西（主题运行时 + axios/swup/lodash-es/vue 等）全部合进 iro-core 一个 chunk。
+const LAZY_VENDOR_GROUPS = [
+    // 注意要带上无作用域的元包 tsparticles：它内部 import 了全部 @tsparticles/*，
+    // 漏掉它就会被并进启动 chunk，把整个粒子集重新绑回首屏。
+    ["vendor-particles", ["@tsparticles", "tsparticles"]],
     ["vendor-highlight", ["highlight\\.js"]],
     ["vendor-markdown", ["markdown-it", "markdown-it-texmath", "katex"]],
+    // element-plus 只被按需加载的 Vue 组件与 _iro.message 动态引用，单独成 chunk 才不会回流进启动链
     ["vendor-element", ["element-plus"]],
-    // aplayer 只在页脚播放器里按需加载，单独成 chunk，避免被 vendor-misc 卷入首屏静态链
+    // aplayer 只在页脚播放器里按需加载
     ["vendor-aplayer", ["aplayer"]],
 ];
 
@@ -29,6 +29,10 @@ const pkgTest = (names) =>
     new RegExp(
         `node_modules[\\\\/](?:\\.pnpm[\\\\/][^\\\\/]+[\\\\/]node_modules[\\\\/])?(?:${names.join("|")})[\\\\/]`,
     );
+
+// 按需大件的匹配器：启动 group 靠它把自己排除在这些包之外
+const LAZY_VENDOR_TESTS = LAZY_VENDOR_GROUPS.map(([, names]) => pkgTest(names));
+const isLazyVendor = (id) => LAZY_VENDOR_TESTS.some((test) => test.test(id));
 
 export default defineConfig(() => {
     return {
@@ -144,40 +148,27 @@ export default defineConfig(() => {
                         return "assets/[name]-[hash][extname]";
                     },
                     codeSplitting: {
+                        // Rolldown 会把不参与 group 匹配的共享模块（典型是 Vite 注入的 __vitePreload helper
+                        // \0vite/preload-helper.js）塞进**优先级最高**的 group 的 chunk。优先级若被大件拿走，
+                        // 入口就会静态 import 整个 400 KB 粒子包。
+                        // 因此启动 group 拿最高优先级，同时显式排除下面那些按需大件。
                         groups: [
-                            ...VENDOR_GROUPS.map(([name, names], index) => {
-                                const pkg = pkgTest(names);
-                                return {
-                                    name,
-                                    // Vite 注入的动态 import 预加载 helper（__vitePreload）没有真实模块 id 规律，
-                                    // 不显式接管时会被 Rolldown 随便塞进某个 vendor chunk（实测是 vendor-particles），
-                                    // 让入口静态 import 整个 tsparticles。这里把它并进首屏的 vendor-core。
-                                    test:
-                                        name === "vendor-core"
-                                            ? (id) =>
-                                                  pkg.test(id) ||
-                                                  id.includes(
-                                                      "vite/preload-helper",
-                                                  )
-                                            : pkg,
-                                    priority: 100 - index,
-                                };
-                            }),
-                            // 主题侧共享运行时：动态 chunk（pjax / 滚动 / 阅读量 / 表情包 / 粒子插件）都要用 _iro 与 api，
-                            // 一旦留在入口 chunk 就会反向引用 app.js。message.js 内部再动态 import element-plus，仍保持懒加载。
                             {
                                 name: "iro-core",
                                 test: (id) =>
-                                    id.includes("/frontend/app/") &&
-                                    !/\.s?css$/.test(id),
-                                priority: 60,
+                                    !/\.s?css$/.test(id) &&
+                                    !isLazyVendor(id) &&
+                                    (id.includes("vite/preload-helper") ||
+                                        id.includes("export-helper") ||
+                                        id.includes("/frontend/app/") ||
+                                        /node_modules[\\/]/.test(id)),
+                                priority: 200,
                             },
-                            // 其余第三方依赖
-                            {
-                                name: "vendor-misc",
-                                test: /node_modules[\\/]/,
-                                priority: 10,
-                            },
+                            ...LAZY_VENDOR_GROUPS.map(([name, names], index) => ({
+                                name,
+                                test: pkgTest(names),
+                                priority: 100 - index,
+                            })),
                         ],
                     },
                 },
