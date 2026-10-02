@@ -41,7 +41,7 @@
 - 命令一律**尽量重定向输出到文件**，再读文件取结果：`pnpm build > /tmp/iro-build.log 2>&1`，然后读 `/tmp/iro-build.log`，根据系统环境自行适配临时目录路径。
 - 需要在一次调用里拿到结果时，用 `<cmd> > /tmp/iro-<name>.log 2>&1; tail -n 50 /tmp/iro-<name>.log`，不要依赖裸命令的回显。
 - 长耗时命令（`pnpm install` / `pnpm build` / `package.sh`）放后台并落盘：`nohup pnpm build > /tmp/iro-build.log 2>&1 &`，随后再读日志判断成败。
-- 日志文件统一放 `/tmp/`，命名形如 `/tmp/iro-<用途>.log`，避免污染仓库工作区。
+- 日志文件统一放**系统临时目录**、命名形如 `iro-<用途>.log`（Linux/macOS 用 `/tmp/`，Windows 用 `$env:TEMP`），避免污染仓库工作区。
 - **以日志文件内容为准**：一次没拿到输出不代表命令失败或成功，别急着下结论或重复执行。
 
 ---
@@ -64,7 +64,7 @@ Sakurairo/
 ├── frontend/                # ★ 前台源码（Vite 工程；workspace 成员，锁文件在主题根）
 │   ├── main.js              # 入口：样式 + app + components
 │   ├── style.scss / layout.scss / icons.scss
-│   ├── vite.config.js       # 双入口 app/captcha、手动 codeSplitting、入口反向引用守卫、HTTPS dev server
+│   ├── vite.config.js       # 三入口 app/captcha/post-sakura、手动 codeSplitting、入口反向引用守卫、HTTPS dev server
 │   ├── package.json / tsconfig.json
 │   ├── app/                 # 客户端核心（非组件）
 │   │   ├── index.ts         # window._iro 命名空间 + hook 系统 + 配置解析
@@ -281,7 +281,7 @@ pnpm install          # 唯一一次安装：frontend / inc/blocks / inc/ai 的�
 | `pnpm build:frontend` | `pnpm --filter frontend run build` | 只构建前台 |
 | `pnpm build:blocks` | `pnpm --filter iro_blocks run build` | 只构建区块 |
 | `pnpm build:ai` | `pnpm --filter ai run build` | 只构建 AI 面板 |
-| `pnpm dev` | `pnpm -r --if-present run dev` | 同时起前台与 AI 的 Vite dev server |
+| `pnpm dev` | `pnpm --filter frontend run dev` | **只起前台的** Vite dev server（5173）；AI 面板要另开 `pnpm dev:ai` |
 | `pnpm dev:ai` | `pnpm --filter ai run dev` | 只起 AI 面板 dev server |
 
 > `package.sh` 需要 `pnpm` / `node` / `zip`；会先检查三个子目录里有没有残留的 `pnpm-lock.yaml`/`pnpm-workspace.yaml`（有则报错退出），再 `pnpm install --frozen-lockfile` 与 `pnpm -r build`。打包时 frontend 只保留 PHP 模板与 `dist/`，`inc/blocks/src` 被删除，`inc/ai` 只保留 `dist/`，并删掉 `.po/.pot`、`AGENTS.md`、`package.sh` 等开发文件。
@@ -299,7 +299,7 @@ pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、comp
 - 本地开发需在**站点选项里打开 `dev_mode`**，`inc/functions/enqueue_assets.php` 会改为加载 `dev_mode_hmr_client` / `dev_mode_main_js`（默认 `https://wordpress:5173/...`）。
 - dev server 使用自签 HTTPS，且 HMR `host: "wordpress"`；本机需能把 `wordpress` 解析到该容器/主机（官方 docker 环境已配置）。
 - `frontend/dist/` 已被 `.gitignore`，**不要提交**（`inc/blocks/build/`、`inc/ai/dist/` 同样不提交）。
-- Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式）。入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
+- Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式），`post-sakura.css` → `post-sakura.css`（**文章排版样式，仅在 `page_style` 选 Sakura 时由 PHP 按需加载**，入口 `components/post/post-sakura.js`，刻意不并进 `post/index.js`，否则会被打进首屏 `style.css`）。主入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
 - **入口反向引用会被构建直接报错**：`vite.config.js` 里的 `iro-entry-import-guard` 插件一旦发现非入口 chunk `import "app.js"` 就终止构建。原因是「入口 chunk 被别的 chunk 反向引用」会让浏览器把 `app.js?ver=...` 与 `./app.js` 当作两份模块图、整包下载执行两次。被多处共享的代码必须落进 `codeSplitting.groups`（现有 `vendor-*` 与 `iro-core`）。
 - `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
 - 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
@@ -344,11 +344,12 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
 
 ### PHP
 
-- 每个可被直接访问的文件顶部加 `if (!defined('ABSPATH')) { exit; }`。
-- 新函数统一加前缀 `iro_` 或 `sakurairo_`；可能与其他主题/插件冲突的函数用 `if (!function_exists(...))` 包裹。
+- `if (!defined('ABSPATH')) { exit; }` 加在**会产生副作用的文件**顶部：直接输出内容、注册 REST 路由或钩子的那些（现有 `inc/api/*.php`、`inc/functions/ai/*`、`inc/functions/comment/smiles*.php`、`sitemap.php`、`smtp.php`）。纯函数定义文件（如 `inc/functions/tools.php`）不加——这条规则管的是「能被直接访问并产生副作用」，不是无差别全覆盖。
+- 新函数统一加前缀 `iro_` 或 `sakurairo_`；**可能被重复 require 的核心函数**用 `if (!function_exists(...))` 包裹（见 `inc/theme_init/iro_opt.php` 的 `iro_opt` / `iro_opt_update`）。前缀规则不回溯：`siren_*`、`hachimi_*`、`DEFAULT_FEATURE_IMAGE()` 等历史名仍被模板调用，**不要改名**。
+- 新函数带参数与返回类型标注（`string $key`、`: void`、`callable $cb`），历史函数普遍没有；新代码按带标注的写法。
 - 输出必须转义：`esc_html()` / `esc_attr()` / `esc_url()` / `esc_js()` / `esc_html__()`。
 - 输入必须清洗：`sanitize_key()` / `sanitize_text_field()` / `intval()`；POST 读取可用 `iro_get_post_key()`（`inc/functions/tools.php`）。
-- 4 空格缩进（`opt/` 与部分历史文件用 tabs，**在既有文件内保持原风格**）。
+- **4 空格缩进，全仓库一致**——`opt/` 也是 4 空格。只有 vendored 库 `inc/libs/*`（wp-api-menus、Meting）与两个独立输出的后台皮肤 `inc/dash-scheme.php`、`inc/option-scheme.php` 用 tabs，在这些既有文件内保持原风格。
 
 ### PHP 组件模板（`frontend/components/**/*.php`）—— 类 Vue 风格
 
@@ -368,9 +369,11 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
 <?php endif; ?>
 ```
 
-- 参考实现：`post/card/with_image.php`、`post/list.php`、`site/widget.php`。
-- 需要循环内做多分支时用 `switch/endswitch`（见 `post/card/with_image.php` 的 `post_card_metas` 输出）。
-- 结构性重复（容器开合）才抽成函数组件（如 `iro_content_container_start/end()`），其余保持单文件模板。
+- `style="..."` 里的 CSS 变量**顶格写**、不跟随标签缩进（见 `site/widget.php`）。
+- 模板要能在**局部渲染**下只输出片段：`global $iro_only_template;` 在文件首行声明，容器开合被条件劈开（见 `post/list.php`：`if (!$iro_only_template): ?>` 开 `<div>`，循环与分页之后再由 `<?php endif; ?>` 闭合）。见 §4.5。
+- **参考实现**：行文与变量的样板是 `post/list.php` 与 `site/widget.php`（零中间变量，表达式连同 `?? 默认值` 一起内联进属性）；`post/card/with_image.php` 只作替代语法与 `switch/endswitch` 的写法参考，它的 `$metas` / `$categories` 提取是**反例**（见下节「变量」）。循环内多分支见它的 `post_card_metas` 输出。
+- 历史文件里存在 `while (...) : ` 冒号前带空格、`&&`/`==` 两侧无空格与松散比较、单双引号混用（见 `post/list.php`）——**这些都是遗留，不要模仿**；新代码按本节规则写。
+- 函数组件以 `<?php iro_post_pagination(); ?>` 形式调用；结构性重复（容器开合）才抽成函数组件（如 `iro_content_container_start/end()`），其余保持单文件模板。
 
 ### 注释
 
@@ -380,13 +383,17 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
   2. 该处**容易引发问题/踩坑**（如 PJAX 后失效、构建产物提交规则）；
   3. **无法从代码本身检索到的外部行为**（如 WordPress 核心行为、WP 7.1 编辑器 iframe 只消费 `enqueue_block_assets`、浏览器/框架的隐式约定）。
 - 能直接从代码读懂的、逻辑直白的，**一律不注释**（不要写「循环输出文章列表」这类复述代码的注释）。
-- 形式：**非多行说明优先用 `//`**（PHP 与 JS 均同），只有确实需要多行时才用块注释。
+- 形式分两级，且**源码里不使用普通的 `/* */` 块注释**（多行说明也连写多个 `//`，生成文件里的 `/* eslint-disable */` 除外）：
+  - **过程内的「为什么」用 `//`**：说明取舍、历史沿革、踩过的坑（如 `vite.config.js` 的 codeSplitting 分组理由、`post-sakura.js` 为何独立成入口）。
+  - **函数、全局对象、类型字段的契约用 `/** */`**：可单行也可多行，必要时也可给局部变量加单行 JSDoc（见 `frontend/components/comment/Smiles.vue`），以及说明「对应 PHP 的哪个字段」这类跨端对应关系（见 `frontend/types/iro.d.ts`）。
+- 反面样板与正面样板都在仓库里：`frontend/components/comment/form.ts` 中解释 WordPress 内核 nonce 行为的那段注释是**正面样板**（写的是代码里读不到的外部行为）；任何复述代码的注释都是反面样板。
 
 ### 变量
 
 - **只使用一次的表达式一律内联**，不要先赋给变量再使用（如仅为取 `get_the_category()[0]` 而先写 `$categories = get_the_category();` —— 历史模板里存在此类写法，新代码不要沿用）。
 - 只有当同一结果被复用 ≥2 次、或为了显著提升可读性（长表达式拆解）时，才提取变量。
 - 模板里优先把表达式直接写进 `<?= ?>`，而不是在模板顶部堆一堆 `$xxx = ...;`。
+- **合规样板是 `post/list.php` 与 `site/widget.php`**（零中间变量，`iro_opt(...)["card_radius"] ?? 0.7` 这类连默认值一起内联进 `style`）；**反例就是 `post/card/with_image.php`** 的 `$metas` 与 `$categories`——它只在替代语法与 `switch` 上可参照，变量规则不要跟它。
 
 ### JS / Vue / SCSS（`frontend/` 与 `inc/ai/`）
 
@@ -395,12 +402,17 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
 - 使用全局 `_iro`（直接写 `_iro`，不要重复声明 `window._iro`）。
 - 事件通信优先用 `_iro.bus`（mitt）与 PJAX 生命周期 hook。
 - 需要脱离主 bundle 独立运行的脚本（如 `site/captcha/captcha.js`）要自行兜底：先判 `window?._iro?.hooks`，否则从 `#iro_theme_config` 解析配置。
-- 网络请求统一用 `frontend/app/utils/api.js`（axios + `axios-cache-interceptor`，GET 缓存 5 分钟），不要直接用裸 `fetch`。
-- SCSS 用 `@use ... as ...`（Dart Sass 模块语法），不要用 `@import`。
+- **请求工具按「所在工程的依赖上下文 + 工具自身的职责」选，不能一刀切，也不要按「内部/外部、GET/POST」这类想当然的分类去套**：
+  - **子包依赖决定可用手段**：三个工程依赖互相隔离，`inc/ai/package.json` **没有 axios**，所以 `inc/ai/**` 只能用 `fetch`（自带薄封装 `inc/ai/src/api.js`）；`inc/blocks/src` 完全不发请求。
+  - **`frontend/app/utils/api.js` 只是「仅 GET 的缓存封装」**：全文 9 行，`setupCache(axios.create(), { ttl: 5 分钟, methods: ["get"] })`，**没有 baseURL、没有拦截器、不注入 nonce**——它是缓存语义，不是通用请求工具。只用于「主题 REST 的**可缓存 GET 读**」（现有用例：分页、搜索索引、表情包列表）。
+  - **写操作**与**必须每次新鲜的读**用**裸 `axios`**（`frontend/` 内已由 unplugin 全局 auto-import，无需 import），并自行带 `X-WP-Nonce`。现有代码里刻意绕开 `api.js` 的两处就是 `app/plugins/postViews.js`（POST 上报）与 `site/captcha/builtin.vue`（`/captcha`，**被缓存 5 分钟就是 bug**）。
+  - **二进制 / `blob()`**、**原生表单提交**（目标不是 REST path）用 `fetch`。
+  - 判断不了时**跟所在文件的既有写法**，不要引入新范式。
+- SCSS 用 `@use ... as <语义命名>`（Dart Sass 模块语法），全站已统一（`frontend/style.scss` 与各分区 `index.scss`，如 `as page-post`）。**唯一例外是导入第三方 `.css`**——`components/post/hljs.scss` 的 `@import "highlight.js/styles/github-dark.css"`，`.css` 不适用 `@use`；除此之外不要用 `@import`。
 
 ### 通用
 
-- 调用 shell 遵循 §2.1：命令输出一律重定向到 `/tmp/iro-*.log` 再读文件，不依赖内置 shell 的回显。
+- 调用 shell 遵循 §2.1：命令输出一律重定向到日志文件再读文件（Linux/macOS 用 `/tmp/iro-*.log`，Windows 用 `$env:TEMP`），不依赖内置 shell 的回显。
 - 不引入新的第三方库，除非确实必要并同步更新 `pnpm-lock.yaml`（项目已内置 vue、element-plus、swup、animejs、tsparticles、markdown-it、katex、highlight.js、tocbot、medium-zoom、typed.js、@opentiny/tiny-robot 等）。
 - 不修改 `update-checker/vendor`、`update-checker/Puc`、`opt/csf`、`opt/customizer/kirki` —— 它们是 vendored 上游代码。
 
@@ -427,6 +439,8 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
 17. **AI 能力有 WP 版本门槛**：内置 AI Client 是 WordPress 7.0 引入的。`inc/functions/ai/provider.php` 与 `tools.php` 都靠「类/函数是否存在」提前 `return`，`options.php` 也在 `iro_ai_generate` 缺失时直接退出、不注册后台入口。低于 WP 7.0 时后台看不到 AI 工具是预期行为，不要当 bug 去补依赖或报错。
 18. **AI 面板用 Shadow DOM 隔离样式**：面板里的样式由 `inc/ai/src/main.js` 从文档克隆进 Shadow DOM（dev 下靠 MutationObserver 跟随 Vite 样式 HMR）。给面板加样式时不要假设全局 CSS 会命中，也不要随便改这段隔离逻辑。
 19. **翻译不要直改 `.mo`**：编辑 `translation/*.po`；`languages/*.mo` 是 `.gitignore` 的编译产物，改了既不入库也会在下次打包时被覆盖。
+20. **`frontend/app/utils/api.js` 是缓存封装，不是通用请求工具**：它只对 GET 做 5 分钟缓存（全文 9 行，无 baseURL、无拦截器、不注入 nonce）。拿它发写操作，或去取**必须每次新鲜**的接口（如 `/captcha`），都会被缓存语义坑到——现有代码里 `app/plugins/postViews.js`（POST 上报）与 `site/captcha/builtin.vue`（`/captcha`）都是**刻意改用裸 `axios`** 绕开它的。另注意 `inc/ai` 子包没有 axios 依赖，那里只能用 `fetch`。
+21. **`frontend/types/iro.d.ts` 的类型错误会被 `skipLibCheck` 掩盖**：tsconfig 继承 `@vue/tsconfig/tsconfig.dom.json`，声明文件整体跳过检查。该文件第 72 行的 `hitokoto_apis?: Array[string]` 实为 `Array<string>` 之误，而默认 `tsc --noEmit` 依然 exit 0——只有 `--skipLibCheck false` 才会暴露（并同时带出其它错误）。**改这个文件不要指望类型检查兜底。**
 
 ---
 
