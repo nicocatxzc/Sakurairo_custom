@@ -131,6 +131,12 @@ interface IroUtils {
     [key: string]: unknown;
 }
 
+/** 对应 app/optimize.js 暴露的弱网/省流信号 */
+interface IroOptimize {
+    /** 用户开启了省流（saveData / prefers-reduced-data） */
+    saveData: boolean;
+}
+
 type IroMessageType = "success" | "warning" | "info" | "error";
 
 /** 对应 frontend/i18n.js 导出的翻译对象，可调用或使用 .t() */
@@ -148,6 +154,7 @@ interface IroNamespace {
     user: IroUserConfig;
     bus: IroBus;
     utils: IroUtils;
+    optimize: IroOptimize;
     i18n: IroI18n;
     navigate: (
         url: string,

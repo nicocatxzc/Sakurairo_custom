@@ -108,6 +108,12 @@ _iro.hooks.DOMContentLoaded.push(() => {
 
         e.preventDefault();
 
+        // 用户主动选字体，直接放开延后的 @font-face
+        const extraFonts = document.getElementById("iro_extra_fonts");
+        if (extraFonts) {
+            extraFonts.media = "all";
+        }
+
         const name = btn.dataset.name;
         const current = localStorage.getItem(STORAGE_KEY);
 

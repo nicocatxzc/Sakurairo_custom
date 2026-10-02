@@ -1,24 +1,18 @@
-function shouldOptimize() {
-
-  const conn = navigator.connection;
-
-  // 省流模式
-  if (conn?.saveData) return false;
-
-  // 弱网
-  if (['slow-2g', '2g'].includes(conn?.effectiveType)) return false;
-
-  // 弱设备
-  if (navigator.deviceMemory && navigator.deviceMemory < 2) return false;
-
-  // 低速
-  if (conn?.downlink !== undefined && conn.downlink < 1) return false;
-
-  // 无需优化
-  return true;
+/**
+ * 弱网/省流信号。
+ *
+ * navigator.connection 实测无效
+ * 这里仅返回明确弱网信号
+ */
+function isDataSaver() {
+    const connection = navigator.connection;
+    return (
+        connection?.saveData === true ||
+        matchMedia("(prefers-reduced-data: reduce)").matches
+    );
 }
 
-_iro.optimize = shouldOptimize();
-
-if(_iro.config.slow_net_optimize) {
-}
+_iro.optimize = {
+    /** 用户开启了省流 */
+    saveData: isDataSaver(),
+};

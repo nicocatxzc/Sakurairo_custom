@@ -1,13 +1,64 @@
-<style>
-    <?php foreach (iro_opt("extra_fonts") as $font): ?>@font-face {
-        font-family: '<?= $font["name"] ?>';
-        src: url('<?= $font["link"] ?>');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
+<?php
+ob_start();
+?>
+<?php foreach (iro_opt("extra_fonts", []) as $font): ?> @font-face {
+    font-family: '<?= $font["name"] ?>';
+    src: url('<?= $font["link"] ?>');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
     }
 
-    <?php endforeach ?> :root {
+<?php endforeach; ?>
+<?php $iro_extra_font_faces = ob_get_clean(); ?>
+<?php if (trim($iro_extra_font_faces) !== ''): ?>
+    <style id="iro_extra_fonts" media="not all">
+        <?= $iro_extra_font_faces ?>
+    </style>
+    <noscript>
+        <style>
+            <?= $iro_extra_font_faces ?>
+        </style>
+    </noscript>
+    <script>
+        // 外链字体默认关在 media="not all" 里，浏览器不会去下载。
+        // 等首屏最大内容绘制稳定后再放开：字体既不和首屏抢带宽，也不会被算成首屏资源。
+        // 用户开启省流时不放开，直接不用外链字体。
+        (function() {
+            function openExtraFonts() {
+                var extraFonts = document.getElementById("iro_extra_fonts");
+                if (extraFonts && extraFonts.media !== "all") {
+                    extraFonts.media = "all";
+                }
+            }
+
+            var connection = navigator.connection;
+            if ((connection && connection.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches) {
+                return;
+            }
+
+            var settleTimer = 0;
+
+            function openAfterLargestPaint() {
+                clearTimeout(settleTimer);
+                settleTimer = setTimeout(openExtraFonts, 600);
+            }
+
+            // 页面一直没有 LCP 候选，或候选一直在更新时兜底
+            setTimeout(openExtraFonts, 10000);
+            try {
+                new PerformanceObserver(openAfterLargestPaint).observe({
+                    type: "largest-contentful-paint",
+                    buffered: true
+                });
+            } catch (e) {
+                window.addEventListener("load", openAfterLargestPaint);
+            }
+        })();
+    </script>
+<?php endif; ?>
+<style>
+    :root {
         --global-font-size: <?= iro_opt('global_font_size', 16) ?>;
         --global-font-weight: <?= iro_opt('global_font_weight', 300) ?>;
 
@@ -43,8 +94,13 @@
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }
 
+    @media (min-width: 861px) {
+        :root {
+            --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'pc', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_pc') ?>);
+        }
+    }
+
     :root {
-        --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'pc', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_pc') ?>);
         --cover-background-img-mb: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'mb', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_mb') ?>);
     }
 
