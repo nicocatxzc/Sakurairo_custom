@@ -2586,6 +2586,14 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'iro_slow_net_optimize',
+                'type'  => 'switcher',
+                'title' => __('弱网优化', 'sakurairo'),
+                'label'   => __('开启后主题前后端将嗅探弱网特征，如果命中将削减图片/字体等资源', 'sakurairo'),
+                'default' => false,
+            ],
+
+            [
                 'id' => 'fontawesome_source',
                 'type' => 'text',
                 'title' => __('Fontawesome源', 'sakurairo'),
