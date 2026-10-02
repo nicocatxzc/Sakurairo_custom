@@ -44,8 +44,8 @@
     }
 
     :root {
-        --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_url_pc') ?>);
-        --cover-background-img-mb: url(<?= iro_opt('cover_random_pic_url_mb') ?>);
+        --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'pc', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_pc') ?>);
+        --cover-background-img-mb: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'mb', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_mb') ?>);
     }
 
     <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {

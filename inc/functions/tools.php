@@ -41,6 +41,13 @@ function DEFAULT_FEATURE_IMAGE()
         $url = wp_is_mobile() ? iro_opt('cover_random_pic_url_mb') : iro_opt('cover_random_pic_url_pc');
         return $url ? get_random_url($url) : '';
     }
+    //使用内建随机图api
+    if (iro_opt('post_card_image') == 'always_builtin') {
+        $request = new WP_REST_Request('GET', '/sakura/v1/gallery');
+        $request->set_query_params(['size' => 'pc']);
+        $url = rest_do_request($request)->get_headers()['Location'] ?? null;
+        return is_string($url) ? $url : '';
+    }
     //仅特色图片，不使用随机图
     return '';
 }

@@ -128,7 +128,11 @@ function iro_gallery_sort(string $dir): array
 /**
  * 随机取图并跳转
  *
- * @return WP_Error|void
+ * 跳转用 WP_REST_Response 而不是 wp_safe_redirect()：除浏览器直接访问外，模板侧
+ * （DEFAULT_FEATURE_IMAGE）还会用 rest_do_request() 内部调它取 Location 头，
+ * 直接输出跳转头再 exit 会把整页变成一次跳转。
+ *
+ * @return WP_Error|WP_REST_Response
  */
 function iro_gallery_get_image(WP_REST_Request $request)
 {
@@ -180,9 +184,9 @@ function iro_gallery_get_image(WP_REST_Request $request)
 
     $image = $images[array_rand($images)];
 
-    wp_safe_redirect(
-        home_url('/' . $rel . '/' . implode('/', array_map('rawurlencode', explode('/', $image)))),
-        302
+    return new WP_REST_Response(
+        null,
+        302,
+        ['Location' => home_url('/' . $rel . '/' . implode('/', array_map('rawurlencode', explode('/', $image))))]
     );
-    exit;
 }
