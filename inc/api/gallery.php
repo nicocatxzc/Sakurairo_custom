@@ -1,238 +1,188 @@
 <?php
 
-// 内建随机图api
-namespace Sakura\API;
+/**
+ * 内建随机图 API
+ *
+ * 目录由设置项 iro_gallery_path 指定（相对站点根），图片按长宽比移动分拣进 pc/ 与 mb/。
+ * 索引文件 <gallery>/imglist.json 同时记录图片清单与 gallery、pc、mb 三个目录的 mtime 快照：
+ * gallery 的 mtime 变了说明有新图进来，重新分拣；pc/ 或 mb/ 的 mtime 变了说明有人直接动过
+ * 分拣目录，只重建索引。
+ */
 
-class gallery
+/**
+ * 目录（或文件）的改动时间
+ *
+ * 目录的 mtime 只在增删其下条目时变化，正是判定「是否需要重新分拣/重建索引」的依据。
+ * 每次读取前清一遍 stat 缓存，移动文件之后拿到的才是新值。
+ */
+function iro_gallery_mtime(string $path): int
 {
-    private $image_dir;
-    private $image_list;
-    private $image_folder;
-    private $backup_folder;
-    private $log = '';
+    clearstatcache(true, $path);
 
-    //定义工作目录
-    public function __construct()
-    {
-        $upload_dir = wp_get_upload_dir()['basedir'];
-        $this->image_dir = $upload_dir . '/iro_gallery';
-        $this->image_list = $this->image_dir . '/imglist.json';
-        $this->image_folder = $this->image_dir . '/img';
-        $this->backup_folder = $this->image_dir . '/backup';
-        //创建目录和索引
-        $this->init_dirs();
+    return (int) @filemtime($path);
+}
+
+/**
+ * 递归列出目录下的文件
+ *
+ * @param string   $dir     目标目录
+ * @param string[] $exclude 仅在首层忽略的子项名，用于把分拣出来的 pc/ 与 mb/ 排除在源图之外
+ * @return string[] 文件绝对路径
+ */
+function iro_gallery_scan(string $dir, array $exclude = []): array
+{
+    if (!is_dir($dir)) {
+        return [];
     }
 
-    private function init_dirs()
-    {
-        //初始化工作目录
-        $dirs = [$this->image_dir, $this->image_folder, $this->backup_folder];
+    $files = [];
 
-        foreach ($dirs as $dir) {
-            if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-                $this->log .= __("Unable to create directory: $dir. Please check permissions.", "sakurairo") . '<br>';
-                return $this->log;
-            }
-        }
-        //初始化索引
-        if (!file_exists($this->image_list)) {
-            if (!touch($this->image_list)) {
-                $this->log .= __("Unable to create file: {$this->image_list}. Please check permissions.", "sakurairo") . '<br>';
-                return $this->log;
-            }
-        }
-    }
-
-    //生成索引并进行分拣
-    public function init()
-    {
-        $allowedExtensions = ['jpg', 'jpeg', 'bmp', 'png', 'webp', 'gif'];
-        $imageFiles = ['long' => [], 'wide' => []];
-
-        $allFiles = $this->get_all_files($this->image_folder);
-
-        foreach ($allFiles as $filePath) {
-            if (in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), $allowedExtensions)) {
-                //获取图片信息进行分拣
-                $imageSize = @getimagesize($filePath);
-
-                if ($imageSize === false) {
-                    continue;
-                }
-
-                $width = $imageSize[0];
-                $height = $imageSize[1];
-
-                $filePath = str_replace($this->image_folder, '/iro_gallery/img', $filePath);
-
-                //根据比例分拣图片
-                if ($width / $height < 9 / 10) {
-                    $imageFiles['long'][] = $filePath;
-                } else {
-                    $imageFiles['wide'][] = $filePath;
-                }
-            }
+    foreach (scandir($dir) ?: [] as $entry) {
+        if ($entry === '.' || $entry === '..' || in_array($entry, $exclude, true)) {
+            continue;
         }
 
-        //保存索引
-        file_put_contents($this->image_list, json_encode($imageFiles));
+        $path = $dir . '/' . $entry;
 
-        $this->log .= __("Successfully initialized the index.", "sakurairo") . '<br>';
-        return $this->log;
-    }
-
-    //遍历目录方法
-    private function get_all_files($directory)
-    {
-        $result = [];
-        $files = scandir($directory);
-
-        foreach ($files as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-
-            $filePath = $directory . '/' . $file;
-            if (is_dir($filePath)) {
-                $result = array_merge($result, $this->get_all_files($filePath));
-            } else {
-                $result[] = $filePath;
-            }
-        }
-
-        return $result;
-    }
-
-    //webp优化步骤
-    public function webp()
-    {
-        $this->log = '';
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-
-        //检查backup目录是否有内容
-        if (!is_dir($this->backup_folder) || count(scandir($this->backup_folder)) <= 2) {
-            //没有则执行备份步骤
-            if (!rename($this->image_folder, $this->backup_folder)) {
-                $this->log .= __("The target directory is not accessible. Please check the permission settings.", "sakurairo") . '<br>';
-                return $this->log;
-            }
-            if (!mkdir($this->image_folder, 0755, true)) {
-                $this->log .= __("The target directory is not accessible. Please check the permission settings.", "sakurairo") . '<br>';
-                return $this->log;
-            }
-            $this->log .= __("Successfully backed up images from the 'img' folder to the 'backup' folder.", "sakurairo") . '<br>';
+        if (is_dir($path)) {
+            $files = array_merge($files, iro_gallery_scan($path));
         } else {
-            $this->log .= __("Detected content in the 'backup' folder. Verifying and attempting to restore conversion operations.", "sakurairo") . '<br>';
-        }
-
-        $allFiles = $this->get_all_files($this->backup_folder);
-
-        foreach ($allFiles as $backupPath) {
-            if (!in_array(strtolower(pathinfo($backupPath, PATHINFO_EXTENSION)), $allowedExtensions)) {
-                continue;
-            }
-
-            //生成 WebP 文件的相对路径和目标路径
-            $relativePath = str_replace($this->backup_folder . '/', '', $backupPath);  //相对路径
-            $pathInfo = pathinfo($relativePath);
-            $webpPath = $this->image_folder . '/' . $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.webp';
-
-            //跳过已存在的WebP文件(从上个断点继续转换)
-            if (file_exists($webpPath)) {
-                $this->log .= __("Skipped file: {$relativePath}, a webp image with the same name already exists.", "sakurairo") . '<br>';
-                continue;
-            }
-
-            //确保目标子目录存在
-            $targetDir = dirname($webpPath);
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0755, true);
-            }
-
-            //转换文件
-            $this->convert_to_webp($backupPath, $webpPath);
-        }
-
-        $this->log .= __("All images have been compressed to WebP format. The original files are stored in the 'backup' folder.<br> Please confirm correctness before reinitializing the index.<br>", "sakurairo") . '<br>';
-
-        return $this->log;
-    }
-
-    //webp优化方法
-    private function convert_to_webp($source, $webpPath)
-    {
-        $extension = strtolower(pathinfo($source, PATHINFO_EXTENSION));
-
-        switch ($extension) {
-            case 'jpg':
-            case 'jpeg':
-                $image = imagecreatefromjpeg($source);
-                break;
-            case 'png':
-                $image = imagecreatefrompng($source);
-                break;
-            case 'gif':
-                $image = imagecreatefromgif($source);
-                break;
-            case 'webp':
-                $image = imagecreatefromwebp($source);
-                break;
-            default:
-                $this->log .= __("Unsupported file type: $source .", "sakurairo") . '<br>';
-        }
-
-        if ($image) {
-            imagewebp($image, $webpPath, 80);
-            imagedestroy($image);
-            $this->log .= __("Successfully converted to WebP: $source .", "sakurairo") . '<br>';
-            return $this->log;
-        } else {
-            $this->log .= __("Failed to convert file: $source .", "sakurairo") . '<br>';
-            return $this->log;
+            $files[] = $path;
         }
     }
 
-    //获取图片
-    public function get_image(\WP_REST_Request $request)
-    {
-        $imgParam = sanitize_text_field($request->get_param('img')) ?: '';
-        $imageList = json_decode(file_get_contents($this->image_list), true);
+    return $files;
+}
 
-        if (empty($imageList)) {
-            $this->init(true);
+/**
+ * 只重建索引：按 pc/ 与 mb/ 的现状重新生成清单，不移动任何文件
+ *
+ * mtime 必须在所有移动动作之后采样，且写入的是已存在的文件——覆盖内容不会改动目录 mtime，
+ * 否则记录下来的时间戳会被写索引这一步自己顶上。
+ *
+ * @return array 图片清单与 mtime 快照
+ */
+function iro_gallery_index(string $dir): array
+{
+    $index = ['pc' => [], 'mb' => []];
+
+    foreach (['pc', 'mb'] as $sub) {
+        $root = $dir . '/' . $sub;
+
+        foreach (iro_gallery_scan($root) as $file) {
+            $index[$sub][] = $sub . '/' . substr($file, strlen($root) + 1);
+        }
+    }
+
+    $index['gallery_mtime'] = iro_gallery_mtime($dir);
+    $index['pc_mtime']      = iro_gallery_mtime($dir . '/pc');
+    $index['mb_mtime']      = iro_gallery_mtime($dir . '/mb');
+
+    file_put_contents($dir . '/imglist.json', (string) wp_json_encode($index));
+
+    return $index;
+}
+
+/**
+ * 重新分拣：把 gallery 下的源图按长宽比移动进 pc/ 或 mb/，随后重建索引
+ *
+ * 目标路径沿用源文件的相对路径，避免不同子目录下的同名文件在分拣时互相覆盖。
+ *
+ * @return array 图片清单与 mtime 快照
+ */
+function iro_gallery_sort(string $dir): array
+{
+    $allowed = ['jpg', 'jpeg', 'bmp', 'png', 'webp', 'gif'];
+
+    foreach (['pc', 'mb'] as $sub) {
+        if (!is_dir($dir . '/' . $sub)) {
+            mkdir($dir . '/' . $sub, 0755, true);
+        }
+    }
+
+    foreach (iro_gallery_scan($dir, ['pc', 'mb']) as $file) {
+        if (!in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $allowed, true)) {
+            continue;
         }
 
-        $error_info = array(
-            'status' => 500,
-            "success" => false,
-            'message' => __("No images found. Please contact the administrator to check if images exist in the 'iro_gallary' directory and ensure the directory is readable and writable.", "sakurairo") . '<br>',
+        $image_size = @getimagesize($file);
+
+        if ($image_size === false || !$image_size[1]) {
+            continue;
+        }
+
+        // 竖图（含方图）给移动端，其余给 PC，判定沿用原有的 9/10 长宽比
+        $sub  = $image_size[0] / $image_size[1] < 9 / 10 ? 'mb' : 'pc';
+        $dest = $dir . '/' . $sub . '/' . substr($file, strlen($dir) + 1);
+
+        if (!is_dir(dirname($dest))) {
+            mkdir(dirname($dest), 0755, true);
+        }
+
+        @rename($file, $dest);
+    }
+
+    return iro_gallery_index($dir);
+}
+
+/**
+ * 随机取图并跳转
+ *
+ * @return WP_Error|void
+ */
+function iro_gallery_get_image(WP_REST_Request $request)
+{
+    $rel = trim(str_replace('\\', '/', (string) iro_opt('iro_gallery_path', 'wp-content/iro-gallery')), '/');
+    $rel = $rel === '' ? 'wp-content/iro-gallery' : $rel;
+    $dir = rtrim(ABSPATH, '/\\') . '/' . $rel;
+
+    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+        return new WP_Error(
+            'iro_gallery_no_dir',
+            __('图片目录不存在且无法创建，请检查 iro_gallery_path 设置与目录权限。', 'sakurairo'),
+            ['status' => 500]
         );
-        $error = new \WP_REST_Response($error_info, 500);
-        $error->set_status(500);
-
-        if (!empty($imageList)) {
-            //img参数优先获取long或wide
-            if ($imgParam == 'l' && !empty($imageList['long'])) {
-                $random_image = $imageList['long'][array_rand($imageList['long'])];
-            } else {
-                if ($imgParam == 'w' && !empty($imageList['wide'])) {
-                    $random_image = $imageList['wide'][array_rand($imageList['wide'])];
-                } else {
-                    $all_images = array_merge($imageList['long'] ?? [], $imageList['wide'] ?? []);
-                    if (!empty($all_images)) {
-                        $random_image = $all_images[array_rand($all_images)];
-                    } else {
-                        return $error;
-                    }
-                }
-            }
-
-            $random_image = wp_get_upload_dir()['baseurl'] . $random_image;
-
-            wp_safe_redirect(esc_url_raw($random_image), 302);
-            exit;
-        } else {
-            return $error;
-        }
     }
+
+    $file  = $dir . '/imglist.json';
+    $index = json_decode((string) @file_get_contents($file), true);
+    $index = is_array($index) ? $index : [];
+
+    // 索引文件就建在 gallery 目录里，首次创建它会改动该目录的 mtime；
+    // 先 touch 掉，紧接着的采样才不会被「建索引文件」这一步顶掉。
+    if (!file_exists($file)) {
+        touch($file);
+    }
+
+    if (empty($index) || ($index['gallery_mtime'] ?? null) !== iro_gallery_mtime($dir)) {
+        $index = iro_gallery_sort($dir);
+    } elseif (
+        ($index['pc_mtime'] ?? null) !== iro_gallery_mtime($dir . '/pc')
+        || ($index['mb_mtime'] ?? null) !== iro_gallery_mtime($dir . '/mb')
+    ) {
+        $index = iro_gallery_index($dir);
+    }
+
+    // 指定分类为空时退回全部，避免单一分类没图就让接口整体不可用
+    $images = $index[sanitize_key((string) $request->get_param('size'))] ?? [];
+
+    if (empty($images)) {
+        $images = array_merge($index['pc'] ?? [], $index['mb'] ?? []);
+    }
+
+    if (empty($images)) {
+        return new WP_Error(
+            'iro_gallery_empty',
+            __('图片目录中没有可用的图片。', 'sakurairo'),
+            ['status' => 500]
+        );
+    }
+
+    $image = $images[array_rand($images)];
+
+    wp_safe_redirect(
+        home_url('/' . $rel . '/' . implode('/', array_map('rawurlencode', explode('/', $image)))),
+        302
+    );
+    exit;
 }

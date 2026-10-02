@@ -1184,16 +1184,6 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id' => 'iro_builtin_gallery_path',
-                'type' => 'text',
-                'title' => __('主题内建随机图API路径', 'sakurairo'),
-                'dependency' => [
-                    ['cover_switch', '==', 'true', '', 'true'],
-                ],
-                'desc' => __('填写网站内存放图片的文件夹相对路径，例如/wp-content/gallery', 'sakurairo'),
-            ],
-
-            [
                 'type'    => 'content',
                 'content' => '<p style="margin:0 0 10px;color:#666;">'
                     . esc_html__('调整优化质量会按新参数重新生成缓存，旧缓存文件不会自动清理，可点击下方链接清理。', 'sakurairo')
@@ -1568,6 +1558,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('文章区域装饰特色图片选项', 'sakurairo'),
                 'options' => [
                     'always_with_cover' => __('始终且使用封面API', 'sakurairo'),
+                    'always_builtin' => __('始终且使用内建API', 'sakurairo'),
                     'always_alone' => __('始终且使用独立API', 'sakurairo'),
                     'only_feather_image' => __('仅特色图片', 'sakurairo'),
                 ],
@@ -2541,6 +2532,14 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('启用公式支持', 'sakurairo'),
                 'label' => __('启用主题公式支持，使用Katex，需要写入markdown区块才能渲染', 'sakurairo'),
                 'default' => true
+            ],
+
+            [
+                'id' => 'iro_gallery_path',
+                'type' => 'text',
+                'title' => __('内建随机图API图片目录', 'sakurairo'),
+                'desc' => __('主题内建随机图API的图片存储目录', 'sakurairo'),
+                'default' => 'wp-content/iro-gallery'
             ],
 
             [

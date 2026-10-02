@@ -252,6 +252,18 @@ add_action('rest_api_init', function () {
         )
     );
 
+    // 内建随机图
+    require_once get_template_directory() . '/inc/api/gallery.php';
+    register_rest_route(
+        'sakura/v1',
+        '/gallery',
+        array(
+            'methods' => 'GET',
+            'callback' => 'iro_gallery_get_image',
+            'permission_callback' => '__return_true'
+        )
+    );
+
     // AI
     require_once get_template_directory() . '/inc/api/ai.php';
     register_rest_route(
