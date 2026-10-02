@@ -129,6 +129,8 @@ export default _iro;
 import("./utils/missImg");
 // 事件总线
 import("./bus");
+// 弱网优化
+import("./optimize");
 // 滚动广播
 import("./stores/scroll");
 // 暗色模式
@@ -138,4 +140,4 @@ import("./pjax");
 
 import("./utils/message");
 
-import("./plugins/postViews")
+import("./plugins/postViews");

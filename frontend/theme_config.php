@@ -46,6 +46,7 @@ function iro_front_theme_config()
         'turnstile_site_key' => iro_opt("turnstile_site_key"),
         'hitokoto_apis' => json_decode((string) iro_opt("footer_hitokoto_api"), true) ?: ['https://v1.hitokoto.cn/'],
         'player' => footer_player_frontend_config(),
+        'slow_net_optimize' => iro_opt("iro_slow_net_optimize", false)
     ]);
 ?>
 
