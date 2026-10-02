@@ -26,7 +26,7 @@
                                 style="
                                 font-family: <?= iro_opt("cover_title")["font"] ?>;
                                 font-size: <?= iro_opt("cover_title")["size"] ?? 5 ?>rem;
-                                color: <?= iro_opt("cover_title")["color"] ?? "#FFF" ?>rem;
+                                color: <?= iro_opt("cover_title")["color"] ?? "#FFF" ?>;
                             ">
                                 <?= iro_opt("cover_title")["text"] ?>
                             </h1>
