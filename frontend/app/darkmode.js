@@ -22,7 +22,11 @@ const check = () => {
     if (darkmode !== "auto") return;
 
     const hours = new Date().getHours();
-    darkmodeStat.value = hours >= 18 || hours < 6;
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        darkmodeStat.value = true;
+    } else {
+        darkmodeStat.value = hours >= 18 || hours < 6;
+    }
 };
 
 async function readCookie() {
@@ -31,9 +35,7 @@ async function readCookie() {
             const entry = await cookieStore.get(STORAGE_KEY);
             return entry?.value ?? null;
         }
-    } catch {
-        
-    }
+    } catch {}
 
     const match = document.cookie.match(
         new RegExp(`(?:^|;\\s*)${STORAGE_KEY}=([^;]*)`),
