@@ -4,6 +4,20 @@
     padding: 0;
     box-sizing: border-box;
 }
-&.fa-icon-solid.fa-circle-info {
-    --svg: url("./icons/fa/circle-info-solid-full.svg");
+i {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+i {
+    &.fa-icon-solid.fa-circle-info {
+        --svg: url("./icons/fa/circle-info-solid-full.svg");
+    }
 }
