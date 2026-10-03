@@ -19,7 +19,8 @@ html {
 @layer rest {
     *:not(article.post-content *, .wp-widget *),
     *:not(article.post-content *, .wp-widget *)::before,
-    *:not(article.post-content *, .wp-widget *)::after {
+    *:not(article.post-content *, .wp-widget *)::after,
+    .page-template * {
         margin: 0;
         padding: 0;
     }
