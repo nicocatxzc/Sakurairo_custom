@@ -97,12 +97,12 @@ ob_start();
 
     @media (min-width: 861px) {
         :root {
-            --cover-background-img-pc: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'pc', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_pc') ?>);
+            --cover-background-img-pc: url(<?= iro_cover_resolve_url('pc') ?>);
         }
     }
 
     :root {
-        --cover-background-img-mb: url(<?= iro_opt('cover_random_pic_select') === 'builtin' ? add_query_arg('size', 'mb', rest_url('sakura/v1/gallery')) : iro_opt('cover_random_pic_url_mb') ?>);
+        --cover-background-img-mb: url(<?= iro_cover_resolve_url('mb') ?>);
     }
 
     <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {
@@ -177,6 +177,38 @@ ob_start();
     <?php endif; ?>
 </style>
 <?php
+/**
+ * 解析封面图地址
+ *
+ * @param string $size 'pc' 或 'mb'
+ * @return string 图片地址，取不到时回退为原始配置值
+ */
+function iro_cover_resolve_url(string $size): string
+{
+    // 内建，直接解析结果
+    if (iro_opt('cover_random_pic_select') === 'builtin') {
+        $request = new WP_REST_Request('GET', '/sakura/v1/gallery');
+        $request->set_query_params(['size' => $size]);
+
+        $url = rest_do_request($request)->get_headers()['Location'] ?? null;
+
+        return is_string($url) ? $url : '';
+    }
+
+    $url = iro_opt($size === 'pc' ? 'cover_random_pic_url_pc' : 'cover_random_pic_url_mb');
+
+    // 根据情况决定是否预取
+    if (
+        !$url
+        || !iro_opt('iro_slow_net_optimize', true)
+        || iro_opt('iro_cover_api_strategy', 'redirect') !== 'redirect'
+    ) {
+        return (string) $url;
+    }
+
+    return function_exists('iro_random_img_fixed_url') ? iro_random_img_fixed_url((string) $url) : (string) $url;
+}
+
 function iro_is_commemorate_date()
 {
     $dateList = iro_opt("theme_commemorate_mode_date");

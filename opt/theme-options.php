@@ -2614,6 +2614,18 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'      => 'iro_cover_api_strategy',
+                'type'    => 'select',
+                'title'   => __('随机图 API 策略', 'sakurairo'),
+                'desc'    => __('决定封面随机图是否需要在服务端预先解析出真实图片地址。跳转型接口（如返回 302 重定向）会让浏览器多一次往返才能开始下载图片，选「跳转」可在弱网优化生效时省掉这次往返；接口直接返回图片本体或地址时选「直出」。', 'sakurairo'),
+                'options' => [
+                    'redirect' => __('跳转（302）', 'sakurairo'),
+                    'direct'   => __('直出', 'sakurairo'),
+                ],
+                'default' => 'redirect',
+            ],
+
+            [
                 'id' => 'fontawesome_source',
                 'type' => 'text',
                 'title' => __('Fontawesome源', 'sakurairo'),

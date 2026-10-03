@@ -1,4 +1,64 @@
 <?php
+/**
+ * 预取外链随机图接口的真实图片地址
+ *
+ * @param string $url 远端随机图接口地址
+ * @return string 解析后的固定地址，失败时返回原地址
+ */
+function iro_random_img_fixed_url(string $url): string
+{
+    static $cache = [];
+
+    if ($url === '' || isset($cache[$url])) {
+        return $cache[$url] ?? $url;
+    }
+
+    $cache[$url] = $url;
+
+    $key = 'iro_cover_url_' . md5($url);
+    $hit = get_transient($key);
+
+    if (is_string($hit) && $hit !== '') {
+        return $cache[$url] = $hit;
+    }
+
+    // 只取跳转头
+    $response = wp_remote_head($url, [
+        'timeout'   => 3,
+        'sslverify' => false,
+    ]);
+
+    if (is_wp_error($response)) {
+        return $cache[$url];
+    }
+
+    $code  = (int) wp_remote_retrieve_response_code($response);
+    $final = '';
+
+    if ($code >= 300 && $code < 400) {
+        // 远端可能返回相对路径（如 img/s15.webp），要按接口地址补成绝对地址。
+        // 这里不能用 dirname()：接口地址常以斜杠结尾（.../imgs/mb/），dirname 会
+        // 把最后一段吃掉变成 .../imgs，拼出 .../imgs/img/... 这种不存在的路径。
+        $final = (string) wp_remote_retrieve_header($response, 'location');
+
+        if ($final !== '' && !preg_match('#^https?://#i', $final)) {
+            $final = rtrim($url, '/\\') . '/' . ltrim($final, '/');
+        }
+    } elseif ($code === 200) {
+        $final = $url;
+    }
+
+    $final = $final === '' ? '' : esc_url_raw($final, ['http', 'https']);
+
+    if ($final === '') {
+        return $cache[$url];
+    }
+
+    set_transient($key, $final, 30 * DAY_IN_SECONDS);
+
+    return $cache[$url] = $final;
+}
+
 if (iro_opt("iro_slow_net_optimize", true)) {
     header('Accept-CH: RTT, Save-Data, ECT, Downlink');
     $iro_is_slow_net = (function () {
