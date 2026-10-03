@@ -28,7 +28,7 @@ export default defineConfig({
         sourcemap: true,
         outDir: "dist",
         emptyOutDir: true,
-        rollupOptions: {
+        rolldownOptions: {
             input: {
                 main: resolve(import.meta.dirname, "src/main.js"),
             },
