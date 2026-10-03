@@ -340,6 +340,18 @@ if (class_exists('Sakurairo_CSF')) {
         'title'  => __('导航栏', 'sakurairo'),
         'icon'      => 'fa fa-map-signs',
         'fields' => [
+
+            [
+                'id'         => 'nav_style_select',
+                'type'       => 'image_select',
+                'title'      => __('Nav Menu Style', 'sakurairo_csf'),
+                'options'    => array(
+                    'island' => $vision_resource_basepath . 'options/nav_menu_style_Island.webp',
+                    'sakura' => $vision_resource_basepath . 'options/nav_menu_style_bar.webp',
+                ),
+                'default'    => 'sakura',
+            ],
+
             [
                 'id'    => 'nav_logo',
                 'type'  => 'upload',

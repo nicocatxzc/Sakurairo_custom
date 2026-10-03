@@ -46,7 +46,11 @@ global $iro_only_template;
         <div class="background">
             <!-- 导航区域 -->
             <?php require_once get_template_directory() . '/frontend/components/site/progress_bar.php'; ?>
-            <?php require_once get_template_directory() . '/frontend/components/navbar/sakura.php'; ?>
+            <?php if (iro_opt('nav_style_select', 'sakura') === 'island'): ?>
+                <?php require_once get_template_directory() . '/frontend/components/navbar/island.php'; ?>
+            <?php else: ?>
+                <?php require_once get_template_directory() . '/frontend/components/navbar/sakura.php'; ?>
+            <?php endif; ?>
             <?php require_once get_template_directory() . '/frontend/components/navbar/mobile.php'; ?>
 
             <!-- 主页封面 -->

@@ -1,0 +1,392 @@
+@keyframes slide-in-bck-top {
+    0% {
+        transform: translateZ(700px) translateY(-300px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateZ(0) translateY(0);
+        opacity: 1;
+    }
+}
+
+.site-header.island {
+    --island-pill-height: 45px;
+    --island-pill-padding: 5px;
+    --island-pill-border: 1px;
+    --island-button: calc(var(--island-pill-height) - var(--island-pill-padding) * 2 - var(--island-pill-border) * 2);
+    --island-pill-gap: 3px;
+    --island-pill-border-color: #f7f7f7;
+    --island-divider-color: rgba(0, 0, 0, 0.1);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    padding: 0 20px;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    contain: layout;
+    transition: all 0.4s ease-in-out;
+    user-select: none;
+
+    // 窄屏交给 layout.scss 的 .site-header.mobile。display 不能直接写在这里：
+    // .site-header.island 的权重会盖过那边 @media 里的 .site-header{display:none}
+    @media screen and (min-width: 861px) {
+        display: flex;
+    }
+
+    // 胶囊之间的空白不拦截点击，底下的页面照常可点
+    pointer-events: none;
+
+    > * {
+        pointer-events: auto;
+    }
+
+    // 站标 / 搜索区 / 用户区 三个胶囊
+    .site-branding,
+    .menu-wrapper,
+    .user {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: var(--island-pill-height);
+        padding: var(--island-pill-padding);
+        background: var(--widget-background-color);
+        border: var(--island-pill-border) solid var(--island-pill-border-color);
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        backdrop-filter: saturate(180%) blur(10px);
+        will-change: backdrop-filter;
+        transition: all 0.4s ease-in-out;
+        animation: slide-in-bck-top 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+        &:hover {
+            background: rgba(var(--widget-background), 0.9);
+        }
+    }
+
+    .site-branding {
+        width: fit-content;
+        max-width: 240px;
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        img {
+            height: 100%;
+            width: auto;
+            max-height: 35px;
+            margin: 0;
+            border-radius: 50px;
+        }
+    }
+
+    .site-title {
+        display: flex;
+        align-items: center;
+        width: auto;
+        padding: 5px 10px;
+        color: var(--word-color-first);
+        font-size: 18px;
+        font-weight: 400;
+        letter-spacing: 1px;
+        white-space: nowrap;
+        border-radius: 50px;
+        transition: all 0.4s ease-out;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: var(--active-color);
+        }
+    }
+
+    .menu-wrapper {
+        gap: var(--island-pill-gap);
+        width: auto;
+        height: var(--island-pill-height);
+        max-width: calc(100% - 400px);
+        overflow: visible;
+        --dw: 0;
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+        &.is-swapping {
+            overflow: hidden;
+        }
+
+        nav {
+            flex: 0 1 auto;
+            min-width: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            transition: all 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95);
+
+            ul {
+                display: flex;
+                gap: 1.5px;
+                width: auto;
+                height: fit-content;
+                margin: 0;
+                padding: 0;
+                align-items: center;
+                white-space: nowrap;
+                list-style: none;
+                transition: all 0.4s ease-in-out;
+            }
+
+            .menu {
+                height: 100%;
+            }
+
+            ul li {
+                position: relative;
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                white-space: nowrap;
+                list-style: none;
+                transition: all 0.4s ease-in-out;
+            }
+
+            ul li a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 34px;
+                padding: 8px 12px;
+                color: var(--word-color-first);
+                font-size: 15px;
+                line-height: 1;
+                box-sizing: border-box;
+                white-space: nowrap;
+                border-radius: 50px;
+                transition: all 0.3s ease-in;
+
+                &:hover {
+                    color: rgba(255, 255, 255, 0.8);
+                    background-color: var(--active-color);
+                    transition: all 0.3s ease-out;
+                }
+            }
+
+            .sub-menu {
+                position: absolute;
+                right: 0;
+                top: 155%;
+                display: flex;
+                flex-direction: column;
+                min-width: 90px;
+                padding: 5px 0;
+                background-color: rgba(var(--widget-background), 0.9);
+                border: 1px solid var(--island-pill-border-color);
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.4s ease-in-out;
+                li {
+                    display: flex;
+                    justify-content: center;
+                    height: auto;
+                    padding: 1px 5px;
+                }
+
+                a {
+                    display: block;
+                    height: 34px;
+                    font-size: 14px;
+                }
+            }
+
+            li:hover > .sub-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+
+        .divider {
+            flex: 0 0 auto;
+            width: 1px;
+            height: 24px;
+            margin: 0 4px;
+            background-color: var(--island-divider-color);
+            transition: all 0.4s ease-in-out;
+        }
+
+        .nav-article-title {
+            position: absolute;
+            top: var(--island-pill-padding);
+            bottom: var(--island-pill-padding);
+            left: var(--island-pill-padding);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: var(--word-color-first);
+            white-space: nowrap;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(150%);
+            pointer-events: none;
+            transition:
+                transform 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95),
+                margin 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95);
+        }
+    }
+
+    // 滚到文章标题之上：菜单行升起、标题升入，胶囊宽度按 --dw 收放让位。
+    // 选择器与上游一致：悬停立刻换回来交给 CSS，3 秒后才换回去交给 island.js 的属性状态
+    &:not(:hover) .menu-wrapper:not(:hover)[data-scrollswap] {
+        nav {
+            opacity: 0;
+            transform: translateY(-100%);
+            margin-left: calc(var(--dw, 0px) / 2);
+            margin-right: calc(var(--dw, 0px) / 2);
+        }
+
+        .nav-article-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .button {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: fit-content;
+        min-width: var(--island-button);
+        aspect-ratio: 1 / 1;
+        color: var(--word-color-first);
+        font-size: 16px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.4s ease-in-out;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: var(--active-color);
+        }
+    }
+
+    // 骰子的切页回弹。收起的过冲意味着「比目标更小」，而 width 不能为负、过冲会被截断成 0
+    // （实测几乎看不到回弹），所以这里动画 margin-left —— 它可以为负，回弹穿得过去。
+    // 收掉的量是常量：一个圆钮 + 一个胶囊 gap，因此不需要像上游那样克隆节点量宽
+    .cover-toggle {
+        transition:
+            margin-left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+            opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &:not(.is-home) .cover-toggle {
+        margin-left: calc(-1 * (var(--island-button) + var(--island-pill-gap)));
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .user {
+        width: 45px;
+        white-space: nowrap;
+        align-items: stretch;
+        cursor: pointer;
+
+        .avatar-wrapper {
+            position: relative;
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            max-width: 35px;
+            max-height: 35px;
+
+            img {
+                flex: 0 0 auto;
+                width: 35px;
+                height: 35px;
+                border-radius: 100%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s ease-in-out;
+            }
+        }
+
+        .user-menu {
+            position: absolute;
+            width: 110px;
+            right: -105%;
+            top: 50px;
+            visibility: hidden;
+            overflow: hidden;
+            background: rgba(var(--widget-background), 0.9);
+            border: 1px solid var(--island-pill-border-color);
+            border-radius: 15px;
+            box-shadow: 0 1px 40px -8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease-in-out;
+
+            &:hover,
+            .avatar-wrapper:hover & {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                background: rgba(var(--widget-background), 0.95);
+            }
+        }
+
+        .user-menu-info {
+            padding: 10px;
+            color: var(--word-color-first);
+            font-size: 12px;
+            font-weight: var(--global-font-weight);
+            border-radius: 4px 4px 0 0;
+
+            .name {
+                display: block;
+                overflow: hidden;
+                font-size: 14px;
+                font-weight: 700;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .user-menu-option {
+            width: 130px;
+            padding: 5px 0;
+            border-radius: 0 0 4px 4px;
+
+            a {
+                display: block;
+                width: 110px;
+                margin: 2px 0;
+                padding: 6px 10px;
+                color: var(--word-color-first);
+                font-size: 13px;
+                font-weight: var(--global-font-weight);
+                text-align: center;
+            }
+        }
+    }
+}
+
+// 原设计这两处是写死的浅色值，暗色下换成主题的暗色描边
+:root.dark .site-header.island {
+    --island-pill-border-color: rgba(255, 255, 255, 0.12);
+    --island-divider-color: rgba(255, 255, 255, 0.15);
+}
