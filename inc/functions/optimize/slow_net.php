@@ -1,9 +1,10 @@
 <?php
+
 /**
- * 预取外链随机图接口的真实图片地址
+ * 预取外链随机图接口的真实图片地址，swr
  *
  * @param string $url 远端随机图接口地址
- * @return string 解析后的固定地址，失败时返回原地址
+ * @return string 解析后的地址，失败时返回原地址
  */
 function iro_random_img_fixed_url(string $url): string
 {
@@ -13,23 +14,44 @@ function iro_random_img_fixed_url(string $url): string
         return $cache[$url] ?? $url;
     }
 
-    $cache[$url] = $url;
-
     $key = 'iro_cover_url_' . md5($url);
     $hit = get_transient($key);
 
     if (is_string($hit) && $hit !== '') {
+        // 有缓存：先用着，等响应发完再更新
+        iro_cover_schedule_refresh($key, $url);
+
         return $cache[$url] = $hit;
     }
 
-    // 只取跳转头
+    // 没缓存：阻塞解析一次，保证页面拿得到真实地址
+    $fresh = iro_cover_fetch_url($url);
+
+    if ($fresh !== '') {
+        set_transient($key, $fresh, 30 * DAY_IN_SECONDS);
+
+        return $cache[$url] = $fresh;
+    }
+
+    return $cache[$url] = $url;
+}
+
+/**
+ * 解析远端跳转，取出真实图片地址
+ *
+ * @param string $url 远端随机图接口地址
+ * @return string 真实地址；解析不出来时返回空串
+ */
+function iro_cover_fetch_url(string $url): string
+{
+    // 只取跳转头，不要正文：远端图片动辄数百 KB，把整张图读进内存毫无必要
     $response = wp_remote_head($url, [
         'timeout'   => 3,
         'sslverify' => false,
     ]);
 
     if (is_wp_error($response)) {
-        return $cache[$url];
+        return '';
     }
 
     $code  = (int) wp_remote_retrieve_response_code($response);
@@ -44,19 +66,49 @@ function iro_random_img_fixed_url(string $url): string
         if ($final !== '' && !preg_match('#^https?://#i', $final)) {
             $final = rtrim($url, '/\\') . '/' . ltrim($final, '/');
         }
-    } elseif ($code === 200) {
-        $final = $url;
     }
 
-    $final = $final === '' ? '' : esc_url_raw($final, ['http', 'https']);
+    return $final === '' ? '' : esc_url_raw($final, ['http', 'https']);
+}
 
-    if ($final === '') {
-        return $cache[$url];
+/**
+ * 响应结束之后刷新缓存
+ *
+ * @param string $key 缓存键
+ * @param string $url 远端随机图接口地址
+ */
+function iro_cover_schedule_refresh(string $key, string $url): void
+{
+    static $scheduled = [];
+
+    if (isset($scheduled[$key])) {
+        return;
     }
+    $scheduled[$key] = true;
 
-    set_transient($key, $final, 30 * DAY_IN_SECONDS);
+    add_action('shutdown', function () use ($key, $url) {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
 
-    return $cache[$url] = $final;
+        $lock_key = $key . '_refreshing';
+
+        if (get_transient($lock_key)) {
+            return;
+        }
+        set_transient($lock_key, 1, 30);
+
+        try {
+            $fresh = iro_cover_fetch_url($url);
+
+            // 刷新失败保留旧值
+            if ($fresh !== '') {
+                set_transient($key, $fresh, 30 * DAY_IN_SECONDS);
+            }
+        } finally {
+            delete_transient($lock_key);
+        }
+    }, PHP_INT_MAX);
 }
 
 if (iro_opt("iro_slow_net_optimize", true)) {
