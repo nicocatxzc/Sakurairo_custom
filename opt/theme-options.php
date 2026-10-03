@@ -2252,6 +2252,26 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'login_background_select',
+                'type' => 'select',
+                'title' => __('登录页面背景图', 'sakurairo'),
+                'options' => [
+                    'off' => __('无', 'sakurairo'),
+                    'with_cover' => __('跟随封面', 'sakurairo'),
+                    'custom' => __('自定义', "sakurairo_csf")
+                ],
+                'default' => 'off',
+            ],
+
+            [
+                'id' => 'login_background_image_url',
+                'type' => 'upload',
+                'title' => __('登录页自定义背景图', 'sakurairo'),
+                'dependency' => ['login_background_select', '==', 'custom', '', 'true'],
+                'library' => 'image',
+            ],
+
+            [
                 'type' => 'subheading',
                 'content' => __('仪表盘', 'sakurairo'),
             ],

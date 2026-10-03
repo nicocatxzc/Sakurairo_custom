@@ -1,135 +1,47 @@
 <?php
-/*
- * 后台登录页
- */
+// 后台登录页
 if (iro_opt('login_custom_switch', false)) {
-    // Add custom login styles
-    function custom_login()
+    function custom_login(): void
     {
 ?>
         <style type="text/css">
-            body.login {
-                background-image: url('<?php echo DEFAULT_FEATURE_IMAGE(); ?>');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
+            body.login.iro-login-custom {
+                --login-logo-image: url('<?= iro_opt('login_logo_img') ?: get_site_icon_url() ?>');
+                --login-accent: <?= iro_opt('word_color_first') ?: '#FF69B4' ?>;
+                --login-accent-hover: <?= iro_opt('active_color') ?: '#FF69B4' ?>;
             }
 
-            .login h1 a {
-                background-image: url('<?php echo iro_opt('login_logo_img') ?: get_site_icon_url(); ?>') !important;
-                background-size: contain;
-                width: 100%;
-                max-height: 100px;
+            <?php if (iro_opt("login_background_select", "off") == "with_cover"): ?>body.login.iro-login-custom {
+                --login-background-image: var(--cover-background-img-pc, --cover-background-img-mb);
             }
 
-            .login form {
-                box-shadow: 0 1px 30px -4px #e8e8e880;
-                border: 1px solid #FFFFFF;
-                background: rgba(255, 255, 255, 0.8);
-                -webkit-backdrop-filter: saturate(180%) blur(10px);
-                backdrop-filter: saturate(180%) blur(10px);
-                border-radius: 10px;
+            @media (max-width: 860px) {
+                body.login.iro-login-custom {
+                    --login-background-image: var(--cover-background-img-mb, --cover-background-img-pc);
+                }
             }
 
-            .login form input[type=checkbox],
-            .login input[type=password],
-            .login input[type=text],
-            .login input[type=email] {
-                background: rgba(255, 255, 255, 0.7);
-                box-shadow: 0 1px 30px -4px #e8e8e880;
-                border: 1px solid #FFFFFF;
-                -webkit-backdrop-filter: saturate(180%) blur(10px);
-                backdrop-filter: saturate(180%) blur(10px);
-                font-size: 15px;
-                padding: 0.6rem;
-                border-radius: 8px;
+            <?php endif; ?><?php if (iro_opt("login_background_select", "off") == "custom"): ?>body.login.iro-login-custom {
+                --login-background-image: url('<?= iro_opt('login_background_image_url') ?>');
             }
 
-            .wp-core-ui .button-primary,
-            #wp-webauthn {
-                background: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
-                border-color: transparent;
-                border-radius: 6px;
-                padding: 1px 18px !important;
-                transition: all 0.3s ease;
-            }
-
-            .wp-core-ui .button-primary:hover,
-            #wp-webauthn:hover {
-                background: <?php echo iro_opt('active_color') ?: '#FF69B4'; ?>;
-                border-color: transparent;
-                transition: all 0.3s ease;
-            }
-
-            .vaptchaContainer {
-                margin: 5px 0 20px;
-            }
-
-            .login form .forgetmenot {
-                margin-top: 6px;
-            }
-
-            .login .button.wp-hide-pw .dashicons {
-                color: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
-            }
-
-            #language-switcher {
-                color: <?php echo iro_opt('word_color_first') ?: '#FF69B4'; ?>;
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-            }
-
-            .login #nav {
-                font-size: 12px;
-                padding: 8px 12px;
-                background: rgba(255, 255, 255, 0.7);
-                box-shadow: 0 1px 30px -4px #e8e8e8;
-                border: 1px solid #FFFFFF;
-                -webkit-backdrop-filter: saturate(180%) blur(10px);
-                backdrop-filter: saturate(180%) blur(10px);
-                width: fit-content;
-                border-radius: 8px;
-                margin: auto;
-                margin-top: -13%;
-            }
-
-            .login #backtoblog {
-                display: none;
-            }
-
-            .captcha {
-                display: flex !important;
-                align-items: center;
-                margin-bottom: 20px !important;
-                margin-top: 10px;
-                gap: 10px;
-            }
-
-            .login form input[name=yzm] {
-                margin: 0;
-            }
-
-            .login label {
-                margin-bottom: 5px;
-            }
-
-            .wp-webauthn-notice {
-                height: 40px !important;
-                margin-bottom: 15px;
-            }
-
-            #wp-webauthn span {
-                color: #fff;
-            }
-
-            .vp-dark-btn.vp-basic-btn {
-                border-radius: 8px !important;
-            }
+            <?php endif; ?>
         </style>
     <?php
     }
     add_action('login_head', 'custom_login');
+
+    /**
+     * 给登录页 body 打上定制皮肤标记，login.scss 的规则挂在它上面；
+     * 关闭定制时不加，登录页就能退回核心与 theme_style_vars.php 的默认外观。
+     */
+    function iro_login_custom_body_class(array $classes): array
+    {
+        $classes[] = 'iro-login-custom';
+
+        return $classes;
+    }
+    add_filter('login_body_class', 'iro_login_custom_body_class');
 
     // Login Page Title
     function custom_headertitle($title)
@@ -146,23 +58,31 @@ if (iro_opt('login_custom_switch', false)) {
     add_filter('login_headerurl', 'custom_loginlogo_url');
 }
 
-if (iro_opt('login_language_opt') == true) {
+// 登录界面语言选项
+if (iro_opt('login_language_opt') != true) {
     add_filter('login_display_language_dropdown', '__return_false');
 }
 
-// 验证码样式
-function iro_login_captcha_style(): void
+// 登录页样式
+function iro_login_style(): void
 {
-    if (iro_opt("login_captcha_select", "builtin") == "off") {
+    $captcha_on = iro_opt("login_captcha_select", "builtin") != "off";
+    $custom_skin = iro_opt('login_custom_switch', false);
+
+    if (!$captcha_on && !$custom_skin) {
         return;
     }
-    require get_template_directory() . '/frontend/theme_style_vars.php';
+
+    if ($captcha_on) {
+        // 验证码组件的配色取自主题的全局变量
+        require get_template_directory() . '/frontend/theme_style_vars.php';
+    }
     ?>
     <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css?ver=' . INT_VERSION ?>">
 <?php
 }
 
-add_action('login_head', 'iro_login_captcha_style');
+add_action('login_head', 'iro_login_style');
 
 function iro_render_login_captcha(): void
 {
