@@ -1,4 +1,5 @@
 <?php
+// 字体
 ob_start();
 ?>
 <?php foreach (iro_opt("extra_fonts", []) as $font): ?> @font-face {
@@ -25,39 +26,50 @@ ob_start();
         // 外链字体默认 media="not all" 不下载
         // 等首屏最大内容绘制稳定后再下载
         ?>
-        (function() {
-            function openExtraFonts() {
-                let extraFonts = document.getElementById("iro_extra_fonts");
-                if (extraFonts && extraFonts.media !== "all") {
-                    extraFonts.media = "all";
+            (function() {
+                function openExtraFonts() {
+                    let extraFonts = document.getElementById("iro_extra_fonts");
+                    if (extraFonts && extraFonts.media !== "all") {
+                        extraFonts.media = "all";
+                    }
                 }
-            }
 
-            let connection = navigator.connection;
-            if ((connection && connection.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches) {
-                return;
-            }
+                <?php // 桌面端直接解锁 
+                ?>
+                if (window.innerWidth > 860) {
+                    openExtraFonts();
+                    return;
+                }
 
-            let settleTimer = 0;
+                let connection = navigator.connection;
+                if ((connection && connection.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches) {
+                    return;
+                }
 
-            function openAfterLargestPaint() {
-                clearTimeout(settleTimer);
-                settleTimer = setTimeout(openExtraFonts, 600);
-            }
+                let settleTimer = 0;
 
-            <?php // 页面一直没有 LCP 候选，或候选一直在更新时兜底 ?>
-            setTimeout(openExtraFonts, 10000);
-            try {
-                new PerformanceObserver(openAfterLargestPaint).observe({
-                    type: "largest-contentful-paint",
-                    buffered: true
-                });
-            } catch (e) {
-                window.addEventListener("load", openAfterLargestPaint);
-            }
-        })();
+                function openAfterLargestPaint() {
+                    clearTimeout(settleTimer);
+                    settleTimer = setTimeout(openExtraFonts, 600);
+                }
+
+                <?php // 页面一直没有 LCP 候选，或候选一直在更新时兜底 
+                ?>
+                setTimeout(openExtraFonts, 10000);
+                try {
+                    new PerformanceObserver(openAfterLargestPaint).observe({
+                        type: "largest-contentful-paint",
+                        buffered: true
+                    });
+                } catch (e) {
+                    window.addEventListener("load", openAfterLargestPaint);
+                }
+            })();
     </script>
 <?php endif; ?>
+
+<?php //样式定义
+?>
 <style>
     :root {
         --global-font-size: <?= iro_opt('global_font_size', 16) ?>;
@@ -98,15 +110,14 @@ ob_start();
     @media (min-width: 861px) {
         :root {
             --cover-background-img-pc: url(<?= iro_cover_resolve_url('pc') ?>);
+            <?php if (!empty(iro_opt('frontend_default_background'))): ?>--page-background-img: url(<?= iro_opt('frontend_default_background') ?>);
+            <?php endif; // 桌面端立即渲染，移动端优化下面按需解锁 
+            ?>
         }
     }
 
-    :root {
-        --cover-background-img-mb: url(<?= iro_cover_resolve_url('mb') ?>);
-    }
-
     <?php if (!empty(iro_opt('frontend_default_background'))): ?>body {
-        background-image: url(<?= iro_opt('frontend_default_background') ?>);
+        background-image: var(--page-background-img);
         <?php if (iro_opt("frontend_background_fill_mode") == "texture"): ?>background-size: auto;
         background-position: center;
         background-repeat: repeat;
@@ -169,6 +180,67 @@ ob_start();
 
     <?php } ?>
 </style>
+
+<?php // 背景 
+?>
+<?php ob_start(); ?>
+@media (max-width: 860px) {
+:root {
+--cover-background-img-mb: url(<?= iro_cover_resolve_url('mb') ?>);
+<?php if (!empty(iro_opt('frontend_default_background'))): ?>--page-background-img: url(<?= iro_opt('frontend_default_background') ?>);
+<?php endif; ?>
+}
+}
+<?php $iro_deferred_background = ob_get_clean(); ?>
+<style id="iro_deferred_bg" media="not all">
+    <?= $iro_deferred_background ?>
+</style>
+<noscript>
+    <style>
+        <?= $iro_deferred_background ?>
+    </style>
+</noscript>
+<script>
+    (function() {
+        function openDeferredBackground() {
+            let deferred = document.getElementById("iro_deferred_bg");
+            if (deferred && deferred.media !== "all") {
+                deferred.media = "all";
+            }
+        }
+
+        <?php // 桌面端直接解锁
+        ?>
+        if (window.innerWidth > 860) {
+            openDeferredBackground();
+            return;
+        }
+
+        <?php // 首屏大图等首个绘制完成后再挂：在此之前不参与下载，避免进入首屏窗口 
+        ?>
+        try {
+            let observer = new PerformanceObserver(function(list) {
+                for (let entry of list.getEntries()) {
+                    if (entry.name === "first-contentful-paint") {
+                        observer.disconnect();
+                        requestAnimationFrame(openDeferredBackground);
+                        break;
+                    }
+                }
+            });
+            observer.observe({
+                type: "paint",
+                buffered: true
+            });
+        } catch (e) {
+            window.addEventListener("load", openDeferredBackground);
+        }
+        setTimeout(openDeferredBackground, 10000);
+    })();
+</script>
+
+<?php // 切换页面时需要改变的样式 
+?>
 <style id="iro_theme_style_dymanic_vars">
     <?php if (iro_opt("post_cover_as_background", false) && is_single()): ?>body {
         background-image: url(<?= iro_media_optimize_image_url(get_the_post_thumbnail_url(get_post(), 'full')) ?>);
@@ -176,6 +248,7 @@ ob_start();
 
     <?php endif; ?>
 </style>
+
 <?php
 /**
  * 解析封面图地址
