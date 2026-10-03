@@ -67,6 +67,20 @@
                     </span>
                     <?php break; ?>
                 <?php
+                case 'words_count': ?>
+                    <span class="flex-center">
+                        <i class="fa-icon-solid fa-pen-to-square"></i>
+                        <?= (int) iro_get_post_words(get_the_ID()) ?><?= __("字", "sakurairo") ?>
+                    </span>
+                    <?php break; ?>
+                <?php
+                case 'reading_time': ?>
+                    <span class="flex-center">
+                        <i class="fa-icon-solid fa-hourglass"></i>
+                        <?= iro_get_reading_time(get_the_ID()) ?>
+                    </span>
+                    <?php break; ?>
+                <?php
                 default: ?>
                     <!-- undefined -->
                     <?php break; ?>

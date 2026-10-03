@@ -1548,6 +1548,8 @@ if (class_exists('Sakurairo_CSF')) {
                     'category'     => __('分类', 'sakurairo'),
                     'comment_count' => __('评论数量', 'sakurairo'),
                     'views' => __('浏览量', 'sakurairo'),
+                    'words_count' => __('字数', 'sakurairo'),
+                    'reading_time' => __('阅读时间', 'sakurairo'),
                 ],
                 "default" => ['category', 'comment_count', 'views'],
             ],

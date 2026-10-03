@@ -35,3 +35,5 @@ require_once get_template_directory() . '/inc/functions/content/post_views.php';
 require_once get_template_directory() . '/inc/functions/content/query.php';
 // 统计信息
 require_once get_template_directory() . '/inc/functions/content/statistical.php';
+// 文章字数
+require_once get_template_directory() . '/inc/functions/content/post_words.php';
