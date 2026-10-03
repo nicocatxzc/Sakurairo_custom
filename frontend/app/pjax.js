@@ -8,7 +8,7 @@ const swup = new Swup({
         // 本页用到的古腾堡区块样式
         "#iro_block_styles",
     ],
-    linkSelector: "a[href]:not(.no-pjax):not(* .no-pjax)",
+    linkSelector: 'a[href]:not(.no-pjax):not(* .no-pjax):not([href*="/wp-login.php"]):not([href*="/wp-admin"]):not([target="_blank"]):not([download])',
     animationSelector: false,
 
     scrollTo: (event) => {
