@@ -7,46 +7,6 @@ $panel-shadow: 0 1px 30px -4px #e8e8e880;
 $pill-shadow: 0 1px 30px -4px #e8e8e8;
 $panel-blur: saturate(180%) blur(10px);
 
-i {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-color: currentColor;
-    -webkit-mask-image: var(--svg);
-    mask-image: var(--svg);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-
-    &.fa-icon-solid.fa-circle-info {
-        --svg: url("./icons/fa/circle-info-solid-full.svg");
-    }
-}
-
-.login .captcha,
-.login .captcha * {
-    box-sizing: border-box;
-}
-
-// 登录页默认字号是13px
-.login .captcha {
-    font-size: 0.95rem;
-    color: var(--word-color-first);
-}
-
-.login form .captcha .input {
-    width: 10rem;
-    min-height: 0;
-    margin: auto;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: var(--border-sketch);
-    color: var(--word-color-first);
-    background-color: var(--widget-background-color);
-    border-radius: 0.5rem;
-}
-
 body.login.iro-login-custom {
     background-image: var(--login-background-image);
     background-size: cover;
@@ -156,6 +116,14 @@ body.login.iro-login-custom {
         align-items: center;
         gap: 10px;
         margin: 10px 0 20px;
+    }
+
+    // 核心有 .login form .input{width:100%}，权重比共用的 .captcha .input 高，
+    // 这里用同款选择器把登录页的输入框宽度收回来
+    #login form .captcha .input {
+        width: 10rem;
+        min-height: 0;
+        margin: auto;
     }
 
     // 核心给的是 3em/2em 大边距的裸链接，这里与 #nav 统一成同款

@@ -1,0 +1,87 @@
+$captcha-radius: 0.5rem;
+
+.captcha {
+    font-size: 0.95rem;
+    color: var(--word-color-first);
+}
+
+.captcha,
+.captcha * {
+    box-sizing: border-box;
+}
+
+// 只作用于验证码内的图标
+.captcha i {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+
+    &.fa-icon-solid.fa-circle-info {
+        --svg: url("../../icons/fa/circle-info-solid-full.svg");
+    }
+}
+
+.captcha-container {
+    position: relative;
+    gap: 0.3rem;
+    height: 2.75rem;
+    padding: 0.2rem;
+    background-color: var(--widget-background-color);
+    border: var(--border-sketch);
+    border-radius: $captcha-radius;
+}
+
+.captcha-container .image-button {
+    height: 2rem;
+    width: 2rem;
+    border: var(--border-sketch);
+    border-radius: $captcha-radius;
+}
+
+.captcha-container .image {
+    position: absolute;
+    visibility: hidden;
+    height: fit-content;
+    width: fit-content;
+    object-fit: contain;
+    transform: translateY(-70%) translateX(40%);
+    border-radius: $captcha-radius;
+}
+
+.captcha-container .image.show {
+    visibility: visible;
+}
+
+.captcha .input {
+    width: 10rem;
+    min-height: 0;
+    margin: auto;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: var(--border-sketch);
+    color: var(--word-color-first);
+    background-color: var(--widget-background-color);
+    border-radius: $captcha-radius;
+}
+
+.captcha-container .input {
+    height: 100%;
+    outline: none;
+}
+
+.captcha-container .captcha_id {
+    display: none;
+}
+
+.captcha-container .button {
+    height: 100%;
+    width: 6rem;
+    border: var(--border-sketch);
+}

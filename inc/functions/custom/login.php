@@ -78,7 +78,7 @@ function iro_login_style(): void
         require get_template_directory() . '/frontend/theme_style_vars.php';
     }
     ?>
-    <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css?ver=' . INT_VERSION ?>">
+    <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/login.css?ver=' . INT_VERSION ?>">
 <?php
 }
 
@@ -89,7 +89,7 @@ function iro_render_login_captcha(): void
 ?>
     <?php if (iro_opt("login_captcha_select", "builtin") != "off"): ?>
         <div class="captcha <?= iro_opt("login_captcha_select", "builtin") ?>"></div>
-        <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/captcha.js?ver=' . INT_VERSION ?>"></script>
+        <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/login.js?ver=' . INT_VERSION ?>"></script>
     <?php endif; ?>
 <?php
 }

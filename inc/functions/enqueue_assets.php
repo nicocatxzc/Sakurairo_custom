@@ -26,7 +26,6 @@ function iro_enqueue_scripts()
         <?php if ($use_sakura_post_style): ?>
             <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/post-sakura.css?ver=' . INT_VERSION ?>">
         <?php endif; ?>
-        <link rel="stylesheet" media="print" onload="this.onload=null;this.media='all'" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/captcha.css?ver=' . INT_VERSION ?>">
     <?php endif; ?>
 <?php
 }

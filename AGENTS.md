@@ -64,7 +64,7 @@ Sakurairo/
 ├── frontend/                # ★ 前台源码（Vite 工程；workspace 成员，锁文件在主题根）
 │   ├── main.js              # 入口：样式 + app + components
 │   ├── style.scss / layout.scss / icons.scss
-│   ├── vite.config.js       # 三入口 app/captcha/post-sakura、手动 codeSplitting、入口反向引用守卫、HTTPS dev server
+│   ├── vite.config.js       # 三入口 app/login/post-sakura、手动 codeSplitting、入口反向引用守卫、HTTPS dev server
 │   ├── package.json / tsconfig.json
 │   ├── app/                 # 客户端核心（非组件）
 │   │   ├── index.ts         # window._iro 命名空间 + hook 系统 + 配置解析
@@ -199,6 +199,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 2. **JS**：`frontend/components/<area>/<name>.js`，并在聚合入口登记：`frontend/components/index.js`（组件）或 `frontend/app/index.ts`（核心）。**不登记 = 不会被打包**。
 3. **样式**：同名 `.scss`，并在对应的 `index.scss` 里 `@use`（顶层汇总见 `frontend/style.scss`）。
 4. 少量复杂交互用 Vue SFC（`captcha/builtin.vue`、`page/template/BangumiDetail.vue`、`site/Model.vue`）。Vue/Element Plus 已配 `unplugin-auto-import` + `unplugin-vue-components`，`components/` 与 `app/` 目录下的组件无需手动注册。
+   - SFC 的 `<style scoped>` 会随共享 chunk 变成**异步 CSS**（前台要多发一次请求才生效）。验证码就踩过这个坑，样式已从 `builtin.vue` 搬到同名的 `site/captcha/captcha.scss` 统一管理；需要「前后台都会用到」的组件样式请照此办理。
 
 页面分发在 `index.php`：`page/home.php` / `page/post.php` / `page/search.php` / `page/author.php` / `page/archive.php`，兜底 `components/default.php`。
 
@@ -294,7 +295,7 @@ pnpm install          # 唯一一次安装：frontend / inc/blocks / inc/ai 的�
 ```bash
 cd frontend           # 以下命令在 frontend/ 里执行
 pnpm dev              # Vite dev server: https://0.0.0.0:5173（HMR host = "wordpress"）
-pnpm build            # 产出 frontend/dist/{app.js,style.css,captcha.css,vendor-*.js,assets/*}
+pnpm build            # 产出 frontend/dist/{app.js,login.js,style.css,login.css,vendor-*.js,assets/*}
 pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、components/、main.js）
 ```
 
@@ -302,7 +303,8 @@ pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、comp
 - 本地开发需在**站点选项里打开 `dev_mode`**，`inc/functions/enqueue_assets.php` 会改为加载 `dev_mode_hmr_client` / `dev_mode_main_js`（默认 `https://wordpress:5173/...`）。
 - dev server 使用自签 HTTPS，且 HMR `host: "wordpress"`；本机需能把 `wordpress` 解析到该容器/主机（官方 docker 环境已配置）。
 - `frontend/dist/` 已被 `.gitignore`，**不要提交**（`inc/blocks/build/`、`inc/ai/dist/` 同样不提交）。
-- Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`captcha.css` → `captcha.css`（验证码样式独立于主样式），`post-sakura.css` → `post-sakura.css`（**文章排版样式，仅在 `page_style` 选 Sakura 时由 PHP 按需加载**，入口 `components/post/post-sakura.js`，刻意不并进 `post/index.js`，否则会被打进首屏 `style.css`）。主入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
+- Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`login.css` → `login.css`（**登录页皮肤 + 验证码样式，由 `wp-login.php` 单独加载**，入口 `components/login.js`），`post-sakura.css` → `post-sakura.css`（**文章排版样式，仅在 `page_style` 选 Sakura 时由 PHP 按需加载**，入口 `components/post/post-sakura.js`，刻意不并进 `post/index.js`，否则会被打进首屏 `style.css`）。主入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
+- **验证码样式两处都要有，但来源只有一份**：`components/site/captcha/captcha.scss` + Vue 组件（`builtin.vue`）原先是 `<style scoped>`，现已并入 `captcha.scss`。前台经 `components/site/index.scss` 进 `style.css`（首屏自带，**不额外发请求**）；登录页经 `components/login.js` 进 `login.css`。登录页皮肤（`components/login.scss`）**只**在 `login.js` 里引入，因此不会跟着前台进 `style.css`——这正是当初「后台样式污染前台」的成因，`components/site/captcha/captcha.js` 不要再 import `login.scss`。
 - **入口反向引用会被构建直接报错**：`vite.config.js` 里的 `iro-entry-import-guard` 插件一旦发现非入口 chunk `import "app.js"` 就终止构建。原因是「入口 chunk 被别的 chunk 反向引用」会让浏览器把 `app.js?ver=...` 与 `./app.js` 当作两份模块图、整包下载执行两次。被多处共享的代码必须落进 `codeSplitting.groups`（现有 `vendor-*` 与 `iro-core`）。
 - `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
 - 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
@@ -404,7 +406,7 @@ pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
 - 类型：`tsconfig` 为 `strict: false`，但 `noUnusedLocals/Parameters: true` —— **未使用的变量会导致类型检查报错**，删除多余声明。`inc/ai/` 目前未接入 tsc 检查，仍按同样风格书写。
 - 使用全局 `_iro`（直接写 `_iro`，不要重复声明 `window._iro`）。
 - 事件通信优先用 `_iro.bus`（mitt）与 PJAX 生命周期 hook。
-- 需要脱离主 bundle 独立运行的脚本（如 `site/captcha/captcha.js`）要自行兜底：先判 `window?._iro?.hooks`，否则从 `#iro_theme_config` 解析配置。
+- 需要脱离主 bundle 独立运行的脚本（如 `site/captcha/captcha.js`）要自行兜底：先判 `window._iro?.hooks && !_iro.isBackend`（后台不派发 hook，得走直接挂载），否则从 `#iro_theme_config` 解析配置。注意写 `window._iro?.` 而不是 `window?._iro?.`——裸 `window` 不存在时可选链救不了它。
 - **请求工具按「所在工程的依赖上下文 + 工具自身的职责」选，不能一刀切，也不要按「内部/外部、GET/POST」这类想当然的分类去套**：
   - **子包依赖决定可用手段**：三个工程依赖互相隔离，`inc/ai/package.json` **没有 axios**，所以 `inc/ai/**` 只能用 `fetch`（自带薄封装 `inc/ai/src/api.js`）；`inc/blocks/src` 完全不发请求。
   - **`frontend/app/utils/api.js` 只是「仅 GET 的缓存封装」**：全文 9 行，`setupCache(axios.create(), { ttl: 5 分钟, methods: ["get"] })`，**没有 baseURL、没有拦截器、不注入 nonce**——它是缓存语义，不是通用请求工具。只用于「主题 REST 的**可缓存 GET 读**」（现有用例：分页、搜索索引、表情包列表）。

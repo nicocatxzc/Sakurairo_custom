@@ -117,9 +117,11 @@ export default defineConfig(() => {
             rolldownOptions: {
                 input: {
                     app: resolve(import.meta.dirname, "main.js"),
-                    captcha: resolve(
+
+                    // 登录页样式
+                    login: resolve(
                         import.meta.dirname,
-                        "components/site/captcha/captcha.js",
+                        "components/login.js",
                     ),
                     // 文章排版样式入口
                     "post-sakura": resolve(
@@ -137,8 +139,8 @@ export default defineConfig(() => {
                             return "style.css";
                         }
 
-                        if (name === "captcha.css") {
-                            return "captcha.css";
+                        if (name === "login.css") {
+                            return "login.css";
                         }
 
                         if (name === "post-sakura.css") {
