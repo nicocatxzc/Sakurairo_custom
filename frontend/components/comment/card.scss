@@ -30,7 +30,7 @@
         border-radius: 0.3rem;
         opacity: 0;
     
-        color: rgb(var(--widget-background));
+        color: var(--word-color-on-active, rgb(var(--widget-background)));
         background-color: var(--active-color);
         border: var(--border-active);
         transition: all 0.2s ease;

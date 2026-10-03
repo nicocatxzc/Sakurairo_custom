@@ -165,7 +165,7 @@
             margin: 0;
             padding: 0.6rem 1.25rem;
 
-            color: rgb(var(--widget-background));
+            color: var(--word-color-on-active, rgb(var(--widget-background)));
             background: var(--active-color);
 
             border: 0.1rem solid var(--active-color);

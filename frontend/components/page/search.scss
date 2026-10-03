@@ -36,7 +36,7 @@
             border: none;
 
             background: var(--active-color);
-            color: #fff;
+            color: var(--word-color-on-active, #fff);
             font-size: 0.9rem;
             cursor: pointer;
 
@@ -88,7 +88,7 @@
         font-weight: bold;
         &.active {
             background-color: var(--active-color);
-            color: #fff;
+            color: var(--word-color-on-active, #fff);
         }
     }
 }

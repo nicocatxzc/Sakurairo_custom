@@ -141,3 +141,5 @@ import("./pjax");
 import("./utils/message");
 
 import("./plugins/postViews");
+// 主色填充上的文字色
+import("./plugins/themeContrast");

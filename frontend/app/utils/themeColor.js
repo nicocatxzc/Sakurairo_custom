@@ -1,4 +1,5 @@
 import { getPaletteSync } from "colorthief";
+import { applyReadableOnActive } from "./contrast";
 
 /**
  * 取色后需要覆盖的 CSS 变量。
@@ -119,14 +120,16 @@ export function applyExtractedColor(color, target = document.documentElement) {
     if (composedShadow) {
         target.style.setProperty("--widget-shadow-shining", composedShadow);
     }
+    applyReadableOnActive(target, [r, g, b]);
 }
 
-/** 移除目标元素上由取色写入的内联变量，恢复到样式表定义的兜底值 */
+/** 移除目标元素上由取色写入的内联变量，恢复到样式表定义的兜底值，并按恢复后的主色重算前景 */
 export function clearExtractedColor(target = document.documentElement) {
     if (!target) {
         return;
     }
     THEME_COLOR_VARS.forEach((name) => target.style.removeProperty(name));
+    applyReadableOnActive(target);
 }
 
 /**

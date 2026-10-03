@@ -57,6 +57,10 @@
 
     .copy-button:hover {
         background-color: var(--active-color);
+
+        i {
+            color: var(--word-color-on-active, var(--widget-background-color));
+        }
     }
 
     .copy-button.copied {

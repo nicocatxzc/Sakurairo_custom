@@ -125,7 +125,7 @@
                     }
 
                     &:hover {
-                        color: var(--word-color-first-reverse);
+                        color: var(--word-color-on-active, var(--word-color-first-reverse));
                         box-shadow: var(--widget-shadow-shine);
                         background-color: var(--active-color);
                     }

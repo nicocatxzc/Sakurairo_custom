@@ -14,6 +14,11 @@ watch(
             "dark",
             darkmodeStat.value === true,
         );
+        document.dispatchEvent(
+            new CustomEvent("darkmode", {
+                detail: { stat: darkmodeStat.value === true },
+            }),
+        );
     },
 );
 
@@ -70,7 +75,6 @@ function setState(mode) {
         darkmodeStat.value = darkmode === "true";
     }
     writeCookie(darkmode);
-    document.dispatchEvent(new CustomEvent("darkmode", { stat: darkmodeStat }));
 }
 
 const getState = () => darkmode;

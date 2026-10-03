@@ -247,7 +247,7 @@
     }
 
     th {
-        color: #fff;
+        color: var(--word-color-on-active, #fff);
         background-color: var(--active-color);
     }
 
