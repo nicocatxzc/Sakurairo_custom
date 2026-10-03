@@ -70,6 +70,7 @@ function setState(mode) {
         darkmodeStat.value = darkmode === "true";
     }
     writeCookie(darkmode);
+    document.dispatchEvent(new CustomEvent("darkmode", { stat: darkmodeStat }));
 }
 
 const getState = () => darkmode;
