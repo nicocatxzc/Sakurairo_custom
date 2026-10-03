@@ -1,7 +1,13 @@
 import Swup from "swup";
 
 const swup = new Swup({
-    containers: ["#pjax-main", "#iro_page_config","#iro_theme_style_dymanic_vars"],
+    containers: [
+        "#pjax-main",
+        "#iro_page_config",
+        "#iro_theme_style_dymanic_vars",
+        // 本页用到的古腾堡区块样式
+        "#iro_block_styles",
+    ],
     linkSelector: "a[href]:not(.no-pjax):not(* .no-pjax)",
     animationSelector: false,
 

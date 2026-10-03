@@ -1,23 +1,135 @@
 <?php
-add_action("after_setup_theme", function () {
-    if (iro_opt("pjax", true) == true) {
-        // 禁用wp6.9按需加载
-        add_filter('wp_should_load_separate_core_block_assets', '__return_false');
-        add_filter('should_load_separate_core_block_assets', '__return_false', 1);
-        add_filter('should_load_block_assets_on_demand', '__return_false', 1);
-        add_filter('enqueue_empty_block_content_assets', '__return_true');
-    }
-});
 
-add_action("wp_enqueue_scripts", function () {
-    if (iro_opt("pjax", true) == true) {
-        // 全量加载wordpress区块和原生组件样式
-        wp_enqueue_style('wp-block-library');
-        wp_enqueue_style('wp-block-library-theme');
-        wp_enqueue_style('wp-block-library-comments');
-        wp_enqueue_style('wp-block-library-widgets');
+/**
+ * WP 6.9 起，经典主题的区块样式默认按需加载：样式要到 render_block 时才入队，只能在页脚打印，
+ * 再由核心的模板增强输出缓冲（wp_hoist_late_printed_styles）吊回 head。
+ * 现在把「吊回 head 的那批区块样式」合并成一个
+ * <style id="iro_block_styles">， pjax 可以整体替换。
+ */
+const IRO_BLOCK_STYLES_MARKER = '/*iro-block-styles*/';
+
+// 容器输出、收集、替换三处必须同条件：pjax 关掉就没有容器可放，ajax 翻页（X-Template-Part）
+// 走的是同一批列表、容器里已经有了，都不接管。WP 6.9 以下没有模板增强缓冲，同样不接管。
+function iro_block_styles_available(): bool
+{
+    if (!iro_opt("pjax", true) || !empty($_SERVER['HTTP_X_TEMPLATE_PART'])) {
+        return false;
     }
-});
+
+    return function_exists('wp_should_output_buffer_template_for_enhancement')
+        && wp_should_output_buffer_template_for_enhancement();
+}
+
+/**
+ * 本页用到的区块样式 CSS。
+ *
+ * 收集时把这些句柄出队，改由 <style id="iro_block_styles"> 承载；
+ * 前提不成立就返回空串，一个句柄都不动，让核心照常打印样式。
+ */
+function iro_block_styles_css(): string
+{
+    static $css = null;
+
+    if ($css !== null) {
+        return $css;
+    }
+
+    $css = '';
+
+    global $wp_styles;
+
+    if (!iro_block_styles_available() || !$wp_styles instanceof WP_Styles) {
+        return $css;
+    }
+
+    // 本页所有已注册区块的样式句柄（core/paragraph → wp-block-paragraph）
+    $handles = [];
+    foreach (WP_Block_Type_Registry::get_instance()->get_all_registered() as $block_type) {
+        foreach ((array) $block_type->style_handles as $style_handle) {
+            $handles[$style_handle] = true;
+        }
+    }
+
+    $collected = '';
+
+    foreach ($wp_styles->queue as $handle) {
+        if (!isset($handles[$handle])) {
+            continue;
+        }
+
+        $style = $wp_styles->registered[$handle] ?? null;
+        if (!$style) {
+            continue;
+        }
+
+        // wp_add_inline_style 追加的行内片段
+        $inline = '';
+        foreach (['before', 'after'] as $position) {
+            if (!empty($style->extra[$position])) {
+                $inline .= implode("\n", (array) $style->extra[$position]) . "\n";
+            }
+        }
+
+        $files = '';
+        if ($wp_styles->get_data($handle, 'inlined_src')) {
+            // 核心已把文件内容内联进 extra；真为空就原样保留，别把样式丢掉
+            if ($inline === '') {
+                continue;
+            }
+        } else {
+            // 按注册时记下的 path 读盘，避免额外 HTTP 往返；读不到（CDN 资源等）就保留 <link>
+            $path = (string) ($style->extra['path'] ?? '');
+            if ($path === '' || !is_readable($path)) {
+                continue;
+            }
+
+            $files = (string) file_get_contents($path);
+
+            // 内联后相对 url() 会以文档为基准失效，按样式表所在目录补成绝对地址
+            if (str_contains($files, 'url(')) {
+                $src_path = (string) preg_replace('/[?#].*$/', '', (string) $style->src);
+                $slash = strrpos($src_path, '/');
+                $dir = $slash === false ? '' : substr($src_path, 0, $slash + 1);
+
+                $files = (string) preg_replace_callback(
+                    '/url\(\s*([\'"]?)(?!data:|https?:|\/\/|\/|#)([^\'")]+)\1\s*\)/i',
+                    static fn(array $matches): string => 'url(' . $matches[1] . $dir . $matches[2] . $matches[1] . ')',
+                    $files
+                );
+            }
+
+            $files .= "\n";
+        }
+
+        $collected .= $inline . $files;
+        unset($style->extra['before'], $style->extra['after']);
+        wp_dequeue_style($handle);
+    }
+
+    $css = $collected;
+
+    return $css;
+}
+
+// 页脚打印前先收集并出队（核心的吊装逻辑此时会看到空队列，不会重复打印）
+add_action('wp_print_footer_scripts', 'iro_block_styles_css', 5);
+
+// 容器固定打在已入队样式的后面（wp_print_styles 在 wp_head 优先级 8）
+add_action('wp_head', function (): void {
+    if (!iro_block_styles_available()) {
+        return;
+    }
+    echo '<style id="iro_block_styles">' . IRO_BLOCK_STYLES_MARKER . '</style>' . "\n";
+}, 9);
+
+// 请求结束时把实际 CSS 填进容器
+add_filter('wp_template_enhancement_output_buffer', function ($buffer) {
+    if (!is_string($buffer) || !str_contains($buffer, IRO_BLOCK_STYLES_MARKER)) {
+        return $buffer;
+    }
+
+    return str_replace(IRO_BLOCK_STYLES_MARKER, iro_block_styles_css(), $buffer);
+}, 20);
 
 /**
  * 修复 WordPress 搜索结果为空，返回为 200 的问题。
