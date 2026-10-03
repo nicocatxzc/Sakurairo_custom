@@ -21,30 +21,31 @@ ob_start();
         </style>
     </noscript>
     <script>
-        // 外链字体默认关在 media="not all" 里，浏览器不会去下载。
-        // 等首屏最大内容绘制稳定后再放开：字体既不和首屏抢带宽，也不会被算成首屏资源。
-        // 用户开启省流时不放开，直接不用外链字体。
+        <?php
+        // 外链字体默认 media="not all" 不下载
+        // 等首屏最大内容绘制稳定后再下载
+        ?>
         (function() {
             function openExtraFonts() {
-                var extraFonts = document.getElementById("iro_extra_fonts");
+                let extraFonts = document.getElementById("iro_extra_fonts");
                 if (extraFonts && extraFonts.media !== "all") {
                     extraFonts.media = "all";
                 }
             }
 
-            var connection = navigator.connection;
+            let connection = navigator.connection;
             if ((connection && connection.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches) {
                 return;
             }
 
-            var settleTimer = 0;
+            let settleTimer = 0;
 
             function openAfterLargestPaint() {
                 clearTimeout(settleTimer);
                 settleTimer = setTimeout(openExtraFonts, 600);
             }
 
-            // 页面一直没有 LCP 候选，或候选一直在更新时兜底
+            <?php // 页面一直没有 LCP 候选，或候选一直在更新时兜底 ?>
             setTimeout(openExtraFonts, 10000);
             try {
                 new PerformanceObserver(openAfterLargestPaint).observe({
