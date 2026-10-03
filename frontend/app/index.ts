@@ -63,9 +63,13 @@ function runHookQueue(queue: IroHookItem[]): void {
     }
 }
 
+// 后台要复用验证码模块，因为某些复杂的原因前台模块没成功拆出来，这里先卡着不让前台逻辑执行
+_iro.isBackend = !document.querySelector("#iro_page_config");
+
 _iro.hooks = {
     DOMContentLoaded: {
         push(fn: IroHookFn): void {
+            if (_iro.isBackend) return;
             if (document.readyState !== "loading") {
                 fn();
             } else {
@@ -73,6 +77,7 @@ _iro.hooks = {
             }
         },
         add(fn: IroHookFn, options: IroHookOptions = {}): void {
+            if (_iro.isBackend) return;
             if (document.readyState !== "loading") {
                 fn();
             } else {
@@ -91,55 +96,58 @@ _iro.hooks = {
     },
 };
 
-// DOM 就绪后统一执行队列
-document.addEventListener("DOMContentLoaded", () => {
-    runHookQueue(domReadyHooks);
-});
-
-// 为所有 pjax 生命周期事件绑定钩子队列执行
-(
-    [
-        "pjax:start",
-        "pjax:success",
-        "pjax:complete",
-        "pjax:end",
-        "pjax:error",
-    ] as const
-).forEach((event) => {
-    document.addEventListener(event, () => {
-        runHookQueue(_iro.hooks[event]);
+if (!_iro.isBackend) {
+    // DOM 就绪后统一执行队列
+    document.addEventListener("DOMContentLoaded", () => {
+        runHookQueue(domReadyHooks);
     });
-});
 
-function initFrontConfig(): void {
-    _iro.config = JSON.parse(
-        document.querySelector("#iro_theme_config")!.innerHTML,
-    );
-    _iro.page = JSON.parse(
-        document.querySelector("#iro_page_config")?.innerHTML ?? "{}",
-    );
-    _iro.user = JSON.parse(
-        document.querySelector("#iro_user_config")?.innerHTML ?? "{}",
-    );
+    // 为所有 pjax 生命周期事件绑定钩子队列执行
+    (
+        [
+            "pjax:start",
+            "pjax:success",
+            "pjax:complete",
+            "pjax:end",
+            "pjax:error",
+        ] as const
+    ).forEach((event) => {
+        document.addEventListener(event, () => {
+            runHookQueue(_iro.hooks[event]);
+        });
+    });
+
+    function initFrontConfig(): void {
+        _iro.config = JSON.parse(
+            document.querySelector("#iro_theme_config")!.innerHTML,
+        );
+        _iro.page = JSON.parse(
+            document.querySelector("#iro_page_config")?.innerHTML ?? "{}",
+        );
+        _iro.user = JSON.parse(
+            document.querySelector("#iro_user_config")?.innerHTML ?? "{}",
+        );
+    }
+    _iro.hooks.onPageLoaded(initFrontConfig);
+
+    
+    // 这部分会被提升，需要自己处理
+    import("./utils/missImg");
+    // 事件总线
+    import("./bus");
+    // 弱网优化
+    import("./optimize");
+    // 滚动广播
+    import("./stores/scroll");
+    // 暗色模式
+    import("./darkmode");
+    // pjax
+    import("./pjax");
+    
+    import("./utils/message");
+    
+    import("./plugins/postViews");
+    // 主色填充上的文字色
+    import("./plugins/themeContrast");
 }
-_iro.hooks.onPageLoaded(initFrontConfig);
-
 export default _iro;
-
-import("./utils/missImg");
-// 事件总线
-import("./bus");
-// 弱网优化
-import("./optimize");
-// 滚动广播
-import("./stores/scroll");
-// 暗色模式
-import("./darkmode");
-// pjax
-import("./pjax");
-
-import("./utils/message");
-
-import("./plugins/postViews");
-// 主色填充上的文字色
-import("./plugins/themeContrast");

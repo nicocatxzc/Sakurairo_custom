@@ -87,7 +87,7 @@ function handlePjaxEnd() {
     }, 0);
 }
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && !_iro.isBackend) {
     const $ = window.jQuery;
 
     if ($ && $.fn && $.fn.pjax) {

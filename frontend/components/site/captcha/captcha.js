@@ -31,7 +31,7 @@ function unmountCaptcha() {
     apps.length = 0;
 }
 
-if (window?._iro?.hooks) {
+if (window._iro?.hooks && !_iro.isBackend) {
     _iro.hooks.onPageLoaded(mountCaptcha);
     _iro.hooks["pjax:start"].add(unmountCaptcha);
     document.addEventListener("captcha:refresh", () => {

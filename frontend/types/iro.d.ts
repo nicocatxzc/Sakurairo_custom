@@ -149,6 +149,7 @@ interface IroI18n {
 /** 主题前端全局命名空间，运行时由 app/index.ts 组装 */
 interface IroNamespace {
     hooks: IroHooks;
+    isBackend: boolean;
     config: IroThemeConfig;
     page: IroPageConfig;
     user: IroUserConfig;

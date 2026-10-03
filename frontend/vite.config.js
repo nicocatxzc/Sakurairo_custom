@@ -114,7 +114,7 @@ export default defineConfig(() => {
             sourcemap: true,
             outDir: "dist",
             emptyOutDir: true,
-            rollupOptions: {
+            rolldownOptions: {
                 input: {
                     app: resolve(import.meta.dirname, "main.js"),
                     captcha: resolve(

@@ -162,6 +162,9 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 其他全局：`_iro.bus`（mitt 事件总线，如 `scroll:update`）、`_iro.navigate`（Swup 导航）、`_iro.utils`（`missImg` / `missAvatar` 等）。
 
+- **后台页面（`wp-login.php` / `wp-admin`）不跑前台运行时**：`_iro.isBackend` 在 `app/index.ts` 里由 `!document.querySelector("#iro_page_config")` 判定——`#iro_page_config` 只由 `wp_enqueue_scripts`（即 `theme_config.php` 的 `iro_front_theme_config()`）输出，后台与登录页只输出 `#iro_theme_config`，所以它是**服务端权威**的「这是前台」标记，不依赖 DOM 里有没有登录表单（表单渲染晚于脚本）。为 `true` 时：`hooks` 的 `push`/`add` 不注册（DOM 已就绪时这两个方法会立刻执行 `fn`，所以总闸卡在方法里而不是派发处）、pjax 事件不派发、`app/pjax.js` 不实例化 Swup、`app/stores/scroll.js` 不听滚动。原因：后台只加载验证码入口，但 `iro-core` 是共享 chunk，前台运行时代码照样会被下载并求值，构建层面拆不开。验证码入口因此在后台页面走直接挂载分支（`components/site/captcha/captcha.js`）。
+- 由此，**新增前台运行时行为默认不会在后台跑**——只要挂在 hooks / `_iro.bus` / pjax 上即可；自带顶层监听或定时器的模块要自己判 `_iro.isBackend`（现有例子：`app/pjax.js`、`app/stores/scroll.js`）。
+
 `_iro` 及其成员的类型统一定义在 `frontend/types/iro.d.ts`（`declare const _iro` + `interface Window`），各文件直接写 `_iro` 即可获得提示。该文件是**手写的全局声明**，新增 `_iro` 成员时要同步补上；`_iro.config` 目前是 `any`，其形状（对应 `theme_config.php` 的三个 JSON）记录在同文件的 `IroThemeConfig` / `IroPageConfig` / `IroUserConfig` 中，收紧类型时替换即可。
 
 ### 4.4 PJAX / Swup
