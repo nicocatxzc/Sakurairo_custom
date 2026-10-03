@@ -1656,6 +1656,27 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'post_head_metas',
+                "type" => "select",
+                "title" => __("文章头部显示信息", "sakurairo_csf"),
+                "chosen" => true,
+                "multiple" => true,
+                "sortable" => true,
+                "options" => [
+                    'author'  => __('作者', 'sakurairo'),
+                    'category'     => __('分类', 'sakurairo'),
+                    'comment_count' => __('评论数量', 'sakurairo'),
+                    'views' => __('浏览量', 'sakurairo'),
+                    'words_count' => __('字数', 'sakurairo'),
+                    'reading_time' => __('阅读时间', 'sakurairo'),
+                    'publish_time' => __('发布时间', 'sakurairo'),
+                    'update_time' => __('最后更新时间', 'sakurairo'),
+                    'editor_link' => __('编辑链接（仅管理员显示）', 'sakurairo'),
+                ],
+                "default" => ['update_time', 'author', 'views'],
+            ],
+
+            [
                 'id' => 'page_title_font_size',
                 'type' => 'slider',
                 'title' => __('页面标题字体大小（无头图）', 'sakurairo'),

@@ -211,8 +211,6 @@ msgstr "個結果"
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
-#: frontend/components/post/header.php:6
-#: frontend/components/post/header_with_image.php:8
 msgid "年"
 msgstr "年"
 
@@ -220,8 +218,6 @@ msgstr "年"
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
-#: frontend/components/post/header.php:6
-#: frontend/components/post/header_with_image.php:8
 msgid "月"
 msgstr "月"
 
@@ -229,8 +225,6 @@ msgstr "月"
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
-#: frontend/components/post/header.php:6
-#: frontend/components/post/header_with_image.php:8
 msgid "日"
 msgstr "日"
 
@@ -260,8 +254,6 @@ msgstr "暫無遊戲數據"
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
-#: frontend/components/post/header.php:6
-#: frontend/components/post/header_with_image.php:8
 msgid "更新于："
 msgstr "更新於："
 
@@ -269,6 +261,22 @@ msgstr "更新於："
 #: frontend/components/post/card/with_image.php:16
 msgid "置顶"
 msgstr "置頂"
+
+#: frontend/components/post/head_metas.php:44
+msgid "次阅读"
+msgstr "次瀏覽"
+
+#: frontend/components/post/head_metas.php:50
+msgid "字"
+msgstr "字"
+
+#: frontend/components/post/head_metas.php:57
+msgid "预计阅读时间"
+msgstr "預期閱讀時間"
+
+#: frontend/components/post/head_metas.php:73
+msgid "编辑"
+msgstr "編輯"
 
 #: frontend/components/post/footer.php:21
 #, php-format

@@ -2,7 +2,7 @@
 function iro_get_post_words($id)
 {
     $post = get_post($id);
-    if (!$post || !in_array($post->post_type, ['post', 'shuoshuo'], true)) {
+    if (!$post) {
         return 0;
     }
 
