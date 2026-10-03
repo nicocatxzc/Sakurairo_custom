@@ -16,7 +16,7 @@ $bangumi_data = $bangumi_response->get_data()["data"];
 $bangumi_pagination = $bangumi_response->get_data()["pagination"];
 ?>
 <?php if (!$iro_only_template): ?>
-    <div class="page-bangumi flex-center">
+    <div class="page-bangumi page-template flex-center">
         <ol class="anime-list">
         <?php endif; ?>
         <?php foreach ($bangumi_data as $item): ?>

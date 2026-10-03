@@ -50,7 +50,7 @@ if ($current_category) {
     console.log(<?= json_encode($favlist_pagination) ?>)
 </script>
 <?php if (!$iro_only_template): ?>
-    <div class="page-favlist flex-center">
+    <div class="page-favlist page-template flex-center">
     <?php endif; ?>
     <!-- 分类切换 -->
     <div class="categories flex-center">

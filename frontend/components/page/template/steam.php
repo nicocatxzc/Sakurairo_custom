@@ -12,7 +12,7 @@ $steam_data       = $steam_result['data'] ?? [];
 $steam_pagination = $steam_result['pagination'] ?? [];
 ?>
 <?php if (!$iro_only_template): ?>
-    <div class="page-steam flex-center">
+    <div class="page-steam page-template flex-center">
         <div class="steam-list">
         <?php endif; ?>
         <?php if (empty($steam_data)): ?>

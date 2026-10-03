@@ -7,7 +7,7 @@ $archive_posts = get_posts([
     'no_found_rows'  => true,
 ]);
 ?>
-<div class="page-archive">
+<div class="page-archive page-template">
     <ol class="list" id="archive-list">
         <?php foreach ($archive_posts as $post) : ?>
             <li

@@ -1,15 +1,17 @@
+$not-template: ":not(:where(.page-template *))";
+
 .post-content {
     position: relative;
 
     // ---------- 标题 ----------
-    h1 {
+    h1#{$not-template} {
         margin: 0.67em 0;
         clear: both;
         font-size: 2em;
         font-weight: var(--global-font-weight);
     }
 
-    h2 {
+    h2#{$not-template} {
         position: relative;
         display: inline-block;
         padding: 0;
@@ -35,43 +37,43 @@
         }
     }
 
-    h3,
-    h4,
-    h5 {
+    h3#{$not-template},
+    h4#{$not-template},
+    h5#{$not-template} {
         position: relative;
         padding-left: 1rem;
     }
 
-    h3 {
+    h3#{$not-template} {
         padding-bottom: 0.6rem;
     }
 
-    h3::after,
-    h4::after,
-    h5::after {
+    h3#{$not-template}::after,
+    h4#{$not-template}::after,
+    h5#{$not-template}::after {
         position: absolute;
         left: 0;
     }
 
-    h3::after {
+    h3#{$not-template}::after {
         content: "#";
     }
 
-    h4::after {
+    h4#{$not-template}::after {
         content: ">";
     }
 
-    h5::after {
+    h5#{$not-template}::after {
         content: "~";
     }
 
     // ---------- 段落与行内元素 ----------
-    p {
+    p#{$not-template} {
         margin-bottom: 1.5em;
         color: var(--word-color-first);
     }
 
-    a {
+    a#{$not-template} {
         color: var(--active-color, #00b0f0);
         text-decoration: none;
         word-break: break-word;
@@ -85,64 +87,64 @@
         }
     }
 
-    sub,
-    sup {
+    sub#{$not-template},
+    sup#{$not-template} {
         position: relative;
         font-size: 75%;
         line-height: 0;
         font-weight: var(--global-font-weight);
     }
 
-    sub {
+    sub#{$not-template} {
         bottom: -0.25em;
     }
 
-    strong,
-    b,
-    dt {
+    strong#{$not-template},
+    b#{$not-template},
+    dt#{$not-template} {
         font-weight: 700;
     }
 
-    small {
+    small#{$not-template} {
         font-size: 80%;
         font-weight: var(--global-font-weight);
     }
 
-    big {
+    big#{$not-template} {
         font-size: 125%;
     }
 
-    mark,
-    ins {
+    mark#{$not-template},
+    ins#{$not-template} {
         color: #000;
         background: #fff9c0; // 主题暂无高亮色变量，保留固定高亮色
         text-decoration: none;
     }
 
-    abbr[title] {
+    abbr[title]#{$not-template} {
         border-bottom: 0.1rem dotted;
         cursor: help;
     }
 
-    code,
-    kbd,
-    samp,
-    tt,
-    var {
+    code#{$not-template},
+    kbd#{$not-template},
+    samp#{$not-template},
+    tt#{$not-template},
+    var#{$not-template} {
         font-family: monospace, monospace;
         font-size: 0.9375rem;
         font-weight: var(--global-font-weight);
     }
 
     // ---------- 分割线 ----------
-    hr:not(.wp-block-separator) {
+    hr:not(.wp-block-separator)#{$not-template} {
         margin: 2.5em 0;
         border: 0;
         border-top: var(--border-sketch);
     }
 
     // ---------- 引用 ----------
-    blockquote {
+    blockquote#{$not-template} {
         position: relative;
         margin: 0;
         padding: 1.8rem 3.5rem;
@@ -188,13 +190,13 @@
     }
 
     // Gutenberg 引用块的内边距比普通引用小
-    .wp-block-quote {
+    .wp-block-quote#{$not-template} {
         padding: 0.8rem 1.6rem;
     }
 
     // ---------- 列表 ----------
-    ul,
-    ol {
+    ul#{$not-template},
+    ol#{$not-template} {
         margin-left: 0;
         padding: 0.8rem 0.5rem 1.8rem 3rem;
         color: var(--word-color-first);
@@ -202,101 +204,101 @@
         border-radius: 0.6rem;
     }
 
-    ul {
+    ul#{$not-template} {
         list-style: disc;
     }
 
-    ol {
+    ol#{$not-template} {
         list-style: decimal;
     }
 
-    ul ul {
+    ul ul#{$not-template} {
         padding: 0.8rem 0.5rem 0.8rem 1.8rem;
         border: none;
     }
 
-    li > ul,
-    li > ol {
+    li > ul#{$not-template},
+    li > ol#{$not-template} {
         margin: 0;
         padding: 0 0 0 1rem;
         border: none;
     }
 
-    li {
+    li#{$not-template} {
         padding: 1rem 0 0;
     }
 
-    dd {
+    dd#{$not-template} {
         margin: 0 1.5em 1.5em;
     }
 
-    address {
+    address#{$not-template} {
         margin: 0 0 1.5em;
     }
 
     // ---------- 表格 ----------
-    table {
+    table#{$not-template} {
         width: 100%;
         border-collapse: collapse;
         border-radius: 0.3rem;
     }
 
-    th,
-    td {
+    th#{$not-template},
+    td#{$not-template} {
         padding: 0.5rem;
     }
 
-    th {
+    th#{$not-template} {
         color: var(--word-color-on-active, #fff);
         background-color: var(--active-color);
     }
 
-    tr {
+    tr#{$not-template} {
         border-bottom: var(--border-sketch);
     }
 
     // ---------- 媒体 ----------
-    figure {
+    figure#{$not-template} {
         margin: 1em 0;
     }
 
-    img {
+    img#{$not-template} {
         max-width: 100%;
         height: auto;
         border: 0;
     }
 
-    embed,
-    iframe,
-    object {
+    embed#{$not-template},
+    iframe#{$not-template},
+    object#{$not-template} {
         max-width: 100%;
     }
 
-    svg:not(:root) {
+    svg:not(:root)#{$not-template} {
         overflow: hidden;
     }
 
     // ---------- WordPress 生成内容 ----------
-    .wp-block-image .aligncenter > figcaption {
+    .wp-block-image .aligncenter > figcaption#{$not-template} {
         text-align: center;
     }
 
-    .wp-caption {
+    .wp-caption#{$not-template} {
         max-width: 100%;
         margin-bottom: 1.5em;
     }
 
-    .wp-caption img[class*="wp-image-"] {
+    .wp-caption img[class*="wp-image-"]#{$not-template} {
         display: block;
         margin-right: auto;
         margin-left: auto;
     }
 
-    .wp-caption .wp-caption-text {
+    .wp-caption .wp-caption-text#{$not-template} {
         margin: 0.8075em 0;
     }
 
-    .wp-smiley {
+    .wp-smiley#{$not-template} {
         height: 2em !important;
         max-height: 2em !important;
         margin: 0;
@@ -306,8 +308,8 @@
     }
 
     // 文本选中
-    ::selection,
-    ::-moz-selection {
+    :not(:where(.page-template *))::selection,
+    :not(:where(.page-template *))::-moz-selection {
         color: #fff;
         background: #444;
     }

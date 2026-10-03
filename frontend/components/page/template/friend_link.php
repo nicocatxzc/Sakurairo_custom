@@ -89,7 +89,7 @@ $iro_friend_links = json_decode(json_encode(iro_get_friend_links()), true);
 <script>
     console.log(<?= json_encode(iro_get_friend_links()) ?>)
 </script>
-<div class="page-links">
+<div class="page-links page-template">
     <ol class="categories">
         <?php foreach ($iro_friend_links as $category_name => $links): ?>
             <h3 id="<?= $category_name ?>" class="category-title">
