@@ -96,51 +96,6 @@
 
         <?php endforeach; ?>
     </style>
-    <script>
-        <?php
-        // 外链字体默认 media="not all" 不下载
-        // 等首屏最大内容绘制稳定后再下载
-        ?>
-            (function() {
-                function openExtraFonts() {
-                    let extraFonts = document.getElementById("iro_extra_fonts");
-                    if (extraFonts && extraFonts.media !== "all") {
-                        extraFonts.media = "all";
-                    }
-                }
-
-                <?php // 桌面端直接解锁 
-                ?>
-                if (window.innerWidth > 860) {
-                    openExtraFonts();
-                    return;
-                }
-
-                let connection = navigator.connection;
-                if ((connection && connection.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches) {
-                    return;
-                }
-
-                let settleTimer = 0;
-
-                function openAfterLargestPaint() {
-                    clearTimeout(settleTimer);
-                    settleTimer = setTimeout(openExtraFonts, 600);
-                }
-
-                <?php // 页面一直没有 LCP 候选，或候选一直在更新时兜底 
-                ?>
-                setTimeout(openExtraFonts, 10000);
-                try {
-                    new PerformanceObserver(openAfterLargestPaint).observe({
-                        type: "largest-contentful-paint",
-                        buffered: true
-                    });
-                } catch (e) {
-                    window.addEventListener("load", openAfterLargestPaint);
-                }
-            })();
-    </script>
 <?php endif; ?>
 
 <?php // 背景 
@@ -187,44 +142,6 @@
         }
     }
 </style>
-<script>
-    (function() {
-        function openDeferredBackground() {
-            let deferred = document.getElementById("iro_deferred_bg");
-            if (deferred && deferred.media !== "all") {
-                deferred.media = "all";
-            }
-        }
-
-        <?php // 桌面端直接解锁
-        ?>
-        if (window.innerWidth > 860) {
-            openDeferredBackground();
-            return;
-        }
-
-        <?php // 首屏大图等首个绘制完成后再挂：在此之前不参与下载，避免进入首屏窗口 
-        ?>
-        try {
-            let observer = new PerformanceObserver(function(list) {
-                for (let entry of list.getEntries()) {
-                    if (entry.name === "first-contentful-paint") {
-                        observer.disconnect();
-                        requestAnimationFrame(openDeferredBackground);
-                        break;
-                    }
-                }
-            });
-            observer.observe({
-                type: "paint",
-                buffered: true
-            });
-        } catch (e) {
-            window.addEventListener("load", openDeferredBackground);
-        }
-        setTimeout(openDeferredBackground, 10000);
-    })();
-</script>
 
 <?php // 切换页面时需要改变的样式 
 ?>
@@ -315,3 +232,6 @@ function iro_is_commemorate_date()
 
     return in_array($today, $dates);
 }
+
+// 门控样式必须和它的解锁器同进同出（登录页也会 require 本文件），所以收口在这里
+require_once __DIR__ . '/theme_performance.php';

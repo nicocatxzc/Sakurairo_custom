@@ -1,4 +1,5 @@
 import i18n from "../i18n";
+import safeRun from "./utils/safeRun";
 
 // _iro 及其成员的类型声明见 types/iro.d.ts
 window._iro = window._iro || ({} as IroNamespace);
@@ -9,6 +10,9 @@ _iro.utils = {};
 _iro.i18n = i18n;
 
 const domReadyHooks: IroHookItem[] = [];
+
+// 后台要复用验证码模块，因为某些复杂的原因前台模块没成功拆出来，这里先卡着不让前台逻辑执行
+_iro.isBackend = !document.querySelector("#iro_page_config");
 
 /**
  * 创建一个带 add 方法的钩子队列
@@ -63,8 +67,46 @@ function runHookQueue(queue: IroHookItem[]): void {
     }
 }
 
-// 后台要复用验证码模块，因为某些复杂的原因前台模块没成功拆出来，这里先卡着不让前台逻辑执行
-_iro.isBackend = !document.querySelector("#iro_page_config");
+/**
+ * 创建一个首屏阶段钩子
+ *
+ * 阶段由 head 里的 theme_performance.php 提前产生，并挂在 window.iroPerformance 上；
+ * 主包可能晚于阶段下载完，所以和 DOMContentLoaded 一样：已过则立即执行，未过则等事件
+ * @param stage 阶段名，对应预产生的标记与 performance:<stage> 事件
+ * @returns 可链式添加钩子的队列
+ */
+function createPaintHook(stage: "fcp" | "lcp"): IroDomReadyHook {
+    const queue = createHookQueue();
+
+    if (!_iro.isBackend) {
+        document.addEventListener(`performance:${stage}`, () => {
+            runHookQueue(queue);
+        });
+    }
+
+    function isFired(): boolean {
+        return window.iroPerformance?.[stage] === true;
+    }
+
+    return {
+        push(fn: IroHookFn): void {
+            if (_iro.isBackend) return;
+            if (isFired()) {
+                safeRun(fn);
+            } else {
+                queue.push(fn);
+            }
+        },
+        add(fn: IroHookFn, options: IroHookOptions = {}): void {
+            if (_iro.isBackend) return;
+            if (isFired()) {
+                safeRun(fn);
+            } else {
+                queue.push([fn, options]);
+            }
+        },
+    };
+}
 
 _iro.hooks = {
     DOMContentLoaded: {
@@ -85,6 +127,8 @@ _iro.hooks = {
             }
         },
     },
+    fcp: createPaintHook("fcp"),
+    lcp: createPaintHook("lcp"),
     "pjax:start": createHookQueue(),
     "pjax:success": createHookQueue(),
     "pjax:complete": createHookQueue(),

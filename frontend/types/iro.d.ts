@@ -19,8 +19,18 @@ interface IroDomReadyHook {
     add(fn: IroHookFn, options?: IroHookOptions): void;
 }
 
+/** 由 frontend/theme_performance.php 在 head 里提前建立的首屏阶段标记 */
+interface IroPerformance {
+    fcp: boolean;
+    lcp: boolean;
+}
+
 interface IroHooks {
     DOMContentLoaded: IroDomReadyHook;
+    /** 首个内容绘制；已过则立即执行 */
+    fcp: IroDomReadyHook;
+    /** LCP 候选稳定（最后一个候选后 600ms）；已过则立即执行 */
+    lcp: IroDomReadyHook;
     "pjax:start": IroHookQueue;
     "pjax:success": IroHookQueue;
     "pjax:complete": IroHookQueue;
@@ -168,4 +178,5 @@ declare const _iro: IroNamespace;
 
 interface Window {
     _iro: IroNamespace;
+    iroPerformance?: IroPerformance;
 }
