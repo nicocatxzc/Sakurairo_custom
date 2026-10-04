@@ -26,10 +26,10 @@ _iro.hooks["DOMContentLoaded"].add(async () => {
 });
 
 function getConfig(
-    amount = _iro.config.particle.builtin.amount ?? 400,
-    speed = _iro.config.particle.builtin.speed ?? 10,
-    sizeMin = _iro.config.particle.builtin.minsize ?? 10,
-    sizeMax = _iro.config.particle.builtin.maxsize ?? 30,
+    amount = _iro.config.particle?.builtin?.amount ?? 400,
+    speed = _iro.config.particle?.builtin?.speed ?? 10,
+    sizeMin = _iro.config.particle?.builtin?.minsize ?? 10,
+    sizeMax = _iro.config.particle?.builtin?.maxsize ?? 30,
 ) {
     switch (_iro.config.particle.select ?? "off") {
         case "off":

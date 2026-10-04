@@ -12,8 +12,8 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
         case 'show':
     ?>
             <h2 class="block-title flex-center">
-                <i class="<?= iro_opt("homepage_show_title")["icon"] ?>"></i>
-                <?= iro_opt("homepage_show_title")["text"] ?>
+                <i class="<?= iro_opt("homepage_show_title", [])["icon"] ?? "" ?>"></i>
+                <?= iro_opt("homepage_show_title", [])["text"] ?? "" ?>
             </h2>
         <?php
             require_once get_template_directory() . '/frontend/components/homepage/show.php';
@@ -21,8 +21,8 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
         case 'post_list':
         ?>
             <h2 class="block-title flex-center">
-                <i class="<?= iro_opt("homepage_post_list_title")["icon"] ?>"></i>
-                <?= iro_opt("homepage_post_list_title")["text"] ?>
+                <i class="<?= iro_opt("homepage_post_list_title", [])["icon"] ?? "" ?>"></i>
+                <?= iro_opt("homepage_post_list_title", [])["text"] ?? "" ?>
             </h2>
     <?php
             require_once get_template_directory() . '/frontend/components/post/list.php';

@@ -8,12 +8,10 @@ $bangumi_request->set_query_params(
 );
 $bangumi_response = rest_do_request($bangumi_request);
 
-if ($bangumi_response->is_error()) {
-    $bangumi_data = [];
-}
+$bangumi_result = $bangumi_response->is_error() ? [] : $bangumi_response->get_data();
 
-$bangumi_data = $bangumi_response->get_data()["data"];
-$bangumi_pagination = $bangumi_response->get_data()["pagination"];
+$bangumi_data = $bangumi_result["data"] ?? [];
+$bangumi_pagination = $bangumi_result["pagination"] ?? [];
 ?>
 <?php if (!$iro_only_template): ?>
     <div class="page-bangumi page-template flex-center">
@@ -59,7 +57,7 @@ $bangumi_pagination = $bangumi_response->get_data()["pagination"];
                 </div>
             </li>
         <?php endforeach; ?>
-        <?php if ($bangumi_pagination["total_pages"] > 1): ?>
+        <?php if (($bangumi_pagination["total_pages"] ?? 0) > 1): ?>
             <div class="site-pagination flex-center">
                 <div class="nav-links">
                     <?= paginate_links(array(

@@ -63,6 +63,7 @@ declare global {
   const ref: typeof import('vue').ref
   const relativeLuminance: typeof import('../app/utils/contrast.js').relativeLuminance
   const resolveComponent: typeof import('vue').resolveComponent
+  const safeRun: typeof import('../app/utils/safeRun').default
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef

@@ -24,11 +24,11 @@
                             <h1
                                 class="cover-title"
                                 style="
-                                font-family: <?= iro_opt("cover_title")["font"] ?>;
-                                font-size: <?= iro_opt("cover_title")["size"] ?? 5 ?>rem;
-                                color: <?= iro_opt("cover_title")["color"] ?? "#FFF" ?>;
+                                font-family: <?= iro_opt("cover_title", [])["font"] ?? "" ?>;
+                                font-size: <?= iro_opt("cover_title", [])["size"] ?? 5 ?>rem;
+                                color: <?= iro_opt("cover_title", [])["color"] ?? "#FFF" ?>;
                             ">
-                                <?= iro_opt("cover_title")["text"] ?>
+                                <?= iro_opt("cover_title", [])["text"] ?? "" ?>
                             </h1>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -51,14 +51,14 @@
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
-                            <?php if (iro_opt("cover_signature")["text"]): ?>
+                            <?php if (iro_opt("cover_signature", [])["text"] ?? ""): ?>
                                 <div class="signature">
                                     <p
                                         style="
-                                            font-family:<?= iro_opt("cover_signature")["font"] ?? "" ?>;
-                                            font-size:<?= iro_opt("cover_signature")["size"] ?? 1 ?>rem;
+                                            font-family:<?= iro_opt("cover_signature", [])["font"] ?? "" ?>;
+                                            font-size:<?= iro_opt("cover_signature", [])["size"] ?? 1 ?>rem;
                                         ">
-                                        <?= iro_opt("cover_signature")["text"] ?>
+                                        <?= iro_opt("cover_signature", [])["text"] ?? "" ?>
                                     </p>
                                 </div>
                             <?php endif; ?>

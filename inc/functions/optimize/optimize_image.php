@@ -107,10 +107,15 @@ function iro_media_public_base_url(): string
  * 当$force为true时强制进行优化
  */
 function iro_media_optimize_image_url(
-    string $url,
+    ?string $url = null,
     array $args = [],
     bool $force = false,
 ): string {
+
+    // 未配置的主题选项读出来是 null（如导航栏 logo），模板照样会把它当 URL 传进来
+    if ($url === null) {
+        return '';
+    }
 
     $original = $url;
 
