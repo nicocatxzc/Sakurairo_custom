@@ -88,20 +88,7 @@ function handlePjaxEnd() {
 }
 
 if (typeof window !== "undefined" && !_iro.isBackend) {
-    const $ = window.jQuery;
-
-    if ($ && $.fn && $.fn.pjax) {
-        $(document).on("pjax:start", handlePjaxStart);
-        $(document).on("pjax:end", handlePjaxEnd);
-    }
-
     startListening();
-
-    window.addEventListener("beforeunload", () => {
-        stopListening();
-        if ($ && $.fn && $.fn.pjax) {
-            $(document).off("pjax:start", handlePjaxStart);
-            $(document).off("pjax:end", handlePjaxEnd);
-        }
-    });
+    _iro.hooks["pjax:start"].add(handlePjaxEnd);
+    _iro.hooks["pjax:end"].add(handlePjaxEnd);
 }
