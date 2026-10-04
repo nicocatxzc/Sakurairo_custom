@@ -9,6 +9,8 @@ const swup = _iro.isBackend
               "#iro_theme_style_dymanic_vars",
               // 本页用到的古腾堡区块样式
               "#iro_block_styles",
+              // 单页视图才有的文章排版样式
+              "#iro_post_style",
           ],
           linkSelector:
               'a[href]:not(.no-pjax):not(* .no-pjax):not([href*="/wp-login.php"]):not([href*="/wp-admin"]):not([target="_blank"]):not([download])',

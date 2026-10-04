@@ -159,19 +159,19 @@ $dev_mode = iro_opt("dev_mode", false) &&
         !iro_opt("dev_mode_admin_only", true) ||
         current_user_can('manage_options')
     );
-// 文章排版样式独立导出为 post-sakura.css，仅在设置为 Sakura 时按需引用。
-$use_sakura_post_style = iro_opt("page_style", "sakura") === "sakura";
+
+$use_sakura_post_style = iro_opt("page_style", "sakura") === "sakura" && is_singular();
 ?>
 
-<?php if ($dev_mode): ?>
+<div id="iro_post_style">
     <?php if ($use_sakura_post_style): ?>
-        <script type="module" src="<?= rtrim(dirname(iro_opt("dev_mode_main_js")), '/\\') . '/components/post/post-sakura.scss' ?>"></script>
+        <?php if ($dev_mode): ?>
+            <script type="module" src="<?= rtrim(dirname(iro_opt("dev_mode_main_js")), '/\\') . '/components/post/post-sakura.scss' ?>"></script>
+        <?php else: ?>
+            <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/post-sakura.css?ver=' . INT_VERSION ?>">
+        <?php endif; ?>
     <?php endif; ?>
-<?php else: ?>
-    <?php if ($use_sakura_post_style): ?>
-        <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/post-sakura.css?ver=' . INT_VERSION ?>">
-    <?php endif; ?>
-<?php endif; ?>
+</div>
 
 <?php
 /**

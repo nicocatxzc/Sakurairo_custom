@@ -170,7 +170,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 ### 4.4 PJAX / Swup
 
-- `frontend/app/pjax.js` 用 Swup，替换容器：`#pjax-main`、`#iro_page_config`、`#iro_theme_style_dymanic_vars`（注意 id 里的 `dymanic` 是历史拼写，改动时要同步 `theme_style_vars.php`）。
+- `frontend/app/pjax.js` 用 Swup，替换容器：`#pjax-main`、`#iro_page_config`、`#iro_theme_style_dymanic_vars`（注意 id 里的 `dymanic` 是历史拼写，改动时要同步 `theme_style_vars.php`）、`#iro_block_styles`、`#iro_post_sakura_style`。**容器必须在每个页面上都存在**：Swup 是在「新文档」里按选择器找同名节点再替换，缺一个就整块不更新。`#iro_post_sakura_style` 因此由 `theme_style_vars.php` 每页输出（空容器），只在单页视图才填 `post-sakura.css`。
 - 链接默认走 PJAX；需要跳过的加 `class="no-pjax"`（分页器已自动加，见 `frontend/components/slots/pagination.php`）。
 - Swup 生命周期 → 原生 `CustomEvent`：`pjax:start / success / complete / end / error`（`visit:abort` 会补发 complete + end）。
 - `scrollTo` 逻辑：首页与 `/page/*` 滚到 `#articles`，其他页面回到顶部。
