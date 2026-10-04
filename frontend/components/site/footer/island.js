@@ -1,11 +1,8 @@
 import bus from "../../../app/bus";
 
-// island 页脚：外层是高度占位的容器（不动、裁剪），卡片在里面做 transform 动画 ——
-// 页面高度与滚动范围不随状态变化，卡片也永远画不出容器的范围。
-// 页脚在 pjax 容器之外，DOM 不随导航重建，监听只挂一次。
 const footer = document.querySelector(".site-footer.island");
 
-// 视口底距文档底这个距离内就算到底了，沿用上游的 100px
+// 视口底距文档底这个距离内就算到底了
 const SHOW_THRESHOLD = 100;
 
 function atBottom() {
@@ -42,11 +39,11 @@ export default function initFooter(action = "init") {
         return;
     }
 
+    // 占位高度，容器实际在视口图层
     footer.style.height = footer.querySelector(".site-info").getBoundingClientRect().height+"px";
 
     bus.on("scroll:update", checkFooterVisibility);
     bus.on("resize:update", checkFooterVisibility);
-    // pjax 换页后文档高度和滚动位置都变了，得重算（页脚本身不会被换掉）
     _iro.hooks.onPageLoaded(checkFooterVisibility);
     checkFooterVisibility();
 }

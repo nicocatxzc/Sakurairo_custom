@@ -1,19 +1,19 @@
 .site-footer.island {
-    // 骨架：高度跟着内容走，自身没有任何可见内容，只负责在文档流末尾占位，并把内容的动画锁在里面
     --island-footer-inset: 30px; // 内容上下外边距之和，位移时的额外余量
     --island-footer-radius: 10px;
     --island-footer-divider: rgba(0, 0, 0, 0.05);
     --island-footer-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
 
-    // 盖掉 sakura.scss 给 .site-footer 的内距，骨架的高度只跟内容走
-    padding: 0;
-    overflow: hidden;
+    margin-top: 4rem;
 
-    // 真正的内容：卡片本体，视觉与动画都在这里
     .site-info {
+        position: fixed;
         width: 90%;
         max-width: 820px;
         margin: 15px auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
         padding: 20px;
         border-radius: var(--island-footer-radius);
         background-color: var(--widget-background-color);
@@ -22,15 +22,13 @@
         color: var(--word-color-second);
         font-size: 14px;
         text-align: center;
-        // 收起比展开慢一点，与上游一致
-        transition: transform 1s ease-in-out;
-        // 整个挪到骨架之外：被上面的 overflow 裁掉，骨架高度与页面高度都不变
+        transition: transform 0.9s ease-in-out;
         transform: translateY(calc(100% + var(--island-footer-inset)));
     }
 
     &.show .site-info {
         transform: translateY(0);
-        transition: transform 0.9s cubic-bezier(0.22, 0.84, 0.46, 1.04);
+        transition: transform 0.6s cubic-bezier(0.22, 0.84, 0.46, 1.04);
     }
 
     .footer-content {
