@@ -15,8 +15,8 @@ function iro_enqueue_scripts()
         <script type="module" src="<?= iro_opt("dev_mode_hmr_client") ?>"></script>
         <script type="module" src="<?= iro_opt("dev_mode_main_js") ?>"></script>
     <?php else: ?>
+        <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/style.css?ver=' . INT_VERSION ?>">
         <script type="module" src="<?= get_template_directory_uri() . '/frontend/dist/app.js?ver=' . INT_VERSION ?>"></script>
-        <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/style.css?ver=' . INT_VERSION ?>">
     <?php endif; ?>
 <?php
 }

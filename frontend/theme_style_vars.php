@@ -169,7 +169,7 @@ $use_sakura_post_style = iro_opt("page_style", "sakura") === "sakura";
     <?php endif; ?>
 <?php else: ?>
     <?php if ($use_sakura_post_style): ?>
-        <link rel="stylesheet" crossorigin="" href="<?= get_template_directory_uri() . '/frontend/dist/post-sakura.css?ver=' . INT_VERSION ?>">
+        <link rel="stylesheet" href="<?= get_template_directory_uri() . '/frontend/dist/post-sakura.css?ver=' . INT_VERSION ?>">
     <?php endif; ?>
 <?php endif; ?>
 
@@ -233,5 +233,5 @@ function iro_is_commemorate_date()
     return in_array($today, $dates);
 }
 
-// 门控样式必须和它的解锁器同进同出（登录页也会 require 本文件），所以收口在这里
+// 性能门控
 require_once __DIR__ . '/theme_performance.php';
