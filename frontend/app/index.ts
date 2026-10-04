@@ -95,7 +95,7 @@ _iro.hooks = {
         _iro.hooks["pjax:complete"].push(fn);
     },
 };
-
+import("./plugins/client");
 if (!_iro.isBackend) {
     // DOM 就绪后统一执行队列
     document.addEventListener("DOMContentLoaded", () => {
@@ -130,7 +130,6 @@ if (!_iro.isBackend) {
     }
     _iro.hooks.onPageLoaded(initFrontConfig);
 
-    
     // 这部分会被提升，需要自己处理
     import("./utils/missImg");
     // 事件总线
@@ -143,9 +142,9 @@ if (!_iro.isBackend) {
     import("./darkmode");
     // pjax
     import("./pjax");
-    
+
     import("./utils/message");
-    
+
     import("./plugins/postViews");
     // 主色填充上的文字色
     import("./plugins/themeContrast");
