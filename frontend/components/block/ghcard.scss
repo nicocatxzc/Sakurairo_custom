@@ -5,30 +5,29 @@
 
 .block-ghcard {
     --design-width: 25rem;
-    --design-height: 7.5rem;
 
     --max-width: 75dvw;
 
-    /* 缩放比例 */
-    --scale: min(1, calc(var(--max-width) / var(--design-width)));
+    // 设计稿 25rem × 7.5rem：占位尺寸由容器决定，比例由 aspect-ratio 决定。
+    // 低版本浏览器不支持长度相除
+    width: min(100%, var(--max-width), var(--design-width));
+    aspect-ratio: 25 / 7.5;
 
-    /* 真实占位尺寸 */
-    width: calc(var(--design-width) * var(--scale));
-    height: calc(var(--design-height) * var(--scale));
+    // 卡片内部以容器宽度为基准等比缩放，1rem 设计单位 = 卡片宽度的 1/25 = 4cqw
+    container-type: inline-size;
 
     position: relative;
     overflow: hidden;
 }
 
 .github-card {
-    width: var(--design-width);
-    height: var(--design-height);
-    transform: scale(var(--scale));
-    transform-origin: top left;
+    width: 100%;
+    height: 100%;
 
-    padding: 1rem 1.1rem;
-    border-radius: 0.5rem;
+    padding: 4cqw 4.4cqw;
+    border-radius: 2cqw;
     border: var(--border-sketch);
+    border-width: 0.4cqw;
     background: rgb(var(--widget-background));
 
     a {
@@ -44,17 +43,17 @@
     .icon {
         fill: var(--word-color-first);
         flex-shrink: 0;
-        height: 1rem;
-        width: 1rem;
+        height: 4cqw;
+        width: 4cqw;
     }
 
     .repo-name {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 2cqw;
 
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 4.4cqw;
         color: #2f80ed;
 
         .title-text {
@@ -65,15 +64,15 @@
     }
 
     .repo-desc {
-        font-size: 0.85rem;
+        font-size: 3.4cqw;
 
         line-height: 1.4;
-        margin-top: 0.25rem;
+        margin-top: 1cqw;
 
         flex: 1;
 
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
@@ -83,24 +82,24 @@
         justify-content: left;
         align-items: center;
 
-        gap: 1rem;
+        gap: 4cqw;
 
-        font-size: 0.8rem;
+        font-size: 3.2cqw;
 
         * {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 1cqw;
         }
 
         .lang {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 2cqw;
 
             .dot {
-                width: 0.8rem;
-                height: 0.8rem;
+                width: 3.2cqw;
+                height: 3.2cqw;
                 border-radius: 50%;
                 display: inline-block;
             }

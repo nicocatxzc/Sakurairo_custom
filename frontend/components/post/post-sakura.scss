@@ -3,6 +3,9 @@ $not-template: ":not(:where(.page-template *))";
 .post-content {
     position: relative;
 
+    //  / : _ 等符号无法断开，长路径/URL等在窄屏会整串顶穿文章容器
+    overflow-wrap: anywhere;
+
     // ---------- 标题 ----------
     h1#{$not-template} {
         margin: 0.67em 0;
