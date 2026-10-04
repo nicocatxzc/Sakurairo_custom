@@ -15,8 +15,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-function use_customize_data()
-{ // 模版中加载，解决其他位置获取不到临时值的问题
+if (is_customize_preview()) { // 模版中加载，解决其他位置获取不到临时值的问题
     $persistent_options = get_theme_mod('iro_options', []);
     $mapping = get_theme_mod('iro_options_map', []);
 
@@ -36,9 +35,6 @@ function use_customize_data()
         }
     }
     set_theme_mod('iro_options', $persistent_options);
-}
-if (is_customize_preview()) {
-    use_customize_data();
 } //预览模式将临时值写入theme_mod中的iro_options
 ?>
 
