@@ -1,3 +1,4 @@
+import bus from "../../app/bus";
 // 根据宽度计算每页显示数量
 function getSocialPageSize(width) {
     if (width < 310) return 1;
