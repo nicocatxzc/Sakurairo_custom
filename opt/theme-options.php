@@ -614,6 +614,18 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'footer_island_style',
+                'type'  => 'select',
+                'title' => __('页尾内容布局', 'sakurairo'),
+                'dependency' => ['footer_style_select', '==', 'island', '', 'true'],
+                'options'     => [
+                    'center'  => __('居中', 'sakurairo'),
+                    'columns'  => __('两列', 'sakurairo'),
+                ],
+                "default" => "center",
+            ],
+
+            [
                 'id' => 'footer_sakura',
                 'type' => 'switcher',
                 'title' => __('页尾樱花', 'sakurairo'),

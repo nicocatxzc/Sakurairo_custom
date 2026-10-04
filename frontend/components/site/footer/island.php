@@ -2,7 +2,7 @@
     class="site-footer island"
     style=" font-family: <?= iro_opt("footer_font") ?> ">
     <div class="site-info">
-        <div class="footer-content">
+        <div class="footer-content <?= iro_opt("footer_island_style", "center") == "center" ? "just-center" : "" ?>">
             <?php require_once get_template_directory() . '/frontend/components/site/footer/hitokoto.php'; ?>
             <?= iro_opt("footer_html") ?>
         </div>
