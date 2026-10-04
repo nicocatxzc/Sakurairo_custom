@@ -13,10 +13,14 @@
     --island-pill-height: 45px;
     --island-pill-padding: 5px;
     --island-pill-border: 1px;
-    --island-button: calc(var(--island-pill-height) - var(--island-pill-padding) * 2 - var(--island-pill-border) * 2);
+    --island-button: calc(
+        var(--island-pill-height) - var(--island-pill-padding) *
+            2 - var(--island-pill-border) * 2
+    );
     --island-pill-gap: 3px;
     --island-pill-border-color: #f7f7f7;
     --island-divider-color: rgba(0, 0, 0, 0.1);
+    --user-option-background: #f1f1f1;
 
     position: fixed;
     top: 0;
@@ -62,7 +66,8 @@
         backdrop-filter: saturate(180%) blur(10px);
         will-change: backdrop-filter;
         transition: all 0.4s ease-in-out;
-        animation: slide-in-bck-top 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        animation: slide-in-bck-top 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+            both;
 
         &:hover {
             background: rgba(var(--widget-background), 0.9);
@@ -322,26 +327,27 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 transition: all 0.4s ease-in-out;
             }
-        }
-
-        .user-menu {
-            position: absolute;
-            width: 110px;
-            right: -105%;
-            top: 50px;
-            visibility: hidden;
-            overflow: hidden;
-            background: rgba(var(--widget-background), 0.9);
-            border: 1px solid var(--island-pill-border-color);
-            border-radius: 15px;
-            box-shadow: 0 1px 40px -8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.4s ease-in-out;
-
-            &:hover,
-            .avatar-wrapper:hover & {
+            .user-menu {
+                position: absolute;
+                width: 110px;
+                right: -105%;
+                top: 50px;
+                visibility: hidden;
+                overflow: hidden;
+                background: rgba(var(--widget-background), 0.9);
+                border: 1px solid var(--island-pill-border-color);
+                border-radius: 15px;
+                box-shadow: 0 1px 40px -8px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                opacity: 0;
+                transform: translateY(-10px);
+                transition: all 0.4s ease-in-out;
+                a:hover {
+                    color: var(--active-color);
+                    background-color: var(--user-option-background);
+                }
+            }
+            &:hover .user-menu {
                 opacity: 1;
                 visibility: visible;
                 transform: translateY(0);
@@ -385,8 +391,8 @@
     }
 }
 
-// 原设计这两处是写死的浅色值，暗色下换成主题的暗色描边
 :root.dark .site-header.island {
     --island-pill-border-color: rgba(255, 255, 255, 0.12);
     --island-divider-color: rgba(255, 255, 255, 0.15);
+    --user-option-background: rgba(255, 255, 255, 0.15);
 }
