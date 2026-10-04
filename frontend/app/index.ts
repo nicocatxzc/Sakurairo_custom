@@ -182,6 +182,8 @@ if (!_iro.isBackend) {
     import("./optimize");
     // 滚动广播
     import("./stores/scroll");
+    // 视口尺寸广播
+    import("./stores/resize");
     // 暗色模式
     import("./darkmode");
     // pjax

@@ -51,7 +51,7 @@ function startListening() {
     });
 
     window.addEventListener("scroll", updateThrottled, { passive: true });
-    window.addEventListener("resize", updateThrottled, { passive: true });
+    bus.on("resize:update", updateScroll);
     isListening = true;
 
     updateScroll();
@@ -61,7 +61,7 @@ function stopListening() {
     if (!isListening) return;
     if (updateThrottled) {
         window.removeEventListener("scroll", updateThrottled);
-        window.removeEventListener("resize", updateThrottled);
+        bus.off("resize:update", updateScroll);
         updateThrottled.cancel();
         updateThrottled = null;
     }

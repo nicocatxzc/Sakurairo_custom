@@ -119,19 +119,34 @@ interface IroScrollUpdateEvent {
     direction: "up" | "down" | "none";
 }
 
+/** 对应 app/stores/resize.js 广播的当前视口尺寸 */
+interface IroResizeUpdateEvent {
+    width: number;
+    height: number;
+}
+
 /** mitt 事件总线，实例见 app/bus.js */
 interface IroBus {
     on(
         type: "scroll:update",
         handler: (event: IroScrollUpdateEvent) => void,
     ): void;
+    on(
+        type: "resize:update",
+        handler: (event: IroResizeUpdateEvent) => void,
+    ): void;
     on(type: string, handler: (event: any) => void): void;
     off(
         type: "scroll:update",
         handler?: (event: IroScrollUpdateEvent) => void,
     ): void;
+    off(
+        type: "resize:update",
+        handler?: (event: IroResizeUpdateEvent) => void,
+    ): void;
     off(type: string, handler?: (event: any) => void): void;
     emit(type: "scroll:update", event: IroScrollUpdateEvent): void;
+    emit(type: "resize:update", event: IroResizeUpdateEvent): void;
     emit(type: string, event?: any): void;
 }
 

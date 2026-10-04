@@ -77,7 +77,7 @@ if (header) {
 
     bus.on("scroll:update", applySwap);
 
-    window.addEventListener("resize", () => {
+    bus.on("resize:update", () => {
         measure();
         applySwap();
     });

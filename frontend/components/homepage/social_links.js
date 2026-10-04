@@ -131,17 +131,18 @@ function cleanupSocialPagers() {
     }
 }
 
-// resize
-let socialResizeTimer = null;
-window.addEventListener("resize", () => {
-    clearTimeout(socialResizeTimer);
-    socialResizeTimer = setTimeout(() => {
-        cleanupSocialPagers();
-        socialPagers.forEach((pager) => pager.resize());
-    }, 100);
-});
-
 // 注册到总线
+let socialResizeTimer = null;
+
 _iro.hooks["DOMContentLoaded"].add(() => {
     initSocialPagers();
+
+    // 视口变化后重建分页，防抖保留原有节奏（事件本身已由 resize store 节流）
+    _iro.bus.on("resize:update", () => {
+        clearTimeout(socialResizeTimer);
+        socialResizeTimer = setTimeout(() => {
+            cleanupSocialPagers();
+            socialPagers.forEach((pager) => pager.resize());
+        }, 100);
+    });
 });

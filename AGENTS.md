@@ -72,6 +72,7 @@ Sakurairo/
 │   │   ├── bus.js           # mitt 事件总线（window._iro.bus）
 │   │   ├── darkmode.js      # 深色模式（cookie: darkmode）
 │   │   ├── stores/scroll.js # 滚动进度广播 scroll:update
+│   │   ├── stores/resize.js # 视口尺寸广播 resize:update（全站唯一的 resize 监听）
 │   │   ├── utils/           # api.js(axios+缓存) / missImg / classicPagination / parseMarkdown / message ...
 │   │   └── plugins/         # postViews.js（阅读量上报），在 app/index.ts 末尾 import
 │   ├── components/          # ★ PHP 局部 + JS 行为 成对出现
@@ -160,7 +161,7 @@ _iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete�
 
 **组件 JS 必须通过 hook 初始化**，不要直接写顶层 DOM 操作，否则 PJAX 跳转后失效。典型写法见 `frontend/components/site/progress_bar.js`、`frontend/components/page/template/bangumi.js`。
 
-其他全局：`_iro.bus`（mitt 事件总线，如 `scroll:update`）、`_iro.navigate`（Swup 导航）、`_iro.utils`（`missImg` / `missAvatar` 等）。
+其他全局：`_iro.bus`（mitt 事件总线，如 `scroll:update`、`resize:update`）、`_iro.navigate`（Swup 导航）、`_iro.utils`（`missImg` / `missAvatar` 等）。
 
 - **后台页面（`wp-login.php` / `wp-admin`）不跑前台运行时**：`_iro.isBackend` 在 `app/index.ts` 里由 `!document.querySelector("#iro_page_config")` 判定——`#iro_page_config` 只由 `wp_enqueue_scripts`（即 `theme_config.php` 的 `iro_front_theme_config()`）输出，后台与登录页只输出 `#iro_theme_config`，所以它是**服务端权威**的「这是前台」标记，不依赖 DOM 里有没有登录表单（表单渲染晚于脚本）。为 `true` 时：`hooks` 的 `push`/`add` 不注册（DOM 已就绪时这两个方法会立刻执行 `fn`，所以总闸卡在方法里而不是派发处）、pjax 事件不派发、`app/pjax.js` 不实例化 Swup、`app/stores/scroll.js` 不听滚动。原因：后台只加载验证码入口，但 `iro-core` 是共享 chunk，前台运行时代码照样会被下载并求值，构建层面拆不开。验证码入口因此在后台页面走直接挂载分支（`components/site/captcha/captcha.js`）。
 - 由此，**新增前台运行时行为默认不会在后台跑**——只要挂在 hooks / `_iro.bus` / pjax 上即可；自带顶层监听或定时器的模块要自己判 `_iro.isBackend`（现有例子：`app/pjax.js`、`app/stores/scroll.js`）。
