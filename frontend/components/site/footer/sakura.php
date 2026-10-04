@@ -1,5 +1,5 @@
 <footer
-    class="site-footer flex-center"
+    class="site-footer-sakura flex-center"
     style=" font-family: <?= iro_opt("footer_font") ?> ">
     <?php if (iro_opt('footer_sakura')): ?>
         <div
