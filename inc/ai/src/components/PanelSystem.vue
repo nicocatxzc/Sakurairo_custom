@@ -2,12 +2,16 @@
 import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { Refresh } from "@element-plus/icons-vue";
+import { useMediaQuery } from "@vueuse/core";
 import { aiApi } from "../api";
 
 const loading = ref(false);
 const report = ref(null);
 
 const t = window.iroI18n.t;
+
+// 与 WordPress 后台同一断点；窄屏下两列描述表放不下，退回单列
+const isMobile = useMediaQuery("(max-width: 782px)");
 
 const KEY_SOURCE_LABELS = {
     theme_option: "主题设置",
@@ -91,7 +95,7 @@ onMounted(load);
         </div>
 
         <div class="iro-ai-system__body">
-            <el-descriptions :column="2" border>
+            <el-descriptions :column="isMobile ? 1 : 2" border>
                 <el-descriptions-item
                     v-for="row in systemRows"
                     :key="row.label"

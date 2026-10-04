@@ -97,6 +97,12 @@ export default defineConfig(() => {
             host: "0.0.0.0",
             strictPort: true,
             cors: true,
+            // Vue 编译器会在源码目录旁写下 .<name>.<pid>.<uuid>.tmpdir/<name>.tmp 临时文件并立刻删除。
+            // watcher 在它被删掉之后才去 fs.watch，Node 抛 EBUSY 且当作 FSWatcher 的 error 事件，
+            // 未捕获即终止整个 dev server（Windows 上必现）。忽略这些临时产物即可，node_modules/.git 等默认忽略项不受影响。
+            watch: {
+                ignored: ["**/*.tmpdir", "**/*.tmpdir/**"],
+            },
             hmr: {
                 protocol: "wss",
                 host: "wordpress",

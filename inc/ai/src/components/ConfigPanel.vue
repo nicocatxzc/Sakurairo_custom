@@ -3,6 +3,7 @@ import { computed, markRaw, ref } from "vue";
 import {
     ChatDotRound,
     Files,
+    Menu,
     Monitor,
     Setting,
 } from "@element-plus/icons-vue";
@@ -13,6 +14,8 @@ import PostManagement from "./PostManagement.vue";
 
 const t = window.iroI18n.t;
 const active = ref("management");
+// 窄屏下侧栏是覆盖式抽屉，点菜单项即收起；宽屏下不显示触发按钮，这个值恒为 false
+const menuOpen = ref(false);
 
 const panels = [
     {
@@ -47,6 +50,7 @@ const currentPanel = computed(
 
 const handleSelect = (key) => {
     active.value = key;
+    menuOpen.value = false;
 };
 </script>
 
@@ -54,13 +58,15 @@ const handleSelect = (key) => {
     <div class="iro-ai-page">
         <el-container class="iro-ai-main" direction="vertical">
             <el-header class="iro-ai-header">
+                <el-button class="iro-ai-header__toggle" text :icon="Menu" :aria-label="t('展开菜单')"
+                    @click="menuOpen = true" />
                 <el-text tag="b" size="large" class="iro-ai-header__title">
                     {{ currentPanel.label }}
                 </el-text>
             </el-header>
 
             <el-container class="iro-ai-body">
-                <el-aside class="iro-ai-aside" width="200px">
+                <el-aside class="iro-ai-aside" :class="{ 'is-open': menuOpen }" width="200px">
                     <el-menu :default-active="active" @select="handleSelect">
                         <el-menu-item v-for="panel in panels" :key="panel.key" :index="panel.key">
                             <el-icon>
@@ -76,6 +82,8 @@ const handleSelect = (key) => {
                         <component :is="currentPanel.component" />
                     </keep-alive>
                 </el-main>
+
+                <div v-if="menuOpen" class="iro-ai-mask" @click="menuOpen = false" />
             </el-container>
         </el-container>
     </div>
@@ -117,6 +125,12 @@ const handleSelect = (key) => {
         right: 1rem;
         transform: translateY(-50%);
     }
+
+    &__toggle {
+        display: none;
+        position: absolute;
+        left: 0.75rem;
+    }
 }
 
 .iro-ai-body {
@@ -148,6 +162,51 @@ const handleSelect = (key) => {
         min-width: 0;
         min-height: 0;
         overflow: auto;
+    }
+}
+
+.iro-ai-mask {
+    display: none;
+}
+
+// WordPress 后台的移动端断点；侧栏与后台菜单一样改成点击展开的覆盖式抽屉
+@media screen and (max-width: 782px) {
+    .iro-ai-page {
+        margin: 0.5rem 0.5rem 0 0;
+    }
+
+    .iro-ai-header {
+        padding: 0 2.5rem;
+
+        &__toggle {
+            display: inline-flex;
+        }
+    }
+
+    .iro-ai-body {
+        position: relative;
+    }
+
+    .iro-ai-aside {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease-in-out;
+
+        &.is-open {
+            transform: none;
+        }
+    }
+
+    .iro-ai-mask {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 9;
+        background-color: rgba(0, 0, 0, 0.3);
     }
 }
 </style>

@@ -12,6 +12,11 @@ export default defineConfig({
         host: "0.0.0.0",
         strictPort: true,
         cors: true,
+        // 同 frontend/vite.config.js：忽略 Vue 编译器在源码目录旁留下的 .tmpdir 临时文件，
+        // 否则 watcher 对已被删除的临时文件 fs.watch 会抛 EBUSY 并终止 dev server。
+        watch: {
+            ignored: ["**/*.tmpdir", "**/*.tmpdir/**"],
+        },
         hmr: {
             protocol: "wss",
             host: "wordpress",

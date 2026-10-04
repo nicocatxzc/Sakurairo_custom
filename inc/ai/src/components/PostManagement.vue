@@ -556,4 +556,15 @@ onMounted(load);
         gap: 1rem;
     }
 }
+
+@media screen and (max-width: 782px) {
+    // 窄屏下统计文案与分页器挤在一行会把表格压掉大半，分页器换行靠右
+    .iro-ai-management__footer {
+        flex-wrap: wrap;
+
+        .el-pagination {
+            margin-left: auto;
+        }
+    }
+}
 </style>

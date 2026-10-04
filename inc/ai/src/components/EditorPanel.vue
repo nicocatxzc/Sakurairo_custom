@@ -272,6 +272,8 @@ onBeforeUnmount(() => unsubscribe?.());
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px) - 3rem);
+    // 窄屏上固定 352px 会顶出视口，按可用宽度收窄
+    max-width: calc(100vw - 3rem);
     overflow: hidden;
     border-radius: 0.5rem;
     background-color: #fff;
