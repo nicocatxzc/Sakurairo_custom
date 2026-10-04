@@ -15,8 +15,7 @@ define('INT_VERSION', '20.1.0');
 // 设置框架
 require_once get_template_directory() . '/inc/theme_init/iro_opt.php';
 
-// $iro_options=get_option('iro_options');
-$iro_options = [];
+$iro_options=get_option('iro_options');
 global $iro_options;
 
 // 屏蔽php日志信息
