@@ -601,6 +601,18 @@ if (class_exists('Sakurairo_CSF')) {
         'title' => __('页尾设置', 'sakurairo'),
         'icon' => 'fa fa-caret-square-o-down',
         'fields' => [
+
+            [
+                'id'    => 'footer_style_select',
+                'type'  => 'select',
+                'title' => __('页尾样式', 'sakurairo'),
+                'options'     => [
+                    'sakura'  => __('sakura经典样式', 'sakurairo'),
+                    'island'  => __('iro浮动样式', 'sakurairo'),
+                ],
+                "default" => "sakura",
+            ],
+
             [
                 'id' => 'footer_sakura',
                 'type' => 'switcher',
