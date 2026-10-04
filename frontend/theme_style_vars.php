@@ -9,7 +9,7 @@
         --background-transparency: <?= iro_opt('background_transparency', 0.8) ?>;
         --word-color-first: <?= iro_opt('word_color_first', '#505050') ?>;
         --word-color-second: <?= iro_opt('word_color_second', '#00000080') ?>;
-        --word-color-third: #00000080;
+        --word-color-third: #0000004d;
         --word-color-first-reverse: <?= iro_opt('word_color_first_dark', '#CCCCCC') ?>;
 
         --widget-background: 255, 255, 255;
