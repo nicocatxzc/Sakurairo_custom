@@ -17,6 +17,10 @@ async function initLightbox() {
     const links = container.querySelectorAll("a");
 
     links.forEach((a) => {
+        // 防止误伤某些特殊结构
+        if (a.children.length !== 1 || a.children[0].tagName !== "IMG") {
+            return;
+        }
         const img = a.querySelector("img");
         if (img) {
             images.push(img);
