@@ -8,6 +8,8 @@ import { ToolbarGroup, DropdownMenu } from "@wordpress/components";
 import { Fragment } from "@wordpress/element";
 import { chevronDown } from "@wordpress/icons";
 import createI18n from "../i18n";
+// 支持语言表
+import { HLJS_LANGUAGES } from "../../../../frontend/hljs-languages";
 
 let lang = createI18n({
     "zh-CN": {
@@ -38,43 +40,7 @@ let lang = createI18n({
 
 const languages = [
     { label: lang.hljsAuto || "Auto Detect", value: "" },
-    { label: "HTML", value: "html" },
-    { label: "CSS", value: "css" },
-    { label: "JavaScript", value: "javascript" },
-    { label: "TypeScript", value: "typescript" },
-    { label: "PHP", value: "php" },
-    { label: "SCSS", value: "scss" },
-    { label: "LESS", value: "less" },
-    { label: "Stylus", value: "stylus" },
-    { label: "Vue", value: "vue" },
-    { label: "React+js", value: "jsx" },
-    { label: "React+ts", value: "tsx" },
-    { label: "Python", value: "python" },
-    { label: "Java", value: "java" },
-    { label: "JSON", value: "json" },
-    { label: "Dart", value: "dart" },
-    { label: "C", value: "c" },
-    { label: "C++", value: "cpp" },
-    { label: "C#", value: "csharp" },
-    { label: "Go", value: "go" },
-    { label: "Lua", value: "lua" },
-    { label: "Swift", value: "swift" },
-    { label: "Kotlin", value: "kotlin" },
-    { label: "Ruby", value: "ruby" },
-    { label: "Rust", value: "rust" },
-    { label: "JSP", value: "jsp" },
-    { label: "ASP", value: "asp" },
-    { label: "YAML", value: "yaml" },
-    { label: "TOML", value: "toml" },
-    { label: "INI", value: "ini" },
-    { label: "SQL", value: "sql" },
-    { label: "XML", value: "xml" },
-    { label: "bash", value: "bash" },
-    { label: "CMD", value: "cmd" },
-    { label: "PowerShell", value: "powershell" },
-    { label: "VBScript", value: "vbscript" },
-    { label: "Markdown", value: "markdown" },
-    { label: "Plain Text", value: "plaintext" },
+    ...HLJS_LANGUAGES,
 ];
 
 export default function hljsSupport() {

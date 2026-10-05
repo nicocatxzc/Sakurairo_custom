@@ -37,6 +37,9 @@ const GAP = 8;
 
 const packs = ref<SmileyPack[]>([]);
 const open = ref(false);
+// 关闭态只是 scale: 0，布局盒仍停在视口里，loading="lazy" 不会因此推迟加载：
+// 不 gate 的话首屏就会把当前表情包整包图片拉下来。
+const hasOpened = ref(false);
 const activePack = ref("");
 const posX = ref(0);
 const posY = ref(0);
@@ -91,6 +94,7 @@ function openPanel() {
     placePanel();
     refreshOrigin();
     open.value = true;
+    hasOpened.value = true;
 }
 
 // 将面板形变原点改为按钮位置
@@ -243,7 +247,7 @@ onBeforeUnmount(() => {
 
         <div
             v-for="pack in packs"
-            v-show="pack.id === activePack"
+            v-show="hasOpened && pack.id === activePack"
             :key="pack.id"
             class="motion-container"
             :class="[

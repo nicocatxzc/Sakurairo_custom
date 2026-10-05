@@ -1,3 +1,5 @@
+import { HLJS_LANGUAGES } from "../../hljs-languages";
+
 // 全局存储当前 zoom 实例
 let zoomInstance = null;
 
@@ -51,6 +53,10 @@ const COPY_ICON_SVG = /* html */ `
 <i class="fa-icon-regular fa-clipboard"></i>
 `;
 
+// 与古腾堡代码块共用同一份语言表，这里只取 value 当自动识别的候选集。
+// 不传候选集时 hljs 会拿全部 193 种语言去试，实测一个 35 字符的块要 400 ms 以上。
+const AUTO_LANGUAGES = HLJS_LANGUAGES.map(({ value }) => value);
+
 // 处理pre标签
 function enhanceCodeBlock(pre, hljs) {
     // 防止重复处理
@@ -72,7 +78,10 @@ function enhanceCodeBlock(pre, hljs) {
                 }).value;
             } else {
                 // 为空自动识别
-                code.innerHTML = hljs.highlightAuto(code.textContent).value;
+                code.innerHTML = hljs.highlightAuto(
+                    code.textContent,
+                    AUTO_LANGUAGES,
+                ).value;
             }
             code.dataset.highlighted = "1";
         } catch (e) {
