@@ -47,6 +47,26 @@ swup?.hooks.on("visit:start", (visit) => {
     }
 });
 
+// 部分脚本不会随 PJAX 重新执行，换页后要对新内容补一次生效时机
+swup?.hooks.on("content:replace", () => {
+    document.querySelectorAll("#pjax-main iframe[loading='lazy']").forEach((iframe) => {
+        // 被脚本用内联样式藏起来、等加载完再握手的 iframe 全靠这一次加载；
+        // PJAX 后视口停在顶部，它落在懒加载阈值之外，
+        // 握手永远等不到，只剩可见的兜底内容
+        if (iframe.style.visibility === "hidden") {
+            iframe.loading = "eager";
+        }
+    });
+
+    // 重放一次 DOMContentLoaded，让部分绑定该事件的脚本对新内容重新生效。
+    document.dispatchEvent(
+        new CustomEvent("DOMContentLoaded", {
+            bubbles: true,
+            detail: { pjax: true },
+        }),
+    );
+});
+
 swup?.hooks.on("content:replace", () => {
     document.dispatchEvent(new CustomEvent("pjax:success", { detail: {} }));
 });

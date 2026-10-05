@@ -142,7 +142,9 @@ _iro.hooks = {
 import("./plugins/client");
 if (!_iro.isBackend) {
     // DOM 就绪后统一执行队列
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", (event) => {
+        if (event instanceof CustomEvent && event.detail?.pjax === true) return;
+
         runHookQueue(domReadyHooks);
     });
 

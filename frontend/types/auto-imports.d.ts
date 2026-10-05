@@ -35,6 +35,7 @@ declare global {
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
+  const isReplayedLifecycle: typeof import('../app/utils/lifecycle.js').isReplayedLifecycle
   const isShallow: typeof import('vue').isShallow
   const loadColorFromUrl: typeof import('../app/utils/themeColor.js').loadColorFromUrl
   const localsearch: typeof import('../app/utils/localsearch').default
@@ -62,6 +63,7 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const relativeLuminance: typeof import('../app/utils/contrast.js').relativeLuminance
+  const replayDomContentLoaded: typeof import('../app/utils/lifecycle.js').replayDomContentLoaded
   const resolveComponent: typeof import('vue').resolveComponent
   const safeRun: typeof import('../app/utils/safeRun').default
   const shallowReactive: typeof import('vue').shallowReactive
