@@ -1025,7 +1025,7 @@ if (class_exists('Sakurairo_CSF')) {
                     'off' => __('无', 'sakurairo'),
                     'avatar' => __('头像', 'sakurairo'),
                     'text' => __('文字', 'sakurairo'),
-                    'mashiro_text' => __('Mashiro特效文字', 'sakurairo'),
+                    // 'mashiro_text' => __('Mashiro特效文字', 'sakurairo'),
                 ],
                 'dependency' => [
                     ['cover_switch', '==', 'true', '', 'true'],
@@ -1311,6 +1311,67 @@ if (class_exists('Sakurairo_CSF')) {
                 'validate' => 'iro_validate_optional_url',
                 'desc' => __("视频的文件地址", 'sakurairo'),
             ),
+
+            array(
+                'type' => 'subheading',
+                'content' => __('首页波浪', 'sakurairo'),
+            ),
+
+            [
+                'id' => 'homepage_wave_switch',
+                'type' => 'switcher',
+                'title' => __('波浪开关', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id' => 'homepage_wave_position',
+                'type' => 'select',
+                'title' => __('波浪定位目标', 'sakurairo'),
+                'options' => [
+                    'cover' => __('封面', 'sakurairo'),
+                    'window' => __('窗口', 'sakurairo'),
+                ],
+                'default' => 'cover'
+            ],
+
+            [
+                'id' => 'homepage_wave_light',
+                'type' => 'select',
+                'title' => __('浅色模式波浪', 'sakurairo'),
+                'options' => [
+                    'white' => __('白色', 'sakurairo'),
+                    'water' => __('水', 'sakurairo'),
+                    'star' => __('星光', 'sakurairo'),
+                ],
+                'default' => 'water'
+            ],
+
+            [
+                'id' => 'homepage_wave_dark',
+                'type' => 'select',
+                'title' => __('深色模式波浪', 'sakurairo'),
+                'options' => [
+                    'white' => __('白色', 'sakurairo'),
+                    'water' => __('水', 'sakurairo'),
+                    'star' => __('星光', 'sakurairo'),
+                ],
+                'default' => 'star'
+            ],
+
+            [
+                'id'        => 'homepage_wave_floating',
+                'type'      => 'repeater',
+                'title'     => __('波浪浮动挂件', 'sakurairo'),
+                'desc' => __('在波浪上漂浮的可互动挂件，每行一张图；未选择图像的行会被忽略', 'sakurairo'),
+                'fields'    => [
+                    [
+                        'id'    => 'url',
+                        'type'  => 'upload',
+                        'title' => __('图像链接', 'sakurairo'),
+                    ],
+                ],
+            ],
         ]
     ]);
 
