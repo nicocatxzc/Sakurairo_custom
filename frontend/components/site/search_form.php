@@ -2,7 +2,7 @@
     class="search-model flex-center site-model">
     <div class="search-header flex-center">
         <h3 class="search-title"><?= __("搜索",'sakurairo') ?></h3>
-        <div class="close button" @click="modelStore.search=false">
+        <div class="close button">
             <i class="fa-icon-solid fa-close icon"></i>
         </div>
         <div class="search-input-wrapper flex-center">

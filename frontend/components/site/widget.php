@@ -10,8 +10,7 @@ font-family:<?= iro_opt("widget_font") ?>;
         </button>
         <button
             id="widgetToggle"
-            title="小工具"
-            @click="isPanelShow = !isPanelShow">
+            title="小工具">
             <i class="icon fa-icon-solid fa-compass-drafting fa-lg fa-flip flex-center"></i>
         </button>
     </div>
