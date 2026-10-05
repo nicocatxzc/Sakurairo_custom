@@ -221,6 +221,11 @@ bus.on("scroll:update", ({ progress, direction }) => {
 _iro.hooks.onPageLoaded(() => {
     initPanels();
     collapse();
+    _iro.hooks.onPageLoaded(() => {
+        document
+            .querySelector(".site-header.mobile .cover-toggle")
+            .classList.toggle("show", _iro.page.is_home ?? false);
+    });
 });
 
 _iro.hooks["pjax:start"].add(() => collapse());

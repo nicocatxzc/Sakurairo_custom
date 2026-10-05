@@ -50,9 +50,9 @@ $iro_menu_options = iro_get_navigation();
             <i class="fa-icon-solid fa-search icon"></i>
         </div>
     <?php endif; ?>
-    <?php if (iro_opt("nav_menu_cover_switch", true) && is_home()): ?>
+    <?php if (iro_opt("nav_menu_cover_switch", true)): ?>
         <div
-            class="button cover-toggle flex-center"
+            class="button cover-toggle flex-center <?= is_home()?"show":"" ?>"
             title="<?= __("切换封面", 'sakurairo') ?>">
             <i class="fa-icon-solid fa-dice icon"></i>
         </div>

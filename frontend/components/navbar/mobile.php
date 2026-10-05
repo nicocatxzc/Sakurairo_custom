@@ -27,10 +27,10 @@ if (!is_array($iro_menu_options)) {
         </a>
     </div>
 
-    <?php if (iro_opt("nav_menu_cover_switch", true) && is_home()): ?>
+    <?php if (iro_opt("nav_menu_cover_switch", true)): ?>
         <button
             type="button"
-            class="cover-toggle flex-center"
+            class="cover-toggle flex-center <?= is_home()?"show":"" ?>"
             title="<?= __("切换封面", 'sakurairo') ?>">
             <i class="fa-icon-solid fa-dice icon"></i>
         </button>

@@ -1,3 +1,3 @@
-import "./sakura"
-import "./mobile"
-import "./island"
+import "./sakura";
+import "./mobile";
+import "./island";

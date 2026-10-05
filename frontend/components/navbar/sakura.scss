@@ -106,7 +106,7 @@
         left: 50%;
     }
     .user .user-menu {
-        left:unset;
+        left: unset;
     }
 
     li:hover > .sub-menu,
@@ -171,6 +171,13 @@
         }
         &:hover {
             border-color: var(--active-color);
+        }
+    }
+
+    .cover-toggle {
+        flex-shrink: 0;
+        &:not(.show) {
+            width: 0;
         }
     }
 }

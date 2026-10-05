@@ -12,6 +12,12 @@ bus.on("scroll:update", (data) => {
     } else {
         header.classList.remove("bg");
     }
+
+    _iro.hooks.onPageLoaded(() => {
+        header
+            .querySelector(".cover-toggle")
+            .classList.toggle("show", _iro.page.is_home ?? false);
+    });
 });
 
 let activeSubMenu = null;
