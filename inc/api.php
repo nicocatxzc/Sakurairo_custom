@@ -360,3 +360,19 @@ add_action('rest_api_init', function () {
         )
     );
 });
+
+/**
+ * Github OAuth：admin-ajax 派发
+ *
+ * 这几个端点全是浏览器顶级跳转（登录页按钮、Github 站外回调、账户页绑定/解绑），
+ * 没有 wp_rest nonce 可用、也用不上 REST 的身份校验，改为 ?action= 派发后
+ * 按钮与解绑操作都能直接写成链接。授权与回调要与登录态无关，两个钩子都要挂。
+ */
+require_once get_template_directory() . '/inc/api/github_oa.php';
+
+add_action('wp_ajax_nopriv_iro_github_oa_authorize', 'iro_github_oa_ajax_authorize');
+add_action('wp_ajax_iro_github_oa_authorize', 'iro_github_oa_ajax_authorize');
+add_action('wp_ajax_nopriv_iro_github_oa_callback', 'iro_github_oa_ajax_callback');
+add_action('wp_ajax_iro_github_oa_callback', 'iro_github_oa_ajax_callback');
+add_action('wp_ajax_iro_github_oa_unbind', 'iro_github_oa_ajax_unbind');
+add_action('wp_ajax_iro_github_oa_selfcheck', 'iro_github_oa_ajax_selfcheck');

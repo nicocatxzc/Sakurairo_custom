@@ -5,3 +5,5 @@ require_once get_template_directory() . '/inc/functions/custom/dashboard.php';
 require_once get_template_directory() . '/inc/functions/custom/login.php';
 // 注册相关
 require_once get_template_directory() . '/inc/functions/custom/register.php';
+// Github OAuth
+require_once get_template_directory() . '/inc/functions/custom/github_oa.php';

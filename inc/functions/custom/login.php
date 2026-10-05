@@ -68,8 +68,9 @@ function iro_login_style(): void
 {
     $captcha_on = iro_opt("login_captcha_select", "builtin") != "off";
     $custom_skin = iro_opt('login_custom_switch', false);
+    $github_oa_on = iro_github_oa_enabled();
 
-    if (!$captcha_on && !$custom_skin) {
+    if (!$captcha_on && !$custom_skin && !$github_oa_on) {
         return;
     }
 

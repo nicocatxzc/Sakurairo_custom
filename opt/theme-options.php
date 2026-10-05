@@ -2419,8 +2419,8 @@ if (class_exists('Sakurairo_CSF')) {
 
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'others',
-        'title' => __('邮件选项', 'sakurairo'),
-        'icon'        => 'fab fa-mailchimp',
+        'title' => __('集成功能', 'sakurairo'),
+        'icon'        => 'fas fa-check-double',
         'fields'      => [
 
             [
@@ -2503,6 +2503,50 @@ if (class_exists('Sakurairo_CSF')) {
                     . '<a href="' . esc_url(admin_url('admin.php?iro_act=smtp_test')) . '" target="_blank" class="button button-primary">'
                     . esc_html__('发送测试邮件', 'sakurairo')
                     . '</a>',
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => __('Github OAuth', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'github_oa_switch',
+                'type' => 'switcher',
+                'title' => __('使用主题提供的Github OAuth集成', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id' => 'github_oa_appid',
+                'type' => 'text',
+                'title' => 'Github AppID',
+                'desc' => __('在Github App的General页获取，仅用于以App身份自检', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'github_oa_client_id',
+                'type' => 'text',
+                'title' => 'Github Client ID',
+                'desc' => __('在Github App设置页获取，也用于App身份的JWT签发', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'github_oa_client_secret',
+                'type' => 'text',
+                'title' => 'Github Client Secret',
+                'desc' => __('在Github App设置页生成客户端密钥后粘贴到这里', 'sakurairo'),
+                'default' => '',
+            ],
+
+            [
+                'id' => 'github_oa_pem',
+                'type' => 'text',
+                'title' => __('Github App密钥', 'sakurairo'),
+                'desc' => __('直接粘贴Github生成的私钥内容（含-----BEGIN RSA PRIVATE KEY-----头尾）', 'sakurairo'),
+                'default' => '',
             ],
 
 
