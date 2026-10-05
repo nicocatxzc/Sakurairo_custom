@@ -115,14 +115,3 @@ function iro_github_oa_ajax_unbind(): void
 
     iro_github_oa_ajax_redirect(iro_github_oa_notice_url('unbound', 'bind'));
 }
-
-function iro_github_oa_ajax_selfcheck(): void
-{
-    $app = iro_github_oa_app_info();
-
-    if (is_wp_error($app)) {
-        wp_send_json_error(['message' => $app->get_error_message()], 400);
-    }
-
-    wp_send_json_success(['app' => $app]);
-}

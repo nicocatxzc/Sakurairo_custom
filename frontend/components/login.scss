@@ -236,10 +236,22 @@ input[type=checkbox]:checked::before {
             color: #fff;
             background: #444c56;
         }
-    }
 
-    .iro-github-oa-icon {
-        width: 18px;
-        height: 18px;
+        i {
+            display: inline-block;
+            width: 1.1em;
+            height: 1.1em;
+            background-color: currentColor;
+            -webkit-mask-image: var(--svg);
+            mask-image: var(--svg);
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+
+            &.fa-icon-solid.fa-github {
+                --svg: url("./icons/fa/github-brands-solid-full.svg");
+            }
+        }
     }
 }

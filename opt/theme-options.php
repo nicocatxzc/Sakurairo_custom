@@ -2543,10 +2543,20 @@ if (class_exists('Sakurairo_CSF')) {
 
             [
                 'id' => 'github_oa_pem',
-                'type' => 'text',
+                'type' => 'textarea',
                 'title' => __('Github App密钥', 'sakurairo'),
-                'desc' => __('直接粘贴Github生成的私钥内容（含-----BEGIN RSA PRIVATE KEY-----头尾）', 'sakurairo'),
+                'desc' => __('直接粘贴Github生成的私钥完整内容（含-----BEGIN RSA PRIVATE KEY-----头尾）', 'sakurairo'),
                 'default' => '',
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => '<p style="margin:0 0 10px;color:#666;">'
+                    . esc_html__('保存选项后，可点击自检确认以上 Github 配置是否可用。', 'sakurairo')
+                    . '</p>'
+                    . '<a href="' . esc_url(admin_url('admin.php?iro_act=github_oa_selfcheck')) . '" target="_blank" class="button button-primary">'
+                    . esc_html__('Github OAuth 自检', 'sakurairo')
+                    . '</a>',
             ],
 
 

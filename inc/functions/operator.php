@@ -114,6 +114,18 @@ function iro_action_operator()
             }
             exit;
 
+        case 'github_oa_selfcheck':
+            echo '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>' . esc_html__('Github OAuth 自检结果', 'sakurairo') . '</title></head><body>';
+
+            foreach (iro_github_oa_selfchecks() as $check) {
+                echo '<p>' . esc_html($check['label']) . '：' . ($check['ok']
+                    ? esc_html__('通过', 'sakurairo')
+                    : esc_html__('失败', 'sakurairo') . ' - ' . esc_html($check['detail'])) . '</p>';
+            }
+
+            echo '</body></html>';
+            exit;
+
         case 'clear_media_cache':
             $cache_dir = trailingslashit(WP_CONTENT_DIR) . 'cache/theme-gd-media';
             $deleted = 0;
@@ -133,7 +145,6 @@ function iro_action_operator()
                 }
             }
 
-            /* 设置页是前端路由，跳转回去没有意义；直接在打开的窗口里打印结果 */
             echo '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>' . esc_html__('图片缓存清理结果', 'sakurairo') . '</title></head><body>';
             echo '<p>' . sprintf(esc_html__('清理完成：已删除 %d 个缓存文件，失败 %d 个。', 'sakurairo'), $deleted, $failed) . '</p>';
             echo '</body></html>';

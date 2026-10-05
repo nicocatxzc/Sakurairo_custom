@@ -142,6 +142,22 @@ function iro_github_oa_http(string $url, array $args = [], array $headers = []):
         return new WP_Error('iro_github_oa_bad_response', __('Github 返回了无法解析的响应。', 'sakurairo'));
     }
 
+    // 令牌接口的错误是 200 + error 字段，这里只管 4xx/5xx，
+    // 否则 /app 的 401 会被当成正常响应、返回一堆空字段
+    $status = (int) wp_remote_retrieve_response_code($response);
+
+    if ($status >= 400) {
+        return new WP_Error(
+            'iro_github_oa_http_error',
+            sprintf(
+                /* translators: 1: HTTP 状态码 2: Github 返回的错误说明 */
+                __('Github 接口返回 HTTP %1$d：%2$s', 'sakurairo'),
+                $status,
+                (string) ($data['message'] ?? $data['error_description'] ?? $data['error'] ?? '')
+            )
+        );
+    }
+
     return $data;
 }
 
@@ -313,8 +329,8 @@ function iro_github_oa_unbind(int $user_id): void
 }
 
 /**
- * Github 私钥在设置页是单行输入，换行会被压成空格，
- * 这里按 -----BEGIN/END----- 重新折成 64 字符一行，否则 openssl 无法解析
+ * 不管设置页存下来的是单行还是带多余换行的多行，
+ * 一律按 -----BEGIN/END----- 剥出正文重新折成 64 字符一行，否则 openssl 解析不了
  */
 function iro_github_oa_normalize_pem(string $pem): string
 {
@@ -384,11 +400,92 @@ function iro_github_oa_app_info(): array|WP_Error
     }
 
     return [
+        'id'        => (string) ($app['id'] ?? ''),
         'name'      => (string) ($app['name'] ?? ''),
         'slug'      => (string) ($app['slug'] ?? ''),
         'client_id' => (string) ($app['client_id'] ?? ''),
         'html_url'  => (string) ($app['html_url'] ?? ''),
     ];
+}
+
+/**
+ * 探一次令牌端点确认 Client ID / Secret 可用
+ *
+ * Github 先校验凭证再校验 code，凭证不对才回 incorrect_client_credentials，
+ * 返回别的错误码说明这对凭证本身已被接受。这样不需要通过真实的用户授权就能验证配置。
+ */
+function iro_github_oa_verify_client(): array|WP_Error
+{
+    if (iro_github_oa_client_id() === '' || iro_github_oa_client_secret() === '') {
+        return new WP_Error('iro_github_oa_client_missing', __('Client ID 或 Client Secret 未填写。', 'sakurairo'));
+    }
+
+    $data = iro_github_oa_http(
+        'https://github.com/login/oauth/access_token',
+        [
+            'method' => 'POST',
+            'body'   => [
+                'client_id'     => iro_github_oa_client_id(),
+                'client_secret' => iro_github_oa_client_secret(),
+                'code'          => 'iro-selfcheck',
+            ],
+        ]
+    );
+
+    if (is_wp_error($data)) {
+        return $data;
+    }
+
+    if ('incorrect_client_credentials' === ($data['error'] ?? '')) {
+        return new WP_Error('iro_github_oa_client_mismatch', __('Client ID 与 Client Secret 不匹配。', 'sakurairo'));
+    }
+
+    return [
+        'error'       => (string) ($data['error'] ?? ''),
+        'description' => (string) ($data['error_description'] ?? ''),
+    ];
+}
+
+/**
+ * 设置页自检项
+ *
+ * - App 身份：用 github_oa_pem 签 RS256 JWT（iss 取 github_oa_appid，未填则回落
+ *   github_oa_client_id）请求 GET /app，验的是私钥与 App 是否配对。
+ * - OAuth 凭证：拿无效 code 打一次令牌端点。Github 先校验 client_id/client_secret、
+ *   再校验 code，凭证不对才回 incorrect_client_credentials，所以「不是这个错误」
+ *   就说明凭证本身可用。
+ *
+ * @return array<int, array{label: string, ok: bool, detail: string}>
+ */
+function iro_github_oa_selfchecks(): array
+{
+    $app    = iro_github_oa_app_info();
+    $client = iro_github_oa_verify_client();
+
+    $checks = [
+        [
+            'label'  => __('App 身份（github_oa_appid / github_oa_pem）', 'sakurairo'),
+            'ok'     => !is_wp_error($app),
+            'detail' => is_wp_error($app) ? $app->get_error_message() : '',
+        ],
+        [
+            'label'  => __('OAuth 凭证（github_oa_client_id / github_oa_client_secret）', 'sakurairo'),
+            'ok'     => !is_wp_error($client),
+            'detail' => is_wp_error($client) ? $client->get_error_message() : '',
+        ],
+    ];
+
+    if (!is_wp_error($app)) {
+        $checks[] = [
+            'label'  => __('Client ID 比对（github_oa_client_id）', 'sakurairo'),
+            'ok'     => iro_github_oa_client_id() === $app['client_id'],
+            'detail' => iro_github_oa_client_id() === ''
+                ? __('未填写', 'sakurairo')
+                : sprintf(__('与 Github 返回的 %s 不一致', 'sakurairo'), $app['client_id']),
+        ];
+    }
+
+    return $checks;
 }
 
 /**
@@ -456,9 +553,7 @@ function iro_render_login_github_oa(): void
 ?>
     <p class="iro-github-oa">
         <a class="iro-github-oa-button" href="<?= esc_url(iro_github_oa_authorize_entry('login', $redirect_to)) ?>">
-            <svg class="iro-github-oa-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
-            </svg>
+            <i class="fa-icon-solid fa-github" aria-hidden="true"></i>
             <?= esc_html('register_form' === current_filter() ? __('使用 Github 注册', 'sakurairo') : __('使用 Github 登录', 'sakurairo')) ?>
         </a>
     </p>
@@ -481,16 +576,14 @@ function iro_github_oa_profile_fields(WP_User $user): void
         <tr>
             <th scope="row"><?= esc_html__('Github 账号', 'sakurairo') ?></th>
             <td>
-                <?php if ($github_id !== ''): ?>
-                    <p><?= esc_html(sprintf(__('已绑定 Github 用户 ID：%s', 'sakurairo'), $github_id)) ?></p>
-                    <?php if ($is_self): ?>
-                        <a class="button" href="<?= esc_url(iro_github_oa_unbind_entry()) ?>"><?= esc_html__('解除绑定', 'sakurairo') ?></a>
-                    <?php endif; ?>
+                <?php if ($is_self && $github_id !== ''): ?>
+                    <a class="button" href="<?= esc_url(iro_github_oa_unbind_entry()) ?>"><?= esc_html__('解除绑定', 'sakurairo') . ' ' . esc_html($github_id) ?></a>
+                <?php elseif ($is_self): ?>
+                    <a class="button" href="<?= esc_url(iro_github_oa_authorize_entry('bind')) ?>"><?= esc_html__('绑定 Github 账号', 'sakurairo') ?></a>
+                <?php elseif ($github_id !== ''): ?>
+                    <?= esc_html__('已绑定', 'sakurairo') . ' ' . esc_html($github_id) ?>
                 <?php else: ?>
-                    <p><?= esc_html__('尚未绑定 Github 账号。', 'sakurairo') ?></p>
-                    <?php if ($is_self): ?>
-                        <a class="button" href="<?= esc_url(iro_github_oa_authorize_entry('bind')) ?>"><?= esc_html__('绑定 Github 账号', 'sakurairo') ?></a>
-                    <?php endif; ?>
+                    <?= esc_html__('未绑定', 'sakurairo') ?>
                 <?php endif; ?>
             </td>
         </tr>

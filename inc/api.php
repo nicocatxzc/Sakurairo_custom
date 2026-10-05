@@ -375,4 +375,3 @@ add_action('wp_ajax_iro_github_oa_authorize', 'iro_github_oa_ajax_authorize');
 add_action('wp_ajax_nopriv_iro_github_oa_callback', 'iro_github_oa_ajax_callback');
 add_action('wp_ajax_iro_github_oa_callback', 'iro_github_oa_ajax_callback');
 add_action('wp_ajax_iro_github_oa_unbind', 'iro_github_oa_ajax_unbind');
-add_action('wp_ajax_iro_github_oa_selfcheck', 'iro_github_oa_ajax_selfcheck');
