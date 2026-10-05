@@ -1,460 +1,218 @@
 # AGENTS.md
 
-面向 AI 编码代理的项目说明。动手改代码前请先读完本文件，尤其是「运行时架构」与「常见陷阱」两节。
+面向 AI 编码代理的项目说明。本文件只写**相关文件**与**通用约定**，不记录版本号、具体配置值、现存实现清单等易变事实——需要这些时直接读对应文件（主题头在 `style.css`，各工程配置在各自的 `package.json` / `vite.config.js` / `tsconfig.json`）。
 
 ---
 
-## 1. 项目概览
+## 1. 项目性质
 
-**Sakurairo** 是一个 WordPress 主题（非插件），基于 [Sakura V3 Series](https://github.com/mashirozx/sakura) 重构，GPL-2.0 开源。当前定位是「具有 AI 辅助阅读功能的主题」。
+Sakurairo 是一个 **WordPress 主题**（非插件，不是插件，不要按插件的方式组织或加载代码），GPL-2.0。
 
-- 主题版本定义在 `style.css` 头部（当前 `3.1.0`），`functions.php` 里读取为常量 `IRO_VERSION`；另有 `BUILD_VERSION`（构建号）与 `INT_VERSION`（`20.1.0`，用于前台静态资源的 `?ver=` 缓存键）。
-- 环境要求（`style.css` 中声明）：**PHP >= 8.1**、**WordPress >= 6.0**、Tested up to 7.1。
-- 内置 AI 能力依赖 **WordPress 7.0+ 自带的 AI Client**；低于该版本时 AI 相关 PHP 会提前 `return`（见 §4.8），因此主题对 6.0+ 仍可用，只是没有 AI。
-- `style.css` **只包含主题头注释，不含任何样式**。所有真实样式都在 `frontend/**/*.scss`，经 Vite 编译成 `frontend/dist/style.css`。
-- 项目内所有注释、文档、后台文案以中文为主（README 另有 `README_en.md` / `README_ja.md` / `README_tw.md`）。
-- 分支：`main` 为主分支（远端另有 `master` 等历史分支）。`.github/workflows/update.yml` 是旧的 JS 产物流程，指向已不存在的 `js/`，属历史遗留。
+- 后端是 PHP 模板 + 函数库；前端样式/脚本由独立工程构建成产物，PHP 只引用产物。
+- 注释、文档、后台文案以中文为主，README 另有多语言版本。
+- 环境要求（PHP / WordPress 版本、是否依赖新版 WordPress 特性）以 `style.css` 主题头与相关代码里的能力判断为准，不写死在本文件里。
 
 ---
 
-## 2. 环境与工具链（推荐配置，默认视为已存在）
-
-下列工具链是**推荐配置，默认按「本机已就绪」处理**：直接调用即可，不必先 `command -v` 探测，也不必先解释「本机有没有」。
-
-| 工具     | 推荐版本        | 用途                                                         |
-| -------- | --------------- | ------------------------------------------------------------ |
-| PHP CLI  | >= 8.1（8.4+）  | `php -l` 语法检查、跑一次性调试脚本                          |
-| Composer | 2.x             | 仅安装第三方 PHP 库时需要（主题本体不依赖 vendor 自动加载）  |
-| Node.js  | >= 20           | `frontend/`、`inc/blocks/`、`inc/ai/` 三个工程的构建      |
-| pnpm     | >= 9（本仓库用 12.5.1） | 三个前端工程共用的唯一包管理器（workspace 统一安装，**不要用 npm/yarn**） |
-
-- PHP 改动先跑 `php -l <文件>` 挡住语法错（`<?php ?>` 配对、字符串闭合、模板标签），再做人工逐行比对。
-- 项目没有 PHP 单元测试框架、没有 PHPCS/ESLint/Stylelint 配置。**验证手段 = 前端构建 + `php -l` + 人工审阅**。
-- 编辑器默认自带 Vue (Official)、Stylelint、Prettier、markdownlint、PHP Intelephense、ESLint、es6-string-html、Auto Rename Tag、Auto Close Tag 插件：**提交即视为格式检查通过**，不必再单独执行格式化/风格检查命令。
-- 个别工具**确实缺失**时（如 `composer`、`zip`、`msgfmt` 未装），跳过依赖它的步骤、改用等价手段即可，不要为了补装工具而中断任务。
-- `frontend/`、`inc/blocks/`、`inc/ai/` 由主题根的 **pnpm workspace 统一管理**：只在主题根 `pnpm install` 一次，依赖物理装在根 `node_modules/`，三个子目录里只剩指向它的软链（几十 KB）。子目录各自安装、各自锁文件的旧流程已废弃，见 §5。
-
-### 2.1 调用 shell 的约定（重要）
-
-内置 shell 工具偶发**不回显输出**（命令已执行但结果为空），因此：
-
-- 命令一律**尽量重定向输出到文件**，再读文件取结果：`pnpm build > /tmp/iro-build.log 2>&1`，然后读 `/tmp/iro-build.log`，根据系统环境自行适配临时目录路径。
-- 需要在一次调用里拿到结果时，用 `<cmd> > /tmp/iro-<name>.log 2>&1; tail -n 50 /tmp/iro-<name>.log`，不要依赖裸命令的回显。
-- 长耗时命令（`pnpm install` / `pnpm build` / `package.sh`）放后台并落盘：`nohup pnpm build > /tmp/iro-build.log 2>&1 &`，随后再读日志判断成败。
-- 日志文件统一放**系统临时目录**、命名形如 `iro-<用途>.log`（Linux/macOS 用 `/tmp/`，Windows 用 `$env:TEMP`），避免污染仓库工作区。
-- **以日志文件内容为准**：一次没拿到输出不代表命令失败或成功，别急着下结论或重复执行。
-
----
-
-## 3. 目录结构
+## 2. 目录与文件职责
 
 ```tree
 Sakurairo/
-├── package.json             # ★ 根工程：pnpm workspace 脚本入口（build / build:frontend / build:blocks / build:ai / dev / dev:ai）
-├── package.sh               # ★ 发布打包脚本（安装依赖 + 三工程构建 + 剔除源码 + 生成 zip）
-├── pnpm-workspace.yaml      # ★ workspace 成员清单（frontend、inc/blocks、inc/ai）+ allowBuilds 白名单
-├── pnpm-lock.yaml           # ★ 唯一锁文件，同时覆盖三个工程
-├── node_modules/            # 依赖物理位置（workspace 共享，.gitignore；子目录里只有软链）
-├── temp/                    # 打包中间目录与日志（.gitignore）
-├── functions.php            # 入口：定义常量、按顺序 require 所有模块
-├── style.css                # 仅主题头（名称/版本/依赖声明）
-├── header.php               # <head>，含 Customizer 预览合并逻辑、PJAX 保活脚本
-├── index.php                # 主模板 + 「局部渲染」分发（X-Template-Part）
-├── footer.php / comments.php / 404.php
-├── frontend/                # ★ 前台源码（Vite 工程；workspace 成员，锁文件在主题根）
-│   ├── main.js              # 入口：样式 + app + components
-│   ├── style.scss / layout.scss / icons.scss
-│   ├── vite.config.js       # 三入口 app/login/post-sakura、手动 codeSplitting、入口反向引用守卫、chunk 全量内容哈希、HTTPS dev server
-│   ├── package.json / tsconfig.json
-│   ├── app/                 # 客户端核心（非组件）
-│   │   ├── index.ts         # window._iro 命名空间 + hook 系统 + 配置解析
-│   │   ├── pjax.js          # Swup 实例，桥接 pjax:* 事件
-│   │   ├── bus.js           # mitt 事件总线（window._iro.bus）
-│   │   ├── darkmode.js      # 深色模式（cookie: darkmode）
-│   │   ├── stores/scroll.js # 滚动进度广播 scroll:update
-│   │   ├── stores/resize.js # 视口尺寸广播 resize:update（全站唯一的 resize 监听）
-│   │   ├── utils/           # api.js(axios+缓存) / missImg / classicPagination / parseMarkdown / message ...
-│   │   └── plugins/         # postViews.js（阅读量上报），在 app/index.ts 末尾 import
-│   ├── components/          # ★ PHP 局部 + JS 行为 成对出现
-│   │   ├── block/           # 古腾堡块的前台渲染（notice/showcard/bvideo/ghcard/conversation/vbilibili）
-│   │   ├── comment/  homepage/  navbar/  page/  post/  site/  slots/  icons/
-│   │   ├── component_register.php  # 注册 PHP「函数组件」（content_container/pagination）
-│   │   └── index.js         # 汇总 import 所有组件 JS（新增 JS 必须在此登记）
-│   ├── theme_config.php     # 把 PHP 配置以 <script type="application/json"> 注入
-│   ├── theme_style_vars.php # 输出全局与动态 :root / :root.dark CSS 变量（第二段带 id）
-│   ├── types/               # ★ iro.d.ts（手写 _iro 全局类型）+ unplugin 自动生成的 d.ts（均纳入版本管理）
-│   └── dist/                # 构建产物（.gitignore，不提交）
+├── package.json / pnpm-workspace.yaml / pnpm-lock.yaml  # ★ workspace 根：脚本入口、成员清单、唯一锁文件
+├── package.sh               # ★ 发布打包脚本（安装依赖 + 全量构建 + 剔除开发文件 + 生成 zip）
+├── node_modules/ / temp/    # 依赖物理位置 / 打包中间产物（均不入库）
+├── functions.php            # 后端入口：定义常量，按顺序 require 各模块（新增后端模块在此登记）
+├── style.css                # 仅主题头（名称/版本/依赖声明），不含样式
+├── header.php / footer.php / index.php / comments.php / 404.php
+│                            # index.php = 主模板 + 局部渲染分发；header.php 含 Customizer 预览合并与 PJAX 保活脚本
+├── frontend/                # ★ 前台源码（Vite 工程，workspace 成员）
+│   ├── main.js / style.scss / layout.scss / icons.scss   # 入口与顶层样式汇总
+│   ├── vite.config.js       # 入口定义、codeSplitting 分组、产物命名、dev server
+│   ├── app/                 # 客户端核心运行时（非组件）：index.ts 提供 window._iro 与 hook；bus / pjax / darkmode / stores / utils / plugins
+│   ├── components/          # ★ 每个组件「PHP 局部 + JS 行为 + SCSS」成对出现
+│   │   ├── index.js         # 组件 JS 的聚合入口（新增组件 JS 必须在此登记）
+│   │   ├── component_register.php  # PHP「函数组件」注册
+│   │   └── block/ comment/ homepage/ navbar/ page/ post/ site/ slots/ icons/
+│   ├── theme_config.php     # 把后端配置注入为 JSON <script>
+│   ├── theme_style_vars.php # 输出全局/动态 CSS 变量
+│   ├── types/               # 手写全局类型声明 + unplugin 自动生成的 d.ts（均入库）
+│   └── dist/                # 构建产物（不入库）
 ├── inc/
-│   ├── api.php              # rest_api_init，注册 sakura/v1 路由 + 统一权限回调
-│   ├── api/                 # ai / bangumi / bilibili_favlist / captcha / comments / post_view / search_index / smiles / steam / turnstile
-│   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts；workspace 成员，锁文件在主题根）
-│   │   ├── src/             # index.js + modules/*.js + style.scss
-│   │   ├── build/           # 构建产物（.gitignore，不提交；改完 src 必须本地构建）
-│   │   ├── render.php       # 前台 shortcode + register_block_type 渲染
-│   │   └── iro_blocks.php   # 编辑器脚本/样式入队、注入 window.iroBlockEditor
-│   ├── ai/                  # ★ AI 后台面板工程（Vite + Vue；workspace 成员）
-│   │   ├── src/             # main.js / panel.js / api.js / config.js / storage.js / components/*.vue
-│   │   └── dist/            # 构建产物（.gitignore，不提交；PHP 直接引用）
-│   ├── functions/
-│   │   ├── tools.php / ip.php / seo.php / nav_bar.php / operator.php(iro_act) / cust_wp.php / wp_cn.php / sitemap.php
-│   │   ├── ai/              # provider.php(注册 AI Provider) / tools.php(生成工具) / selftest.php / options.php(入队+页面)
-│   │   ├── comment/  content/  custom/  optimize/   # optimize = 内置图片服务与压缩
-│   │   └── enqueue_assets.php   # 前台 JS/CSS 入队（dev_mode 时指向 Vite）
-│   ├── libs/                # 第三方类：Captcha / Meting / Parsedown / wp-api-menus
-│   ├── theme_init/          # support / translation / shuoshuo / wp_fix / check / iro_opt
+│   ├── api.php + api/       # REST 路由注册与各命名空间的实现
+│   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts，workspace 成员）
+│   │   ├── src/             # 编辑器源码（index.js 汇总 modules/*）
+│   │   ├── build/           # 构建产物（不入库，PHP 引用）
+│   │   ├── render.php       # 前台 shortcode / block 渲染
+│   │   └── iro_blocks.php   # 编辑器资源入队与配置注入
+│   ├── ai/                  # ★ AI 后台面板工程（Vite + Vue，workspace 成员）：src/ 源码 + dist/ 产物（不入库）
+│   ├── functions/           # 后端功能模块：tools/ip/seo/nav_bar/operator/cust_wp/wp_cn/sitemap/smtp/player/enqueue_assets
+│   │   ├── ai/              # AI Provider、生成工具、自检、后台页面
+│   │   ├── comment/ content/ custom/ optimize/   # 分区子模块（optimize = 内置图片服务与压缩）
+│   ├── libs/                # vendored 第三方 PHP 类
+│   ├── theme_init/          # 主题初始化：support / translation / shuoshuo / wp_fix / check / iro_opt
 │   ├── dash-scheme.php      # 后台设置页动态 CSS（独立输出，不经 WP 引导，不可用 WP 函数）
 │   └── option-scheme.php    # 后台 / 登录页 CSS 皮肤（含 PHP 插值）
-├── opt/                     # ★ 后台设置框架（Codestar CSF 的私有分支）
-│   ├── option-framework.php # 载入 csf/classes/setup.class.php + theme-options.php
-│   ├── theme-options.php    # ★ 所有后台设置项的唯一定义处（Sakurairo_CSF::createSection）
-│   ├── csf/                 # 框架实现（classes / fields / functions / assets / languages），一般不要改
-│   └── customizer/          # ★ Kirki 可视化编辑器（index.php / init.php + 内置 kirki/）
-├── translation/             # ★ 翻译源文件 *.po / *.pot（打包时编译为 languages/*.mo）
-├── languages/               # 编译产物 *.mo（.gitignore；textdomain: sakurairo）
-├── update-checker/          # 内置 Plugin Update Checker v5（vendor 目录，勿改）
-└── .github/                 # Issue 模板 + 历史 workflow
+├── opt/                     # ★ 后台设置框架
+│   ├── option-framework.php / theme-options.php   # 加载框架；所有后台设置项的唯一定义处
+│   ├── csf/                 # 框架实现与字段（vendored，一般不改）
+│   └── customizer/          # 可视化编辑器（含内置 kirki/）
+├── translation/             # 翻译源稿 *.po / *.pot（入库）
+├── languages/               # 编译产物 *.mo（不入库）
+├── update-checker/          # 内置更新检查器（vendored，勿改）
+└── .github/                 # Issue 模板等
 ```
 
 ---
 
-## 4. 运行时架构（重点）
+## 3. 关键机制与对应文件
 
-### 4.1 设置项系统：`iro_opt()`
+以下每节都是「改这里要遵守的约定」，不是当前实现清单。
 
-所有主题设置存放在**单个 WP option `iro_options`（数组）** 中。
+### 3.1 设置项系统
 
-```php
-iro_opt('key', $default);          // 读（Customizer 预览时优先取 theme_mod）
-iro_opt_update('key', $value);     // 写
-$GLOBALS['iro_options'];           // 完整数组
-```
+- 主题设置集中存放在**单个 WP option 数组**中，读 `iro_opt($key, $default)`、写 `iro_opt_update($key, $value)`；实现与常量定义在 `inc/theme_init/iro_opt.php`。
+- **新增设置项必须三处对齐**：后台字段定义（`opt/theme-options.php`）、读取处的默认值、以及需要在设置框架之间同步的映射键（可视化编辑器字段靠映射键写回同一 option）。映射键写错的表现是「预览正常、保存后失效」。
 
-- 定义位置：`inc/theme_init/iro_opt.php`；后台 UI 定义在 `opt/theme-options.php`（CSF）。
-- **新增设置项时要在两处对齐**：CSF 后台字段（`opt/theme-options.php`）与前台读取处的默认值。
-- Kirki Customizer（`opt/customizer/init.php`）通过字段里的 `iro_key` / `iro_subkey` 映射写回 `iro_options`：
-  - 预览中：`header.php` 的 `use_customize_data()` 把临时 `theme_mod` 合并进 `theme_mod('iro_options')`，供 `iro_opt()` 读到。
-  - 保存后：`opt/customizer/index.php` 的 `update_customize_to_iro_options()` 合并进 `iro_options`。
-  - 因此自定义器字段的 `iro_key` 写错会「预览正常、保存后失效」。
+### 3.2 配置注入 → `window._iro`
 
-### 4.2 配置注入 → `window._iro`
+`frontend/theme_config.php` 以 `<script type="application/json">` 输出若干份配置，前台在 `frontend/app/index.ts` 里解析为 `_iro.config` / `_iro.page` / `_iro.user` 等。
 
-`frontend/theme_config.php` 在页面上输出三个 JSON `<script>`：
+- 前台与后台/登录页注入的份数不同，因此「是否存在前台专属配置节点」被用作**服务端权威的前台标记**（`_iro.isBackend`），不要改成靠 DOM 里某个表单/元素是否存在来判断。
+- PJAX 会替换其中部分配置节点，因此配置必须在**页面加载 hook** 里解析，而不是模块顶层解析一次。
+- `_iro` 及其成员的类型声明集中在一个手写的全局声明文件中（`frontend/types/`）。它是**脚本形态**的声明文件：不要加顶层 `import`/`export`（会变成模块、全局声明失效）；新增 `_iro` 成员时同步补声明，并可从主题根跑前台的类型检查。
 
-| id                  | JS 侧         | 内容                                                                                             |
-| ------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
-| `#iro_theme_config` | `_iro.config` | 站点/接口/nonce/粒子/分页/lightbox/代码高亮等全局配置                                             |
-| `#iro_page_config`  | `_iro.page`   | `post_id`、`post_image`、`is_home`、`is_singular`（列表页的 `post_id` 是循环首篇，判定单页靠 `is_singular`） |
-| `#iro_user_config`  | `_iro.user`   | 当前用户 id/name/email/avatar...                                                                 |
+### 3.3 Hook 与初始化时机
 
-同一函数还会在 `admin_head` / `login_head` 输出基础配置。前台在 `frontend/app/index.ts` 的 `initFrontConfig()`（注册于 `onPageLoaded`）里解析。**PJAX 后会重新解析**，因为 `#iro_page_config` 是 Swup 的替换容器之一。
+`frontend/app/index.ts` 暴露 `_iro.hooks`（初次 DOM 就绪 + 各 PJAX 生命周期，并有「首次加载与 PJAX 完成」的合并钩子）。
 
-### 4.3 Hook 系统（`window._iro.hooks`）
+- **组件 JS 一律通过 hook 初始化**，不要写顶层 DOM 操作或顶层事件监听，否则 PJAX 跳转后失效。
+- 自带顶层监听/定时器的模块要自己判断是否为后台页面，后台不应运行前台运行时行为。
+- 跨组件通信优先走事件总线 `_iro.bus` 与 PJAX 生命周期，不要各自加全局监听（如视口变化应复用统一的 resize 广播）。
 
-`frontend/app/index.ts` 提供：
+### 3.4 PJAX
 
-```js
-_iro.hooks.DOMContentLoaded.push(fn)      // 初次 DOM 就绪
-_iro.hooks.DOMContentLoaded.add(fn, {once:true})
-_iro.hooks["pjax:start"|"pjax:success"|"pjax:complete"|"pjax:end"|"pjax:error"].push/add(fn)
-_iro.hooks.onPageLoaded(fn)               // = DOMContentLoaded + pjax:complete（最常用）
-```
+- PJAX 用 Swup，**替换容器列表固定**：由 `frontend/app/pjax.js` 指定。Swup 是在新文档里按选择器找同名节点替换，**缺一个容器就整块不更新**，因此这些容器必须在每个页面上都存在（即使为空）。改动容器 id 时，PHP 侧输出处必须同步。
+- 链接默认走 PJAX；需要绕过的加 `no-pjax` 类（AJAX 翻页等与局部渲染冲突的链接必须加）。
 
-**组件 JS 必须通过 hook 初始化**，不要直接写顶层 DOM 操作，否则 PJAX 跳转后失效。典型写法见 `frontend/components/site/progress_bar.js`、`frontend/components/page/template/bangumi.js`。
+### 3.5 局部模板渲染
 
-其他全局：`_iro.bus`（mitt 事件总线，如 `scroll:update`、`resize:update`）、`_iro.navigate`（Swup 导航）、`_iro.utils`（`missImg` / `missAvatar` 等）。
+`index.php` 读取请求头后只渲染片段（不输出整页），前端 AJAX 翻页/加载更多依赖它。
 
-- **后台页面（`wp-login.php` / `wp-admin`）不跑前台运行时**：`_iro.isBackend` 在 `app/index.ts` 里由 `!document.querySelector("#iro_page_config")` 判定——`#iro_page_config` 只由 `wp_enqueue_scripts`（即 `theme_config.php` 的 `iro_front_theme_config()`）输出，后台与登录页只输出 `#iro_theme_config`，所以它是**服务端权威**的「这是前台」标记，不依赖 DOM 里有没有登录表单（表单渲染晚于脚本）。为 `true` 时：`hooks` 的 `push`/`add` 不注册（DOM 已就绪时这两个方法会立刻执行 `fn`，所以总闸卡在方法里而不是派发处）、pjax 事件不派发、`app/pjax.js` 不实例化 Swup、`app/stores/scroll.js` 不听滚动。原因：后台只加载验证码入口，但 `iro-core` 是共享 chunk，前台运行时代码照样会被下载并求值，构建层面拆不开。验证码入口因此在后台页面走直接挂载分支（`components/site/captcha/captcha.js`）。
-- 由此，**新增前台运行时行为默认不会在后台跑**——只要挂在 hooks / `_iro.bus` / pjax 上即可；自带顶层监听或定时器的模块要自己判 `_iro.isBackend`（现有例子：`app/pjax.js`、`app/stores/scroll.js`）。
+- 需要支持片段渲染的模板，在文件首行声明对应的全局标记，并把「容器开合」用条件劈开，使同一文件既能整页输出也能只输出片段。
+- 新增可局部渲染的类型时，`index.php` 的分发与前端请求处要同时更新。
 
-`_iro` 及其成员的类型统一定义在 `frontend/types/iro.d.ts`（`declare const _iro` + `interface Window`），各文件直接写 `_iro` 即可获得提示。该文件是**手写的全局声明**，新增 `_iro` 成员时要同步补上；`_iro.config` 目前是 `any`，其形状（对应 `theme_config.php` 的三个 JSON）记录在同文件的 `IroThemeConfig` / `IroPageConfig` / `IroUserConfig` 中，收紧类型时替换即可。
+### 3.6 组件约定
 
-### 4.4 PJAX / Swup
+新增一个前台组件，三件事缺一不可：
 
-- `frontend/app/pjax.js` 用 Swup，替换容器：`#pjax-main`、`#iro_page_config`、`#iro_theme_style_dymanic_vars`（注意 id 里的 `dymanic` 是历史拼写，改动时要同步 `theme_style_vars.php`）、`#iro_block_styles`、`#iro_post_sakura_style`。**容器必须在每个页面上都存在**：Swup 是在「新文档」里按选择器找同名节点再替换，缺一个就整块不更新。`#iro_post_sakura_style` 因此由 `theme_style_vars.php` 每页输出（空容器），只在单页视图才填 `post-sakura.css`。
-- 链接默认走 PJAX；需要跳过的加 `class="no-pjax"`（分页器已自动加，见 `frontend/components/slots/pagination.php`）。
-- Swup 生命周期 → 原生 `CustomEvent`：`pjax:start / success / complete / end / error`（`visit:abort` 会补发 complete + end）。
-- `scrollTo` 逻辑：首页与 `/page/*` 滚到 `#articles`，其他页面回到顶部。
-- 另有「PJAX 保持加载资源」的 inline 脚本在 `header.php`（选项 `pjax_keep_loading`），通过 `data-pjax-keep-loading` 标记管理。
+1. **PHP**：`frontend/components/<area>/<name>.php`，用 `require_once` 挂进对应模板，或注册为「函数组件」；模板写法见 §4.2。
+2. **JS**：`frontend/components/<area>/<name>.js`，并在**聚合入口**登记（组件进 `frontend/components/index.js`，核心进 `frontend/app/index.ts`）。**不登记就不会被打包**。
+3. **样式**：同名 `.scss`，在对应分区 `index.scss` 里 `@use`。
 
-### 4.5 局部模板渲染（`X-Template-Part`）
+- 复杂交互可用 Vue SFC；前后台都会用到的组件样式要放进独立 `.scss` 统一管理，不要放在 SFC 的 `<style scoped>` 里（会变成异步 CSS，首屏多一次请求）。
+- 需要脱离主 bundle 独立运行的脚本要自行兜底：能拿到 hook 就走 hook，否则直接挂载；配置解析也要有等价回退。
 
-`index.php` 顶部读取请求头 `X-Template-Part`，命中时只渲染片段（不输出 `<html>`）：
+### 3.7 REST 接口
 
-| 值                              | 渲染内容                             |
-| ------------------------------- | ------------------------------------ |
-| 任意非空（首页/归档/作者/搜索） | `frontend/components/post/list.php`  |
-| `comment_list`                  | `comments_template()`                |
-| `bangumi_list`                  | `page/template/bangumi.php`          |
-| `bilibili_favlist`              | `page/template/bilibili_favlist.php` |
-| `steam_list`                    | `page/template/steam.php`            |
+- 统一命名空间与统一权限回调（nonce 校验、以及在此之上的权限校验）由一个集中文件定义，各接口实现放在 `inc/api/`。
+- **nonce 的 action 必须是 WordPress 标准的 `wp_rest`**：带 cookie 的请求，内核会用同一请求头按该 action 预先校验，自定义 action 会在进入 `permission_callback` 之前就被拒绝。
+- 新增接口要同时更新前端的调用处与（如有必要的）注入给前端的配置。
 
-前端通过 `frontend/app/utils/classicPagination.js` 携带该头发起请求（AJAX 翻页/加载更多），并收到 `global $iro_only_template`。
+### 3.8 翻译
 
-### 4.6 组件约定：PHP 局部 + JS 模块成对
+- 新文案统一使用主题 textdomain；CSF 设置页、可视化编辑器、更新检查器各有自己的 textdomain 与语言包目录，不要混用。
+- **只改翻译源稿**（`translation/*.po` / `.pot`），`.mo` 是构建产物、不入库、会被打包流程覆盖。
 
-新增一个前台组件时，通常需要：
+### 3.9 区块与 AI 面板
 
-1. **PHP**：`frontend/components/<area>/<name>.php`，用 `require_once` 挂进 `index.php`、`footer.php`、`comments.php` 或 `frontend/components/component_register.php`。
-   - 模板写法遵循 §6 的「PHP 组件模板 —— 类 Vue 风格」（`foreach/endforeach`、`if/endif` 包裹 HTML + `<?= ?>` 内联输出）。
-   - 可复用 UI 用「函数组件」形式（见 `slots/content_container.php` 的 `iro_content_container_start/end()`、`slots/pagination.php` 的 `iro_post_pagination()`）。
-2. **JS**：`frontend/components/<area>/<name>.js`，并在聚合入口登记：`frontend/components/index.js`（组件）或 `frontend/app/index.ts`（核心）。**不登记 = 不会被打包**。
-3. **样式**：同名 `.scss`，并在对应的 `index.scss` 里 `@use`（顶层汇总见 `frontend/style.scss`）。
-4. 少量复杂交互用 Vue SFC（`captcha/builtin.vue`、`page/template/BangumiDetail.vue`、`site/Model.vue`）。Vue/Element Plus 已配 `unplugin-auto-import` + `unplugin-vue-components`，`components/` 与 `app/` 目录下的组件无需手动注册。
-   - SFC 的 `<style scoped>` 会随共享 chunk 变成**异步 CSS**（前台要多发一次请求才生效）。验证码就踩过这个坑，样式已从 `builtin.vue` 搬到同名的 `site/captcha/captcha.scss` 统一管理；需要「前后台都会用到」的组件样式请照此办理。
-
-页面分发在 `index.php`：`page/home.php` / `page/post.php` / `page/search.php` / `page/author.php` / `page/archive.php`，兜底 `components/default.php`。
-
-### 4.7 古腾堡区块与短代码
-
-- 编辑器端：`inc/blocks/src/`（`index.js` 汇总 `modules/*`），用 `@wordpress/scripts` 构建。
-- 前台端：`inc/blocks/render.php` 注册短代码（`[friend_link]`、`[bangumi]`、`[favlist]`、`[steam]`、`[archive]`、`[ghcard]`、`[showcard]`、`[warning]` 等）和 `register_block_type('sakurairo/*')`。
-- 编辑器样式在 `inc/blocks/iro_blocks.php` 中**注册两次**（外层文档 + `enqueue_block_assets` iframe），这是为兼容 WP 7.1 画布 iframe 的刻意设计，勿删。
-- `inc/blocks/build/` **不纳入版本管理**（与 `frontend/dist` 一致）。改完 `src/` 必须在本地重新 build 才生效；发布/部署/打包前务必跑过 `pnpm build:blocks`，否则新 clone 出来的主题缺编辑器资源（`iro_blocks.php` 检测到产物缺失会跳过入队，不会报错，但编辑器里所有 Sakurairo 区块都不会出现）。
-
-### 4.8 AI 子系统（`inc/ai` + `inc/functions/ai`）
-
-这是主题的独立后台功能，前台不加载。基于 **WordPress 7.0 内置的 AI Client**（`WordPress\AiClient\AiClient`），主题实现了一个 OpenAI 兼容 Provider。
-
-- **PHP 后端**（`inc/functions/ai/`）：
-  - `provider.php`：注册 Provider（id `sakurairo`）、API Base/Key/默认模型读取逻辑。文件顶部在类声明前判断 `class_exists(AiClient::class)`，旧版 WP 下直接 `return`，避免「父类不存在」致命错误。
-  - `tools.php`：`iro_ai_generate()` / `iro_ai_chat()` 及文章关键词、摘要、标题生成工具。
-  - `selftest.php`：系统信息、接口探测、模型列表。
-  - `options.php`：后台入队（`admin_enqueue_scripts`）、配置 JSON 注入、编辑器 meta box、`工具 → AI工具` 设置页。同样在 `iro_ai_generate` 不存在时提前 `return`。
-- **前端面板**（`inc/ai/`，Vite + Vue + Element Plus + `@opentiny/tiny-robot`）：构建产物 `inc/ai/dist/{main.js,style.css}` 由 PHP 以 **ESM 模块脚本**加载（`wp_enqueue_script_module`，无该函数时回退 `<script type="module">`）。面板挂载到 `#iro-ai-config`（设置页）与 `#iro-ai-editor`（编辑器 meta box），并用 **Shadow DOM 隔离 WordPress 后台样式污染**；编辑页悬浮面板额外挂到 `body`（避开 meta box 折叠/侧栏 overflow/transform 对 fixed 定位的影响）。
-- **REST 接口**（`inc/api/ai.php`，命名空间 `sakura/v1`）：`/ai/selftest`、`/ai/models`、`/ai/chat`、`/ai/posts`、`/ai/posts/keyword|description|title`，权限回调 `iro_rest_check_permission`（管理员 + nonce）。
-- **设置项**：`ai_api_base`、`ai_api_key`、`ai_model`（CSF 的「AI 摘要」分区）；另有 `dev_mode_ai_hmr_client` / `dev_mode_ai_main_js` 控制 AI 面板的 Vite 开发入口。
-- **开发**：AI 工程 dev server 在 **5174**，`pnpm dev:ai`，HMR host 同为 `wordpress`。
-
-### 4.9 REST API
-
-统一命名空间 `sakura/v1`（`inc/api.php` + `inc/api/*.php`），前端基址 `_iro.config.iro_api`：
-
-- 公开读：`/comment/smiles`、`/captcha`（GET 生成 / POST 校验）、`/captcha/turnstile`、`/search_index`、`/bangumi/bangumi|bilibili|mal`、`/favlist/all|detail`、`/steam`。
-- 需 nonce：`/post/views`（GET 读取阅读量 / POST 上报计数）。
-- 需管理员 + nonce：`/ai/*`（见 §4.8）。
-
-**nonce 约定**：`iro_get_basic_theme_config()`（`frontend/theme_config.php`）随基础配置输出 `nonce`（`wp_create_nonce('wp_rest')`），前端经 `X-WP-Nonce` 头或 `nonce` 参数回传；`iro_rest_check_nonce()`（定义在 `inc/api.php`，全局可用）作为 `permission_callback` 统一校验，`iro_rest_check_permission()` 在其上再加 `manage_options` 限制。**action 必须保持 `wp_rest`**：带 cookie 的请求，内核会先用同名头按 `wp_rest` 校验一次，自定义 action 会在进入 `permission_callback` 之前就被 403（`rest_cookie_invalid_nonce`）。另注意 `wp_verify_nonce` 允许前后各一个 tick，整页缓存站点里页面上的 nonce 最长 12~24h 内仍有效，超时后上报只会静默收到 403。
-
-新增接口要同时更新 `frontend/theme_config.php` 暴露的配置（如需）与前端调用处。
-
-### 4.10 翻译
-
-| textdomain              | 语言包目录                  | 用途              |
-| ----------------------- | --------------------------- | ----------------- |
-| `sakurairo`             | `languages/`（`.mo` 为编译产物，源在 `translation/`） | 主题前台/部分后台 |
-| `sakurairo_csf`         | `opt/csf/languages/`        | CSF 设置页        |
-| `Sakuraino_C`           | `opt/customizer/` 内联      | Kirki Customizer  |
-| `plugin-update-checker` | `update-checker/languages/` | 更新检查器        |
-
-- 翻译源稿是 `translation/*.po`、`translation/sakurairo.pot`；`.mo` 是编译产物，`/languages/` 与 `/opt/languages/` 均被 `.gitignore`。`package.sh` 在 `msgfmt` 可用时会自动把 `translation/*.po` 编译到包内 `languages/*.mo`。
-- 新文案统一用 `sakurairo`。历史文件里残留 `'iro'` 域名（如 `inc/functions/nav_bar.php`），新代码不要模仿。
-
-### 4.11 其他值得知道的机制
-
-- `inc/functions/operator.php`：`?iro_act=xxx` 的后台跳转/动作分发（bangumi、mal、steam、playlist、del_exist_theme）。
-- `inc/theme_init/check.php`：主题目录名必须是 `Sakurairo`，否则后台提示并尝试重命名。
-- `inc/functions/content/query.php`：`pre_get_posts` 干预主查询（首页/搜索/归档允许 `shuoshuo` 等类型），并让置顶文章在非搜索页优先。
-- `inc/theme_init/shuoshuo.php`：注册 `shuoshuo` 自定义文章类型。
-- `inc/functions/content/post_views.php`：阅读量统计（meta key `views`）。计数由 `frontend/app/plugins/postViews.js` 驻留 3 秒后 POST `/post/views` 触发，`iro_set_post_views($post_id)` 是唯一入口。
-- `inc/functions/sitemap.php`：主题内置站点地图（选项 `iro_sitemap`，走 `iro_sitemap` 路由变量，样式在 `inc/sitemap.xsl` / `sitemap-urls.xsl`）。
-- `inc/functions/optimize/`：内置图片服务与压缩。`image_server.php` 通过 `iro_media_route` 路由按尺寸/格式动态出图并缓存；`iro_media_optimize_image_url()` 是模板取图入口。
-- `inc/functions/wp_cn.php`：中国本地化（如 Gravatar 镜像等）。
-- `inc/functions/custom/`：后台仪表盘/登录页定制；`dashboard.php` 通过 `inc/dash-scheme.php` 动态输出后台 CSS。
-- `update-checker/` 在 `functions.php` 顶部引入，并依 `iro_update_source` 选择更新源。
+- 编辑器区块在 `inc/blocks/src/`，前台渲染与 shortcode 在 `inc/blocks/render.php`；编辑器资源的入队实现里有**刻意的双重注册**（外层文档 + 区块画布），不要当成冗余删掉。
+- AI 面板是独立后台工程（`inc/ai/` + `inc/functions/ai/`），前台不加载，产物由 PHP 以模块脚本加载。
+- AI 能力依赖较新的 WordPress 特性：相关 PHP 靠**能力检测**（类/函数是否存在）提前 `return`，旧版本下后台看不到入口属预期行为，不要当 bug 去补依赖。
+- AI 面板用样式隔离容器（Shadow DOM）避免被后台样式污染，新增样式不要假设全局 CSS 会命中。
+- 上述两个工程的**源码与产物分离**：产物不入库，改完源码必须本地构建才能生效，且缺失产物时 PHP 侧是静默跳过而不报错。
 
 ---
 
-## 5. 构建与常用命令
+## 4. 编码规范
 
-### 依赖安装（主题根目录，唯一入口）
+### 4.1 PHP
 
-```bash
-pnpm install          # 唯一一次安装：frontend / inc/blocks / inc/ai 的依赖一起装好
-```
+- 会产生副作用的文件（直接输出内容、注册路由/钩子）顶部加 `if (!defined('ABSPATH')) { exit; }`；纯函数定义文件不加。判断依据是「能否被直接访问并产生副作用」，不是无差别全覆盖。
+- 新函数统一加 `iro_` / `sakurairo_` 前缀；可能被重复 require 的核心函数用 `if (!function_exists(...))` 包裹。**前缀规则不回溯**：历史函数名即使风格不一致也保持原样，不要改名。
+- 新函数带参数与返回类型标注；历史函数普遍没有，不要顺手大规模补。
+- 输出必须转义（`esc_html` / `esc_attr` / `esc_url` / `esc_js` / `esc_html__`），输入必须清洗（`sanitize_*` / `intval`）。
+- **4 空格缩进**。仅 vendored 库与两个独立输出的后台皮肤文件保持其原有 tabs 风格，不要跨文件统一。
 
-- 锁文件只有一个：根 `pnpm-lock.yaml`；pnpm 版本只在根 `package.json` 的 `packageManager` 里声明（`pnpm@12.5.1`）。
-- **不要在 `frontend/`、`inc/blocks/`、`inc/ai/` 里执行 `pnpm install`**：子目录一旦出现自己的 `pnpm-workspace.yaml` / `pnpm-lock.yaml`，pnpm 就会把该目录当成独立 workspace 根、静默忽略根锁文件（见 §7 第 15 条）。
-- 依赖解析仍按成员隔离：`lodash`(CJS，区块) 与 `lodash-es`(前台)、React（区块）与 Vue 3（前台/AI）并存互不干扰。
+### 4.2 PHP 组件模板 —— 类 Vue 风格
 
-### 三个工程与脚本
+组件模板是「PHP 版的 Vue 模板」：
 
-根 `package.json` 的脚本：
+- 条件/循环用替代语法（`if/endif`、`foreach/endforeach`、`switch/endswitch`）包裹 HTML，结束标签独占一行、与被包裹的 HTML 同缩进层级。
+- 动态值一律用短标签内联输出，表达式直接写在标签属性/文本里（含默认值），不要为了拼字符串先赋值再 `echo`。
+- **只使用一次的表达式一律内联**；仅当结果被复用多次、或长表达式需要拆解时才提取变量。不要为了好读而在模板顶部堆一批 `$xxx = ...;`。
+- 模板参考以「零中间变量、表达式内联（含 `?? 默认值`）」的文件为准；历史文件里的空格风格、松散比较、单双引号混用等属于遗留，不要模仿。
+- 结构性重复（容器开合等）才抽成函数组件，其余保持单文件模板。
 
-| 脚本 | 实际命令 | 作用 |
-| ---- | -------- | ---- |
-| `pnpm build` | `bash package.sh` | **发布打包**（不是单纯构建）：冻结锁文件安装 → 三工程构建 → 剔除源码 → 生成 `temp/Sakurairo-<版本>.zip` |
-| `pnpm build:frontend` | `pnpm --filter frontend run build` | 只构建前台 |
-| `pnpm build:blocks` | `pnpm --filter iro_blocks run build` | 只构建区块 |
-| `pnpm build:ai` | `pnpm --filter ai run build` | 只构建 AI 面板 |
-| `pnpm dev` | `pnpm --filter frontend run dev` | **只起前台的** Vite dev server（5173）；AI 面板要另开 `pnpm dev:ai` |
-| `pnpm dev:ai` | `pnpm --filter ai run dev` | 只起 AI 面板 dev server |
+### 4.3 注释
 
-> `package.sh` 需要 `pnpm` / `node` / `zip`；会先检查三个子目录里有没有残留的 `pnpm-lock.yaml`/`pnpm-workspace.yaml`（有则报错退出），再 `pnpm install --frozen-lockfile` 与 `pnpm -r build`。打包时 frontend 只保留 PHP 模板与 `dist/`，`inc/blocks/src` 被删除，`inc/ai` 只保留 `dist/`，并删掉 `.po/.pot`、`AGENTS.md`、`package.sh` 等开发文件。
+- **默认不写注释**。只在三种情况下写：说明关键机制/非显而易见取舍、标注容易踩坑处、记录无法从代码检索到的外部行为（内核/框架/浏览器约定）。
+- 复述代码的注释一律不要。
+- 形式：过程内的「为什么」用 `//`（多行也连写多个 `//`）；函数、全局对象、类型字段的契约用 `/** */`。**源码中不使用普通 `/* */` 块注释**。
 
-### 前端（`frontend/`）
+### 4.4 JS / Vue / SCSS
 
-```bash
-cd frontend           # 以下命令在 frontend/ 里执行
-pnpm dev              # Vite dev server: https://0.0.0.0:5173（HMR host = "wordpress"）
-pnpm build            # 产出 frontend/dist/{app.js,login.js,style.css,login.css,iro-core.*.js,rolldown-runtime.*.js,vendor-*.js,assets/*}
-pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、components/、main.js）
-```
+- ESM、**4 空格缩进**、双引号；使用全局 `_iro` 时直接写 `_iro`，不要重复声明 `window._iro`。
+- 类型检查开了未使用变量/参数检查，多余声明会导致检查失败；`.vue` 不保证能被现有工具链检查，仍按同样风格书写。
+- **请求工具按「所在工程的依赖上下文 + 工具自身职责」选，不要一刀切**：
+  - 三个工程的依赖互相隔离，某个子包可能没有 axios，那种目录只能用 `fetch`（或它自带的薄封装）。
+  - 全局只有一个「仅 GET 的缓存封装」工具，它没有 baseURL、不注入 nonce，只适用于**可缓存的 GET 读**；写操作与必须每次新鲜的读都用裸请求工具并自行带 nonce。
+  - 二进制/blob、非 REST 的原生表单提交用 `fetch`。
+  - 判断不了就跟所在文件的既有写法，不要引入新范式。
+- SCSS 用 Dart Sass 模块语法 `@use ... as <语义命名>`；唯一例外是导入第三方 `.css`（`.css` 不适用 `@use`），其余不要用 `@import`。
 
-- 这三条命令也可以从主题根用 `pnpm --filter frontend run dev` / `pnpm --filter frontend run build` / `pnpm --filter frontend exec tsc --noEmit` 执行；只是**别在子目录里 `pnpm install`**。
-- 本地开发需在**站点选项里打开 `dev_mode`**，`inc/functions/enqueue_assets.php` 会改为加载 `dev_mode_hmr_client` / `dev_mode_main_js`（默认 `https://wordpress:5173/...`）。
-- dev server 使用自签 HTTPS，且 HMR `host: "wordpress"`；本机需能把 `wordpress` 解析到该容器/主机（官方 docker 环境已配置）。
-- `frontend/dist/` 已被 `.gitignore`，**不要提交**（`inc/blocks/build/`、`inc/ai/dist/` 同样不提交）。
-- Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`login.css` → `login.css`（**登录页皮肤 + 验证码样式，由 `wp-login.php` 单独加载**，入口 `components/login.js`），`post-sakura.css` → `post-sakura.css`（**文章排版样式，仅在 `page_style` 选 Sakura 时由 PHP 按需加载**，入口 `components/post/post-sakura.js`，刻意不并进 `post/index.js`，否则会被打进首屏 `style.css`）。主入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
-- **验证码样式两处都要有，但来源只有一份**：`components/site/captcha/captcha.scss` + Vue 组件（`builtin.vue`）原先是 `<style scoped>`，现已并入 `captcha.scss`。前台经 `components/site/index.scss` 进 `style.css`（首屏自带，**不额外发请求**）；登录页经 `components/login.js` 进 `login.css`。登录页皮肤（`components/login.scss`）**只**在 `login.js` 里引入，因此不会跟着前台进 `style.css`——这正是当初「后台样式污染前台」的成因，`components/site/captcha/captcha.js` 不要再 import `login.scss`。
-- **验证码 JS 按需加载**：`components/site/index.js` 在 `_iro.hooks.onPageLoaded` 里检测到 `.captcha` 容器才 `import("./captcha/captcha")`，首页/列表页因此完全不下载这段（连带它引的 `builtin.vue` / `turnstile.vue`）。登录页仍由 `components/login.js` 静态引入同一份模块，两边共用同一个 chunk——那条静态 import 不能删。
-- **入口反向引用会被构建直接报错**：`vite.config.js` 里的 `iro-entry-import-guard` 插件一旦发现非入口 chunk `import "app.js"` 就终止构建。原因是「入口 chunk 被别的 chunk 反向引用」会让浏览器把 `app.js?ver=...` 与 `./app.js` 当作两份模块图、整包下载执行两次。被多处共享的代码必须落进 `codeSplitting.groups`（现有 `vendor-*` 与 `iro-core`）。
-- **`codeSplitting.groups` 的 `node_modules` 兜底会把按需包也捞进启动 chunk**：`iro-core` 的匹配器覆盖整个 `node_modules`，所以任何被 `await import()` 的第三方包，只要没写进 `LAZY_VENDOR_GROUPS`，都会被打进首屏。新增按需依赖时：首屏用不到的加进 `LAZY_VENDOR_GROUPS`（独立 chunk）或 `LAZY_COMPONENT_PACKAGES`（回到引用它的动态 chunk），首屏常驻的（如 `typed.js` / `medium-zoom` / `tocbot`）什么都不用加。反过来，把启动链真正要用的包（`lodash-es` / `swup` / `axios` / `@vueuse` / `animejs` / `colorthief`）移出 `iro-core`，会让引用它们的 chunk（典型是 `vendor-element`）被反向拉成首屏阻塞资源。
-- **首屏 chunk 由 PHP 按文件名反查后预载**：`app.js` 以 `?ver=INT_VERSION` 加载，它静态 import 的 chunk 却走相对路径，浏览器要先下完并解析 `app.js` 才会发现 `iro-core`（200 KB 级）与 rolldown 运行时，首屏关键路径因此多一次串行往返。预载这两个 chunk 有两个硬约束：`<link rel="modulepreload">` 的 URL 必须与相对 import 的解析结果**逐字一致**（加了 `?ver=` 会被当成第二份模块图重复下载），而 Vite **不提供**给 chunk 之间的 import 说明符加查询串的手段（`experimental.renderBuiltUrl` 会被以 `host=js` 调用，但实测只改 `__vite__mapDeps`，真正的 `import ... from` 仍是裸路径，用了反而会让按需 chunk 被下载两遍）。因此 chunk 一律保留内容哈希，由 `inc/functions/enqueue_assets.php` 的 `iro_dist_chunk_file()` 在 `frontend/dist` 里按 `iro-core.<hash>.js` / `rolldown-runtime.<hash>.js` 模式反查（每次请求一次 `scandir`），chunk 名怎么变都不用手工同步。另外 rolldown 运行时模块（`\0rolldown/runtime.js`）不参与 `codeSplitting.groups` 匹配，单入口构建实测也照样独立成 chunk，任何分组都并不进 `app.js`。
-- `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
-- 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
-- `components/**/*.js` 是 `checkJs: false` 的 JS：纳入 tsconfig 只为拿到 `_iro` 等智能提示，不会因 JS 里的小毛病报错。
+### 4.5 通用
 
-### 区块（`inc/blocks/`）
-
-```bash
-pnpm build:blocks     # 主题根执行；= pnpm --filter iro_blocks run build
-# 等价写法（仍可用）：cd inc/blocks && pnpm build
-# 实际命令：wp-scripts build src/index.js → inc/blocks/build/
-```
-
-### AI 面板（`inc/ai/`）
-
-```bash
-pnpm build:ai         # 主题根执行；= pnpm --filter ai run build
-pnpm dev:ai           # Vite dev server: https://0.0.0.0:5174
-```
-
-- 产物为 `inc/ai/dist/main.js` 与 `style.css`，PHP 直接引用；`inc/ai/dist/` 不提交，新 clone 必须构建，否则后台 AI 面板空白（PHP 不会报错）。
-
-### 其他
-
-- `frontend/types/*.d.ts`（unplugin 自动生成）**属于版本管理内容，需要提交**；`inc/blocks/build/**`、`inc/ai/dist/**` 与 `frontend/dist/**` 一样**不提交**。
-- `.github/workflows/update.yml` 指向已不存在的 `js/` 与 `Sakurairo_Scripts` 产物，属历史遗留，不要复用。
-
-### 提交前自检清单
-
-1. 按改动范围构建通过：`pnpm build:frontend` / `pnpm build:blocks` / `pnpm build:ai`（或整套 `pnpm build`，注意它会打包）。
-2. 若新增设置项：确认 CSF 字段、`iro_opt()` 读取、默认值三处一致。
-3. 若新增组件 JS：确认已在 `frontend/components/index.js`（或 `app/index.ts`）登记，并且初始化挂在 `_iro.hooks.onPageLoaded` 上。
-4. 若改动区块/AI 面板：本地已跑对应构建（产物不入库，但要落到工作区才会生效）。
-5. 若新增/修改 `_iro` 的成员（`hooks` / `bus` / `navigate` / `message` / `utils` 等）：同步 `frontend/types/iro.d.ts`，并在主题根跑 `pnpm --filter frontend exec tsc --noEmit`。
-6. PHP：`php -l <改动文件>` 全部通过，再人工复核模板标签、括号/引号闭合与 `<?php ?>` 配对。
-7. 若增删/升级依赖：只改成员自己的 `package.json`，然后回主题根跑 `pnpm install` 更新根 `pnpm-lock.yaml`；确认三个子目录里没有冒出 `pnpm-lock.yaml` 或 `pnpm-workspace.yaml`。
-8. 若改动翻译源：改 `translation/*.po`（不要手改 `languages/*.mo`），必要时用 `msgfmt` 重新编译。
+- 不引入新的第三方库，除非确实必要并同步更新锁文件；不修改 vendored 上游代码目录（更新检查器、CSF、Kirki 等）。
+- 优先复用已有机制（hook、事件总线、设置项、既有工具函数），而不是新增平行机制。
 
 ---
 
-## 6. 编码规范
+## 5. 构建与依赖
 
-### PHP
+- 依赖由**主题根的 pnpm workspace 统一管理**：`pnpm install` 只在主题根执行一次，依赖物理装在根 `node_modules/`，子工程目录里只有软链。
+- **不要在子工程目录里 `pnpm install`，也不要在那里新增 `pnpm-workspace.yaml` / 锁文件**：一旦出现，pnpm 会把该目录当成独立 workspace 根、静默忽略根锁文件，安装结果与提交的锁文件不一致且没有警告。
+- 锁文件只有一个；`packageManager` 只在根 `package.json` 声明；不要用 npm/yarn。
+- 根 `package.json` 脚本约定：`build:*` 分别构建单个工程，`dev` / `dev:ai` 分别起各工程的 dev server，`build` 是**发布打包**（并非单纯构建）——只想要构建产物时用分工程的脚本。
+- **构建产物一律不入库**：前台产物、区块产物、AI 面板产物都由本地构建生成（前端 unplugin 自动生成的类型声明文件属例外，需要提交）。缺失产物时 PHP 侧多为静默跳过，表现为「区块/面板不出现」而不是报错，新 clone 后必须自行构建。
+- 依赖解析按成员隔离，同一库的 CJS / ESM、不同框架版本可以在不同工程内并存。
+- 打包脚本会校验子目录无残留锁文件、冻结锁文件安装、全量构建，并在产物中剔除源码与开发文件。
 
-- `if (!defined('ABSPATH')) { exit; }` 加在**会产生副作用的文件**顶部：直接输出内容、注册 REST 路由或钩子的那些（现有 `inc/api/*.php`、`inc/functions/ai/*`、`inc/functions/comment/smiles*.php`、`sitemap.php`、`smtp.php`）。纯函数定义文件（如 `inc/functions/tools.php`）不加——这条规则管的是「能被直接访问并产生副作用」，不是无差别全覆盖。
-- 新函数统一加前缀 `iro_` 或 `sakurairo_`；**可能被重复 require 的核心函数**用 `if (!function_exists(...))` 包裹（见 `inc/theme_init/iro_opt.php` 的 `iro_opt` / `iro_opt_update`）。前缀规则不回溯：`siren_*`、`hachimi_*`、`DEFAULT_FEATURE_IMAGE()` 等历史名仍被模板调用，**不要改名**。
-- 新函数带参数与返回类型标注（`string $key`、`: void`、`callable $cb`），历史函数普遍没有；新代码按带标注的写法。
-- 输出必须转义：`esc_html()` / `esc_attr()` / `esc_url()` / `esc_js()` / `esc_html__()`。
-- 输入必须清洗：`sanitize_key()` / `sanitize_text_field()` / `intval()`；POST 读取可用 `iro_get_post_key()`（`inc/functions/tools.php`）。
-- **4 空格缩进，全仓库一致**——`opt/` 也是 4 空格。只有 vendored 库 `inc/libs/*`（wp-api-menus、Meting）与两个独立输出的后台皮肤 `inc/dash-scheme.php`、`inc/option-scheme.php` 用 tabs，在这些既有文件内保持原风格。
+### 5.1 后端构建产物的加载约定
 
-### PHP 组件模板（`frontend/components/**/*.php`）—— 类 Vue 风格
-
-组件模板是「PHP 版的 Vue 模板」，写法遵循：
-
-- **条件/循环用替代语法包裹 HTML**：`if / elseif / else / endif`、`foreach / endforeach`、`while / endwhile`、`switch / endswitch`，冒号紧贴条件，`endforeach;` 等独占一行并与被包裹的 HTML 同缩进层级。
-- **动态值一律用短标签内联输出**：`<?= ... ?>`（配合转义函数），不要为了拼字符串而先赋值再 `echo`。
-- **表达式内联在标签属性/文本中**，例如：
-
-```php
-<?php foreach (iro_opt("widget_font_choice", []) as $font): ?>
-    <button data-name="<?= $font["name"] ?>"><?= $font["name"] ?></button>
-<?php endforeach; ?>
-
-<?php if (has_post_thumbnail()) : ?>
-    <img src="<?= esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large')) ?>">
-<?php endif; ?>
-```
-
-- `style="..."` 里的 CSS 变量**顶格写**、不跟随标签缩进（见 `site/widget.php`）。
-- 模板要能在**局部渲染**下只输出片段：`global $iro_only_template;` 在文件首行声明，容器开合被条件劈开（见 `post/list.php`：`if (!$iro_only_template): ?>` 开 `<div>`，循环与分页之后再由 `<?php endif; ?>` 闭合）。见 §4.5。
-- **参考实现**：行文与变量的样板是 `post/list.php` 与 `site/widget.php`（零中间变量，表达式连同 `?? 默认值` 一起内联进属性）；`post/card/with_image.php` 只作替代语法与 `switch/endswitch` 的写法参考，它的 `$metas` / `$categories` 提取是**反例**（见下节「变量」）。循环内多分支见它的 `post_card_metas` 输出。
-- 历史文件里存在 `while (...) : ` 冒号前带空格、`&&`/`==` 两侧无空格与松散比较、单双引号混用（见 `post/list.php`）——**这些都是遗留，不要模仿**；新代码按本节规则写。
-- 函数组件以 `<?php iro_post_pagination(); ?>` 形式调用；结构性重复（容器开合）才抽成函数组件（如 `iro_content_container_start/end()`），其余保持单文件模板。
-
-### 注释
-
-- **非必要不加注释**，默认不写。
-- 仅在以下情况才写注释：
-  1. 说明**重要作用的实现**（关键机制、非显而易见的取舍）；
-  2. 该处**容易引发问题/踩坑**（如 PJAX 后失效、构建产物提交规则）；
-  3. **无法从代码本身检索到的外部行为**（如 WordPress 核心行为、WP 7.1 编辑器 iframe 只消费 `enqueue_block_assets`、浏览器/框架的隐式约定）。
-- 能直接从代码读懂的、逻辑直白的，**一律不注释**（不要写「循环输出文章列表」这类复述代码的注释）。
-- 形式分两级，且**源码里不使用普通的 `/* */` 块注释**（多行说明也连写多个 `//`，生成文件里的 `/* eslint-disable */` 除外）：
-  - **过程内的「为什么」用 `//`**：说明取舍、历史沿革、踩过的坑（如 `vite.config.js` 的 codeSplitting 分组理由、`post-sakura.js` 为何独立成入口）。
-  - **函数、全局对象、类型字段的契约用 `/** */`**：可单行也可多行，必要时也可给局部变量加单行 JSDoc（见 `frontend/components/comment/Smiles.vue`），以及说明「对应 PHP 的哪个字段」这类跨端对应关系（见 `frontend/types/iro.d.ts`）。
-- 反面样板与正面样板都在仓库里：`frontend/components/comment/form.ts` 中解释 WordPress 内核 nonce 行为的那段注释是**正面样板**（写的是代码里读不到的外部行为）；任何复述代码的注释都是反面样板。
-
-### 变量
-
-- **只使用一次的表达式一律内联**，不要先赋给变量再使用（如仅为取 `get_the_category()[0]` 而先写 `$categories = get_the_category();` —— 历史模板里存在此类写法，新代码不要沿用）。
-- 只有当同一结果被复用 ≥2 次、或为了显著提升可读性（长表达式拆解）时，才提取变量。
-- 模板里优先把表达式直接写进 `<?= ?>`，而不是在模板顶部堆一堆 `$xxx = ...;`。
-- **合规样板是 `post/list.php` 与 `site/widget.php`**（零中间变量，`iro_opt(...)["card_radius"] ?? 0.7` 这类连默认值一起内联进 `style`）；**反例就是 `post/card/with_image.php`** 的 `$metas` 与 `$categories`——它只在替代语法与 `switch` 上可参照，变量规则不要跟它。
-
-### JS / Vue / SCSS（`frontend/` 与 `inc/ai/`）
-
-- ESM + **4 空格缩进** + 双引号（与现有文件保持一致）。
-- 类型：`tsconfig` 为 `strict: false`，但 `noUnusedLocals/Parameters: true` —— **未使用的变量会导致类型检查报错**，删除多余声明。`inc/ai/` 目前未接入 tsc 检查，仍按同样风格书写。
-- 使用全局 `_iro`（直接写 `_iro`，不要重复声明 `window._iro`）。
-- 事件通信优先用 `_iro.bus`（mitt）与 PJAX 生命周期 hook。
-- 需要脱离主 bundle 独立运行的脚本（如 `site/captcha/captcha.js`）要自行兜底：先判 `window._iro?.hooks && !_iro.isBackend`（后台不派发 hook，得走直接挂载），否则从 `#iro_theme_config` 解析配置。注意写 `window._iro?.` 而不是 `window?._iro?.`——裸 `window` 不存在时可选链救不了它。
-- **请求工具按「所在工程的依赖上下文 + 工具自身的职责」选，不能一刀切，也不要按「内部/外部、GET/POST」这类想当然的分类去套**：
-  - **子包依赖决定可用手段**：三个工程依赖互相隔离，`inc/ai/package.json` **没有 axios**，所以 `inc/ai/**` 只能用 `fetch`（自带薄封装 `inc/ai/src/api.js`）；`inc/blocks/src` 完全不发请求。
-  - **`frontend/app/utils/api.js` 只是「仅 GET 的缓存封装」**：全文 9 行，`setupCache(axios.create(), { ttl: 5 分钟, methods: ["get"] })`，**没有 baseURL、没有拦截器、不注入 nonce**——它是缓存语义，不是通用请求工具。只用于「主题 REST 的**可缓存 GET 读**」（现有用例：分页、搜索索引、表情包列表）。
-  - **写操作**与**必须每次新鲜的读**用**裸 `axios`**（`frontend/` 内已由 unplugin 全局 auto-import，无需 import），并自行带 `X-WP-Nonce`。现有代码里刻意绕开 `api.js` 的两处就是 `app/plugins/postViews.js`（POST 上报）与 `site/captcha/builtin.vue`（`/captcha`，**被缓存 5 分钟就是 bug**）。
-  - **二进制 / `blob()`**、**原生表单提交**（目标不是 REST path）用 `fetch`。
-  - 判断不了时**跟所在文件的既有写法**，不要引入新范式。
-- SCSS 用 `@use ... as <语义命名>`（Dart Sass 模块语法），全站已统一（`frontend/style.scss` 与各分区 `index.scss`，如 `as page-post`）。**唯一例外是导入第三方 `.css`**——`components/post/hljs.scss` 的 `@import "highlight.js/styles/github-dark.css"`，`.css` 不适用 `@use`；除此之外不要用 `@import`。
-
-### 通用
-
-- 调用 shell 遵循 §2.1：命令输出一律重定向到日志文件再读文件（Linux/macOS 用 `/tmp/iro-*.log`，Windows 用 `$env:TEMP`），不依赖内置 shell 的回显。
-- 不引入新的第三方库，除非确实必要并同步更新 `pnpm-lock.yaml`（项目已内置 vue、element-plus、swup、animejs、tsparticles、markdown-it、katex、highlight.js、tocbot、medium-zoom、typed.js、@opentiny/tiny-robot 等）。
-- 不修改 `update-checker/vendor`、`update-checker/Puc`、`opt/csf`、`opt/customizer/kirki` —— 它们是 vendored 上游代码。
+- PHP 按**固定入口名**引用产物，因此入口文件名是契约，改变入口要同步 PHP。
+- 供不同页面单独加载的入口要保持独立（例如仅登录页用、仅特定文章排版用的样式/脚本），不要并入首屏入口，否则首屏会多下载。
+- 需要按需加载的模块用动态 `import`；但要确认构建分组不会把按需依赖提升进启动 chunk——首屏用不到的第三方依赖需要显式声明为惰性分组。
+- 共享代码必须落进显式分组：**入口 chunk 被别的 chunk 反向引用会导致同一模块被下载执行两次**，构建里有守卫会直接报错。
+- 首屏关键 chunk 由 PHP 反查产物文件名后预载；预载 URL 必须与实际 import 解析结果逐字一致，因此不要给 chunk 之间的 import 加查询串，保留内容哈希、由 PHP 按模式查找。
 
 ---
 
-## 7. 常见陷阱（踩过就不要重复踩）
+## 6. 验证与自检
 
-1. **JS 不登记就不会生效**：只创建 `.js` 文件而不在聚合入口 import，Vite 不会打包它。
-2. **顶层 DOM 操作在 PJAX 后失效**：必须放进 `_iro.hooks.onPageLoaded()`。
-3. **三个构建产物都不提交**：`frontend/dist`、`inc/blocks/build`、`inc/ai/dist` 都由本地构建产出，新 clone 必须先构建。`inc/blocks/build/` 缺失时 PHP 侧会静默跳过入队（见 `iro_blocks.php` 的 `file_exists` 判断），表现为「编辑器里没有 Sakurairo 区块」；`inc/ai/dist/` 缺失时后台 AI 面板就是空白，同样不报错。
-4. **Customizer 的 `iro_key` 写错**：预览看似正常，保存后设置丢失。
-5. **`style.css` 不是样式文件**：往里写 CSS 不会被加载（只有主题头）。
-6. **主题文件夹名必须为 `Sakurairo`**：否则触发 `inc/theme_init/check.php` 的重命名/告警逻辑。
-7. **编辑器 iframe 样式**：`iro_blocks.php` 的双重注册是必要的兼容处理。
-8. **分页/自定义 AJAX 链接要加 `no-pjax`**，否则会被 Swup 拦截，与局部渲染逻辑冲突。
-9. **PHP 改动必须过 `php -l`**：模板里 `<?php ?>` 配对、字符串闭合、替代语法（`endforeach;` 等）肉眼极易漏看，命令能挡掉绝大部分低级错误。
-10. **`pnpm build` 是打包而不是单纯构建**：它会执行 `package.sh`（冻结锁文件安装 + 构建 + 生成 zip）。只想构建请用 `pnpm build:frontend` / `build:blocks` / `build:ai`。
-11. **新增前台功能时 PHP 与 JS 都要登记**：漏掉任一侧都会「页面有结构但无交互」或「脚本打包了但没人用」。
-12. **`frontend/types/iro.d.ts` 必须保持脚本形态**：加了顶层 `import`/`export` 就变成模块，`_iro` / `Window` 的全局声明随即失效，全项目报 `TS2304 Cannot find name '_iro'`。要引用外部类型请用 `import("xxx").Yyy` 这种内联写法。
-13. **在 `.ts` / `.vue` 里写了 `_iro` 却报「找不到名称」**：说明该文件没被 tsconfig 的 `include` 覆盖（`frontend/tsconfig.json` 只含 `types/`、`app/`、`components/`、`main.js`），而不是语法错误。
-14. **别给 REST nonce 换 action**：`X-WP-Nonce` 头里必须放 `wp_create_nonce('wp_rest')`。内核 `rest_cookie_check_errors()`（`wp-includes/rest-api.php`）会拿这个头按 `wp_rest` 先校验一遍，用自定义 action 只会拿回 `rest_cookie_invalid_nonce`，连 `permission_callback` 都进不去。
-15. **不要在 `frontend/`、`inc/blocks/`、`inc/ai/` 里跑 `pnpm install`**：这些目录只要出现自己的 `pnpm-workspace.yaml`（哪怕里面只有 `allowBuilds`），pnpm 就把该目录当成独立 workspace 根，静默生成子锁文件并彻底无视根 `pnpm-lock.yaml`，安装结果与提交的锁文件不一致且没有任何警告。依赖统一在主题根装。
-16. **子目录里的 `node_modules` 只是软链农场**：物理包全部在根 `node_modules/`（约 1G），子目录各几十 KB。删掉子目录的 `node_modules` 不影响仓库，回主题根重跑 `pnpm install` 会重新生成；不要为了「只装某个工程」而去子目录单独装。
-17. **AI 能力有 WP 版本门槛**：内置 AI Client 是 WordPress 7.0 引入的。`inc/functions/ai/provider.php` 与 `tools.php` 都靠「类/函数是否存在」提前 `return`，`options.php` 也在 `iro_ai_generate` 缺失时直接退出、不注册后台入口。低于 WP 7.0 时后台看不到 AI 工具是预期行为，不要当 bug 去补依赖或报错。
-18. **AI 面板用 Shadow DOM 隔离样式**：面板里的样式由 `inc/ai/src/main.js` 从文档克隆进 Shadow DOM（dev 下靠 MutationObserver 跟随 Vite 样式 HMR）。给面板加样式时不要假设全局 CSS 会命中，也不要随便改这段隔离逻辑。
-19. **翻译不要直改 `.mo`**：编辑 `translation/*.po`；`languages/*.mo` 是 `.gitignore` 的编译产物，改了既不入库也会在下次打包时被覆盖。
-20. **`frontend/app/utils/api.js` 是缓存封装，不是通用请求工具**：它只对 GET 做 5 分钟缓存（全文 9 行，无 baseURL、无拦截器、不注入 nonce）。拿它发写操作，或去取**必须每次新鲜**的接口（如 `/captcha`），都会被缓存语义坑到——现有代码里 `app/plugins/postViews.js`（POST 上报）与 `site/captcha/builtin.vue`（`/captcha`）都是**刻意改用裸 `axios`** 绕开它的。另注意 `inc/ai` 子包没有 axios 依赖，那里只能用 `fetch`。
-21. **`frontend/types/iro.d.ts` 的类型错误会被 `skipLibCheck` 掩盖**：tsconfig 继承 `@vue/tsconfig/tsconfig.dom.json`，声明文件整体跳过检查。该文件第 72 行的 `hitokoto_apis?: Array[string]` 实为 `Array<string>` 之误，而默认 `tsc --noEmit` 依然 exit 0——只有 `--skipLibCheck false` 才会暴露（并同时带出其它错误）。**改这个文件不要指望类型检查兜底。**
+项目**没有** PHP 单元测试框架，也没有提交式的格式/风格检查命令（编辑器插件已覆盖格式化，提交即视为格式检查通过）。因此验证手段是：
 
----
+1. PHP 改动先跑语法检查，再人工复核模板标签、括号/引号闭合与 `<?php ?>` 配对。
+2. 前端改动按范围跑对应构建（或类型检查）——`.js` 只做智能提示级别的纳入，类型检查主要覆盖 `.ts`。
+3. 新增设置项：确认后台字段、读取默认值、映射键一致。
+4. 新增组件：确认 PHP 与 JS 两侧都已登记，且初始化挂在页面对应的 hook 上。
+5. 新增/修改 `_iro` 成员：同步全局类型声明并跑前台类型检查。
+6. 增删依赖：只改对应工程的 `package.json`，回主题根更新锁文件，确认子目录没有冒出锁文件。
+7. 改翻译：只改源稿，必要时重新编译。
+8. vendored 目录与打包脚本剔除的开发文件不要改出依赖。
 
-## 8. 相关文档
+### 6.1 调用 shell 的约定
 
-- 使用文档：<https://docs.fuukei.org>
-- 上游仓库：<https://github.com/mirai-mamori/Sakurairo>
-- 问题反馈：`.github/ISSUE_TEMPLATE/`（bug / feature / help）
+- 命令**尽量重定向输出到文件再读文件**，不要依赖裸命令回显；需要一次取回时用「重定向 + tail」的形式。
+- 长耗时命令（安装、构建、打包）放后台并落盘，之后读日志判断成败。
+- 日志放系统临时目录、命名带统一前缀，避免污染仓库工作区。
+- **以日志内容为准**：一次没拿到输出不代表成功或失败，不要据此下结论或重复执行。
