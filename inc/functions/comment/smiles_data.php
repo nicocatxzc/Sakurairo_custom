@@ -231,7 +231,7 @@ function iro_smiley_asset_context()
     }
 
     return $context = [
-        'base' => (string) iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/'),
+        'base' => (string) iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH),
         'type' => iro_is_webp() ? 'webp' : 'png',
     ];
 }

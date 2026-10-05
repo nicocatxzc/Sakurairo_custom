@@ -3,7 +3,7 @@ if (class_exists('Sakurairo_CSF')) {
 
     $prefix = 'iro_options';
 
-    $vision_resource_basepath = get_option('iro_options')['vision_resource_basepath'] ?? 'https://s.nmxc.ltd/sakurairo_vision/@3.0/';
+    $vision_resource_basepath = get_option('iro_options')['vision_resource_basepath'] ?? BASIC_VISION_RESOURCE_PATH;
 
     Sakurairo_CSF::createOptions($prefix, [
         'menu_title' => __('iro主题设置', 'sakurairo'),
@@ -2961,7 +2961,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'text',
                 'title' => __('静态资源基础路径', 'sakurairo'),
                 'desc' => __('该链接的目录结构需要与 fuukei 官方提供的 <a href="https://github.com/Fuukei/Sakurairo_Vision">Sakurairo Vision</a> 仓库保持一致，否则部分资源可能会出现 404。默认采用 <a href="https://waf.pro/">WAFPRO</a> 官方提供的图源。', 'sakurairo'),
-                'default' => "https://s.nmxc.ltd/sakurairo_vision/@3.0/"
+                'default' => BASIC_VISION_RESOURCE_PATH
             ],
 
             [

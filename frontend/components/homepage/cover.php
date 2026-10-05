@@ -2,8 +2,8 @@
     <div class="homepage-cover <?= is_home() ? '' : 'hide' ?>"
         style="
         --cover-height: <?= iro_opt('cover_height', 100) ?>dvh; 
-        --cover-filter-grid: url(<?= iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') ?>basic/grid.png);
-        --cover-filter-dot: url(<?= iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') ?>basic/dot.gif);">
+        --cover-filter-grid: url(<?= iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH) ?>basic/grid.png);
+        --cover-filter-dot: url(<?= iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH) ?>basic/dot.gif);">
         <?php if (iro_opt("cover_video", false)): ?>
             <video class="cover-video" src="<?= iro_opt("cover_video_source") ?>" <?= iro_opt("cover_video_loop", false) ? "loop" : "" ?> muted autoplay></video>
         <?php endif; ?>

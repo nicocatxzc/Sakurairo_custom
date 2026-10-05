@@ -12,6 +12,8 @@ define('IRO_VERSION', wp_get_theme()->get('Version'));
 define('BUILD_VERSION', '3');
 define('INT_VERSION', '20.1.0');
 
+define('BASIC_VISION_RESOURCE_PATH', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/');
+
 // 设置框架
 require_once get_template_directory() . '/inc/theme_init/iro_opt.php';
 

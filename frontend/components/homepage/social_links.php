@@ -67,7 +67,7 @@ $icons_map = [
                         title="<?= esc_attr(__("点击访问", 'sakurairo') . ($item['title'] ?? '')) ?>">
                         <img
                             loading="lazy"
-                            src="<?= esc_url(iro_media_optimize_image_url(iro_opt('vision_resource_basepath', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/') . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp')) ?>"
+                            src="<?= esc_url(iro_media_optimize_image_url(iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH) . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp')) ?>"
                             class="social-img nuxtpic"
                             alt="<?= esc_attr($item['title'] ?? '') ?>" />
                     </a>

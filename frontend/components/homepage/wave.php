@@ -10,7 +10,7 @@ $iro_wave_light = iro_opt("homepage_wave_light", "water");
 $iro_wave_dark = iro_opt("homepage_wave_dark", "star");
 $iro_wave_light = in_array($iro_wave_light, $iro_wave_modes, true) ? $iro_wave_light : "water";
 $iro_wave_dark = in_array($iro_wave_dark, $iro_wave_modes, true) ? $iro_wave_dark : "star";
-$iro_wave_basic = iro_opt("vision_resource_basepath", "https://s.nmxc.ltd/sakurairo_vision/@3.0/") . "basic/";
+$iro_wave_basic = iro_opt("vision_resource_basepath", BASIC_VISION_RESOURCE_PATH) . "basic/";
 ?>
 <div
     class="iro-wave iro-wave--<?= iro_opt("homepage_wave_position", "cover") === "window" ? "window" : "cover" ?>"
