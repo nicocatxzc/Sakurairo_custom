@@ -47,7 +47,6 @@ _iro.hooks.onPageLoaded(() => {
     POWERMODE.colorful = true;
     POWERMODE.shake = false;
     textarea.addEventListener("input", POWERMODE);
-    console.log(POWERMODE)
 
     // 回复目标
     let replyTarget: any = {};
