@@ -3,7 +3,7 @@
 // 统一换算成波浪容器自身的局部坐标，封面是相对定位时同样成立。
 
 const TICK = 1000;
-const DRIFT_STEP = 40; // 每秒的水平位移，决定横穿水面要多快
+const DRIFT_STEP = 20; // 每秒的水平位移，决定横穿水面要多快
 const RESPAWN_DELAY = 1500; // 游出可视区后隔多久换一个重新游入
 const BOB_AMPLITUDE = 3;
 const DROP_DURATION = 800; // 与 .iro-wave__floating--dropping 的 0.8s 对齐
