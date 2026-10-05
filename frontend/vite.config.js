@@ -17,11 +17,38 @@ const LAZY_VENDOR_GROUPS = [
     // 漏掉它就会被并进启动 chunk，把整个粒子集重新绑回首屏。
     ["vendor-particles", ["@tsparticles", "tsparticles"]],
     ["vendor-highlight", ["highlight\\.js"]],
-    ["vendor-markdown", ["markdown-it", "markdown-it-texmath", "katex"]],
+    // markdown-it 光写包名不够：它的依赖不列进来就会被 iro-core 的 node_modules 兜底规则绑进启动 chunk。
+    [
+        "vendor-markdown",
+        [
+            "markdown-it",
+            "markdown-it-texmath",
+            "katex",
+            "entities",
+            "linkify-it",
+            "mdurl",
+            "punycode\\.js",
+            "uc\\.micro",
+        ],
+    ],
     // element-plus 只被按需加载的 Vue 组件与 _iro.message 动态引用，单独成 chunk 才不会回流进启动链
     ["vendor-element", ["element-plus"]],
     // aplayer 只在页脚播放器里按需加载
     ["vendor-aplayer", ["aplayer"]],
+];
+
+// 只被「按需 chunk」引用的包：不必单独成 chunk，但要挡住 iro-core 的 node_modules 兜底规则，
+// 否则它们会被并进 iro-core，跟首屏一起下载。
+// 注意 lodash-es / swup / axios / @vueuse / animejs / colorthief 是启动链上真正要用的，不能列在这里：
+// 一旦把它们移出 iro-core，引用它们的 chunk 会被反向拉成首屏阻塞资源。
+const LAZY_COMPONENT_PACKAGES = [
+    "vue-draggable-resizable",
+    "activate-power-mode",
+    "vue-cloudflare-turnstile",
+    "md5",
+    "crypt",
+    "charenc",
+    "is-buffer",
 ];
 
 // pnpm 的真实路径是 node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>/...
@@ -31,7 +58,9 @@ const pkgTest = (names) =>
     );
 
 // 按需大件的匹配器：启动 group 靠它把自己排除在这些包之外
-const LAZY_VENDOR_TESTS = LAZY_VENDOR_GROUPS.map(([, names]) => pkgTest(names));
+const LAZY_VENDOR_TESTS = LAZY_VENDOR_GROUPS.map(([, names]) => pkgTest(names)).concat(
+    pkgTest(LAZY_COMPONENT_PACKAGES),
+);
 const isLazyVendor = (id) => LAZY_VENDOR_TESTS.some((test) => test.test(id));
 
 export default defineConfig(() => {
@@ -163,6 +192,8 @@ export default defineConfig(() => {
                         groups: [
                             {
                                 name: "iro-core",
+                                // 只能用函数：按 id 排除按需大件（isLazyVendor），
+                                // 再兜底收拢 node_modules 与主题运行时。
                                 test: (id) =>
                                     !/\.s?css$/.test(id) &&
                                     !isLazyVendor(id) &&

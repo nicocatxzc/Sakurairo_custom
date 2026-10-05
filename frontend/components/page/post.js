@@ -1,7 +1,7 @@
 _iro.hooks.onPageLoaded(async () => {
     const toc = document.querySelector(".toc");
     if (toc) {
-        // tocbot 只在存在目录的文章页按需加载
+        // tocbot 已打进启动 chunk，这里只控制初始化时机
         const { default: tocbot } = await import("tocbot");
         tocbot.init({
             tocSelector: "#toc",

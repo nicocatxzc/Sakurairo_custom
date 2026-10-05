@@ -139,7 +139,7 @@ _iro.hooks.onPageLoaded(async () => {
         const typed_el = document.querySelector("#typed");
         if (typed_el) {
             typed_el.innerHTML = "";
-            // typed.js 仅首页封面需要，按需加载
+            // typed.js 已打进启动 chunk，这里只控制初始化时机
             const { default: Typed } = await import("typed.js");
             if (document.querySelector("#typed") === typed_el) {
                 typedInstance = new Typed(typed_el, config);

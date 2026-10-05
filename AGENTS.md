@@ -64,7 +64,7 @@ Sakurairo/
 ├── frontend/                # ★ 前台源码（Vite 工程；workspace 成员，锁文件在主题根）
 │   ├── main.js              # 入口：样式 + app + components
 │   ├── style.scss / layout.scss / icons.scss
-│   ├── vite.config.js       # 三入口 app/login/post-sakura、手动 codeSplitting、入口反向引用守卫、HTTPS dev server
+│   ├── vite.config.js       # 三入口 app/login/post-sakura、手动 codeSplitting、入口反向引用守卫、chunk 全量内容哈希、HTTPS dev server
 │   ├── package.json / tsconfig.json
 │   ├── app/                 # 客户端核心（非组件）
 │   │   ├── index.ts         # window._iro 命名空间 + hook 系统 + 配置解析
@@ -296,7 +296,7 @@ pnpm install          # 唯一一次安装：frontend / inc/blocks / inc/ai 的�
 ```bash
 cd frontend           # 以下命令在 frontend/ 里执行
 pnpm dev              # Vite dev server: https://0.0.0.0:5173（HMR host = "wordpress"）
-pnpm build            # 产出 frontend/dist/{app.js,login.js,style.css,login.css,vendor-*.js,assets/*}
+pnpm build            # 产出 frontend/dist/{app.js,login.js,style.css,login.css,iro-core.*.js,rolldown-runtime.*.js,vendor-*.js,assets/*}
 pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、components/、main.js）
 ```
 
@@ -306,7 +306,10 @@ pnpm exec tsc --noEmit  # 类型检查（tsconfig 已覆盖 types/、app/、comp
 - `frontend/dist/` 已被 `.gitignore`，**不要提交**（`inc/blocks/build/`、`inc/ai/dist/` 同样不提交）。
 - Vite 产物命名由 `assetFileNames` 定制：`app.css` → `style.css`，`login.css` → `login.css`（**登录页皮肤 + 验证码样式，由 `wp-login.php` 单独加载**，入口 `components/login.js`），`post-sakura.css` → `post-sakura.css`（**文章排版样式，仅在 `page_style` 选 Sakura 时由 PHP 按需加载**，入口 `components/post/post-sakura.js`，刻意不并进 `post/index.js`，否则会被打进首屏 `style.css`）。主入口固定为 `app.js`（PHP 以 `app.js?ver=INT_VERSION` 引用）。
 - **验证码样式两处都要有，但来源只有一份**：`components/site/captcha/captcha.scss` + Vue 组件（`builtin.vue`）原先是 `<style scoped>`，现已并入 `captcha.scss`。前台经 `components/site/index.scss` 进 `style.css`（首屏自带，**不额外发请求**）；登录页经 `components/login.js` 进 `login.css`。登录页皮肤（`components/login.scss`）**只**在 `login.js` 里引入，因此不会跟着前台进 `style.css`——这正是当初「后台样式污染前台」的成因，`components/site/captcha/captcha.js` 不要再 import `login.scss`。
+- **验证码 JS 按需加载**：`components/site/index.js` 在 `_iro.hooks.onPageLoaded` 里检测到 `.captcha` 容器才 `import("./captcha/captcha")`，首页/列表页因此完全不下载这段（连带它引的 `builtin.vue` / `turnstile.vue`）。登录页仍由 `components/login.js` 静态引入同一份模块，两边共用同一个 chunk——那条静态 import 不能删。
 - **入口反向引用会被构建直接报错**：`vite.config.js` 里的 `iro-entry-import-guard` 插件一旦发现非入口 chunk `import "app.js"` 就终止构建。原因是「入口 chunk 被别的 chunk 反向引用」会让浏览器把 `app.js?ver=...` 与 `./app.js` 当作两份模块图、整包下载执行两次。被多处共享的代码必须落进 `codeSplitting.groups`（现有 `vendor-*` 与 `iro-core`）。
+- **`codeSplitting.groups` 的 `node_modules` 兜底会把按需包也捞进启动 chunk**：`iro-core` 的匹配器覆盖整个 `node_modules`，所以任何被 `await import()` 的第三方包，只要没写进 `LAZY_VENDOR_GROUPS`，都会被打进首屏。新增按需依赖时：首屏用不到的加进 `LAZY_VENDOR_GROUPS`（独立 chunk）或 `LAZY_COMPONENT_PACKAGES`（回到引用它的动态 chunk），首屏常驻的（如 `typed.js` / `medium-zoom` / `tocbot`）什么都不用加。反过来，把启动链真正要用的包（`lodash-es` / `swup` / `axios` / `@vueuse` / `animejs` / `colorthief`）移出 `iro-core`，会让引用它们的 chunk（典型是 `vendor-element`）被反向拉成首屏阻塞资源。
+- **首屏 chunk 由 PHP 按文件名反查后预载**：`app.js` 以 `?ver=INT_VERSION` 加载，它静态 import 的 chunk 却走相对路径，浏览器要先下完并解析 `app.js` 才会发现 `iro-core`（200 KB 级）与 rolldown 运行时，首屏关键路径因此多一次串行往返。预载这两个 chunk 有两个硬约束：`<link rel="modulepreload">` 的 URL 必须与相对 import 的解析结果**逐字一致**（加了 `?ver=` 会被当成第二份模块图重复下载），而 Vite **不提供**给 chunk 之间的 import 说明符加查询串的手段（`experimental.renderBuiltUrl` 会被以 `host=js` 调用，但实测只改 `__vite__mapDeps`，真正的 `import ... from` 仍是裸路径，用了反而会让按需 chunk 被下载两遍）。因此 chunk 一律保留内容哈希，由 `inc/functions/enqueue_assets.php` 的 `iro_dist_chunk_file()` 在 `frontend/dist` 里按 `iro-core.<hash>.js` / `rolldown-runtime.<hash>.js` 模式反查（每次请求一次 `scandir`），chunk 名怎么变都不用手工同步。另外 rolldown 运行时模块（`\0rolldown/runtime.js`）不参与 `codeSplitting.groups` 匹配，单入口构建实测也照样独立成 chunk，任何分组都并不进 `app.js`。
 - `pnpm build` 不做类型检查；`.vue` 的检查需 `vue-tsc`，但当前 `vue-tsc` 与工程内的 `typescript@7` 不兼容（`ERR_PACKAGE_PATH_NOT_EXPORTED: './lib/tsc'`），只能用 `tsc` 覆盖 `.ts`/`.js`。
 - 构建/类型检查遵循 §2.1 的 shell 约定：`pnpm build > /tmp/iro-fe-build.log 2>&1`，然后读日志判断成败。
 - `components/**/*.js` 是 `checkJs: false` 的 JS：纳入 tsconfig 只为拿到 `_iro` 等智能提示，不会因 JS 里的小毛病报错。

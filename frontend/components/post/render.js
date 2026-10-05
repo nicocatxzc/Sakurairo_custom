@@ -31,7 +31,7 @@ async function initLightbox() {
         }
     });
 
-    // 初始化 medium-zoom（按需加载，避免首屏下载）
+    // medium-zoom 已打进启动 chunk，这里只控制初始化时机
     if (images.length) {
         const { default: mediumZoom } = await import("medium-zoom");
         await import("medium-zoom/dist/style.css");
