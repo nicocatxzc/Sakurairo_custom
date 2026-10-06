@@ -301,11 +301,11 @@ function iro_media_parse_modifiers(string $modifiers): array|WP_Error
 
                 if (
                     $format === 'avif'
-                    && !function_exists('imageavif')
+                    && !iro_media_avif_supported()
                 ) {
                     return new WP_Error(
                         'avif_not_supported',
-                        'This GD build does not support AVIF.'
+                        'Neither Imagick nor GD can write AVIF here.'
                     );
                 }
 
@@ -443,9 +443,124 @@ function iro_media_resolve_source(
     return $candidate;
 }
 
+/**
+ * 图像处理后端：优先 Imagick（能处理多帧动图），没有就退回 GD。
+ */
+function iro_media_has_imagick(): bool
+{
+    return class_exists('Imagick');
+}
+
+function iro_media_imagick_writes(string $format): bool
+{
+    return Imagick::queryFormats(strtoupper($format)) !== [];
+}
+
+function iro_media_webp_supported(): bool
+{
+    return iro_media_has_imagick()
+        ? iro_media_imagick_writes('webp')
+        : function_exists('imagewebp');
+}
+
+function iro_media_avif_supported(): bool
+{
+    return iro_media_has_imagick()
+        ? iro_media_imagick_writes('avif')
+        : function_exists('imageavif');
+}
+
+/**
+ * 源图是不是多帧动图。
+ *
+ * 只看文件头：GIF 看 NETSCAPE 循环块与图形控制块，
+ * WebP 看 ANIM 块，不解码整图。
+ */
+function iro_media_source_is_animated(string $path): bool
+{
+    $head = (string) @file_get_contents(
+        $path,
+        false,
+        null,
+        0,
+        4096
+    );
+
+    if (str_starts_with($head, 'GIF')) {
+        return str_contains($head, 'NETSCAPE2.0')
+            || substr_count($head, "\x21\xF9\x04") > 1;
+    }
+
+    if (
+        str_starts_with($head, 'RIFF')
+        && str_contains(substr($head, 0, 16), 'WEBP')
+    ) {
+        return str_contains($head, 'ANIM');
+    }
+
+    return false;
+}
+
+/**
+ * 不处理，直接把原图交出去（动图专用）。
+ *
+ * @param array<string,mixed> $options
+ * @return array{path:string,mime:string,etag:string}
+ */
+function iro_media_passthrough(
+    string $source_path,
+    array $options
+): array {
+
+    $info = @getimagesize($source_path);
+
+    return [
+        'path' => $source_path,
+        'mime' => (string) (
+            $info['mime'] ?? 'application/octet-stream'
+        ),
+        'etag' => '"'
+            . iro_media_cache_key($source_path, $options)
+            . '"',
+    ];
+}
+
+function iro_media_destroy(Imagick|GdImage $image): void
+{
+    if ($image instanceof Imagick) {
+        $image->clear();
+
+        return;
+    }
+
+    @imagedestroy($image);
+}
+
 function iro_media_create_from_file(
-    string $path
-): GdImage|WP_Error {
+    string $path,
+    ?string $format = null
+): Imagick|GdImage|WP_Error {
+
+    /*
+     * Imagick 优先：它认得动图，GD 只认第一帧。
+     * 但它写不了目标格式时仍然要让位给 GD。
+     */
+    if (
+        iro_media_has_imagick()
+        && (
+            $format === null
+            || iro_media_imagick_writes($format)
+        )
+    ) {
+        try {
+            return new Imagick($path);
+        } catch (Throwable $e) {
+            return new WP_Error(
+                'decode_failed',
+                $e->getMessage()
+            );
+        }
+    }
 
     $type = @exif_imagetype($path);
 
@@ -563,14 +678,21 @@ function iro_media_prepare_canvas(
  *
  * width + height：
  *     cover，居中裁剪到精确尺寸
+ *
+ * 任何一边都不放大：
+ *     目标超过原图的边按原图截断，
+ *     只把大于参数的那一边居中裁剪（对边各裁一半）
+ *
+ * 两个后端共用这一份几何计算，避免规则跑偏。
+ *
+ * @param array<string,mixed> $options
+ * @return array{width:int,height:int,x:int,y:int,crop_width:int,crop_height:int}|null
  */
-function iro_media_resize(
-    GdImage $source,
+function iro_media_resize_geometry(
+    int $src_w,
+    int $src_h,
     array $options
-): GdImage {
-
-    $src_w = imagesx($source);
-    $src_h = imagesy($source);
+): ?array {
 
     $target_w = $options['width'] ?? null;
     $target_h = $options['height'] ?? null;
@@ -582,7 +704,7 @@ function iro_media_resize(
         $target_w === null
         && $target_h === null
     ) {
-        return $source;
+        return null;
     }
 
     /*
@@ -608,22 +730,15 @@ function iro_media_resize(
         );
     }
 
-    if (
-        $target_w * $target_h
-        > IRO_MEDIA_MAX_PIXELS
-    ) {
-        imagedestroy($source);
-
-        throw new RuntimeException(
-            'Target image is too large.'
-        );
-    }
-
-    $canvas = iro_media_prepare_canvas(
-        (int) $target_w,
-        (int) $target_h,
-        (string) $options['format']
-    );
+    /*
+     * 不放大：
+     *
+     * 目标尺寸超过原图时按原图截断，
+     * 后面的 cover 逻辑便只会裁掉大于参数的那一边，
+     * 另一边保持原始像素，且从中心对半裁。
+     */
+    $target_w = min($target_w, $src_w);
+    $target_h = min($target_h, $src_h);
 
     $src_x = 0;
     $src_y = 0;
@@ -670,22 +785,118 @@ function iro_media_resize(
         }
     }
 
+    return [
+        'width'       => (int) $target_w,
+        'height'      => (int) $target_h,
+        'x'           => $src_x,
+        'y'           => $src_y,
+        'crop_width'  => $crop_w,
+        'crop_height' => $crop_h,
+    ];
+}
+
+function iro_media_resize(
+    Imagick|GdImage $source,
+    array $options
+): Imagick|GdImage {
+
+    $imagick = $source instanceof Imagick;
+
+    $geometry = iro_media_resize_geometry(
+        $imagick
+            ? $source->getImageWidth()
+            : imagesx($source),
+        $imagick
+            ? $source->getImageHeight()
+            : imagesy($source),
+        $options
+    );
+
+    if ($geometry === null) {
+        return $source;
+    }
+
+    if (
+        $geometry['width'] * $geometry['height']
+        > IRO_MEDIA_MAX_PIXELS
+    ) {
+        throw new RuntimeException(
+            'Target image is too large.'
+        );
+    }
+
+    if ($imagick) {
+        return iro_media_resize_imagick($source, $geometry);
+    }
+
+    $canvas = iro_media_prepare_canvas(
+        $geometry['width'],
+        $geometry['height'],
+        (string) $options['format']
+    );
+
     imagecopyresampled(
         $canvas,
         $source,
         0,
         0,
-        $src_x,
-        $src_y,
-        $target_w,
-        $target_h,
-        $crop_w,
-        $crop_h
+        $geometry['x'],
+        $geometry['y'],
+        $geometry['width'],
+        $geometry['height'],
+        $geometry['crop_width'],
+        $geometry['crop_height']
     );
 
-    imagedestroy($source);
-
     return $canvas;
+}
+
+/**
+ * Imagick 分支：动图先合并出完整画布，再逐帧裁剪缩放，
+ * 帧延时与循环次数原样保留。
+ *
+ * @param array{width:int,height:int,x:int,y:int,crop_width:int,crop_height:int} $geometry
+ */
+function iro_media_resize_imagick(
+    Imagick $source,
+    array $geometry
+): Imagick {
+
+    $animated = $source->getNumberImages() > 1;
+
+    $frames = $animated
+        ? $source->coalesceImages()
+        : $source;
+
+    foreach ($frames as $frame) {
+
+        $frame->cropImage(
+            $geometry['crop_width'],
+            $geometry['crop_height'],
+            $geometry['x'],
+            $geometry['y']
+        );
+
+        /*
+         * 裁剪后画布原点必须归零，否则动图每帧都会带着偏移。
+         */
+        $frame->setImagePage(0, 0, 0, 0);
+
+        $frame->resizeImage(
+            $geometry['width'],
+            $geometry['height'],
+            Imagick::FILTER_LANCZOS,
+            1
+        );
+    }
+
+    if ($animated) {
+        $source->clear();
+
+        $frames->setIteratorIndex(0);
+    }
+
+    return $frames;
 }
 
 
@@ -728,10 +939,18 @@ function iro_media_cache_key(
  * @return array{mime:string,extension:string}|WP_Error
  */
 function iro_media_encode(
-    GdImage $image,
+    Imagick|GdImage $image,
     string $cache_path,
     array $options
 ): array|WP_Error {
+
+    if ($image instanceof Imagick) {
+        return iro_media_encode_imagick(
+            $image,
+            $cache_path,
+            $options
+        );
+    }
 
     $format  = $options['format'];
     $quality = $options['quality'];
@@ -924,6 +1143,177 @@ function iro_media_encode(
 }
 
 /**
+ * Imagick 编码：WebP 保留动图（逐帧写入），其余格式只能写第一帧。
+ *
+ * @return array{mime:string,extension:string}|WP_Error
+ */
+function iro_media_encode_imagick(
+    Imagick $image,
+    string $cache_path,
+    array $options
+): array|WP_Error {
+
+    $format  = (string) $options['format'];
+    $quality = $options['quality'];
+
+    $extensions = [
+        'webp' => 'webp',
+        'jpeg' => 'jpg',
+        'png'  => 'png',
+        'avif' => 'avif',
+    ];
+
+    if (!isset($extensions[$format])) {
+        return new WP_Error(
+            'invalid_format',
+            'Unsupported output format.'
+        );
+    }
+
+    if (!iro_media_imagick_writes($format)) {
+        return new WP_Error(
+            $format . '_not_supported',
+            'Imagick cannot write this format.'
+        );
+    }
+
+    $animated = $format === 'webp'
+        && $image->getNumberImages() > 1;
+
+    try {
+
+        $image->setFormat($format);
+
+        switch ($format) {
+
+            case 'webp':
+
+                if ($animated) {
+
+                    /*
+                     * 动图源（GIF 之类）本身就是有损调色板，
+                     * 无损重编码只会比原图还大，统一走有损最高档。
+                     */
+                    $image->setIteratorIndex(0);
+
+                    $image->setImageCompressionQuality(
+                        (int) min(99, $quality ?? 100)
+                    );
+
+                    break;
+                }
+
+                /*
+                 * 与 GD 分支保持一致：
+                 *
+                 * quality = 100 或未指定 => 无损，
+                 * 其余 => 有损。
+                 */
+                if ($quality === null || $quality === 100) {
+                    $image->setOption(
+                        'webp:lossless',
+                        'true'
+                    );
+                } else {
+                    $image->setImageCompressionQuality(
+                        (int) $quality
+                    );
+                }
+
+                break;
+
+            case 'jpeg':
+
+                /*
+                 * JPEG 没有 alpha，统一压到白底，与 GD 分支一致。
+                 */
+                $image->setIteratorIndex(0);
+
+                $image->setImageBackgroundColor('#ffffff');
+
+                $image->setImageAlphaChannel(
+                    Imagick::ALPHACHANNEL_REMOVE
+                );
+
+                $image->setImageCompression(
+                    Imagick::COMPRESSION_JPEG
+                );
+
+                $image->setImageCompressionQuality(
+                    (int) ($quality ?? 85)
+                );
+
+                break;
+
+            case 'png':
+
+                /*
+                 * GD 的 0-9 压缩级换算方式照搬过来，
+                 * 保证换后端时体积量级一致。
+                 */
+                $image->setIteratorIndex(0);
+
+                $image->setOption(
+                    'png:compression-level',
+                    (string) max(
+                        0,
+                        min(
+                            9,
+                            $quality === null
+                                ? 6
+                                : 9 - (int) round(
+                                    $quality * 9 / 100
+                                )
+                        )
+                    )
+                );
+
+                break;
+
+            case 'avif':
+
+                $image->setIteratorIndex(0);
+
+                $image->setImageCompressionQuality(
+                    (int) ($quality ?? 85)
+                );
+
+                break;
+        }
+
+        /*
+         * 必须写 coder 前缀：缓存临时文件没有后缀，
+         * 不带前缀时 Imagick 认不出目标格式，会按源格式（GIF 之类）写出去，
+         * 质量设置也会一起失效。
+         */
+        $target = $format . ':' . $cache_path;
+
+        $ok = $animated
+            ? $image->writeImages($target, true)
+            : $image->writeImage($target);
+    } catch (Throwable $e) {
+
+        return new WP_Error(
+            'encode_failed',
+            $e->getMessage()
+        );
+    }
+
+    if (!$ok) {
+        return new WP_Error(
+            'encode_failed',
+            'Imagick failed to encode image.'
+        );
+    }
+
+    return [
+        'mime'      => 'image/'
+            . ($format === 'jpeg' ? 'jpeg' : $format),
+        'extension' => $extensions[$format],
+    ];
+}
+
+/**
  * @return array{path:string,mime:string,etag:string}|WP_Error
  */
 function iro_media_generate(
@@ -976,21 +1366,52 @@ function iro_media_generate(
      * 读取原图。
      */
     $source = iro_media_create_from_file(
-        $source_path
+        $source_path,
+        (string) $options['format']
     );
 
     if (is_wp_error($source)) {
         return $source;
     }
 
-    $src_w = imagesx($source);
-    $src_h = imagesy($source);
+    $imagick = $source instanceof Imagick;
+
+    $frames = $imagick
+        ? $source->getNumberImages()
+        : 1;
+
+    $src_w = $imagick
+        ? $source->getImageWidth()
+        : imagesx($source);
+
+    $src_h = $imagick
+        ? $source->getImageHeight()
+        : imagesy($source);
+
+    /*
+     * 多帧动图：只有「Imagick + WebP」这一条路保得住动画，
+     * 没有 Imagick（GD 只解第一帧）或请求的是 JPEG/PNG/AVIF 时，
+     * 一律不处理，直接把原图交出去，绝不静帧化。
+     */
+    $animated = $frames > 1
+        || (!$imagick && iro_media_source_is_animated($source_path));
 
     if (
-        $src_w * $src_h
-        > IRO_MEDIA_MAX_PIXELS
+        $animated
+        && (!$imagick || $options['format'] !== 'webp')
     ) {
-        imagedestroy($source);
+        iro_media_destroy($source);
+
+        return iro_media_passthrough($source_path, $options);
+    }
+
+    if ($src_w * $src_h * $frames > IRO_MEDIA_MAX_PIXELS) {
+
+        iro_media_destroy($source);
+
+        if ($animated) {
+            return iro_media_passthrough($source_path, $options);
+        }
 
         return new WP_Error(
             'source_too_large',
@@ -1003,7 +1424,8 @@ function iro_media_generate(
      * 输出 WebP/PNG/AVIF 前转换到 truecolor。
      */
     if (
-        function_exists('imageistruecolor')
+        !$imagick
+        && function_exists('imageistruecolor')
         && function_exists('imagepalettetotruecolor')
         && !imageistruecolor($source)
     ) {
@@ -1021,8 +1443,10 @@ function iro_media_generate(
         /*
          * 如果 resize 没接管 source，则安全释放。
          */
-        if ($source instanceof GdImage) {
-            @imagedestroy($source);
+        iro_media_destroy($source);
+
+        if ($animated) {
+            return iro_media_passthrough($source_path, $options);
         }
 
         return new WP_Error(
@@ -1037,7 +1461,7 @@ function iro_media_generate(
     );
 
     if ($tmp_path === false) {
-        imagedestroy($output);
+        iro_media_destroy($output);
 
         return new WP_Error(
             'cache_temp_failed',
@@ -1054,12 +1478,29 @@ function iro_media_generate(
         $options
     );
 
-    imagedestroy($output);
+    iro_media_destroy($output);
 
     if (is_wp_error($encoded)) {
         @unlink($tmp_path);
 
+        if ($animated) {
+            return iro_media_passthrough($source_path, $options);
+        }
+
         return $encoded;
+    }
+
+    /*
+     * 动图转码不划算时
+     * 交回原图，不让页面变重。
+     */
+    if (
+        $animated
+        && @filesize($tmp_path) >= @filesize($source_path)
+    ) {
+        @unlink($tmp_path);
+
+        return iro_media_passthrough($source_path, $options);
     }
 
     $final_path =

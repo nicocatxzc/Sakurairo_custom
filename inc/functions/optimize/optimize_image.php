@@ -180,15 +180,26 @@ function iro_media_optimize_image_url(
         }
 
         /*
-         * 已经是优化路由则不重复改写路径。
+         * 已经是优化路由则不重复改写路径；
+         * 没有 Imagick 时动图只能静帧化（GD 只解第一帧），
+         * 所以 GIF 保持原始 URL，宁可不优化也不毁动画。
          */
         if (
             str_starts_with(
                 $path_for_route,
                 '/static/media/'
             )
+            || (
+                !iro_media_has_imagick()
+                && strtolower(
+                    pathinfo(
+                        $path_for_route,
+                        PATHINFO_EXTENSION
+                    )
+                ) === 'gif'
+            )
         ) {
-            // 已是优化路由，保留原始 URL，后续可能还要替换 CDN 域名
+            // 保留原始 URL，后续可能还要替换 CDN 域名
             $route = $original;
         } else {
             // 构造优化路由
@@ -370,11 +381,11 @@ function iro_media_build_modifier_segment(
 
         if (
             $format === 'avif'
-            && !function_exists('imageavif')
+            && !iro_media_avif_supported()
         ) {
             return new WP_Error(
                 'avif_not_supported',
-                'This GD build does not support AVIF.'
+                'Neither Imagick nor GD can write AVIF here.'
             );
         }
 
@@ -553,4 +564,472 @@ function iro_media_optimize_content_images(
         },
         $content
     ) ?? $content;
+}
+
+/**
+ * 响应式图片生成。
+ *
+ * width/height 视为开发时该图在最大档（>860px 视口）下的实际显示像素；
+ * 图片在任何视口下都不会宽过视口，于是三档显示宽度是：
+ *
+ * ≤480px 视口 -> min(width, 480)
+ * ≤860px 视口 -> min(width, 860)
+ * 更大视口    -> width
+ *
+ * 每档再按 1 / 2 / 3 倍密度补候选，交给浏览器按自身 DPR 取；
+ * 没有 width 时退化成单档。
+ *
+ * 例如头像传 96x96：
+ *
+ * srcset  96w, 192w, 288w
+ * sizes   96px
+ *
+ * @return array{sizes:string,width:int|null,height:int|null,candidates:array<int,array{width:int|null,height:int|null}>}
+ */
+function iro_media_responsive_plan(array $args): array
+{
+    $width  = $args['width'] ?? $args['w'] ?? null;
+    $height = $args['height'] ?? $args['h'] ?? null;
+
+    $width  = is_numeric($width) ? (int) $width : null;
+    $height = is_numeric($height) ? (int) $height : null;
+
+    if ($width === null || $width < 1) {
+        return [
+            'sizes'      => '',
+            'width'      => null,
+            'height'     => $height,
+            'candidates' => [
+                ['width' => null, 'height' => null],
+            ],
+        ];
+    }
+
+    $tiers = [
+        min($width, IRO_MEDIA_BREAKPOINT_MOBILE),
+        min($width, IRO_MEDIA_BREAKPOINT_TABLET),
+        $width,
+    ];
+
+    /*
+     * 与最大档同宽的媒体条件恒真，去掉。
+     */
+    $conditions = [
+        '(max-width: ' . IRO_MEDIA_BREAKPOINT_MOBILE . 'px)',
+        '(max-width: ' . IRO_MEDIA_BREAKPOINT_TABLET . 'px)',
+    ];
+
+    $sizes = [];
+
+    foreach ($conditions as $index => $condition) {
+        if ($tiers[$index] !== $width) {
+            $sizes[] = $condition . ' ' . $tiers[$index] . 'px';
+        }
+    }
+
+    $sizes[] = $width . 'px';
+
+    /*
+     * 1 / 2 / 3 倍密度，按宽度去重升序。
+     */
+    $widths = [];
+
+    foreach ($tiers as $tier) {
+        foreach ([1, 2, 3] as $density) {
+            $widths[$tier * $density] = true;
+        }
+    }
+
+    ksort($widths);
+
+    $candidates = [];
+
+    foreach (array_keys($widths) as $candidate_width) {
+
+        $candidate_width = min(
+            (int) $candidate_width,
+            IRO_MEDIA_MAX_DIMENSION
+        );
+
+        $candidate_height = $height === null
+            ? null
+            : min(
+                IRO_MEDIA_MAX_DIMENSION,
+                max(
+                    1,
+                    (int) round(
+                        $height * $candidate_width / $width
+                    )
+                )
+            );
+
+        /*
+         * 超过图床像素上限的候选会被拒绝，不要递给浏览器。
+         */
+        if (
+            $candidate_height !== null
+            && $candidate_width * $candidate_height
+            > IRO_MEDIA_MAX_PIXELS
+        ) {
+            continue;
+        }
+
+        $candidates[$candidate_width] = [
+            'width'  => $candidate_width,
+            'height' => $candidate_height,
+        ];
+    }
+
+    if ($candidates === []) {
+        $candidates[$width] = [
+            'width'  => $width,
+            'height' => $height,
+        ];
+    }
+
+    return [
+        'sizes'      => is_string($args['sizes'] ?? null)
+            && ($args['sizes'] ?? '') !== ''
+            ? (string) $args['sizes']
+            : implode(', ', $sizes),
+        'width'      => $width,
+        'height'     => $height,
+        'candidates' => array_values($candidates),
+    ];
+}
+
+/**
+ * 按档位计划生成一整套 src / srcset / sizes。
+ *
+ * @param array{sizes:string,width:int|null,height:int|null,candidates:array<int,array{width:int|null,height:int|null}>} $plan
+ * @return array{src:string,srcset:string,sizes:string}
+ */
+function iro_media_responsive_srcset(
+    ?string $url,
+    array $args,
+    array $plan,
+    bool $force = false
+): array {
+
+    $urls = [];
+
+    foreach ($plan['candidates'] as $candidate) {
+
+        $candidate_args = $args;
+
+        if ($candidate['width'] !== null) {
+            unset($candidate_args['w']);
+
+            $candidate_args['width'] = $candidate['width'];
+        }
+
+        if ($candidate['height'] !== null) {
+            unset($candidate_args['h']);
+
+            $candidate_args['height'] = $candidate['height'];
+        }
+
+        $candidate_url = iro_media_optimize_image_url(
+            $url,
+            $candidate_args,
+            $force
+        );
+
+        if ($candidate_url === '') {
+            continue;
+        }
+
+        /*
+         * 档位升序插入，最后一个即最大档；
+         * 图床路由没生效时各档返回同一个 URL，会自然塌缩成单张。
+         */
+        $urls[$candidate_url] = $candidate['width'];
+    }
+
+    if ($urls === []) {
+        return ['src' => '', 'srcset' => '', 'sizes' => ''];
+    }
+
+    /*
+     * src 取最大档的 1 倍，也就是显示尺寸本身：
+     * 支持 srcset 的浏览器不会用它，不支持时也不会去拉一张远超渲染尺寸的图。
+     */
+    $src = (string) array_key_last($urls);
+
+    foreach ($urls as $candidate_url => $candidate_width) {
+        if (
+            $plan['width'] !== null
+            && $candidate_width === $plan['width']
+        ) {
+            $src = (string) $candidate_url;
+        }
+    }
+
+    $items = [];
+
+    foreach ($urls as $candidate_url => $candidate_width) {
+        if ($candidate_width !== null) {
+            $items[] = $candidate_url . ' ' . $candidate_width . 'w';
+        }
+    }
+
+    if (count($items) < 2) {
+        return ['src' => $src, 'srcset' => '', 'sizes' => ''];
+    }
+
+    return [
+        'src'    => $src,
+        'srcset' => implode(', ', $items),
+        'sizes'  => (string) $plan['sizes'],
+    ];
+}
+
+/**
+ * <img> 的优化属性：src + srcset + sizes + width/height。
+ *
+ * 只生成属性，标签与其余属性（alt / class / loading / ...）由调用处自己写：
+ *
+ * <img <?= iro_media_optimize_image_sizes($url, ['width' => 96, 'height' => 96]) ?>
+ *     alt="<?= esc_attr($alt) ?>" loading="lazy">
+ *
+ * $args 透传给 iro_media_optimize_image_url()，
+ * 其中 width/height 视为实际显示像素，既用于推导档位，也用于输出宽高属性；
+ * 额外的 sizes 键可以覆盖自动生成的 sizes。
+ *
+ * @param array<string,mixed> $args
+ */
+function iro_media_optimize_image_sizes(
+    ?string $url = null,
+    array $args = [],
+    bool $force = false
+): string {
+
+    $plan = iro_media_responsive_plan($args);
+
+    $responsive = iro_media_responsive_srcset(
+        $url,
+        $args,
+        $plan,
+        $force
+    );
+
+    if ($responsive['src'] === '') {
+        return '';
+    }
+
+    $attributes = ['src' => $responsive['src']];
+
+    if ($responsive['srcset'] !== '') {
+        $attributes['srcset'] = $responsive['srcset'];
+        $attributes['sizes']  = $responsive['sizes'];
+    }
+
+    if ($plan['width'] !== null) {
+        $attributes['width'] = $plan['width'];
+    }
+
+    if ($plan['height'] !== null) {
+        $attributes['height'] = $plan['height'];
+    }
+
+    $html = [];
+
+    foreach ($attributes as $name => $value) {
+        $html[] = $name . '="' . esc_attr((string) $value) . '"';
+    }
+
+    return implode(' ', $html);
+}
+
+/**
+ * <picture>
+ *     <?= iro_media_optimize_image_formats($url, ['width' => 96, 'height' => 96], ['alt' => '']) ?>
+ * </picture>
+ *
+ * $args 与 iro_media_optimize_image_sizes() 一致，每个 <source> 用各自的 format；
+ * GD 不支持该格式、或图床路由没生效时自动跳过格式分支。
+ *
+ * $attributes 收 <img> 的其余属性（alt / class / loading / decoding / ...）。
+ *
+ * @param array<string,mixed> $args
+ * @param array<string,mixed> $attributes
+ */
+function iro_media_optimize_image_formats(
+    ?string $url = null,
+    array $args = [],
+    array $attributes = [],
+    bool $force = false
+): string {
+
+    $image = iro_media_optimize_image_sizes(
+        $url,
+        $args,
+        $force
+    );
+
+    if ($image === '') {
+        return '';
+    }
+
+    /*
+     * 要看生成后的地址：传入的多半是 /wp-content/uploads/...，
+     * 非同源、或优化未开启时不会改写成图床路由，这时声明 image/avif 就是撒谎。
+     */
+    $routed = str_contains(
+        (string) wp_parse_url(
+            iro_media_optimize_image_url($url, $args, $force),
+            PHP_URL_PATH
+        ),
+        '/static/media/'
+    );
+
+    $sources = [];
+
+    if ($routed) {
+
+        $plan = iro_media_responsive_plan($args);
+
+        /*
+         * AVIF 的 100 是无损档，体积会大过无损 WebP；
+         * 取有损最高档（WebP 的 100 减一），保证它始终更小。
+         */
+        $quality = $args['quality'] ?? $args['q']
+            ?? iro_opt('iro_image_quality', 100);
+
+        $quality = is_numeric($quality)
+            ? min(99, max(0, (int) $quality))
+            : 99;
+
+        /*
+         * 有损 AVIF 并非永远更小，也不是永远安全：
+         *
+         * 动图换 AVIF 会丢帧（只有 WebP 分支能保住动画），
+         * PNG 则可以直接看密度——PNG 无损，字节/像素越小说明越扁平
+         * （图标、线条图），那种图有损 AVIF 反而大过无损 WebP。
+         */
+        $path = (string) wp_parse_url((string) $url, PHP_URL_PATH);
+
+        $home_path = iro_media_home_path();
+
+        if (
+            $home_path !== '/'
+            && str_starts_with($path, $home_path . '/')
+        ) {
+            $path = substr($path, strlen($home_path));
+        }
+
+        $extension = strtolower(
+            pathinfo($path, PATHINFO_EXTENSION)
+        );
+
+        $avif = true;
+
+        if (in_array(
+            $extension,
+            ['gif', 'webp', 'png', 'avif'],
+            true
+        )) {
+
+            $source = iro_media_resolve_source(
+                ltrim($path, '/')
+            );
+
+            if (!is_wp_error($source)) {
+                $avif = !iro_media_source_is_animated($source);
+            }
+
+            if (
+                $avif
+                && $extension === 'png'
+                && !is_wp_error($source)
+            ) {
+                $info = @getimagesize($source);
+
+                if (
+                    $info !== false
+                    && $info[0] * $info[1] > 0
+                ) {
+                    $avif =
+                        (@filesize($source) ?: 0)
+                        / ($info[0] * $info[1])
+                        >= IRO_MEDIA_AVIF_MIN_PNG_DENSITY;
+                }
+            }
+        }
+
+        foreach ($avif ? ['avif', 'webp'] : ['webp'] as $format) {
+
+            $supported = $format === 'avif'
+                ? iro_media_avif_supported()
+                : iro_media_webp_supported();
+
+            if (!$supported) {
+                continue;
+            }
+
+            $format_args = $args;
+
+            unset($format_args['f']);
+
+            $format_args['format'] = $format;
+
+            if ($format === 'avif') {
+                $format_args['quality'] = $quality;
+            }
+
+            $responsive = iro_media_responsive_srcset(
+                $url,
+                $format_args,
+                $plan,
+                $force
+            );
+
+            if ($responsive['src'] === '') {
+                continue;
+            }
+
+            /*
+             * 单档（例如只给了 height）时没有 w 描述符，
+             * 但换个格式仍然省流量。
+             */
+            $sources[$format] = [
+                'srcset' => $responsive['srcset'] === ''
+                    ? $responsive['src']
+                    : $responsive['srcset'],
+                'sizes'  => $responsive['srcset'] === ''
+                    ? ''
+                    : ' sizes="' . esc_attr($responsive['sizes']) . '"',
+            ];
+        }
+    }
+
+    $extra = '';
+
+    foreach (['alt' => ''] + $attributes as $name => $value) {
+
+        if (
+            $value === null
+            || $value === false
+            || preg_match(
+                '/^[a-zA-Z][a-zA-Z0-9_:.-]*$/',
+                (string) $name
+            ) !== 1
+        ) {
+            continue;
+        }
+
+        $extra .= $value === true
+            ? ' ' . $name
+            : ' ' . $name . '="' . esc_attr((string) $value) . '"';
+    }
+
+    ob_start();
+?><?php foreach ($sources as $type => $source) : ?>
+<source
+    type="image/<?= $type ?>"
+    srcset="<?= esc_attr($source['srcset']) ?>" <?= $source['sizes'] ?>>
+<?php endforeach; ?>
+<img <?= $image ?><?= $extra ?>>
+<?php
+    return (string) ob_get_clean();
 }
