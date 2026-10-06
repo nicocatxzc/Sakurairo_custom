@@ -15,7 +15,11 @@ $reward = iro_opt('article_author_reward', []);
         ?>
         <a
             class="post-license"
-            href="https://creativecommons.org/<?= $license === 'cc0' ? 'publicdomain/zero/1.0' : 'licenses/' . $license_variant . '/4.0' ?>/deed.<?= get_user_locale() ?>"
+            href="https://creativecommons.org/<?= $license === 'cc0' ? 'publicdomain/zero/1.0' : 'licenses/' . $license_variant . '/4.0' ?>/deed.<?= match (get_user_locale()) {
+                'zh_CN' => 'zh-hans',
+                'zh_TW', 'zh_HK' => 'zh-hant',
+                default => get_user_locale(),
+            } ?>"
             target="_blank"
             rel="nofollow"
             title="<?= esc_attr(sprintf(__('本文采用 %s 协议授权', 'sakurairo'), $license_name)) ?>">
