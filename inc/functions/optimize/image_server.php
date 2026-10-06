@@ -13,6 +13,8 @@
  */
 
 add_action('init', 'iro_media_register_routes', 10);
+add_action('init', 'iro_media_schedule_gc');
+add_action('iro_media_gc', 'iro_media_gc_run');
 add_filter('query_vars', 'iro_media_query_vars');
 add_action('template_redirect', 'iro_media_dispatch', 0);
 add_action('after_switch_theme', function () {
@@ -563,8 +565,8 @@ function iro_media_imagick_writes(string $format): bool
 
     $cache_key = 'iro_media_writer_' . md5(
         $format
-        . (Imagick::getVersion()['versionString'] ?? '')
-        . (string) phpversion('imagick')
+            . (Imagick::getVersion()['versionString'] ?? '')
+            . (string) phpversion('imagick')
     );
 
     $cached = get_transient($cache_key);
@@ -1531,6 +1533,100 @@ function iro_media_cache_write(
     );
 }
 
+/**
+ * 每天扫一遍缓存目录（wp_cron 由请求驱动，不保证准点）。
+ */
+function iro_media_schedule_gc(): void
+{
+    if (!wp_next_scheduled('iro_media_gc')) {
+        wp_schedule_event(time(), 'daily', 'iro_media_gc');
+    }
+}
+
+/**
+ * 清掉一周没人用过的缓存。
+ *
+ * 命中一次就会 readfile() 图片，relatime 下 atime 最多滞后一天，
+ * 所以「atime 一周没动」就等于没人再用它。
+ *
+ * 按缓存键分组处理：meta 是被 include 的，opcache 命中时根本不读盘、
+ * atime 不会更新，只看单个文件会把还在用的 meta 清掉，
+ * 下次请求又得把图重编一遍。同一键的文件只要有一个还热，整组都留着。
+ *
+ * @return int 清掉的文件数
+ */
+function iro_media_gc_run(): int
+{
+    $dir = iro_media_cache_dir();
+
+    if (!is_dir($dir)) {
+        return 0;
+    }
+
+    $deadline = time() - WEEK_IN_SECONDS;
+
+    $groups = [];
+
+    foreach ((array) @scandir($dir) as $name) {
+
+        if ($name === '.' || $name === '..') {
+            continue;
+        }
+
+        $path = $dir . '/' . $name;
+
+        if (!is_file($path)) {
+            continue;
+        }
+
+        /*
+         * 有的文件系统会把 atime 写成早于 mtime，
+         * 取两者里更新的那个当最后使用时间。
+         */
+        $used = max(
+            (int) @fileatime($path),
+            (int) @filemtime($path)
+        );
+
+        /*
+         * <key>.webp / <key>.meta.php 同组；img-xxx 这类临时文件各自成组。
+         */
+        $key = strstr($name, '.', true);
+
+        if ($key === false || $key === '') {
+            $key = $name;
+        }
+
+        $groups[$key]['files'][] = $path;
+
+        $groups[$key]['used'] = max(
+            $groups[$key]['used'] ?? 0,
+            $used
+        );
+    }
+
+    $removed = 0;
+
+    foreach ($groups as $group) {
+
+        if (
+            $group['used'] <= 0
+            || $group['used'] >= $deadline
+        ) {
+            continue;
+        }
+
+        foreach ($group['files'] as $path) {
+
+            if (@unlink($path)) {
+                $removed++;
+            }
+        }
+    }
+
+    return $removed;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Pipeline
@@ -1646,9 +1742,9 @@ function iro_media_build_imagick(
         && (
             $format !== 'webp'
             || $frames
-                * $source->getImageWidth()
-                * $source->getImageHeight()
-                > IRO_MEDIA_MAX_PIXELS
+            * $source->getImageWidth()
+            * $source->getImageHeight()
+            > IRO_MEDIA_MAX_PIXELS
         )
     ) {
         iro_media_destroy($source);
