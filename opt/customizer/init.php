@@ -96,6 +96,22 @@ $sections = [
                 'default'  => __('<p>主题配色</p>', 'sakurairo'),
             ],
             [
+                'type'        => 'switch',
+                'settings'    => 'extract_theme_skin_from_cover',
+                'iro_key'     => 'extract_theme_skin_from_cover',
+                'label'       => esc_html__('从封面图提取主题色', 'sakurairo'),
+                'description' => esc_html__('关闭后使用下方配置的主题配色', 'sakurairo'),
+                'default'     => true,
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'extract_article_highlight_from_feature',
+                'iro_key'     => 'extract_article_highlight_from_feature',
+                'label'       => esc_html__('从文章封面提取主题色', 'sakurairo'),
+                'description' => esc_html__('文章页展示的颜色将取自文章特色图片', 'sakurairo'),
+                'default'     => true,
+            ],
+            [
                 'type'        => 'color',
                 'settings'    => 'word_color_first',
                 'iro_key'     => 'word_color_first',
@@ -185,7 +201,7 @@ $sections = [
                 'settings'  => 'word_color_second_dark',
                 'iro_key'   => 'word_color_second_dark',
                 'label'     => esc_html__('次要文字颜色', 'sakurairo'),
-                'default'   => '#7d7d7d',
+                'default'   => '#999999',
                 'transport' => 'auto',
                 'output'    => [['element' => ':root.dark', 'property' => '--word-color-second']],
             ],
@@ -300,12 +316,12 @@ $sections = [
                 'description'  => esc_html__('在此处添加外部字体，添加后即可在字体设置中使用对应的字体名称', 'sakurairo'),
                 'row_label'    => [
                     'type'  => 'field',
-                    'field' => 'font_name',
+                    'field' => 'name',
                     'value' => esc_html__('字体', 'sakurairo'),
                 ],
                 'button_label' => esc_html__('添加字体', 'sakurairo'),
                 'fields'       => [
-                    'font_name' => [
+                    'name' => [
                         'type'  => 'text',
                         'label' => esc_html__('字体名称', 'sakurairo'),
                     ],
@@ -326,6 +342,17 @@ $sections = [
         'panel'       => 'iro_global',
 
         'fields'      => [
+            [
+                'type'    => 'radio_image',
+                'settings' => 'nav_style_select',
+                'iro_key' => 'nav_style_select',
+                'label'   => esc_html__('导航栏样式', 'sakurairo'),
+                'default' => 'sakura',
+                'choices' => [
+                    'island' => $vision_resource_basepath . 'options/nav_menu_style_Island.webp',
+                    'sakura' => $vision_resource_basepath . 'options/nav_menu_style_bar.webp',
+                ],
+            ],
             [
                 'type'      => 'image',
                 'settings'  => 'nav_logo',
@@ -668,6 +695,35 @@ $sections = [
 
         'fields'      => [
             [
+                'type'    => 'select',
+                'settings' => 'footer_style_select',
+                'iro_key' => 'footer_style_select',
+                'label'   => esc_html__('页尾样式', 'sakurairo'),
+                'default' => 'sakura',
+                'choices' => [
+                    'sakura' => esc_html__('sakura经典样式', 'sakurairo'),
+                    'island' => esc_html__('iro浮动样式', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'footer_island_style',
+                'iro_key' => 'footer_island_style',
+                'label'   => esc_html__('页尾内容布局', 'sakurairo'),
+                'default' => 'center',
+                'choices' => [
+                    'center'  => esc_html__('居中', 'sakurairo'),
+                    'columns' => esc_html__('两列', 'sakurairo'),
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_style_select',
+                        'operator' => '==',
+                        'value'    => 'island',
+                    ],
+                ],
+            ],
+            [
                 'type'    => 'switch',
                 'settings' => 'footer_sakura',
                 'iro_key' => 'footer_sakura',
@@ -741,6 +797,160 @@ $sections = [
                         'setting'  => 'footer_hitokoto_select',
                         'operator' => '!=',
                         'value'    => 'off',
+                    ],
+                ],
+            ],
+            [
+                'type'     => 'custom',
+                'settings' => 'iro_footer_player_notice',
+                'default'  => __('<p>播放器</p>', 'sakurairo'),
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'footer_player_mode',
+                'iro_key'     => 'footer_player_mode',
+                'label'       => esc_html__('页脚播放器', 'sakurairo'),
+                'description' => esc_html__('开启后页脚出现悬浮播放器，歌单由服务端解析后交给前端，非同源音频、封面与歌词会经服务端代理以避免跨域被拦截', 'sakurairo'),
+                'default'     => 'off',
+                'choices'     => [
+                    'off'     => esc_html__('关闭', 'sakurairo'),
+                    'netease' => esc_html__('网易云（内置 Meting）', 'sakurairo'),
+                    'custom'  => esc_html__('自定义 API', 'sakurairo'),
+                    'static'  => esc_html__('静态歌单', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'footer_player_netease_playlist',
+                'iro_key'     => 'footer_player_netease_playlist',
+                'label'       => esc_html__('网易云歌单 ID', 'sakurairo'),
+                'description' => esc_html__('例如 https://music.163.com/#/playlist?id=5380675133 中的 5380675133', 'sakurairo'),
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_player_mode',
+                        'operator' => '==',
+                        'value'    => 'netease',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'textarea',
+                'settings'    => 'footer_player_netease_cookie',
+                'iro_key'     => 'footer_player_netease_cookie',
+                'label'       => esc_html__('网易云 Cookie', 'sakurairo'),
+                'description' => esc_html__('播放 VIP 歌曲时需要填写账号 Cookie，留空则仅能解析普通歌曲', 'sakurairo'),
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_player_mode',
+                        'operator' => '==',
+                        'value'    => 'netease',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'text',
+                'settings'    => 'footer_player_custom_api',
+                'iro_key'     => 'footer_player_custom_api',
+                'label'       => esc_html__('自定义 API 地址', 'sakurairo'),
+                'description' => esc_html__('返回歌单 JSON 的接口地址，支持 {data:[...]}、{songs:[...]} 或直接数组，字段兼容 name/title、artist/author、url/src、cover/pic、lrc/lyric', 'sakurairo'),
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_player_mode',
+                        'operator' => '==',
+                        'value'    => 'custom',
+                    ],
+                ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'footer_player_auto_scan',
+                'iro_key'     => 'footer_player_auto_scan',
+                'label'       => esc_html__('自动扫描上传目录', 'sakurairo'),
+                'description' => esc_html__('自动收录上传目录中所有带封面的音乐，结果带缓存', 'sakurairo'),
+                'default'     => false,
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_player_mode',
+                        'operator' => '==',
+                        'value'    => 'static',
+                    ],
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'footer_player_order',
+                'iro_key' => 'footer_player_order',
+                'label'   => esc_html__('播放顺序', 'sakurairo'),
+                'default' => 'list',
+                'choices' => [
+                    'list'   => esc_html__('列表', 'sakurairo'),
+                    'random' => esc_html__('随机', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'footer_player_preload',
+                'iro_key' => 'footer_player_preload',
+                'label'   => esc_html__('预加载', 'sakurairo'),
+                'default' => 'metadata',
+                'choices' => [
+                    'none'     => esc_html__('不预加载', 'sakurairo'),
+                    'metadata' => esc_html__('预加载元数据', 'sakurairo'),
+                    'auto'     => esc_html__('自动', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'      => 'slider',
+                'settings'  => 'footer_player_volume',
+                'iro_key'   => 'footer_player_volume',
+                'label'     => esc_html__('默认音量', 'sakurairo'),
+                'default'   => 0.5,
+                'choices'   => ['min' => 0, 'max' => 1, 'step' => 0.01],
+            ],
+            [
+                'type'         => 'repeater',
+                'settings'     => 'footer_player_static',
+                'iro_key'      => 'footer_player_static',
+                'label'        => esc_html__('静态歌单', 'sakurairo'),
+                'description'  => esc_html__('手动维护歌曲列表，音频地址为必填', 'sakurairo'),
+                'row_label'    => [
+                    'type'  => 'field',
+                    'field' => 'name',
+                    'value' => esc_html__('歌曲', 'sakurairo'),
+                ],
+                'button_label' => esc_html__('添加歌曲', 'sakurairo'),
+                'fields'       => [
+                    'name'   => [
+                        'type'  => 'text',
+                        'label' => esc_html__('名称', 'sakurairo'),
+                    ],
+                    'artist' => [
+                        'type'  => 'text',
+                        'label' => esc_html__('艺术家', 'sakurairo'),
+                    ],
+                    'url'    => [
+                        'type'  => 'text',
+                        'label' => esc_html__('音频地址', 'sakurairo'),
+                    ],
+                    'cover'  => [
+                        'type'  => 'text',
+                        'label' => esc_html__('封面地址', 'sakurairo'),
+                    ],
+                    'lrc'    => [
+                        'type'  => 'text',
+                        'label' => esc_html__('歌词地址', 'sakurairo'),
+                    ],
+                    'type'   => [
+                        'type'        => 'text',
+                        'label'       => esc_html__('类型', 'sakurairo'),
+                        'description' => esc_html__('如 mp3、flac，留空则按扩展名判断', 'sakurairo'),
+                    ],
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'footer_player_mode',
+                        'operator' => '==',
+                        'value'    => 'static',
                     ],
                 ],
             ],
@@ -1044,7 +1254,6 @@ $sections = [
                     'off'          => esc_html__('无', 'sakurairo'),
                     'avatar'       => esc_html__('头像', 'sakurairo'),
                     'text'         => esc_html__('文字', 'sakurairo'),
-                    'mashiro_text' => esc_html__('Mashiro特效文字', 'sakurairo'),
                 ],
                 'active_callback' => [
                     [
@@ -1269,21 +1478,21 @@ $sections = [
                         'choices' => [
                             'qq'            => esc_html__('QQ', 'sakurairo'),
                             'wechat'        => esc_html__('微信', 'sakurairo'),
-                            'bilibili'      => esc_html__('bilibili', 'sakurairo'),
+                            'bilibili'      => esc_html__('哔哩哔哩', 'sakurairo'),
                             'netease_music' => esc_html__('网易云音乐', 'sakurairo'),
                             'sina'          => esc_html__('新浪', 'sakurairo'),
                             'github'        => esc_html__('Github', 'sakurairo'),
                             'telegram'      => esc_html__('Telegram', 'sakurairo'),
                             'steam'         => esc_html__('Steam', 'sakurairo'),
                             'youtube'       => esc_html__('Youtube', 'sakurairo'),
-                            'instgram'      => esc_html__('instgram', 'sakurairo'),
+                            'instgram'      => esc_html__('Instagram', 'sakurairo'),
                             'tiktok'        => esc_html__('抖音', 'sakurairo'),
                             'xiaohongshu'   => esc_html__('小红书', 'sakurairo'),
                             'discord'       => esc_html__('Discord', 'sakurairo'),
                             'zhihu'         => esc_html__('知乎', 'sakurairo'),
                             'linkedin'      => esc_html__('领英', 'sakurairo'),
                             'twitter'       => esc_html__('推特/X', 'sakurairo'),
-                            'facebook'      => esc_html__('facebook', 'sakurairo'),
+                            'facebook'      => esc_html__('Facebook', 'sakurairo'),
                             'email'         => esc_html__('邮箱', 'sakurairo'),
                             'custom'        => esc_html__('自定义', 'sakurairo'),
                         ],
@@ -1318,10 +1527,28 @@ $sections = [
 
         'fields'      => [
             [
+                'type'    => 'select',
+                'settings' => 'cover_random_pic_select',
+                'iro_key' => 'cover_random_pic_select',
+                'label'   => esc_html__('封面随机图API', 'sakurairo'),
+                'default' => 'custom',
+                'choices' => [
+                    'custom'  => esc_html__('自定义', 'sakurairo'),
+                    'builtin' => esc_html__('主题内建', 'sakurairo'),
+                ],
+                'active_callback' => [
+                    [
+                        'setting'  => 'cover_switch',
+                        'operator' => '==',
+                        'value'    => true,
+                    ],
+                ],
+            ],
+            [
                 'type'        => 'text',
                 'settings'    => 'cover_random_pic_url_pc',
                 'iro_key'     => 'cover_random_pic_url_pc',
-                'label'       => esc_html__('PC封面图片地址', 'sakurairo'),
+                'label'       => esc_html__('桌面端封面图片地址', 'sakurairo'),
                 'description' => esc_html__('填写图片地址或者随机图API', 'sakurairo'),
                 'transport'   => 'auto',
                 'output'      => [
@@ -1337,6 +1564,7 @@ $sections = [
                 'settings'  => 'cover_random_pic_url_mb',
                 'iro_key'   => 'cover_random_pic_url_mb',
                 'label'     => esc_html__('移动端封面图片地址', 'sakurairo'),
+                'description' => esc_html__('填写图片地址或者随机图API，未填写则使用与桌面端图片相同的配置', 'sakurairo'),
                 'transport' => 'auto',
                 'output'    => [
                     [
@@ -1385,6 +1613,72 @@ $sections = [
                 'label'       => esc_html__('视频URL地址', 'sakurairo'),
                 'description' => esc_html__('视频的文件地址', 'sakurairo'),
                 'choices'     => ['button_label' => esc_html__('选择视频', 'sakurairo')],
+            ],
+            [
+                'type'     => 'custom',
+                'settings' => 'iro_homepage_wave_notice',
+                'default'  => __('<p>首页波浪</p>', 'sakurairo'),
+            ],
+            [
+                'type'    => 'switch',
+                'settings' => 'homepage_wave_switch',
+                'iro_key' => 'homepage_wave_switch',
+                'label'   => esc_html__('波浪开关', 'sakurairo'),
+                'default' => false,
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'homepage_wave_position',
+                'iro_key' => 'homepage_wave_position',
+                'label'   => esc_html__('波浪定位目标', 'sakurairo'),
+                'default' => 'cover',
+                'choices' => [
+                    'cover'  => esc_html__('封面', 'sakurairo'),
+                    'window' => esc_html__('窗口', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'homepage_wave_light',
+                'iro_key' => 'homepage_wave_light',
+                'label'   => esc_html__('浅色模式波浪', 'sakurairo'),
+                'default' => 'water',
+                'choices' => [
+                    'white' => esc_html__('白色', 'sakurairo'),
+                    'water' => esc_html__('水', 'sakurairo'),
+                    'star'  => esc_html__('星光', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'    => 'select',
+                'settings' => 'homepage_wave_dark',
+                'iro_key' => 'homepage_wave_dark',
+                'label'   => esc_html__('深色模式波浪', 'sakurairo'),
+                'default' => 'star',
+                'choices' => [
+                    'white' => esc_html__('白色', 'sakurairo'),
+                    'water' => esc_html__('水', 'sakurairo'),
+                    'star'  => esc_html__('星光', 'sakurairo'),
+                ],
+            ],
+            [
+                'type'         => 'repeater',
+                'settings'     => 'homepage_wave_floating',
+                'iro_key'      => 'homepage_wave_floating',
+                'label'        => esc_html__('波浪浮动挂件', 'sakurairo'),
+                'description'  => esc_html__('在波浪上漂浮的可互动挂件，每行一张图；未选择图像的行会被忽略', 'sakurairo'),
+                'row_label'    => [
+                    'type'  => 'field',
+                    'field' => 'url',
+                    'value' => esc_html__('挂件', 'sakurairo'),
+                ],
+                'button_label' => esc_html__('添加挂件', 'sakurairo'),
+                'fields'       => [
+                    'url' => [
+                        'type'  => 'upload',
+                        'label' => esc_html__('图像链接', 'sakurairo'),
+                    ],
+                ],
             ],
         ],
     ],
@@ -1564,6 +1858,8 @@ $sections = [
                     'category'      => esc_html__('分类', 'sakurairo'),
                     'comment_count' => esc_html__('评论数量', 'sakurairo'),
                     'views'         => esc_html__('浏览量', 'sakurairo'),
+                    'words_count'   => esc_html__('字数', 'sakurairo'),
+                    'reading_time'  => esc_html__('阅读时间', 'sakurairo'),
                 ],
             ],
             [
@@ -1573,6 +1869,7 @@ $sections = [
                 'label'   => esc_html__('文章区域装饰特色图片选项', 'sakurairo'),
                 'choices' => [
                     'always_with_cover'  => esc_html__('始终且使用封面API', 'sakurairo'),
+                    'always_builtin'     => esc_html__('始终且使用内建API', 'sakurairo'),
                     'always_alone'       => esc_html__('始终且使用独立API', 'sakurairo'),
                     'only_feather_image' => esc_html__('仅特色图片', 'sakurairo'),
                 ],
@@ -1663,6 +1960,24 @@ $sections = [
 
         'fields'      => [
             [
+                'type'    => 'sortable',
+                'settings' => 'post_head_metas',
+                'iro_key' => 'post_head_metas',
+                'label'   => esc_html__('文章头部显示信息', 'sakurairo'),
+                'default' => ['update_time', 'author', 'views'],
+                'choices' => [
+                    'author'        => esc_html__('作者', 'sakurairo'),
+                    'category'      => esc_html__('分类', 'sakurairo'),
+                    'comment_count' => esc_html__('评论数量', 'sakurairo'),
+                    'views'         => esc_html__('浏览量', 'sakurairo'),
+                    'words_count'   => esc_html__('字数', 'sakurairo'),
+                    'reading_time'  => esc_html__('阅读时间', 'sakurairo'),
+                    'publish_time'  => esc_html__('发布时间', 'sakurairo'),
+                    'update_time'   => esc_html__('最后更新时间', 'sakurairo'),
+                    'editor_link'   => esc_html__('编辑链接（仅管理员显示）', 'sakurairo'),
+                ],
+            ],
+            [
                 'type'        => 'switch',
                 'settings'    => 'page_post_toc',
                 'iro_key'     => 'page_post_toc',
@@ -1677,6 +1992,17 @@ $sections = [
                 'label'       => esc_html__('页面目录', 'sakurairo'),
                 'description' => esc_html__('在页面显示目录', 'sakurairo'),
                 'default'     => false,
+            ],
+            [
+                'type'        => 'select',
+                'settings'    => 'page_style',
+                'iro_key'     => 'page_style',
+                'label'       => esc_html__('文章排版样式', 'sakurairo'),
+                'default'     => 'sakura',
+                'choices'     => [
+                    'wordpress' => 'WordPress',
+                    'sakura'    => 'Sakura',
+                ],
             ],
         ],
     ],
@@ -1847,7 +2173,7 @@ $sections = [
                 'settings'    => 'comment_submit_button_text',
                 'iro_key'     => 'comment_submit_button_text',
                 'label'       => esc_html__('评论区提交按钮文本', 'sakurairo'),
-                'default'     => '提交',
+                'default'     => '提交✈️',
                 'transport'   => 'postMessage',
                 'js_vars'     => [
                     [
@@ -1864,7 +2190,7 @@ $sections = [
                 'description' => esc_html__('选择要在评论区域输入框中显示的表情。全部取消选中可关闭评论区域输入框表情功能。', 'sakurairo'),
                 'default'     => ['bilibili', 'tieba', 'yanwenzi'],
                 'choices'     => [
-                    'bilibili' => esc_html__('bilibili', 'sakurairo'),
+                    'bilibili' => esc_html__('哔哩哔哩', 'sakurairo'),
                     'tieba'    => esc_html__('贴吧', 'sakurairo'),
                     'yanwenzi' => esc_html__('颜文字', 'sakurairo'),
                     'custom'   => esc_html__('自定义', 'sakurairo'),
@@ -1893,10 +2219,18 @@ $sections = [
                 'description' => esc_html__('开启后游客评论需要通过验证码验证', 'sakurairo'),
                 'default'     => 'off',
                 'choices'     => [
-                    'off'       => esc_html__('Off', 'sakurairo'),
+                    'off'       => esc_html__('关闭', 'sakurairo'),
                     'builtin'   => esc_html__('主题内建验证码', 'sakurairo'),
                     'turnstile' => 'Cloudflare Turnstile',
                 ],
+            ],
+            [
+                'type'        => 'switch',
+                'settings'    => 'comment_mail_notify',
+                'iro_key'     => 'comment_mail_notify',
+                'label'       => esc_html__('评论邮件通知', 'sakurairo'),
+                'description' => esc_html__('开启后由主题发送评论回复通知，用户可在评论区选择是否接收；关闭后主题不介入，仅保留 WordPress 默认通知', 'sakurairo'),
+                'default'     => false,
             ],
         ],
     ],
