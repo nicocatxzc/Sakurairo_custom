@@ -299,16 +299,11 @@ function iro_media_parse_modifiers(string $modifiers): array|WP_Error
                     );
                 }
 
-                if (
-                    $format === 'avif'
-                    && !iro_media_avif_supported()
-                ) {
-                    return new WP_Error(
-                        'avif_not_supported',
-                        'Neither Imagick nor GD can write AVIF here.'
-                    );
-                }
-
+                /*
+                 * 这里不按后端能力拦格式：
+                 * 能不能交付由 iro_media_build() 现试（Imagick → GD），
+                 * 实在不行还有 302 到原图兜底。
+                 */
                 $result['format'] = $format;
 
                 break;
@@ -444,30 +439,192 @@ function iro_media_resolve_source(
 }
 
 /**
- * 图像处理后端：优先 Imagick（能处理多帧动图），没有就退回 GD。
+ * 编码链的第一环：Imagick 能处理多帧动图，写不出来时才轮到 GD。
  */
 function iro_media_has_imagick(): bool
 {
     return class_exists('Imagick');
 }
 
-function iro_media_imagick_writes(string $format): bool
-{
-    return Imagick::queryFormats(strtoupper($format)) !== [];
+/**
+ * 校验文件头与目标格式是否一致。
+ *
+ * Imagick 写不出目标格式时会安静地退回源格式（PNG 源就写出 PNG），
+ * 只看 writeImage() 的返回值会把这种文件当成功缓存出去。
+ */
+function iro_media_file_matches_format(
+    string $format,
+    string $path
+): bool {
+
+    $head = (string) @file_get_contents(
+        $path,
+        false,
+        null,
+        0,
+        16
+    );
+
+    if (strlen($head) < 12) {
+        return false;
+    }
+
+    return match (strtolower($format)) {
+
+        'avif' => substr($head, 4, 4) === 'ftyp'
+            && in_array(
+                substr($head, 8, 4),
+                ['avif', 'avis', 'mif1', 'msf1'],
+                true
+            ),
+
+        'webp' => str_starts_with($head, 'RIFF')
+            && substr($head, 8, 4) === 'WEBP',
+
+        'jpeg' => str_starts_with($head, "\xFF\xD8\xFF"),
+
+        'png' => str_starts_with($head, "\x89PNG\r\n\x1A\n"),
+
+        default => true,
+    };
 }
 
+/**
+ * 真编一张最小的图，验证 Imagick 写不写得出来。
+ *
+ * 写法必须与 iro_media_encode_imagick() 一致，探的才是同一条路。
+ */
+function iro_media_probe_imagick_writer(string $format): bool
+{
+    $probe = @tempnam(
+        get_temp_dir(),
+        'iro-writer-'
+    );
+
+    if ($probe === false) {
+        return false;
+    }
+
+    try {
+
+        $image = new Imagick();
+
+        $image->newImage(
+            16,
+            16,
+            new ImagickPixel('white')
+        );
+
+        $image->setFormat($format);
+
+        $image->writeImage($format . ':' . $probe);
+
+        $image->clear();
+    } catch (Throwable $e) {
+
+        @unlink($probe);
+
+        return false;
+    }
+
+    $ok = iro_media_file_matches_format($format, $probe);
+
+    @unlink($probe);
+
+    return $ok;
+}
+
+/**
+ * Imagick 能不能写出这个格式。
+ *
+ * queryFormats() 只回答「coder 在不在册」：镜像里缺 libheif 编码插件时
+ * AVIF 依然在列，实际写出去却会报 no encode delegate，或者退回源格式。
+ * 所以这里真的编码一次来验证，结果按 Imagick 版本缓存一天
+ */
+function iro_media_imagick_writes(string $format): bool
+{
+    static $probed = [];
+
+    $format = strtolower($format);
+
+    if (!iro_media_has_imagick()) {
+        return false;
+    }
+
+    if (array_key_exists($format, $probed)) {
+        return $probed[$format];
+    }
+
+    $probed[$format] = false;
+
+    if (Imagick::queryFormats(strtoupper($format)) === []) {
+        return false;
+    }
+
+    $cache_key = 'iro_media_writer_' . md5(
+        $format
+        . (Imagick::getVersion()['versionString'] ?? '')
+        . (string) phpversion('imagick')
+    );
+
+    $cached = get_transient($cache_key);
+
+    if ($cached === 'yes' || $cached === 'no') {
+
+        $probed[$format] = $cached === 'yes';
+
+        return $probed[$format];
+    }
+
+    $probed[$format] = iro_media_probe_imagick_writer($format);
+
+    set_transient(
+        $cache_key,
+        $probed[$format] ? 'yes' : 'no',
+        DAY_IN_SECONDS
+    );
+
+    return $probed[$format];
+}
+
+/**
+ * GD 有没有这个格式的编码函数。
+ */
+function iro_media_gd_can_encode(string $format): bool
+{
+    return match (strtolower($format)) {
+
+        'webp' => function_exists('imagewebp'),
+
+        'jpeg' => function_exists('imagejpeg'),
+
+        'png' => function_exists('imagepng'),
+
+        'avif' => function_exists('imageavif'),
+
+        default => false,
+    };
+}
+
+/**
+ * 能不能「推荐」这个格式：只看首选后端。
+ *
+ * 这只决定前台要不要发这个格式的 URL，所以要求的是首选后端的效率：
+ * GD 的 AVIF 在 q99 下比 WebP 还大，拿它去投 avif 分支是负收益。
+ * 真正交付时写不出来还会退 GD，那是另一回事。
+ */
 function iro_media_webp_supported(): bool
 {
     return iro_media_has_imagick()
         ? iro_media_imagick_writes('webp')
-        : function_exists('imagewebp');
+        : iro_media_gd_can_encode('webp');
 }
 
 function iro_media_avif_supported(): bool
 {
     return iro_media_has_imagick()
         ? iro_media_imagick_writes('avif')
-        : function_exists('imageavif');
+        : iro_media_gd_can_encode('avif');
 }
 
 /**
@@ -501,30 +658,6 @@ function iro_media_source_is_animated(string $path): bool
     return false;
 }
 
-/**
- * 不处理，直接把原图交出去（动图专用）。
- *
- * @param array<string,mixed> $options
- * @return array{path:string,mime:string,etag:string}
- */
-function iro_media_passthrough(
-    string $source_path,
-    array $options
-): array {
-
-    $info = @getimagesize($source_path);
-
-    return [
-        'path' => $source_path,
-        'mime' => (string) (
-            $info['mime'] ?? 'application/octet-stream'
-        ),
-        'etag' => '"'
-            . iro_media_cache_key($source_path, $options)
-            . '"',
-    ];
-}
-
 function iro_media_destroy(Imagick|GdImage $image): void
 {
     if ($image instanceof Imagick) {
@@ -536,33 +669,25 @@ function iro_media_destroy(Imagick|GdImage $image): void
     @imagedestroy($image);
 }
 
-function iro_media_create_from_file(
-    string $path,
-    ?string $format = null
-): Imagick|GdImage|WP_Error {
-
-    /*
-     * Imagick 优先：它认得动图，GD 只认第一帧。
-     * 但它写不了目标格式时仍然要让位给 GD。
-     */
-    if (
-        iro_media_has_imagick()
-        && (
-            $format === null
-            || iro_media_imagick_writes($format)
-        )
-    ) {
-        try {
-            return new Imagick($path);
-        } catch (Throwable $e) {
-            return new WP_Error(
-                'decode_failed',
-                $e->getMessage()
-            );
-        }
+function iro_media_load_imagick(string $path): ?Imagick
+{
+    try {
+        return new Imagick($path);
+    } catch (Throwable $e) {
+        return null;
     }
+}
 
+/**
+ * GD 只认静态图：动图会只剩第一帧，所以动图不走这条路。
+ */
+function iro_media_load_gd(string $path): ?GdImage
+{
     $type = @exif_imagetype($path);
+
+    if ($type === false) {
+        return null;
+    }
 
     $map = [
         IMAGETYPE_JPEG => 'imagecreatefromjpeg',
@@ -581,22 +706,14 @@ function iro_media_create_from_file(
         $function === null
         || !function_exists($function)
     ) {
-        return new WP_Error(
-            'unsupported_source',
-            'GD cannot decode this image format.'
-        );
+        return null;
     }
 
     $image = @$function($path);
 
-    if (!$image instanceof GdImage) {
-        return new WP_Error(
-            'decode_failed',
-            'GD failed to decode source image.'
-        );
-    }
-
-    return $image;
+    return $image instanceof GdImage
+        ? $image
+        : null;
 }
 
 function iro_media_prepare_canvas(
@@ -1306,6 +1423,13 @@ function iro_media_encode_imagick(
         );
     }
 
+    if (!iro_media_file_matches_format($format, $cache_path)) {
+        return new WP_Error(
+            'encode_failed',
+            'Imagick wrote an unexpected image format.'
+        );
+    }
+
     return [
         'mime'      => 'image/'
             . ($format === 'jpeg' ? 'jpeg' : $format),
@@ -1313,110 +1437,259 @@ function iro_media_encode_imagick(
     ];
 }
 
-/**
- * @return array{path:string,mime:string,etag:string}|WP_Error
- */
-function iro_media_generate(
-    string $source_path,
-    array $options
-): array|WP_Error {
-
-    $cache_dir =
-        trailingslashit(WP_CONTENT_DIR)
+function iro_media_cache_dir(): string
+{
+    return trailingslashit(WP_CONTENT_DIR)
         . 'cache/theme-gd-media';
+}
 
-    if (!wp_mkdir_p($cache_dir)) {
-        return new WP_Error(
-            'cache_dir_failed',
-            'Unable to create image cache directory.'
-        );
+/**
+ * 临时文件就放在缓存目录里：交付完原地改名，不跨文件系统。
+ */
+function iro_media_temp_path(): ?string
+{
+    $dir = iro_media_cache_dir();
+
+    if (!wp_mkdir_p($dir)) {
+        return null;
     }
 
-    $cache_key = iro_media_cache_key(
-        $source_path,
-        $options
-    );
+    $path = @tempnam($dir, 'img-');
 
-    $meta_path =
-        trailingslashit($cache_dir)
+    return $path === false ? null : $path;
+}
+
+/**
+ * 缓存命中才算数：meta 是提交点，它存在、且指向的文件还在。
+ *
+ * @return array{path:string,mime:string}|null
+ */
+function iro_media_cache_read(string $cache_key): ?array
+{
+    $meta_path = iro_media_cache_dir()
+        . '/'
         . $cache_key
         . '.meta.php';
 
+    if (!is_file($meta_path)) {
+        return null;
+    }
+
+    $meta = @include $meta_path;
+
+    if (
+        !is_array($meta)
+        || !isset($meta['path'], $meta['mime'])
+        || !is_file((string) $meta['path'])
+    ) {
+        return null;
+    }
+
+    return [
+        'path' => (string) $meta['path'],
+        'mime' => (string) $meta['mime'],
+    ];
+}
+
+/**
+ * 图已经交付给客户端了，这里只把它挪进缓存目录。
+ *
+ * 不加锁：并发下两个请求写同一个键也无所谓，
+ * rename 是原子的，而且两边写出来的内容一致。
+ */
+function iro_media_cache_write(
+    string $cache_key,
+    array $built
+): void {
+
+    $final = iro_media_cache_dir()
+        . '/'
+        . $cache_key
+        . '.'
+        . $built['extension'];
+
+    if (!@rename($built['path'], $final)) {
+        @unlink($built['path']);
+
+        return;
+    }
+
     /*
-     * 已有缓存。
+     * 先落图再写 meta：meta 出现就代表这份图可用。
      */
-    if (is_file($meta_path)) {
-
-        $meta = @include $meta_path;
-
-        if (
-            is_array($meta)
-            && isset(
-                $meta['path'],
-                $meta['mime'],
-                $meta['etag']
+    @file_put_contents(
+        iro_media_cache_dir() . '/' . $cache_key . '.meta.php',
+        '<?php return '
+            . var_export(
+                [
+                    'path' => $final,
+                    'mime' => $built['mime'],
+                ],
+                true
             )
-            && is_file($meta['path'])
-        ) {
-            return $meta;
+            . ';'
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Pipeline
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * 生成一份优化图。
+ *
+ * Imagick 优先；它写不出来或失败时，静态图再交给 GD 重试一次；
+ * 两条路都不行就返回 null，由调用方 302 到原图。
+ *
+ * 动图只走 Imagick：GD 只解第一帧，会把动画静帧化。
+ *
+ * @return array{path:string,mime:string,extension:string}|null
+ */
+function iro_media_build(
+    string $source_path,
+    array $options
+): ?array {
+
+    $format = (string) $options['format'];
+
+    $animated = iro_media_source_is_animated($source_path);
+
+    /*
+     * 动图只有「Imagick + WebP」这一条路保得住动画，
+     * 其余组合一律不处理，让浏览器直接取原图。
+     */
+    if ($animated && $format !== 'webp') {
+        return null;
+    }
+
+    $size = @getimagesize($source_path);
+
+    if (
+        $size === false
+        || $size[0] * $size[1] > IRO_MEDIA_MAX_PIXELS
+    ) {
+        return null;
+    }
+
+    $built = iro_media_build_imagick($source_path, $options);
+
+    $fallback = false;
+
+    /*
+     * 回退前先看收益：GD 写不了这个格式、或者解不了这张图，就不必白跑一趟。
+     */
+    if (
+        $built === null
+        && !$animated
+        && iro_media_gd_can_encode($format)
+    ) {
+        $fallback = true;
+
+        $built = iro_media_build_gd($source_path, $options);
+    }
+
+    /*
+     * 收益校验：
+     * 动图转码不划算会让页面变重，回退本身也是额外成本，
+     * 编出来不比原图小就把原图交出去。
+     */
+    if ($built !== null && ($animated || $fallback)) {
+
+        $produced = (int) @filesize($built['path']);
+        $original = (int) @filesize($source_path);
+
+        if ($original > 0 && $produced >= $original) {
+            @unlink($built['path']);
+
+            return null;
         }
     }
 
-    /*
-     * 读取原图。
-     */
-    $source = iro_media_create_from_file(
-        $source_path,
-        (string) $options['format']
-    );
+    return $built;
+}
 
-    if (is_wp_error($source)) {
-        return $source;
+/**
+ * Imagick 分支：解码 → 缩放 → 编码。
+ *
+ * @return array{path:string,mime:string,extension:string}|null
+ */
+function iro_media_build_imagick(
+    string $source_path,
+    array $options
+): ?array {
+
+    $format = (string) $options['format'];
+
+    /*
+     * 先问能力再动手：写不出来的格式不必白解码一张大图。
+     */
+    if (!iro_media_imagick_writes($format)) {
+        return null;
     }
 
-    $imagick = $source instanceof Imagick;
+    $source = iro_media_load_imagick($source_path);
 
-    $frames = $imagick
-        ? $source->getNumberImages()
-        : 1;
+    if ($source === null) {
+        return null;
+    }
 
-    $src_w = $imagick
-        ? $source->getImageWidth()
-        : imagesx($source);
-
-    $src_h = $imagick
-        ? $source->getImageHeight()
-        : imagesy($source);
+    $frames = $source->getNumberImages();
 
     /*
-     * 多帧动图：只有「Imagick + WebP」这一条路保得住动画，
-     * 没有 Imagick（GD 只解第一帧）或请求的是 JPEG/PNG/AVIF 时，
-     * 一律不处理，直接把原图交出去，绝不静帧化。
+     * 头部看不出多帧的格式（动图 AVIF 之类）在这里补一刀：
+     * 非 WebP 静帧化会毁动画，超限的动图不碰。
      */
-    $animated = $frames > 1
-        || (!$imagick && iro_media_source_is_animated($source_path));
-
     if (
-        $animated
-        && (!$imagick || $options['format'] !== 'webp')
+        $frames > 1
+        && (
+            $format !== 'webp'
+            || $frames
+                * $source->getImageWidth()
+                * $source->getImageHeight()
+                > IRO_MEDIA_MAX_PIXELS
+        )
     ) {
         iro_media_destroy($source);
 
-        return iro_media_passthrough($source_path, $options);
+        return null;
     }
 
-    if ($src_w * $src_h * $frames > IRO_MEDIA_MAX_PIXELS) {
+    try {
+        $output = iro_media_resize($source, $options);
+    } catch (Throwable $e) {
 
         iro_media_destroy($source);
 
-        if ($animated) {
-            return iro_media_passthrough($source_path, $options);
-        }
+        return null;
+    }
 
-        return new WP_Error(
-            'source_too_large',
-            'Source image is too large.'
-        );
+    if ($output !== $source) {
+        iro_media_destroy($source);
+    }
+
+    $built = iro_media_encode_to_temp($output, $options);
+
+    iro_media_destroy($output);
+
+    return $built;
+}
+
+/**
+ * GD 分支：只跑第一帧，格式能不能写由调用方先问过。
+ *
+ * @return array{path:string,mime:string,extension:string}|null
+ */
+function iro_media_build_gd(
+    string $source_path,
+    array $options
+): ?array {
+
+    $source = iro_media_load_gd($source_path);
+
+    if ($source === null) {
+        return null;
     }
 
     /*
@@ -1424,8 +1697,7 @@ function iro_media_generate(
      * 输出 WebP/PNG/AVIF 前转换到 truecolor。
      */
     if (
-        !$imagick
-        && function_exists('imageistruecolor')
+        function_exists('imageistruecolor')
         && function_exists('imagepalettetotruecolor')
         && !imageistruecolor($source)
     ) {
@@ -1433,125 +1705,178 @@ function iro_media_generate(
     }
 
     try {
-
-        $output = iro_media_resize(
-            $source,
-            $options
-        );
+        $output = iro_media_resize($source, $options);
     } catch (Throwable $e) {
 
-        /*
-         * 如果 resize 没接管 source，则安全释放。
-         */
         iro_media_destroy($source);
 
-        if ($animated) {
-            return iro_media_passthrough($source_path, $options);
-        }
-
-        return new WP_Error(
-            'resize_failed',
-            $e->getMessage()
-        );
+        return null;
     }
 
-    $tmp_path = tempnam(
-        $cache_dir,
-        'img-'
-    );
-
-    if ($tmp_path === false) {
-        iro_media_destroy($output);
-
-        return new WP_Error(
-            'cache_temp_failed',
-            'Unable to create image cache file.'
-        );
+    if ($output !== $source) {
+        iro_media_destroy($source);
     }
 
-    /*
-     * 编码。
-     */
+    $built = iro_media_encode_to_temp($output, $options);
+
+    iro_media_destroy($output);
+
+    return $built;
+}
+
+/**
+ * 编到缓存目录里的临时文件，失败返回 null。
+ *
+ * @return array{path:string,mime:string,extension:string}|null
+ */
+function iro_media_encode_to_temp(
+    Imagick|GdImage $image,
+    array $options
+): ?array {
+
+    $tmp_path = iro_media_temp_path();
+
+    if ($tmp_path === null) {
+        return null;
+    }
+
     $encoded = iro_media_encode(
-        $output,
+        $image,
         $tmp_path,
         $options
     );
 
-    iro_media_destroy($output);
-
     if (is_wp_error($encoded)) {
         @unlink($tmp_path);
 
-        if ($animated) {
-            return iro_media_passthrough($source_path, $options);
-        }
-
-        return $encoded;
+        return null;
     }
 
-    /*
-     * 动图转码不划算时
-     * 交回原图，不让页面变重。
-     */
-    if (
-        $animated
-        && @filesize($tmp_path) >= @filesize($source_path)
-    ) {
-        @unlink($tmp_path);
-
-        return iro_media_passthrough($source_path, $options);
-    }
-
-    $final_path =
-        trailingslashit($cache_dir)
-        . $cache_key
-        . '.'
-        . $encoded['extension'];
-
-    if (!@rename($tmp_path, $final_path)) {
-        @unlink($tmp_path);
-
-        return new WP_Error(
-            'cache_write_failed',
-            'Unable to move encoded image into cache.'
-        );
-    }
-
-    $etag = '"' . $cache_key . '"';
-
-    $meta = [
-        'path' => $final_path,
-        'mime' => $encoded['mime'],
-        'etag' => $etag,
+    return [
+        'path'      => $tmp_path,
+        'mime'      => $encoded['mime'],
+        'extension' => $encoded['extension'],
     ];
-
-    /*
-     * PHP array cache。
-     */
-    $meta_php =
-        '<?php return '
-        . var_export($meta, true)
-        . ';';
-
-    if (
-        @file_put_contents(
-            $meta_path,
-            $meta_php,
-            LOCK_EX
-        ) === false
-    ) {
-        @unlink($final_path);
-
-        return new WP_Error(
-            'cache_meta_failed',
-            'Unable to write image cache metadata.'
-        );
-    }
-
-    return $meta;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Response
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * 一切都是客户端缓存，服务端不留结论：
+ * 命中就 30 天内不再来，客户端清了缓存打回来就重新算。
+ */
+function iro_media_cache_control(): string
+{
+    return 'public, max-age=' . MONTH_IN_SECONDS . ', immutable';
+}
+
+/**
+ * 交付文件。
+ *
+ * 命中缓存时这就是全部工作；未命中时调用方在它之后写缓存，
+ * 客户端不必等落盘。
+ */
+function iro_media_send_file(
+    string $path,
+    string $mime,
+    string $etag
+): void {
+
+    $size = @filesize($path);
+    $mtime = @filemtime($path);
+
+    header('ETag: ' . $etag);
+    header('Cache-Control: ' . iro_media_cache_control());
+    header('Content-Type: ' . $mime);
+    header('X-Content-Type-Options: nosniff');
+
+    if ($size !== false) {
+        header('Content-Length: ' . $size);
+    }
+
+    if ($mtime !== false) {
+        header(
+            'Last-Modified: '
+                . gmdate('D, d M Y H:i:s', $mtime)
+                . ' GMT'
+        );
+    }
+
+    @readfile($path);
+
+    iro_media_finish_response();
+}
+
+function iro_media_send_not_modified(string $etag): void
+{
+    header('ETag: ' . $etag);
+    header('Cache-Control: ' . iro_media_cache_control());
+
+    status_header(304);
+
+    exit;
+}
+
+/**
+ * 客户端带来的 If-None-Match。
+ *
+ * WP 对 $_SERVER 做了 add_magic_quotes()，不还原转义斜杠的话
+ * 带引号的 ETag 永远比不上，304 就成了死代码。
+ */
+function iro_media_client_etag(): string
+{
+    $etag = trim(
+        stripslashes(
+            (string) ($_SERVER['HTTP_IF_NONE_MATCH'] ?? '')
+        )
+    );
+
+    if (str_starts_with($etag, 'W/')) {
+        $etag = substr($etag, 2);
+    }
+
+    return $etag;
+}
+
+/**
+ * 响应推完就断开：后面的写缓存不占用客户端的等待时间。
+ */
+function iro_media_finish_response(): void
+{
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+}
+
+/**
+ * 交不出优化图就交原图：显示正确优先，宁可多一跳也不出错。
+ *
+ * 缓存和图片用同一套：服务端不落盘、不留负缓存，
+ * 结论只跟着响应走，客户端清了缓存再打回来就重新算。
+ */
+function iro_media_redirect_source(string $image_path): void
+{
+    status_header(302);
+
+    header('Cache-Control: ' . iro_media_cache_control());
+
+    header(
+        'Location: '
+            . home_url('/' . ltrim($image_path, '/'))
+    );
+
+    exit;
+}
+
+/**
+ * 请求入口：命中就打缓存，没命中就现做一份，做不出来就 302 到原图。
+ *
+ * 这条路只有两种结局：交付一张图，或者交回原图，不会回错误页。
+ */
 function iro_media_dispatch(): void
 {
     /*
@@ -1568,135 +1893,79 @@ function iro_media_dispatch(): void
         return;
     }
 
+    $image_path = $request['image_path'];
+
     /*
-     * modifiers。
+     * 源图不存在就没有可交付的东西：
+     * 302 过去也只是把 404 挪个位置。
+     */
+    $source_path = iro_media_resolve_source($image_path);
+
+    if (is_wp_error($source_path)) {
+        status_header(404);
+        exit;
+    }
+
+    /*
+     * 参数不认识就把原图交出去，不再回错误页。
      */
     $options = iro_media_parse_modifiers(
         $request['modifiers']
     );
 
     if (is_wp_error($options)) {
-        status_header(400);
-
-        header(
-            'Content-Type: text/plain; charset=UTF-8'
-        );
-
-        echo $options->get_error_message();
-
-        exit;
+        iro_media_redirect_source($image_path);
     }
 
-    /*
-     * 原图。
-     */
-    $source_path = iro_media_resolve_source(
-        $request['image_path']
-    );
-
-    if (is_wp_error($source_path)) {
-
-        $status =
-            $source_path->get_error_code()
-            === 'not_found'
-            ? 404
-            : 400;
-
-        status_header($status);
-
-        header(
-            'Content-Type: text/plain; charset=UTF-8'
-        );
-
-        echo $source_path->get_error_message();
-
-        exit;
-    }
-
-    /*
-     * 生成/读取缓存。
-     */
-    $generated = iro_media_generate(
+    $cache_key = iro_media_cache_key(
         $source_path,
         $options
     );
 
-    if (is_wp_error($generated)) {
-        status_header(500);
+    $etag = '"' . $cache_key . '"';
 
-        header(
-            'Content-Type: text/plain; charset=UTF-8'
+    /*
+     * 客户端手里那份就是这个 ETag：连构建都省掉。
+     */
+    if (iro_media_client_etag() === $etag) {
+        iro_media_send_not_modified($etag);
+    }
+
+    /*
+     * 1. 有缓存直接发。
+     */
+    $cached = iro_media_cache_read($cache_key);
+
+    if ($cached !== null) {
+
+        iro_media_send_file(
+            $cached['path'],
+            $cached['mime'],
+            $etag
         );
-
-        echo $generated->get_error_message();
 
         exit;
     }
 
     /*
-     * HTTP cache。
+     * 2. 现做一份：Imagick 优先，退 GD，都不行就交原图。
      */
-    $etag = $generated['etag'];
+    $built = iro_media_build($source_path, $options);
 
-    header('ETag: ' . $etag);
-
-    header(
-        'Cache-Control: public, max-age=31536000, immutable'
-    );
-
-    header(
-        'Content-Type: ' . $generated['mime']
-    );
-
-    header(
-        'X-Content-Type-Options: nosniff'
-    );
-
-    /*
-     * ETag。
-     */
-    if (
-        isset($_SERVER['HTTP_IF_NONE_MATCH'])
-        && trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag
-    ) {
-        status_header(304);
-        exit;
+    if ($built === null) {
+        iro_media_redirect_source($image_path);
     }
 
     /*
-     * Last-Modified。
+     * 3. 先把图交出去，再落盘。
      */
-    $last_modified = @filemtime(
-        $generated['path']
+    iro_media_send_file(
+        $built['path'],
+        $built['mime'],
+        $etag
     );
 
-    if ($last_modified !== false) {
-        header(
-            'Last-Modified: '
-                . gmdate(
-                    'D, d M Y H:i:s',
-                    $last_modified
-                )
-                . ' GMT'
-        );
-    }
-
-    /*
-     * Content-Length。
-     */
-    $size = @filesize(
-        $generated['path']
-    );
-
-    if ($size !== false) {
-        header(
-            'Content-Length: ' . $size
-        );
-    }
-
-    @readfile(
-        $generated['path']
-    );
+    iro_media_cache_write($cache_key, $built);
 
     exit;
 }
