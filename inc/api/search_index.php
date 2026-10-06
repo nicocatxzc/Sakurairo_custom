@@ -11,6 +11,10 @@ function iro_get_search_index()
 
     $search_index = [];
     foreach ($query_index->posts as $p) {
+        if (!empty($p->post_password)) {
+            continue;
+        }
+
         $author  = get_userdata($p->post_author);
         $thumbId = get_post_thumbnail_id($p);
 
