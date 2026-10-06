@@ -19,8 +19,8 @@ function classicPagination(
         event.preventDefault();
         event.stopPropagation();
 
-        if (link.dataset.loading === true) return;
-        link.dataset.loading = true;
+        if (link.dataset.loading) return;
+        link.dataset.loading = "1";
 
         try {
             const res = await api.get(link.href, {
@@ -51,7 +51,7 @@ function classicPagination(
         } catch (err) {
             console.error("翻页失败:", err);
         } finally {
-            link.dataset.loading = false;
+            delete link.dataset.loading;
         }
     });
 }
