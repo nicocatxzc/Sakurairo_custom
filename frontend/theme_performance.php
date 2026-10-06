@@ -28,74 +28,60 @@
         let connection = navigator.connection;
         let skipFonts = (connection && connection.saveData) ||
             matchMedia("(prefers-reduced-data: reduce)").matches;
-        let gateFonts = window.innerWidth <= 860 && !skipFonts;
         try {
-            if (window.innerWidth > 860) {
-                openStyle("iro_deferred_bg");
-
-                if (!skipFonts) {
-                    openStyle("iro_extra_fonts");
-                }
-
-                mark("fcp");
-                mark("lcp");
-            } else {
-                <?php
-                // 首屏大图等首个绘制完成后再挂：在此之前不参与下载，避免进入首屏窗口
-                ?>
-                try {
-                    let paintObserver = new PerformanceObserver(function(list) {
-                        for (let entry of list.getEntries()) {
-                            if (entry.name === "first-contentful-paint") {
-                                paintObserver.disconnect();
-                                mark("fcp");
-                                requestAnimationFrame(function() {
-                                    openStyle("iro_deferred_bg");
-                                });
-                                break;
-                            }
+            <?php
+            // 首屏大图等首个绘制完成后再挂：在此之前不参与下载，避免进入首屏窗口
+            ?>
+            try {
+                let paintObserver = new PerformanceObserver(function(list) {
+                    for (let entry of list.getEntries()) {
+                        if (entry.name === "first-contentful-paint") {
+                            paintObserver.disconnect();
+                            mark("fcp");
+                            requestAnimationFrame(function() {
+                                openStyle("iro_deferred_bg");
+                            });
+                            break;
                         }
+                    }
+                });
+                paintObserver.observe({
+                    type: "paint",
+                    buffered: true
+                });
+            } catch (e) {
+                window.addEventListener("load", function() {
+                    mark("fcp");
+                    requestAnimationFrame(function() {
+                        openStyle("iro_deferred_bg");
                     });
-                    paintObserver.observe({
-                        type: "paint",
-                        buffered: true
-                    });
-                } catch (e) {
-                    window.addEventListener("load", function() {
-                        mark("fcp");
-                        requestAnimationFrame(function() {
-                            openStyle("iro_deferred_bg");
-                        });
-                    }, {
-                        once: true
-                    });
-                }
-                <?php
-                // 外链字体默认 media="not all" 不下载，等首屏最大内容绘制稳定后再下载
-                // 桌面端立即加载
-                // 省流永不加载
-                ?>
-                let settleTimer = 0;
+                }, {
+                    once: true
+                });
+            }
+            <?php
+            // 外链字体默认 media="not all" 不下载，等首屏最大内容绘制稳定后再下载。
+            // 省流永不加载
+            ?>
+            let settleTimer = 0;
 
-                function settleLargestPaint() {
-                    clearTimeout(settleTimer);
-                    settleTimer = setTimeout(function() {
-                        mark("lcp");
-                        if (gateFonts) {
-                            openStyle("iro_extra_fonts");
-                        }
-                    }, 600);
-                }
+            function settleLargestPaint() {
+                clearTimeout(settleTimer);
+                settleTimer = setTimeout(function() {
+                    mark("lcp");
+                    if (!skipFonts) {
+                        openStyle("iro_extra_fonts");
+                    }
+                }, 600);
+            }
 
-                try {
-                    new PerformanceObserver(settleLargestPaint).observe({
-                        type: "largest-contentful-paint",
-                        buffered: true
-                    });
-                } catch (e) {
-                    window.addEventListener("load", settleLargestPaint);
-                }
-
+            try {
+                new PerformanceObserver(settleLargestPaint).observe({
+                    type: "largest-contentful-paint",
+                    buffered: true
+                });
+            } catch (e) {
+                window.addEventListener("load", settleLargestPaint);
             }
         } catch (e) {
             console.log(e)
@@ -107,7 +93,7 @@
             mark("fcp");
             mark("lcp");
             openStyle("iro_deferred_bg");
-            if (gateFonts) {
+            if (!skipFonts) {
                 openStyle("iro_extra_fonts");
             }
         }, 10000);
