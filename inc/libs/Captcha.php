@@ -286,7 +286,7 @@ class IroCaptcha
             return [
                 'stat' => true,
                 'data' => '',
-                'msg'  => __('验证码查验失败。', 'sakurairo'),
+                'msg'  => '',
             ];
         }
 
