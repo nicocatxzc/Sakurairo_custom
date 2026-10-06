@@ -14,11 +14,21 @@
                 rel="<?= $isExternal ? 'external nofollow noreferrer' : '' ?>"
                 class="card-link">
                 <div class="card-image">
-                    <img
-                        class="nuxtpic"
-                        alt="showcard-image"
-                        src="<?= iro_media_optimize_image_url($showcard["img"],["height"=>448]) ?>"
-                        loading="lazy" />
+                    <picture class="nuxtpic">
+                        <?= iro_media_optimize_image_formats(
+                            $showcard["img"],
+                            [
+                                'width' => 276,
+                                'height' => '14rem',
+                                'fit' => 'cover',
+                                'sizes' => '(max-width: 800px) 92vw, (max-width: 1120px) 47vw, 276px',
+                            ],
+                            [
+                                'alt' => 'showcard-image',
+                                'loading' => 'lazy',
+                            ]
+                        ) ?>
+                    </picture>
                 </div>
                 <div class="card-info">
                     <p class="card-desc"><?= $showcard["description"] ?></p>

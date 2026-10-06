@@ -1,10 +1,21 @@
 <article class="post-card post-card-with-image">
     <div class="post-thumb">
         <a href="<?= esc_url(get_permalink()) ?>">
-            <img
-                src="<?= has_post_thumbnail() ? iro_media_optimize_image_url(esc_url(get_the_post_thumbnail_url(get_the_ID(), 'medium_large'))) : DEFAULT_FEATURE_IMAGE() ?>"
-                alt="<?= esc_attr(sprintf('featured image for post %s', get_the_title())) ?>"
-                loading="lazy">
+            <picture class="nuxtpic">
+                <?= iro_media_optimize_image_formats(
+                    has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium_large') : DEFAULT_FEATURE_IMAGE(),
+                    [
+                        'width' => 860,
+                        'height' => '12.75rem',
+                        'fit' => 'cover',
+                        'sizes' => '(max-width: 934px) 92vw, 860px',
+                    ],
+                    [
+                        'alt' => sprintf('featured image for post %s', get_the_title()),
+                        'loading' => 'lazy',
+                    ]
+                ) ?>
+            </picture>
         </a>
     </div>
 

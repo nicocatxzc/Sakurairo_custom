@@ -17,9 +17,13 @@
                 <div class="center">
                     <?php if (iro_opt("cover_focus_style") != "off") : ?>
                         <?php if (iro_opt("cover_focus_style", "text") == "avatar"): ?>
-                            <img
-                                src="<?= iro_media_optimize_image_url(iro_opt('cover_avatar')) ?>"
-                                class="nuxtpic cover-avatar" />
+                            <picture class="nuxtpic">
+                                <?= iro_media_optimize_image_formats(
+                                    iro_opt('cover_avatar'),
+                                    ['width' => '7.5rem', 'height' => '7.5rem'],
+                                    ['class' => 'cover-avatar']
+                                ) ?>
+                            </picture>
                         <?php else: ?>
                             <h1
                                 class="cover-title"

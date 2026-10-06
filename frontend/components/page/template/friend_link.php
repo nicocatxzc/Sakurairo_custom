@@ -108,7 +108,7 @@ $iro_friend_links = json_decode(json_encode(iro_get_friend_links()), true);
                             <img
                                 loading="lazy"
                                 class="avatar"
-                                src="<?= $link["link_image"] ?>"
+                                src="<?= esc_url(iro_media_optimize_image_url($link["link_image"], ['width' => '6rem', 'height' => '6rem'])) ?>"
                                 onerror="_iro.utils.missAvatar(this)"
                                 alt="" />
 

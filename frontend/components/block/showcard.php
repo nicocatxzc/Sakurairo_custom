@@ -1,11 +1,16 @@
 <div class="block-showcard">
     <div class="img">
         <?php if (!empty($data['img'])): ?>
-            <img
-                class="nuxtpic"
-                src="<?= iro_media_optimize_image_url(esc_url($data['img'])) ?>"
-                alt="<?= esc_attr(wp_strip_all_tags($data['title'])) ?>"
-                loading="lazy" />
+            <picture class="nuxtpic">
+                <?= iro_media_optimize_image_formats(
+                    $data['img'],
+                    ['width' => '12.5rem', 'height' => '12.5rem'],
+                    [
+                        'alt' => wp_strip_all_tags($data['title']),
+                        'loading' => 'lazy',
+                    ]
+                ) ?>
+            </picture>
         <?php endif; ?>
 
         <?php if (!empty($data['link'])): ?>

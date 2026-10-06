@@ -45,10 +45,22 @@ $reward = iro_opt('article_author_reward', []);
                             <li class="reward-<?= $image_key ?>">
                                 <?php if (!empty($reward[$link_key])): ?>
                                     <a href="<?= esc_url($reward[$link_key]) ?>" target="_blank" rel="noopener noreferrer">
-                                        <img src="<?= iro_media_optimize_image_url(esc_url($reward[$image_key])) ?>" alt="<?= esc_attr('reward_' . $image_key) ?>">
+                                        <picture>
+                                            <?= iro_media_optimize_image_formats(
+                                                $reward[$image_key],
+                                                ['width' => '9.38rem'],
+                                                ['alt' => 'reward_' . $image_key]
+                                            ) ?>
+                                        </picture>
                                     </a>
                                 <?php else: ?>
-                                    <img src="<?= iro_media_optimize_image_url(esc_url($reward[$image_key])) ?>" alt="<?= esc_attr('reward_' . $image_key) ?>">
+                                    <picture>
+                                        <?= iro_media_optimize_image_formats(
+                                            $reward[$image_key],
+                                            ['width' => '9.38rem'],
+                                            ['alt' => 'reward_' . $image_key]
+                                        ) ?>
+                                    </picture>
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>

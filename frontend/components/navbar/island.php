@@ -9,7 +9,13 @@ if (!is_array($iro_menu_options)) {
 <header class="site-header island flex-center<?= is_home() ? ' is-home' : '' ?>">
     <div class="site-branding flex-center">
         <a href="<?= esc_url(home_url('/')) ?>">
-            <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo"), ["height" => 96]) ?>" class="nuxtpic logo" alt="site logo">
+            <picture>
+                <?= iro_media_optimize_image_formats(
+                    iro_opt("nav_logo"),
+                    ["height" => 96],
+                    ["class" => "nuxtpic logo", "alt" => "site logo"]
+                ) ?>
+            </picture>
             <span
                 class="site-title"
                 style=" font-family: <?= iro_opt("nav_title_font") ?> ">
@@ -72,10 +78,16 @@ if (!is_array($iro_menu_options)) {
                 ?>
                     <?= get_avatar($current_user->ID, 80, '', __("用户头像", "sakurairo"), ['class' => 'avatar']) ?>
                 <?php else: ?>
-                    <img
-                        src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
-                        alt="<?= __("用户头像", 'sakurairo') ?>"
-                        class="nuxtpic avatar">
+                    <picture>
+                        <?= iro_media_optimize_image_formats(
+                            iro_opt("missing_avatars_placeholder"),
+                            ["width" => 35, "height" => 35],
+                            [
+                                "class" => "nuxtpic avatar",
+                                "alt" => __("用户头像", 'sakurairo'),
+                            ]
+                        ) ?>
+                    </picture>
                 <?php endif; ?>
                 <div class="user-menu">
                     <div class="user-menu-info">

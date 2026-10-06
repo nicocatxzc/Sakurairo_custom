@@ -103,10 +103,16 @@ $post_comment_args = iro_comment_form_data();
                 <!-- 名称 / 邮箱 / 网站 -->
                 <?php if (!is_user_logged_in()): ?>
                     <div class="infos">
-                        <img
-                            alt="avatar"
-                            src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
-                            class="nuxtpic avatar" />
+                        <picture class="nuxtpic">
+                            <?= iro_media_optimize_image_formats(
+                                iro_opt("missing_avatars_placeholder"),
+                                ['width' => '3rem', 'height' => '3rem'],
+                                [
+                                    'class' => 'avatar',
+                                    'alt' => 'avatar',
+                                ]
+                            ) ?>
+                        </picture>
                         <?php foreach ($info_fields as $name => $field) : ?>
                             <?= $field ?>
                         <?php endforeach; ?>

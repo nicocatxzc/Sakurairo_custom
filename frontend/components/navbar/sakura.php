@@ -5,7 +5,13 @@ $iro_menu_options = iro_get_navigation();
 <header
     class="site-header sakura flex-center">
     <div class="site-branding flex-center">
-        <img src="<?= iro_media_optimize_image_url(iro_opt("nav_logo"),["height"=>96]) ?>" class="nuxtpic logo" alt="site logo">
+        <picture>
+            <?= iro_media_optimize_image_formats(
+                iro_opt("nav_logo"),
+                ["height" => 96],
+                ["class" => "nuxtpic logo", "alt" => "site logo"]
+            ) ?>
+        </picture>
         <a href="/">
             <span
                 class="site-title"
@@ -84,11 +90,13 @@ $iro_menu_options = iro_get_navigation();
                     </div>
                 </div>
             <?php else: ?>
-                    <img
-                        src="<?= iro_media_optimize_image_url(iro_opt("missing_avatars_placeholder")) ?>"
-                        alt="用户头像"
-                        class="nuxtpic avatar"
-                    />
+                    <picture>
+                        <?= iro_media_optimize_image_formats(
+                            iro_opt("missing_avatars_placeholder"),
+                            ["width" => "2.5rem", "height" => "2.5rem"],
+                            ["class" => "nuxtpic avatar", "alt" => "用户头像"]
+                        ) ?>
+                    </picture>
                 <div class="user-menu">
                     <div class="user-menu-info">
                         <span class="name"><?= __("游客",'sakurairo') ?></span>

@@ -655,6 +655,11 @@ function iro_media_optimize_content_images(
  * srcset  96w, 192w, 288w
  * sizes   96px
  *
+ * 传 fit => cover 表示这是「高度固定、宽度随视口变」的裁剪框
+ * （CSS 里 height 写死、img 用 object-fit: cover），
+ * 此时每档的裁切比例按该档自己的宽度算，
+ * 否则会按最大档的比例等比缩小高度、服务端裁出错误的构图。
+ *
  * @return array{sizes:string,width:int|null,height:int|null,candidates:array<int,array{width:int|null,height:int|null}>}
  */
 function iro_media_responsive_plan(array $args): array
@@ -666,6 +671,8 @@ function iro_media_responsive_plan(array $args): array
 
     $width  = is_int($width) && $width > 0 ? $width : null;
     $height = is_int($height) && $height > 0 ? $height : null;
+
+    $cover = strtolower(trim((string) ($args['fit'] ?? ''))) === 'cover';
 
     if ($width === null) {
         return [
@@ -703,13 +710,14 @@ function iro_media_responsive_plan(array $args): array
     $sizes[] = $width . 'px';
 
     /*
-     * 1 / 2 / 3 倍密度，按宽度去重升序。
+     * 1 / 2 / 3 倍密度，按宽度去重升序；
+     * 记下产生该宽度的档位，cover 模式要用它算这一档的裁切比例。
      */
     $widths = [];
 
     foreach ($tiers as $tier) {
         foreach ([1, 2, 3] as $density) {
-            $widths[$tier * $density] = true;
+            $widths[$tier * $density] ??= $tier;
         }
     }
 
@@ -717,12 +725,16 @@ function iro_media_responsive_plan(array $args): array
 
     $candidates = [];
 
-    foreach (array_keys($widths) as $candidate_width) {
+    foreach ($widths as $candidate_key => $candidate_tier) {
 
         $candidate_width = min(
-            (int) $candidate_width,
+            (int) $candidate_key,
             IRO_MEDIA_MAX_DIMENSION
         );
+
+        $candidate_scale = $cover
+            ? $candidate_width / $candidate_tier
+            : $candidate_width / $width;
 
         $candidate_height = $height === null
             ? null
@@ -731,7 +743,7 @@ function iro_media_responsive_plan(array $args): array
                 max(
                     1,
                     (int) round(
-                        $height * $candidate_width / $width
+                        $height * $candidate_scale
                     )
                 )
             );
@@ -1079,7 +1091,11 @@ function iro_media_optimize_image_formats(
 
     $extra = '';
 
-    foreach (['alt' => ''] + $attributes as $name => $value) {
+    /*
+     * $attributes 在前，调用处没给 alt 时才补空 alt
+     * （数组 + 的语义是左边优先）。
+     */
+    foreach ($attributes + ['alt' => ''] as $name => $value) {
 
         if (
             $value === null

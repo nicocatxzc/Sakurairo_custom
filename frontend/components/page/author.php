@@ -6,10 +6,13 @@
         <div
             class="author-avatar"
             style="--post-count:'<?= count_user_posts($author) ?>'">
-            <img
-                src="<?= iro_media_optimize_image_url(esc_url(get_avatar_url($author, ['size' => 150]))) ?>"
-                alt="avatar of <?= esc_attr(get_the_author_meta('display_name', $author)) ?>"
-                class="nuxtpic" />
+            <picture class="nuxtpic">
+                <?= iro_media_optimize_image_formats(
+                    get_avatar_url($author, ['size' => 150]),
+                    ['width' => '4.6rem', 'height' => '4.6rem'],
+                    ['alt' => sprintf('avatar of %s', get_the_author_meta('display_name', $author))]
+                ) ?>
+            </picture>
         </div>
         <div class="author-desc">
             <h3 class="name"><?= esc_html(get_the_author_meta('display_name', $author)) ?></h3>
