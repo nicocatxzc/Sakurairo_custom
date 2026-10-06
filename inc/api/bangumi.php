@@ -1,6 +1,11 @@
 <?php
 class IroAnimeList
 {
+    // 追番多时逐页拉取会拖慢首屏：限制页数与总耗时（bgm.tv 每页最多 50 条）
+    private const BGM_PAGE_LIMIT = 50;
+    private const BGM_MAX_PAGES = 10;
+    private const BGM_TIME_BUDGET = 10;
+
     private static function buildPagination(int $page, int $totalItems, int $perPage): array
     {
         $totalPages = $perPage > 0 ? (int) ceil($totalItems / $perPage) : 0;
@@ -43,6 +48,59 @@ class IroAnimeList
         ];
     }
 
+    /**
+     * 逐页拉取 bgm.tv 动画收藏
+     *
+     * 首页就拉不到（网络错误 / 非 200 / 响应不合规）返回 null，调用方据此不写缓存并报错；
+     * 中途某页失败或超出时间预算时返回已拿到的部分，避免整页空白。
+     *
+     * @return array<int, array<string, mixed>>|null
+     */
+    private static function fetchBangumiCollections(string $userID): ?array
+    {
+        $items = [];
+        $deadline = microtime(true) + self::BGM_TIME_BUDGET;
+
+        for ($page = 0; $page < self::BGM_MAX_PAGES; $page++) {
+            if ($page > 0 && microtime(true) > $deadline) {
+                break;
+            }
+
+            $response = wp_remote_get(
+                add_query_arg([
+                    'subject_type' => 2,
+                    'limit'        => self::BGM_PAGE_LIMIT,
+                    'offset'       => $page * self::BGM_PAGE_LIMIT,
+                ], "https://api.bgm.tv/v0/users/{$userID}/collections"),
+                [
+                    'headers' => [
+                        'User-Agent' => 'nicocatxzc/hachimi(https://github.com/nicocatxzc/hachimi):WordPressTheme',
+                    ],
+                    'timeout' => 15,
+                ]
+            );
+
+            if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+                break;
+            }
+
+            $pageData = json_decode(wp_remote_retrieve_body($response), true);
+
+            if (!isset($pageData['data']) || !is_array($pageData['data'])) {
+                break;
+            }
+
+            $items = array_merge($items, $pageData['data']);
+
+            $total = (int) ($pageData['total'] ?? count($items));
+            if (count($items) >= $total || count($pageData['data']) < self::BGM_PAGE_LIMIT) {
+                return $items;
+            }
+        }
+
+        return $items === [] ? null : $items;
+    }
+
     // bilibili
     public static function getBilibiliList(int $page = 1, int $perPage = 15, string $type = 'bangumi'): array
     {
@@ -75,12 +133,23 @@ class IroAnimeList
                     'timeout' => 15,
                 ]);
 
-                if (is_wp_error($response)) {
+                if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
                     return null;
                 }
 
-                $body = wp_remote_retrieve_body($response);
-                return json_decode($body, true);
+                $list = json_decode(wp_remote_retrieve_body($response), true);
+
+                // 接口级报错（如用户不可见、被风控）不能当成有效列表缓存
+                if (
+                    !is_array($list) ||
+                    (int) ($list['code'] ?? 0) !== 0 ||
+                    !isset($list['data']['list']) ||
+                    !is_array($list['data']['list'])
+                ) {
+                    return null;
+                }
+
+                return $list;
             }
         );
 
@@ -109,14 +178,11 @@ class IroAnimeList
             ];
         }
 
-        $totalItems    = (int) ($list['data']['total'] ?? 0);
-        $offset        = ($page - 1) * $perPage;
-        $paginatedData = array_slice($formatted, $offset, $perPage);
-
+        // 列表已由接口按 pn/ps 分页，这里不能再按全局偏移切一次
         return [
             'success'    => true,
-            'data'       => array_values($paginatedData),
-            'pagination' => self::buildPagination($page, $totalItems, $perPage),
+            'data'       => $formatted,
+            'pagination' => self::buildPagination($page, (int) ($list['data']['total'] ?? 0), $perPage),
         ];
     }
 
@@ -131,34 +197,24 @@ class IroAnimeList
         $page    = max(1, $page);
         $perPage = max(1, $perPage);
 
+        // 键加 _all：旧实现只缓存接口首屏（≤30 条）且没有完整标记，换键让残缺缓存立即失效
         $collections = iro_swr_cache(
-            "bangumi_{$userID}",
+            "bangumi_{$userID}_all",
             function () use ($userID) {
-                $url = "https://api.bgm.tv/v0/users/{$userID}/collections";
+                $items = self::fetchBangumiCollections($userID);
 
-                $response = wp_remote_get($url, [
-                    'headers' => [
-                        'User-Agent' => 'nicocatxzc/hachimi(https://github.com/nicocatxzc/hachimi):WordPressTheme',
-                    ],
-                    'timeout' => 15,
-                ]);
-
-                if (is_wp_error($response)) {
+                if ($items === null) {
                     return null;
                 }
 
-                $data = json_decode(wp_remote_retrieve_body($response), true);
-
                 $result = [];
-                if (isset($data['data']) && is_array($data['data'])) {
-                    foreach ($data['data'] as $item) {
-                        // type: 2=在看, 3=看过 ; subject_type: 2=动画
-                        if (
-                            in_array((int) ($item['type'] ?? 0), [2, 3], true) &&
-                            (int) ($item['subject_type'] ?? 0) === 2
-                        ) {
-                            $result[] = $item;
-                        }
+                foreach ($items as $item) {
+                    // bgm.tv 收藏类型 type：2=看过、3=在看；subject_type：2=动画
+                    if (
+                        in_array((int) ($item['type'] ?? 0), [2, 3], true) &&
+                        (int) ($item['subject_type'] ?? 2) === 2
+                    ) {
+                        $result[] = $item;
                     }
                 }
 
@@ -255,12 +311,14 @@ class IroAnimeList
                     'timeout' => 15,
                 ]);
 
-                if (is_wp_error($response)) {
+                if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
                     return null;
                 }
 
                 $data = json_decode(wp_remote_retrieve_body($response), true);
-                return is_array($data) ? $data : [];
+
+                // 非 JSON（错误页、私有列表重定向）视为失败，不能缓存成「没有追番」
+                return is_array($data) ? $data : null;
             }
         );
 
