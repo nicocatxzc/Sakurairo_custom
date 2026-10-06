@@ -82,6 +82,75 @@ function iro_media_public_base_url(): string
 
 
 /**
+ * 尺寸参数支持 px 与 rem：
+ *
+ * 96 / '96' / '96px' / '6rem'
+ *
+ * rem 按 iro_opt('global_font_size') 换算，CSS 里写多少这里就传多少。
+ */
+function iro_media_parse_dimension(mixed $value): ?int
+{
+    if (is_int($value)) {
+        return $value;
+    }
+
+    if (is_float($value)) {
+        return (int) round($value);
+    }
+
+    if (!is_string($value)) {
+        return null;
+    }
+
+    $value = strtolower(trim($value));
+
+    if (str_ends_with($value, 'rem')) {
+
+        $number = trim(substr($value, 0, -3));
+
+        if (!is_numeric($number)) {
+            return null;
+        }
+
+        // 后台的滑块存的是纯数字，这里容忍 '16px' 之类的写法
+        $font_size = (float) iro_opt('global_font_size', '16');
+
+        if ($font_size <= 0) {
+            $font_size = 16.0;
+        }
+
+        return (int) round((float) $number * $font_size);
+    }
+
+    if (str_ends_with($value, 'px')) {
+        $value = trim(substr($value, 0, -2));
+    }
+
+    return is_numeric($value)
+        ? (int) round((float) $value)
+        : null;
+}
+
+function iro_media_normalize_dimensions(array $args): array
+{
+    foreach (['width', 'w', 'height', 'h'] as $key) {
+
+        if (!array_key_exists($key, $args)) {
+            continue;
+        }
+
+        $parsed = iro_media_parse_dimension($args[$key]);
+
+        // 解析不了就留下原值，交给参数校验照旧报错
+        if ($parsed !== null) {
+            $args[$key] = $parsed;
+        }
+    }
+
+    return $args;
+}
+
+/**
  * 把一个同源图片 URL 转为优化图片：
  * 
  * /static/media/...
@@ -118,6 +187,8 @@ function iro_media_optimize_image_url(
     }
 
     $original = $url;
+
+    $args = iro_media_normalize_dimensions($args);
 
     // 读取选项
     $optimize_enabled = (bool) iro_opt("iro_image_optimize");
@@ -588,13 +659,15 @@ function iro_media_optimize_content_images(
  */
 function iro_media_responsive_plan(array $args): array
 {
+    $args = iro_media_normalize_dimensions($args);
+
     $width  = $args['width'] ?? $args['w'] ?? null;
     $height = $args['height'] ?? $args['h'] ?? null;
 
-    $width  = is_numeric($width) ? (int) $width : null;
-    $height = is_numeric($height) ? (int) $height : null;
+    $width  = is_int($width) && $width > 0 ? $width : null;
+    $height = is_int($height) && $height > 0 ? $height : null;
 
-    if ($width === null || $width < 1) {
+    if ($width === null) {
         return [
             'sizes'      => '',
             'width'      => null,
@@ -789,11 +862,12 @@ function iro_media_responsive_srcset(
  *
  * 只生成属性，标签与其余属性（alt / class / loading / ...）由调用处自己写：
  *
- * <img <?= iro_media_optimize_image_sizes($url, ['width' => 96, 'height' => 96]) ?>
+ * <img <?= iro_media_optimize_image_sizes($url, ['width' => '6rem', 'height' => '6rem']) ?>
  *     alt="<?= esc_attr($alt) ?>" loading="lazy">
  *
  * $args 透传给 iro_media_optimize_image_url()，
- * 其中 width/height 视为实际显示像素，既用于推导档位，也用于输出宽高属性；
+ * 其中 width/height 视为实际显示像素（px 与 rem 写法等价），
+ * 既用于推导档位，也用于输出宽高属性；
  * 额外的 sizes 键可以覆盖自动生成的 sizes。
  *
  * @param array<string,mixed> $args
@@ -843,7 +917,7 @@ function iro_media_optimize_image_sizes(
 
 /**
  * <picture>
- *     <?= iro_media_optimize_image_formats($url, ['width' => 96, 'height' => 96], ['alt' => '']) ?>
+ *     <?= iro_media_optimize_image_formats($url, ['width' => '6rem', 'height' => '6rem'], ['alt' => '']) ?>
  * </picture>
  *
  * $args 与 iro_media_optimize_image_sizes() 一致，每个 <source> 用各自的 format；
