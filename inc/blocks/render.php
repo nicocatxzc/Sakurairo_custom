@@ -127,26 +127,6 @@ add_action('init', function () {
         },
     ]);
 
-
-    /*
-     * 工具块（Sakurairo Tools 分类，推荐放进小工具）：外观只在前台渲染，编辑器内是占位符
-     */
-    foreach ([
-        'sidebar-author' => 'side_bar_author.php',
-        'sidebar-terms'  => 'side_bar_terms.php',
-        'sidebar-menu'   => 'side_bar_menu.php',
-        'sidebar-toc'    => 'side_bar_toc.php',
-    ] as $sidebar_block => $sidebar_template) {
-        register_block_type('sakurairo/' . $sidebar_block, [
-            'render_callback' => function ($attributes) use ($sidebar_template) {
-                ob_start();
-                require get_theme_file_path('/frontend/components/site/widget/' . $sidebar_template);
-                return ob_get_clean();
-            },
-        ]);
-    }
-
-
     /*
      * Show Card
      */
@@ -230,6 +210,26 @@ add_action('init', function () {
             ]);
         },
     ]);
+
+    /*
+     * 工具块
+     */
+    foreach (
+        [
+            'sidebar-author' => 'side_bar_author.php',
+            'sidebar-terms'  => 'side_bar_terms.php',
+            'sidebar-menu'   => 'side_bar_menu.php',
+            'sidebar-toc'    => 'side_bar_toc.php',
+        ] as $sidebar_block => $sidebar_template
+    ) {
+        register_block_type('sakurairo/' . $sidebar_block, [
+            'render_callback' => function ($attributes) use ($sidebar_template) {
+                ob_start();
+                require get_theme_file_path('/frontend/components/site/widget/' . $sidebar_template);
+                return ob_get_clean();
+            },
+        ]);
+    }
 }, 999);
 
 // ghcard

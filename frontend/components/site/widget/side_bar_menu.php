@@ -1,7 +1,5 @@
 <?php
-// 侧栏导航：条目数据取自 side_bar 菜单位置，结构与移动端导航栏一致。
-// 链接文字是用户自己输进菜单标签的，这里刻意不转义（保持原样 HTML 输出），
-// 才能在标签里写自定义图标；标签由具备 unfiltered_html 权限的管理员录入。
+// 侧栏导航：条目数据取自 side_bar 菜单位置，结构与移动端导航栏一致
 $menu_items = iro_get_navigation('side_bar');
 
 if (!is_array($menu_items)) {
