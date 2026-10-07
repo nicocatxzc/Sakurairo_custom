@@ -14,7 +14,7 @@ import authorBlock from "./tools/author";
 import termsBlock from "./tools/terms";
 import menuBlock from "./tools/menu";
 import tocBlock from "./tools/toc";
-import stickyBlock from "./tools/sticky";
+import columnBlock from "./tools/column";
 import "./style.scss";
 
 domReady(() => {
@@ -55,7 +55,7 @@ export default function initBlocks() {
         termsBlock();
         menuBlock();
         tocBlock();
-        stickyBlock();
+        columnBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

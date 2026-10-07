@@ -20,7 +20,7 @@
     display: grid;
     // 轨道总宽小于容器时整体居中
     justify-content: center;
-    // 侧栏撑到正文高度
+    // 侧栏撑到正文高度，给栏内「栏目容器」留出行程
     align-items: stretch;
     column-gap: var(--layout-gap);
     padding-inline: var(--layout-safe-area);
@@ -47,7 +47,7 @@
     margin-left: calc(50% - 50dvw);
 }
 
-// 侧栏本身不吸附：随正文一起滚走，只有 .iro-sticky 里的内容会留下
+// 侧栏是一条全高轨道，自身不吸附：没被「栏目容器」包住的块随正文滚走
 .site-side-bar {
     margin-top: 1rem;
 }

@@ -1,7 +1,7 @@
 .site-side-bar {
-    &.with-background {
-        background-color: var(--widget-background-color);
-    }
+    // 整条轨道是全高的：不画背景，只给栏内的吸附块提供行程；
+    // 整体背景交给栏内的「栏目容器」，这样它只包内容高度，
+    // 同一条轨道里可以有多个栏目，也可以有没被包住的裸块
     padding: 1rem;
 
     .widget_search {
