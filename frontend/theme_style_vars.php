@@ -1,45 +1,9 @@
 <?php //样式定义
 ?>
 <style>
-    <?php
-    // 受主题色影响、需要「当前模式 + 反转」两个名字的 token
-    $iro_mode_tokens = [
-        'active-color',
-        'active-widget-text',
-        'active-widget-fill',
-        'active-widget-fill-on',
-        'widget-bg',
-        'widget-bg-hover',
-    ];
-    ?> :root {
-        /* 取色钩子 --theme-base-color 刻意不定义：colorthief 成功时由 JS 写到 <html> 内联样式，
-           内联优先于本规则，两个模式的基色会同时改用它；清除后自动回落各自的设置项。 */
-        --theme-base-color-light: var(--theme-base-color, <?= iro_opt('active_color', '#00b0f0') ?>);
-        --theme-base-color-dark: var(--theme-base-color, <?= iro_opt('active_color_dark', '#FCCD00') ?>);
-        --theme-widget-transparency-light: <?= iro_opt('widget_transparency', 0.8) ?>;
-        --theme-widget-transparency-dark: <?= iro_opt('widget_transparency_dark', 0.8) ?>;
-        --theme-background-transparency-light: <?= iro_opt('background_transparency', 0.8) ?>;
-        --theme-background-transparency-dark: <?= iro_opt('background_transparency_dark', 0.7) ?>;
-
-        /* 兜底：不认识相对颜色语法的浏览器不钳制，直接用原色 */
-        --lt-active-color: var(--theme-base-color-light);
-        --lt-active-widget-text: var(--theme-base-color-light);
-        --lt-active-widget-fill: var(--theme-base-color-light);
-        --lt-active-widget-fill-on: #000;
-        --lt-widget-bg: rgba(255, 255, 255, var(--theme-widget-transparency-light));
-        --lt-widget-bg-hover: rgba(0, 0, 0, 0.06);
-
-        --dk-active-color: var(--theme-base-color-dark);
-        --dk-active-widget-text: var(--theme-base-color-dark);
-        --dk-active-widget-fill: var(--theme-base-color-dark);
-        --dk-active-widget-fill-on: #000;
-        --dk-widget-bg: color-mix(in srgb, color-mix(in srgb, var(--theme-base-color-dark) 14%, #1a1a1a) calc(var(--theme-widget-transparency-dark) * 100%), transparent);
-        --dk-widget-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--theme-base-color-dark) 22%, #1a1a1a) calc(var(--theme-widget-transparency-dark) * 100%), transparent);
-
-        <?php foreach ($iro_mode_tokens as $iro_token): ?>--<?= $iro_token ?>: var(--lt-<?= $iro_token ?>);
-        --<?= $iro_token ?>-reverse: var(--dk-<?= $iro_token ?>);
-        <?php endforeach; ?>--widget-transparency: var(--theme-widget-transparency-light);
-        --background-transparency: var(--theme-background-transparency-light);
+    :root {
+        --widget-transparency: <?= iro_opt('widget_transparency', 0.8) ?>;
+        --background-transparency: <?= iro_opt('background_transparency', 0.8) ?>;
         --word-color-first: <?= iro_opt('word_color_first', '#505050') ?>;
         --word-color-second: <?= iro_opt('word_color_second', '#00000080') ?>;
         --word-color-third: #0000004d;
@@ -65,23 +29,9 @@
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }
 
-    @supports (color: oklch(from red l c h)) {
-
-        /* 只在超标时纠正：预设 #00b0f0（L=0.709 C=0.145）与 #FCCD00（L=0.868 C=0.182）
-           都落在区间内，原值保留。填充前景恒为黑，所以只需把 oklch L 钳到 0.60 下界。 */
-        :root {
-            --lt-active-widget-text: oklch(from var(--theme-base-color-light) min(l, 0.52) min(c, 0.2) h / 1);
-            --lt-active-widget-fill: oklch(from var(--theme-base-color-light) max(l, 0.60) min(c, 0.2) h / 1);
-            --dk-active-widget-text: oklch(from var(--theme-base-color-dark) max(l, 0.68) min(c, 0.2) h / 1);
-            --dk-active-widget-fill: oklch(from var(--theme-base-color-dark) max(l, 0.60) min(c, 0.2) h / 1);
-        }
-    }
-
     :root.dark {
-        <?php foreach ($iro_mode_tokens as $iro_token): ?>--<?= $iro_token ?>: var(--dk-<?= $iro_token ?>);
-        --<?= $iro_token ?>-reverse: var(--lt-<?= $iro_token ?>);
-        <?php endforeach; ?>--widget-transparency: var(--theme-widget-transparency-dark);
-        --background-transparency: var(--theme-background-transparency-dark);
+        --widget-transparency: <?= iro_opt('widget_transparency_dark', 0.8) ?>;
+        --background-transparency: <?= iro_opt('background_transparency_dark', 0.7) ?>;
         --word-color-first: <?= iro_opt('word_color_first_dark', '#CCCCCC') ?>;
         --word-color-second: <?= iro_opt('word_color_second_dark', '#999999') ?>;
         --word-color-third: #7d7d7d;
@@ -89,10 +39,11 @@
 
         --widget-background: 26, 26, 26;
         --widget-background-reverse: 255, 255, 255;
-        --widget-background-color: rgba(var(--widget-background), var(--widget-transparency));
+        /* 深色组件背景继承计算区的 --widget-dark-bg，再叠上透明度 */
+        --widget-background-color: color-mix(in srgb, var(--widget-dark-bg) calc(var(--widget-transparency) * 100%), transparent);
         --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
         --widget-shadow-shine-color: rgba(26, 26, 26, 0.8);
-        --widget-shadow-shining-color: var(--active-color);
+        --widget-shadow-shining-color: var(--widget-dark-shining);
         --widget-shadow-shadow-color: rgba(0, 0, 0, 0.2);
         --widget-shadow-shine: 0 0.1rem 1.2rem -0.25rem var(--widget-shadow-shine-color);
         --widget-shadow-shining: 0 0.1rem 2rem -0.25rem var(--widget-shadow-shining-color);
@@ -119,6 +70,85 @@
     }
 
     <?php } ?>
+</style>
+
+<?php //颜色计算区：全部由 --theme-base-color 派生，取色只需覆写这一个变量 ?>
+<style>
+    <?php
+    // 计算区里需要「当前模式 + 反转」两个名字的 token
+    $iro_reversible_tokens = [
+        'active-color',
+        'button-bg',
+        'button-text',
+        'button-border',
+        'button-hover-bg',
+        'button-hover-text',
+        'button-hover-border',
+        'button-active-bg',
+        'button-active-text',
+        'button-active-border',
+    ];
+    ?>
+    :root {
+        /* 取色钩子 --theme-base-color 刻意不定义：colorthief 成功时由 JS 写到 <html> 内联样式，
+           内联优先于本规则，两个模式的基色会同时改用它；清除后自动回落各自的设置项。 */
+        --theme-base-color-light: var(--theme-base-color, <?= iro_opt('active_color', '#00b0f0') ?>);
+        --theme-base-color-dark: var(--theme-base-color, <?= iro_opt('active_color_dark', '#FCCD00') ?>);
+
+        /* 纯变量：带 color 的中间量，不直接给组件用 */
+        --lt-active-color: var(--theme-base-color-light);
+        --lt-button-bg-color: var(--theme-base-color-light);
+        --lt-button-text-color: #000;
+        --lt-button-border-color: var(--lt-button-bg-color);
+        --dk-active-color: var(--theme-base-color-dark);
+        --dk-button-bg-color: var(--theme-base-color-dark);
+        --dk-button-text-color: #000;
+        --dk-button-border-color: var(--dk-button-bg-color);
+
+        /* 可直接用的属性：不带 color */
+        --lt-button-bg: var(--lt-button-bg-color);
+        --lt-button-text: var(--lt-button-text-color);
+        --lt-button-border: var(--lt-button-border-color);
+        --lt-button-hover-bg: color-mix(in srgb, var(--lt-button-bg-color) 86%, #fff);
+        --lt-button-hover-text: var(--lt-button-text-color);
+        --lt-button-hover-border: var(--lt-button-hover-bg);
+        --lt-button-active-bg: color-mix(in srgb, var(--lt-button-bg-color) 74%, #fff);
+        --lt-button-active-text: var(--lt-button-text-color);
+        --lt-button-active-border: var(--lt-button-active-bg);
+
+        --dk-button-bg: var(--dk-button-bg-color);
+        --dk-button-text: var(--dk-button-text-color);
+        --dk-button-border: var(--dk-button-border-color);
+        --dk-button-hover-bg: color-mix(in srgb, var(--dk-button-bg-color) 86%, #fff);
+        --dk-button-hover-text: var(--dk-button-text-color);
+        --dk-button-hover-border: var(--dk-button-hover-bg);
+        --dk-button-active-bg: color-mix(in srgb, var(--dk-button-bg-color) 74%, #fff);
+        --dk-button-active-text: var(--dk-button-text-color);
+        --dk-button-active-border: var(--dk-button-active-bg);
+
+        /* 深色组件背景：黑与主题色混出；发光色同理 */
+        --widget-dark-bg: color-mix(in srgb, var(--theme-base-color-dark) 3%, #1a1a1a);
+        --widget-dark-shining: var(--theme-base-color-dark);
+
+        <?php foreach ($iro_reversible_tokens as $iro_token): ?>--<?= $iro_token ?>: var(--lt-<?= $iro_token ?>);
+        --<?= $iro_token ?>-reverse: var(--dk-<?= $iro_token ?>);
+        <?php endforeach; ?>
+    }
+
+    @supports (color: oklch(from red l c h)) {
+        /* 只在超标时纠正：填充恒配黑字，把 oklch L 钳到 0.60 下界即可。
+           预设 #00b0f0（L=0.709 C=0.145）与 #FCCD00（L=0.868 C=0.182）都落在区间内，原值保留。 */
+        :root {
+            --lt-button-bg-color: oklch(from var(--theme-base-color-light) max(l, 0.60) min(c, 0.2) h / 1);
+            --dk-button-bg-color: oklch(from var(--theme-base-color-dark) max(l, 0.60) min(c, 0.2) h / 1);
+        }
+    }
+
+    :root.dark {
+        <?php foreach ($iro_reversible_tokens as $iro_token): ?>--<?= $iro_token ?>: var(--dk-<?= $iro_token ?>);
+        --<?= $iro_token ?>-reverse: var(--lt-<?= $iro_token ?>);
+        <?php endforeach; ?>
+    }
 </style>
 
 <style>

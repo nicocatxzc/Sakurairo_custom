@@ -125,9 +125,9 @@
                     }
 
                     &:hover {
-                        color: var(--active-widget-fill-on);
+                        color: var(--button-text);
                         box-shadow: var(--widget-shadow-shine);
-                        background-color: var(--active-widget-fill);
+                        background-color: var(--button-bg);
                     }
                 }
                 .darkmode-toggle {

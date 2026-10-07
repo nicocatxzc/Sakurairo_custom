@@ -20,9 +20,9 @@
             transition: all 0.3s ease;
             &.active,
             &:hover {
-                color: var(--active-widget-fill-on);
-                background-color: var(--active-widget-fill);
-                border-color: var(--active-widget-fill);
+                color: var(--button-text);
+                background-color: var(--button-bg);
+                border-color: var(--button-border);
             }
             &:hover {
                 box-shadow: var(--widget-shadow-shadow);
