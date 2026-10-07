@@ -16,19 +16,18 @@
     > * {
         color: var(--word-color-second);
         background: var(--post-footer-pill-background);
-        box-shadow: var(--widget-shadow-shine);
         border: var(--border-shine);
         border-radius: var(--post-footer-pill-radius);
-
+        
         &:hover {
             background: var(--widget-background-color);
-            box-shadow: var(--widget-shadow-shining);
+            box-shadow: var(--widget-shadow-shine);
         }
     }
 
-    a:hover {
-        color: var(--active-color);
-    }
+    // a:hover {
+    //     color: var(--active-color);
+    // }
 
     .post-license {
         display: flex;

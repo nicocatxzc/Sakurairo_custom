@@ -32,7 +32,9 @@
         &:hover,
         //wordpress
         &.current {
-            color: var(--active-color);
+            color: var(--button-text);
+            background-color: var(--button-bg);
+            border-color: var(--button-border);
         }
     }
 

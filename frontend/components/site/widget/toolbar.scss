@@ -30,11 +30,12 @@
             cursor: pointer;
 
             &:hover {
-                color: var(--word-color-first-reverse);
+                color: var(--button-text);
+                background-color: var(--button-bg);
                 box-shadow: var(--widget-shadow-shine);
 
                 .icon {
-                    color: var(--active-color);
+                    color: inherit;
                 }
             }
         }

@@ -138,7 +138,8 @@
             cursor: pointer;
 
             &:hover {
-                color: var(--active-color);
+                color: var(--button-text);
+                background-color: var(--button-bg);
                 box-shadow: var(--widget-shadow-shining);
             }
         }
@@ -168,14 +169,14 @@
             color: var(--button-text);
             background: var(--button-bg);
 
-            border: 0.1rem solid var(--active-color);
+            border: 0.1rem solid var(--button-border);
             border-radius: 0.6rem;
             will-change: color background-color;
         }
 
         .submit:hover {
-            color: var(--active-color);
-            background-color: rgb(var(--widget-background));
+            color: var(--button-hover-text);
+            background-color: var(--button-hover-bg);
         }
     }
 }
