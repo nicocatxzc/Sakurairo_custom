@@ -1,8 +1,8 @@
-import bus from "../../app/bus";
-import { toggleMode, getState } from "../../app/darkmode";
-import iconMoonLoop from "../icons/line-md-moon-loop.svg?raw";
-import iconSunRisingLoop from "../icons/line-md-sun-rising-loop.svg?raw";
-import iconThemeLightDark from "../icons/mdi-theme-light-dark.svg?raw";
+import bus from "../../../app/bus";
+import { toggleMode, getState } from "../../../app/darkmode";
+import iconMoonLoop from "../../icons/line-md-moon-loop.svg?raw";
+import iconSunRisingLoop from "../../icons/line-md-sun-rising-loop.svg?raw";
+import iconThemeLightDark from "../../icons/mdi-theme-light-dark.svg?raw";
 import { onClickOutside } from "@vueuse/core";
 
 let siteWidget = document.querySelector(".site-widget");

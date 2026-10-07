@@ -58,15 +58,19 @@ global $iro_only_template;
 
             <div class="layout-slot">
                 <div class="background-filter"></div>
-                <!-- pjax start -->
-                <div id="pjax-main">
-                    <?php $is_home = is_home() || is_front_page() ?>
-                    <!-- content start -->
-                    <?php if (!$is_home): ?>
-                        <section class="main-container">
-                        <?php endif; ?>
+                <?php
+                // 布局几何常量在 frontend/layout.scss，这里只附加随配置变化的量
+                $layout_columns          = min(3, max(1, (int) iro_opt('layout_content_coloumns', 1)));
+                $layout_first_position   = iro_opt('layout_first_coloumn_position', 'left') === 'right' ? 'right' : 'left';
+                // 固定导航栏会盖住页面上沿，侧栏吸顶位置要在它下方
+                $layout_nav_height       = iro_opt('nav_style_select', 'sakura') === 'island' ? '70px' : '3.75rem';
+                ?>
+                <div class="layout-grid cols-<?= $layout_columns ?> first-<?= $layout_first_position ?>"
+                    style="--layout-sticky-top: calc(<?= $layout_nav_height ?> + 0.75rem);">
+                    <!-- pjax start -->
+                    <div id="pjax-main" class="pjax-main">
                         <?php
-                        if ($is_home) {
+                        if (is_home() || is_front_page()) {
                             require_once get_theme_file_path('/frontend/components/page/home.php');
                         } elseif (is_single() || is_page()) {
                             require_once get_theme_file_path('/frontend/components/page/post.php');
@@ -82,12 +86,15 @@ global $iro_only_template;
                             require_once get_theme_file_path('/frontend/components/default.php');
                         }
                         ?>
-                        <?php if (!$is_home): ?>
-                        </section>
-                        <!-- content end -->
+                    </div>
+                    <!-- pjax end -->
+                    <?php if ($layout_columns >= 2): ?>
+                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_first.php'); ?>
+                    <?php endif; ?>
+                    <?php if ($layout_columns >= 3): ?>
+                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_second.php'); ?>
                     <?php endif; ?>
                 </div>
-                <!-- pjax end -->
                 <?php
                 get_footer();
                 require_once get_theme_file_path('/frontend/components/site/particle.php');

@@ -1,5 +1,5 @@
 <?php require_once get_theme_file_path('/frontend/components/post/head_metas.php'); ?>
-<div class="page-header with-image">
+<div class="page-header with-image bleed">
     <?php if (has_post_thumbnail()) : ?>
         <picture>
             <?= iro_media_optimize_image_formats(

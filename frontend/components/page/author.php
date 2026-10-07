@@ -1,7 +1,6 @@
 <?php $author = get_queried_object_id(); ?>
 
-<?php iro_content_container_start() ?>
-<div class="author-info-container">
+<header class="page-header author-info-container">
     <div class="author-info">
         <div
             class="author-avatar"
@@ -21,6 +20,8 @@
             </div>
         </div>
     </div>
-</div>
+</header>
+
+<?php iro_content_container_start(['class' => 'page-author']) ?>
 <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
 <?php iro_content_container_end() ?>

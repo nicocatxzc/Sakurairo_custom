@@ -70,43 +70,42 @@ function iro_get_search_type_filters(): array
 }
 $search_filters = iro_get_search_type_filters();
 ?>
-<div class="page-search">
-    <?php iro_content_container_start() ?>
-    <header class="search-header flex-center">
-        <div class="search-box flex-center">
-            <i class="fa-icon-solid fa-search search-icon"></i>
+<header class="page-header search-header flex-center">
+    <div class="search-box flex-center">
+        <i class="fa-icon-solid fa-search search-icon"></i>
 
-            <input
-                type="text"
-                class="search-input"
-                placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
-                @keyup.enter="gotoSearch" />
+        <input
+            type="text"
+            class="search-input"
+            placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
+            @keyup.enter="gotoSearch" />
 
-            <button
-                class="search-button">
-                <?= __("搜索",'sakurairo') ?>
-            </button>
+        <button
+            class="search-button">
+            <?= __("搜索",'sakurairo') ?>
+        </button>
+    </div>
+</header>
+
+<?php iro_content_container_start(['class' => 'page-search']) ?>
+<?php if (iro_opt('search_filter') && count($search_filters['filters']) > 1) : ?>
+    <!-- 筛选器部分 -->
+    <div id="filter-container">
+        <div class="filter-count">
+            <?= $wp_query->found_posts ?> <?= __('个结果', 'sakurairo'); ?>
         </div>
-    </header>
-    <?php if (iro_opt('search_filter') && count($search_filters['filters']) > 1) : ?>
-        <!-- 筛选器部分 -->
-        <div id="filter-container">
-            <div class="filter-count">
-                <?= $wp_query->found_posts ?> <?= __('个结果', 'sakurairo'); ?>
-            </div>
 
-            <div id="search-filter-form" action="" method="GET">
-                <?php foreach ($search_filters['filters'] as $type => $filter): ?>
-                    <a
-                        href="<?= esc_url($filter['url']) ?>"
-                        class="type-filter <?= $filter['active'] ? 'active' : '' ?>">
-                        <?= esc_html($filter['label']) ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+        <div id="search-filter-form" action="" method="GET">
+            <?php foreach ($search_filters['filters'] as $type => $filter): ?>
+                <a
+                    href="<?= esc_url($filter['url']) ?>"
+                    class="type-filter <?= $filter['active'] ? 'active' : '' ?>">
+                    <?= esc_html($filter['label']) ?>
+                </a>
+            <?php endforeach; ?>
         </div>
-    <?php endif; ?>
+    </div>
+<?php endif; ?>
 
-    <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
-    <?php iro_content_container_end() ?>
-</div>
+<?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
+<?php iro_content_container_end() ?>

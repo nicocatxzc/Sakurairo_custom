@@ -9,14 +9,15 @@ if ($term && ! is_wp_error($term)) {
 }
 ?>
 
-<div class="page-taxonomy">
+<header class="page-header taxonomy-header">
     <?php iro_content_container_start() ?>
-    <header class="taxonomy-header">
-        <h1><?= $term_name ?></h1>
-        <?php if (term_description()): ?>
-            <p><?= $term_description ?></p>
-        <?php endif; ?>
-    </header>
-    <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
+    <h1><?= $term_name ?></h1>
+    <?php if (term_description()): ?>
+        <p><?= $term_description ?></p>
+    <?php endif; ?>
     <?php iro_content_container_end() ?>
-</div>
+</header>
+
+<?php iro_content_container_start(['class' => 'page-taxonomy']) ?>
+<?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
+<?php iro_content_container_end() ?>

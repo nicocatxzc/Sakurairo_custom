@@ -5,6 +5,142 @@
     }
 }
 
+// 布局骨架：页头独占第一行，正文与侧栏并列在第二行。
+// 侧栏是 #pjax-main 的兄弟节点，PJAX 只替换 #pjax-main，永不触碰侧栏。
+// 断点取各模式最小宽度之和再加上左右安全区：双栏 280+20+600+32=932，三栏 150+20+860+20+150+32=1232。
+.layout-grid {
+    --layout-content-max: 860px;
+    --layout-content-min: 600px;
+    --layout-side-width: 280px;
+    --layout-side-min: 150px;
+    --layout-gap: 1.25rem;
+    // 轨道与视口左右边缘之间的最小距离（一个文字宽）
+    --layout-safe-area: 1rem;
+
+    display: grid;
+    // 轨道总宽小于容器时整体居中
+    justify-content: center;
+    align-items: start;
+    column-gap: var(--layout-gap);
+    padding-inline: var(--layout-safe-area);
+}
+
+.pjax-main {
+    // 不生成盒子，让页头与正文提升为 .layout-grid 的网格项
+    display: contents;
+
+    > .page-header {
+        grid-area: head;
+    }
+    > :not(.page-header) {
+        grid-area: main;
+        min-height: 85dvh;
+    }
+}
+
+// 通栏页头（文章封面图）：轨道组由 justify-content:center 居中，
+// 50% 是网格区宽度的一半，配 100dvw 宽度就把盒子钉回视口两边
+.page-header.bleed {
+    grid-area: 1 / 1 / 2 / -1;
+    width: 100dvw;
+    margin-left: calc(50% - 50dvw);
+}
+
+.site-side-bar {
+    position: sticky;
+    top: var(--layout-sticky-top, 0);
+
+    // 占位，侧栏内容就绪后删除
+    min-height: 12rem;
+    outline: 1px dashed rgba(127, 127, 127, 0.35);
+}
+.side-bar-first {
+    grid-area: first;
+}
+.side-bar-second {
+    grid-area: second;
+}
+
+.layout-grid.cols-1 {
+    grid-template-columns: minmax(0, var(--layout-content-max));
+    grid-template-areas: "head" "main";
+}
+
+// 双栏
+.layout-grid.cols-2.first-left {
+    grid-template-columns:
+        var(--layout-side-width)
+        minmax(var(--layout-content-min), var(--layout-content-max));
+    grid-template-areas:
+        ". head"
+        "first main";
+}
+.layout-grid.cols-2.first-right {
+    grid-template-columns:
+        minmax(var(--layout-content-min), var(--layout-content-max))
+        var(--layout-side-width);
+    grid-template-areas:
+        "head ."
+        "main first";
+}
+
+// 三栏：正文锁死 860，两侧先收缩
+.layout-grid.cols-3.first-left,
+.layout-grid.cols-3.first-right {
+    grid-template-columns:
+        minmax(var(--layout-side-min), var(--layout-side-width))
+        var(--layout-content-max)
+        minmax(var(--layout-side-min), var(--layout-side-width));
+}
+.layout-grid.cols-3.first-left {
+    grid-template-areas:
+        ". head ."
+        "first main second";
+}
+.layout-grid.cols-3.first-right {
+    grid-template-areas:
+        ". head ."
+        "second main first";
+}
+
+// 低于 1200px + 左右安全区：让出右侧那一栏，正文回到 860
+@media (max-width: 1231.98px) {
+    .layout-grid.cols-3.first-left {
+        grid-template-columns:
+            var(--layout-side-width)
+            minmax(var(--layout-content-min), var(--layout-content-max));
+        grid-template-areas:
+            ". head"
+            "first main";
+    }
+    .layout-grid.cols-3.first-right {
+        grid-template-columns:
+            var(--layout-side-width)
+            minmax(var(--layout-content-min), var(--layout-content-max));
+        grid-template-areas:
+            ". head"
+            "second main";
+    }
+    .layout-grid.cols-3.first-left .side-bar-second,
+    .layout-grid.cols-3.first-right .side-bar-first {
+        display: none;
+    }
+}
+
+// 低于 900px + 左右安全区：让出剩下的那一栏，正文回到 860
+@media (max-width: 931.98px) {
+    .layout-grid.cols-2.first-left,
+    .layout-grid.cols-2.first-right,
+    .layout-grid.cols-3.first-left,
+    .layout-grid.cols-3.first-right {
+        grid-template-columns: minmax(0, var(--layout-content-max));
+        grid-template-areas: "head" "main";
+    }
+    .site-side-bar {
+        display: none;
+    }
+}
+
 .background {
     #progress-bars {
         z-index: 11;
@@ -49,10 +185,6 @@
     .site-widget {
         z-index: 10;
     }
-}
-
-section.main-container {
-    min-height: 85dvh;
 }
 
 #site-model-slot {

@@ -244,6 +244,40 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'type'    => 'subheading',
+                'content' => __('站点布局', 'sakurairo'),
+            ],
+
+            [
+                'id'         => 'layout_content_coloumns',
+                'type'       => 'select',
+                'title'      => __('内容布局', 'sakurairo_csf'),
+                'options'     => [
+                    1  => __('单栏', 'sakurairo'),
+                    2  => __('双栏', 'sakurairo'),
+                    3  => __('三栏', 'sakurairo'),
+                ],
+                'default'    => 1,
+            ],
+
+            [
+                'id'         => 'layout_first_coloumn_position',
+                'type'       => 'select',
+                'title'      => __('第一栏内容位置', 'sakurairo_csf'),
+                'desc'   => __('决定双栏时侧栏的位置，也决定三栏时另一栏的位置', 'sakurairo'),
+                'options'     => [
+                    'left'  => __('左侧', 'sakurairo'),
+                    'right'  => __('右侧', 'sakurairo'),
+                ],
+                'default'    => 'left',
+            ],
+
+            [
+                'type'    => 'subheading',
+                'content' => __('其他', 'sakurairo'),
+            ],
+
+            [
                 'id'    => 'theme_darkmode_auto',
                 'type'  => 'switcher',
                 'title' => __('自动切换深色模式', 'sakurairo'),
@@ -2485,7 +2519,7 @@ if (class_exists('Sakurairo_CSF')) {
         'fields'      => [
 
             [
-                'type'    => 'content',
+                'type'    => 'subheading',
                 'content' => __('主题提供了一个简易的smtp支持配置以支持通过第三方发送邮件，也许你应该用更专业的插件', 'sakurairo'),
             ],
 
@@ -2567,8 +2601,8 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'type'    => 'content',
-                'content' => __('Github OAuth', 'sakurairo'),
+                'type'    => 'subheading',
+                'content' => 'Github OAuth',
             ],
 
             [

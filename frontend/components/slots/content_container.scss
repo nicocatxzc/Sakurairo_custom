@@ -1,7 +1,8 @@
 @layer layout {
     .content.flex-center {
         position: relative;
-        width: 100vw;
+        // 由所在布局轨道决定宽度，100vw 会溢出轨道
+        width: 100%;
         .container {
             position: relative;
             max-width: 860px;
