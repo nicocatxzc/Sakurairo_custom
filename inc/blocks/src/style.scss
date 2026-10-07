@@ -219,7 +219,7 @@
         }
     }
 
-    // 侧栏动态块的编辑器占位：外观由前台 PHP 渲染，这里只给一个可辨认的框
+    // 侧栏动态块的编辑器占位
     .iro-block-placeholder {
         display: flex;
         flex-direction: column;
@@ -240,5 +240,12 @@
             font-size: 0.8rem;
             opacity: 0.7;
         }
+    }
+
+    // 吸附容器：用 outline 标出边界，不吃布局，空的时候也能看见往哪拖
+    .iro-sticky {
+        min-height: 2.5rem;
+        outline: 0.1rem dashed #d0d0d0;
+        outline-offset: 0.25rem;
     }
 }

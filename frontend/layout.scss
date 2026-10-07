@@ -20,7 +20,8 @@
     display: grid;
     // 轨道总宽小于容器时整体居中
     justify-content: center;
-    align-items: start;
+    // 侧栏撑到正文高度
+    align-items: stretch;
     column-gap: var(--layout-gap);
     padding-inline: var(--layout-safe-area);
 }
@@ -46,9 +47,8 @@
     margin-left: calc(50% - 50dvw);
 }
 
+// 侧栏本身不吸附：随正文一起滚走，只有 .iro-sticky 里的内容会留下
 .site-side-bar {
-    position: sticky;
-    top: var(--layout-sticky-top, 0);
     margin-top: 1rem;
 }
 .side-bar-first {
