@@ -1,6 +1,6 @@
 <?php
 add_filter('paginate_links_output', function ($output) {
-    return str_replace('class="page-numbers', 'class="page-numbers no-pjax', $output);
+    return str_replace('class="page-numbers', 'class="page-numbers no-pjax widget-button', $output);
 });
 
 function iro_post_pagination()

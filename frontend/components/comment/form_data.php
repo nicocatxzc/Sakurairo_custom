@@ -99,7 +99,7 @@ function iro_comment_form_data($args = array(), $post = null)
 
         'class_container' => 'comment-respond',
         'class_form' => 'comment-form',
-        'class_submit' => 'submit',
+        'class_submit' => 'submit widget-button filled',
 
         'name_submit' => 'submit',
 
@@ -480,7 +480,7 @@ function iro_comment_form_submit_field()
 ?>
     <div class="form-submit functions">
         %1$s %2$s
-        <label class="markdown-toggle">
+        <label class="markdown-toggle widget-button">
             <input
                 type="checkbox"
                 id="enable_markdown"
@@ -489,7 +489,7 @@ function iro_comment_form_submit_field()
         </label>
 
         <?php if (iro_get_smiley_packs()): ?>
-            <div id="emotion-toggle" class="no-select">
+            <div id="emotion-toggle" class="no-select widget-button">
                 <i class="fa-icon-regular fa-face-kiss-wink-heart"></i>
             </div>
         <?php endif; ?>

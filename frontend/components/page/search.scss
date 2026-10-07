@@ -35,8 +35,6 @@
             border-radius: 0.8rem;
             border: none;
 
-            background: var(--button-bg);
-            color: var(--button-text);
             font-size: 0.9rem;
             cursor: pointer;
 
@@ -86,6 +84,9 @@
         background-color: var(--widget-background-color);
         border-radius: 0.5rem;
         font-weight: bold;
+        // 静止外观保持原样：工具类会给文字色和边框，这里按原设计否掉
+        color: inherit;
+        border: none;
         &.active {
             background-color: var(--button-bg);
             color: var(--button-text);

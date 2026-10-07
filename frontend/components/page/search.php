@@ -81,7 +81,7 @@ $search_filters = iro_get_search_type_filters();
             @keyup.enter="gotoSearch" />
 
         <button
-            class="search-button">
+            class="search-button widget-button filled">
             <?= __("搜索",'sakurairo') ?>
         </button>
     </div>
@@ -99,7 +99,7 @@ $search_filters = iro_get_search_type_filters();
             <?php foreach ($search_filters['filters'] as $type => $filter): ?>
                 <a
                     href="<?= esc_url($filter['url']) ?>"
-                    class="type-filter <?= $filter['active'] ? 'active' : '' ?>">
+                    class="type-filter widget-button <?= $filter['active'] ? 'active' : '' ?>">
                     <?= esc_html($filter['label']) ?>
                 </a>
             <?php endforeach; ?>

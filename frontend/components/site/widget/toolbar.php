@@ -5,11 +5,12 @@
 font-family:<?= iro_opt("widget_font") ?>;
 ">
     <div class="control">
-        <button id="goToTop" title="<?= __("回到顶部",'sakurairo') ?>">
+        <button id="goToTop" class="widget-button" title="<?= __("回到顶部",'sakurairo') ?>">
             <i class="icon fa-icon-solid fa-caret-up fa-lg flex-center"></i>
         </button>
         <button
             id="widgetToggle"
+            class="widget-button"
             title="小工具">
             <i class="icon fa-icon-solid fa-compass-drafting fa-lg fa-flip flex-center"></i>
         </button>
@@ -23,7 +24,7 @@ font-family:<?= iro_opt("widget_font") ?>;
         <div class="theme-controls widget-groups">
             <div class="darkmode group">
                 <button
-                    class="darkmode-toggle"
+                    class="darkmode-toggle widget-button"
                     aria-label="<?= __("切换主题深色模式状态",'sakurairo') ?>"
                     title="<?= __("切换主题深色模式状态",'sakurairo') ?>">
                 </button>
@@ -35,6 +36,7 @@ font-family:<?= iro_opt("widget_font") ?>;
                     <?php foreach (iro_opt("widget_font_choice", []) as $font): ?>
                         <button
                             type="button"
+                            class="widget-button"
                             aria-label="<?= __("切换到字体",'sakurairo') ?><?= $font["name"] ?>"
                             title="<?= __("切换到字体",'sakurairo') ?><?= $font["name"] ?>"
                             data-name="<?= $font["name"] ?>">

@@ -8,7 +8,7 @@ function iro_comment_render($comment, $args=[], $depth=[])
     <li id="comment-<?= $comment_id; ?>" <?php comment_class('comment-card'); ?>>
         <div class="comment">
             <button
-                class="reply-button"
+                class="reply-button widget-button filled"
                 data-commentid="<?= $comment_id; ?>"
                 data-commentauthor="<?= esc_attr(get_comment_author()); ?>">
                 <?= __("回复",'sakurairo') ?>

@@ -18,6 +18,8 @@
             border-radius: 2rem;
             border: var(--border-shine);
             transition: all 0.3s ease;
+            // 静止文字色保持继承，工具类给的是按钮上的深色
+            color: inherit;
             &.active,
             &:hover {
                 color: var(--button-text);

@@ -17,19 +17,29 @@
         display: none;
     }
     .widget-button {
-        background-color: var(--button-bg);
         color: var(--button-text);
         transition:
             background-color 0.2s ease,
             color 0.2s ease;
+        // --button-border 是颜色，border 简写会把 border-style 重置成 none（不画边框），
+        // 所以要带宽度和线型
+        border: 0.1rem solid var(--button-border);
         &:hover {
-            background-color: var(--button-hover-bg);
             color: var(--button-hover-text);
         }
         &.active,
         &:active {
-            background-color: var(--button-active-bg);
             color: var(--button-active-text);
+        }
+        &.filled {
+            background-color: var(--button-bg);
+            &:hover {
+                background-color: var(--button-hover-bg);
+            }
+            &.active,
+            &:active {
+                background-color: var(--button-active-bg);
+            }
         }
     }
 }

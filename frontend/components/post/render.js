@@ -95,7 +95,7 @@ function enhanceCodeBlock(pre, hljs) {
     if (pre.querySelector(".copy-button")) return;
 
     const button = document.createElement("button");
-    button.className = "copy-button";
+    button.className = "copy-button widget-button";
     button.type = "button";
     button.setAttribute("aria-label", _iro.i18n.t("复制代码"));
     button.innerHTML = COPY_ICON_SVG;

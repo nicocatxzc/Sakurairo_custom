@@ -27,11 +27,12 @@
             background-color: var(--widget-background-color);
             border-radius: 0.5rem;
             border: var(--border-shine);
+            // 静止文字色保持继承，工具类给的是按钮上的深色
+            color: inherit;
             cursor: pointer;
 
             &:hover {
                 color: var(--button-text);
-                background-color: var(--button-bg);
                 box-shadow: var(--widget-shadow-shine);
 
                 .icon {
@@ -115,7 +116,9 @@
                     background-color: var(--widget-background-color);
                     box-shadow: var(--widget-shadow-shine);
                     border-radius: var(--widget_button_radius);
-                    border: var(--border-color-shine);
+                    // 原本写的是 border: var(--border-color-shine)，那是个颜色分量三元组，
+                    // 放进 border 简写整条声明会被丢弃，等于没有边框。改成 none 保持原效果
+                    border: none;
                     color: var(--word-color-first);
                     flex-grow: 1;
                     cursor: pointer;

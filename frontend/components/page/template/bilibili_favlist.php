@@ -64,7 +64,7 @@ if ($current_category) {
             ?>
             <button
                 href="<?= esc_url($category_url) ?>"
-                class="category <?= $is_active ? 'active' : '' ?>"
+                class="category widget-button <?= $is_active ? 'active' : '' ?>"
                 data-id="<?= esc_attr($category['id']) ?>">
                 <?= esc_html($category['title']) ?>
             </button>

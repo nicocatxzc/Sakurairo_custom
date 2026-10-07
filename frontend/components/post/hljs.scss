@@ -41,7 +41,10 @@
         cursor: pointer;
         border-radius: 0.25rem;
 
-        border: var(--widget-shadow-shine);
+        // 原本这里写的是 border: var(--widget-shadow-shine)——那是 box-shadow 的值，
+        // 放进 border 简写整条声明会被丢弃，等于没有边框。改成 none 保持原效果，
+        // 同时挡住 .widget-button 自带的边框
+        border: none;
         background: var(--word-color-first);
         
         i {

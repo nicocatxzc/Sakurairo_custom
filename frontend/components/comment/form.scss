@@ -166,17 +166,8 @@
             margin: 0;
             padding: 0.6rem 1.25rem;
 
-            color: var(--button-text);
-            background: var(--button-bg);
-
-            border: 0.1rem solid var(--button-border);
             border-radius: 0.6rem;
             will-change: color background-color;
-        }
-
-        .submit:hover {
-            color: var(--button-hover-text);
-            background-color: var(--button-hover-bg);
         }
     }
 }
