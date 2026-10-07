@@ -1,5 +1,5 @@
 _iro.hooks.onPageLoaded(async () => {
-    const searchHeader = document.querySelector(".search-header");
+    const searchHeader = document.querySelector(".page-search.search-header");
     if (searchHeader) {
         const input = searchHeader.querySelector(".search-input");
         const button = searchHeader.querySelector(".search-button");
