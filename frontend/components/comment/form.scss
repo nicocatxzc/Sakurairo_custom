@@ -165,8 +165,8 @@
             margin: 0;
             padding: 0.6rem 1.25rem;
 
-            color: var(--word-color-on-active, rgb(var(--widget-background)));
-            background: var(--active-color);
+            color: var(--active-widget-fill-on);
+            background: var(--active-widget-fill);
 
             border: 0.1rem solid var(--active-color);
             border-radius: 0.6rem;

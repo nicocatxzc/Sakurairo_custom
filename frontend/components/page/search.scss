@@ -35,8 +35,8 @@
             border-radius: 0.8rem;
             border: none;
 
-            background: var(--active-color);
-            color: var(--word-color-on-active, #fff);
+            background: var(--active-widget-fill);
+            color: var(--active-widget-fill-on);
             font-size: 0.9rem;
             cursor: pointer;
 
@@ -87,8 +87,8 @@
         border-radius: 0.5rem;
         font-weight: bold;
         &.active {
-            background-color: var(--active-color);
-            color: var(--word-color-on-active, #fff);
+            background-color: var(--active-widget-fill);
+            color: var(--active-widget-fill-on);
         }
     }
 }

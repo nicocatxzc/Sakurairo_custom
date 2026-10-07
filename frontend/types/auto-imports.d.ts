@@ -14,7 +14,6 @@ declare global {
   const _: typeof import('lodash-es').default
   const api: typeof import('../app/utils/api.js').default
   const applyExtractedColor: typeof import('../app/utils/themeColor.js').applyExtractedColor
-  const applyReadableOnActive: typeof import('../app/utils/contrast.js').applyReadableOnActive
   const axios: typeof import('axios').default
   const checkEmail: typeof import('../app/utils/check').checkEmail
   const classicPagination: typeof import('../app/utils/classicPagination.js').default
@@ -35,7 +34,6 @@ declare global {
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
-  const isReplayedLifecycle: typeof import('../app/utils/lifecycle.js').isReplayedLifecycle
   const isShallow: typeof import('vue').isShallow
   const loadColorFromUrl: typeof import('../app/utils/themeColor.js').loadColorFromUrl
   const localsearch: typeof import('../app/utils/localsearch').default
@@ -55,15 +53,11 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
-  const parseCssColor: typeof import('../app/utils/contrast.js').parseCssColor
   const parseMarkdown: typeof import('../app/utils/parseMarkdown.js').default
   const provide: typeof import('vue').provide
   const reactive: typeof import('vue').reactive
-  const readableOn: typeof import('../app/utils/contrast.js').readableOn
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
-  const relativeLuminance: typeof import('../app/utils/contrast.js').relativeLuminance
-  const replayDomContentLoaded: typeof import('../app/utils/lifecycle.js').replayDomContentLoaded
   const resolveComponent: typeof import('vue').resolveComponent
   const safeRun: typeof import('../app/utils/safeRun').default
   const shallowReactive: typeof import('vue').shallowReactive

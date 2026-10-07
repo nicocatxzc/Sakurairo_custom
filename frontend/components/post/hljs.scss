@@ -56,10 +56,10 @@
     }
 
     .copy-button:hover {
-        background-color: var(--active-color);
+        background-color: var(--active-widget-fill);
 
         i {
-            color: var(--word-color-on-active, var(--widget-background-color));
+            color: var(--active-widget-fill-on);
         }
     }
 

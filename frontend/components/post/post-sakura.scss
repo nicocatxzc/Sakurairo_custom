@@ -252,8 +252,8 @@ $not-template: ":not(:where(.page-template *))";
     }
 
     th#{$not-template} {
-        color: var(--word-color-on-active, #fff);
-        background-color: var(--active-color);
+        color: var(--active-widget-fill-on);
+        background-color: var(--active-widget-fill);
     }
 
     tr#{$not-template} {

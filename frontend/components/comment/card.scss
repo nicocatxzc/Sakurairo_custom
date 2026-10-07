@@ -30,8 +30,8 @@
         border-radius: 0.3rem;
         opacity: 0;
     
-        color: var(--word-color-on-active, rgb(var(--widget-background)));
-        background-color: var(--active-color);
+        color: var(--active-widget-fill-on);
+        background-color: var(--active-widget-fill);
         border: var(--border-active);
         transition: all 0.2s ease;
     

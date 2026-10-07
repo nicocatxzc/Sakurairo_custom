@@ -20,9 +20,9 @@
             transition: all 0.3s ease;
             &.active,
             &:hover {
-                color: var(--word-color-on-active, #fff);
-                background-color: var(--active-color);
-                border-color: var(--active-color);
+                color: var(--active-widget-fill-on);
+                background-color: var(--active-widget-fill);
+                border-color: var(--active-widget-fill);
             }
             &:hover {
                 box-shadow: var(--widget-shadow-shadow);

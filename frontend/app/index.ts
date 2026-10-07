@@ -194,7 +194,5 @@ if (!_iro.isBackend) {
     import("./utils/message");
 
     import("./plugins/postViews");
-    // 主色填充上的文字色
-    import("./plugins/themeContrast");
 }
 export default _iro;
