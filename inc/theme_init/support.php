@@ -10,7 +10,8 @@ if (!function_exists('akina_setup')) {
         register_nav_menus(
             array(
                 'primary' => __('导航栏', 'sakurairo'), //导航菜单
-            )
+                'side_bar' => __('侧栏', 'sakurairo'),
+            ),
         );
 
         /*
@@ -146,7 +147,7 @@ add_action('widgets_init', function () {
         'name'          => __('Sakurairo侧边栏一', 'sakurairo'),
         'id'            => 'iro_side_bar_first',
         'description'   => __('需启用至少双栏布局来使用它', 'sakurairo'),
-        'before_widget' => '<div id="%1$s" class="%2$s '.iro_opt("layout_side_bar_items_background",true) ? "with-background" : "".'">',
+        'before_widget' => '<div id="%1$s" class="%2$s ' . (iro_opt("layout_side_bar_items_background", false) ? "with-background" : "") . '">',
         'after_widget'  => '</div>',
         'before_title'  => '<h2 class="iro_side_bar_title">',
         'after_title'   => '</h2>',
@@ -156,7 +157,7 @@ add_action('widgets_init', function () {
         'name'          => __('Sakurairo侧边栏二', 'sakurairo'),
         'id'            => 'iro_side_bar_second',
         'description'   => __('需启用至少三栏布局来使用它', 'sakurairo'),
-        'before_widget' => '<div id="%1$s" class="=%2$s '.iro_opt("layout_side_bar_items_background",true) ? "with-background" : "".'">',
+        'before_widget' => '<div id="%1$s" class="%2$s ' . (iro_opt("layout_side_bar_items_background", false) ? "with-background" : "") . '">',
         'after_widget'  => '</div>',
         'before_title'  => '<h2 class="iro_side_bar_title">',
         'after_title'   => '</h2>',

@@ -21,6 +21,10 @@ domReady(() => {
             slug: "sakurairo",
             title: "Sakurairo",
         },
+        {
+            slug: "sakurairo-tools",
+            title: "Sakurairo Tools",
+        },
         ...existing.slice(1),
     ];
 

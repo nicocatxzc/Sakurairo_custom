@@ -59,7 +59,7 @@ html {
         scrollbar-width: 6px;
         font-weight: var(--global-font-weight);
     }
-    
+
     $outside-content: ":not(article.post-content *, .wp-widget *)";
 
     .page-template a,
@@ -96,6 +96,10 @@ html {
         background-color: var(--widget-background-color);
         border: var(--border-shine);
         border-radius: 0.5rem;
+    }
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
     }
     button#{$outside-content} {
         cursor: pointer;

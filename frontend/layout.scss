@@ -49,10 +49,7 @@
 .site-side-bar {
     position: sticky;
     top: var(--layout-sticky-top, 0);
-
-    // 占位，侧栏内容就绪后删除
-    min-height: 12rem;
-    outline: 1px dashed rgba(127, 127, 127, 0.35);
+    margin-top: 1rem;
 }
 .side-bar-first {
     grid-area: first;
