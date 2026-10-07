@@ -9,3 +9,10 @@
 @use "./template/bilibili_favlist.scss" as page-favlist;
 @use "./template/friend_link.scss" as page-friend_link;
 @use "./template/steam.scss" as page-steam;
+
+.layout-grid:has(.page-template) {
+    --layout-content-max: 80rem;
+    .post .container:not(:has(.page-links)) {
+        max-width: 80rem;
+    }
+}

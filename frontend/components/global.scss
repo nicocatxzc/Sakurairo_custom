@@ -62,6 +62,7 @@ html {
     
     $outside-content: ":not(article.post-content *, .wp-widget *)";
 
+    .page-template a,
     a#{$outside-content} {
         background-color: transparent;
         text-decoration: none;
