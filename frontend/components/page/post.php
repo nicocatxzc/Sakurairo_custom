@@ -12,7 +12,8 @@
                 <article class="post-content">
                     <?php require get_theme_file_path('/frontend/components/post/render.php'); ?>
                 </article>
-                <?php if (iro_opt("layout_content_coloumns", 1) === 1): ?>
+                <?php // 仅限单栏
+                if (iro_opt("layout_content_coloumns", 1) === 1): ?>
                     <?php if ((is_single() && iro_opt("page_post_toc", true)) || (is_page() && iro_opt("page_page_toc", false))): ?>
                         <div class="toc-container toc">
                             <div id="toc"></div>

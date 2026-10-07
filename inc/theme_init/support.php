@@ -141,6 +141,26 @@ add_action('widgets_init', function () {
         'before_title'  => '<h2 class="iro_widget_title">',
         'after_title'   => '</h2>',
     ]);
+
+    register_sidebar([
+        'name'          => __('Sakurairo侧边栏一', 'sakurairo'),
+        'id'            => 'iro_widget',
+        'description'   => __('需启用至少双栏布局来使用它', 'sakurairo'),
+        'before_widget' => '<aside id="%1$s" class="site-side-bar side-bar-first %2$s">',
+        'after_widget'  => '</aside>',
+        'before_title'  => '<h2 class="iro_side_bar_title">',
+        'after_title'   => '</h2>',
+    ]);
+
+    register_sidebar([
+        'name'          => __('Sakurairo侧边栏二', 'sakurairo'),
+        'id'            => 'iro_widget',
+        'description'   => __('需启用至少三栏布局来使用它', 'sakurairo'),
+        'before_widget' => '<aside id="%1$s" class="site-side-bar side-bar-second %2$s">',
+        'after_widget'  => '</aside>',
+        'before_title'  => '<h2 class="iro_side_bar_title">',
+        'after_title'   => '</h2>',
+    ]);
 });
 
 //WEBP支持?
