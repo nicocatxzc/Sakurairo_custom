@@ -24,4 +24,25 @@
             border: var(--button-border);
         }
     }
+
+    // 侧栏各块的标题：左侧一条主题色竖条
+    .iro-side-bar-title {
+        position: relative;
+        margin: 0 0 0.75rem 1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--word-color-first);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -1rem;
+            width: 0.25rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+            background: var(--button-bg);
+            transform: translateY(-50%);
+        }
+    }
 }

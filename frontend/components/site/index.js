@@ -1,4 +1,5 @@
 import "./widget/toolbar";
+import "./widget/side_bar_menu";
 import "./particle";
 import "./search_form";
 import "./progress_bar";

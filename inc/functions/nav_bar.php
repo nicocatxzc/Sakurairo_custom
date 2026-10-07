@@ -37,16 +37,8 @@ function iro_get_menu($location)
     return (int) $locations[$location];
 }
 
-function iro_get_navigation()
+function iro_get_navigation($location = 'primary')
 {
-
-    // 获取菜单
-    $menu_id = iro_get_menu('primary');
-
-    if (!$menu_id) {
-        return [];
-    }
-
     // 使用wp_rest_menu获取结构
     if (!class_exists('WP_REST_Menus')) {
         return new WP_Error(
@@ -56,10 +48,12 @@ function iro_get_navigation()
         );
     }
 
+    iro_get_menu($location);
+
     $menus_api = new WP_REST_Menus();
 
     $request = new WP_REST_Request('GET');
-    $request->set_param('location', 'primary');
+    $request->set_param('location', $location);
 
     return $menus_api->get_menu_location($request);
 }

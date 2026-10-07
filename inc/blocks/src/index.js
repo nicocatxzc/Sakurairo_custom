@@ -1,14 +1,20 @@
 import { setCategories, getCategories } from "@wordpress/blocks";
 import domReady from "@wordpress/dom-ready";
-import hljsSupport from "./modules/hljs";
-import noticeBlock from "./modules/notice";
-import showcardBlock from "./modules/showcard";
-import conversationBlock from "./modules/converstation";
-import bilibiliBlock from "./modules/bilibili";
-import templateBlocks from "./modules/template";
+// 编辑内容用的块
+import hljsSupport from "./editor/hljs";
+import noticeBlock from "./editor/notice";
+import showcardBlock from "./editor/showcard";
+import conversationBlock from "./editor/converstation";
+import bilibiliBlock from "./editor/bilibili";
+import templateBlocks from "./editor/template";
+import markdownBlock from "./editor/markdown";
+import ghcard from "./editor/ghcard";
+// 推荐放在小工具里的块
+import authorBlock from "./tools/author";
+import termsBlock from "./tools/terms";
+import menuBlock from "./tools/menu";
+import tocBlock from "./tools/toc";
 import "./style.scss";
-import markdownBlock from "./modules/markdown";
-import ghcard from "./modules/ghcard";
 
 domReady(() => {
     // 获取已有分类
@@ -34,6 +40,7 @@ domReady(() => {
 
 export default function initBlocks() {
     try {
+        // 编辑内容用的块
         hljsSupport();
         noticeBlock();
         showcardBlock();
@@ -42,6 +49,11 @@ export default function initBlocks() {
         templateBlocks();
         markdownBlock();
         ghcard();
+        // 推荐放在小工具里的块
+        authorBlock();
+        termsBlock();
+        menuBlock();
+        tocBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

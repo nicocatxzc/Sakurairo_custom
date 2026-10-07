@@ -1,0 +1,110 @@
+.iro-sidebar-menu {
+    .menu,
+    .sub-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .item > .item-head {
+        display: flex;
+        align-items: center;
+        height: 2.25rem;
+        border-radius: 0.5rem;
+        transition: background 0.3s ease;
+
+        .link {
+            flex: 1;
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            padding: 0 0.75rem;
+            overflow-wrap: break-word;
+            color: var(--word-color-first);
+            text-decoration: none;
+            transition: color 0.3s ease, padding 0.3s ease;
+        }
+
+        &:hover {
+            background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
+
+            .link {
+                padding-left: 1rem;
+                color: var(--button-bg);
+            }
+        }
+    }
+
+    .current-menu-item > .item-head {
+        background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
+
+        .link {
+            color: var(--button-bg);
+        }
+    }
+
+    // 展开指示：纯 CSS 折角，不引入图标字体
+    .button {
+        flex-shrink: 0;
+        position: relative;
+        width: 2.25rem;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background: none;
+        color: var(--word-color-first);
+        cursor: pointer;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0.4rem;
+            height: 0.4rem;
+            border-right: 0.1rem solid currentColor;
+            border-bottom: 0.1rem solid currentColor;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            transition: transform 0.5s ease;
+        }
+
+        &.expand::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+    }
+
+    // 折叠只作用在最外层子菜单上，孙项跟着一起展开
+    .item > .sub-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease;
+
+        &.expand {
+            max-height: 30dvh;
+            overflow: auto;
+        }
+    }
+
+    .sub-menu {
+        li > a {
+            display: block;
+            padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+            overflow-wrap: break-word;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--word-color-second);
+            text-decoration: none;
+            transition: color 0.3s ease, background 0.3s ease;
+
+            &:hover {
+                color: var(--button-bg);
+                background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
+            }
+        }
+
+        .sub-menu li > a {
+            padding-left: 2.5rem;
+        }
+    }
+}

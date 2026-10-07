@@ -1,0 +1,86 @@
+.iro-sidebar-terms {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .term-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        color: var(--word-color-first);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .term-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .term-count {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2rem;
+        height: 1.75rem;
+        padding: 0 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--button-bg);
+        background: color-mix(in srgb, var(--button-bg) 12%, transparent);
+    }
+
+    // 列表：整行可点，悬停整行变色并向右让位
+    .terms-list {
+        .term-item {
+            height: 2.5rem;
+            padding: 0 0.5rem;
+            border-radius: 0.5rem;
+
+            &:hover {
+                padding-left: 0.75rem;
+                color: var(--button-bg);
+                background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
+            }
+        }
+    }
+
+    // 按钮：胶囊自动换行，数字跟在名称后面
+    .terms-button {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .term-item {
+            justify-content: center;
+            height: 2rem;
+            padding: 0 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--button-bg);
+            background: color-mix(in srgb, var(--button-bg) 12%, transparent);
+
+            &:hover {
+                color: var(--button-text);
+                background: var(--button-bg);
+            }
+        }
+
+        .term-count {
+            min-width: 0;
+            height: auto;
+            padding: 0;
+            background: none;
+            font-size: 0.8125rem;
+            color: inherit;
+            opacity: 0.75;
+        }
+    }
+}

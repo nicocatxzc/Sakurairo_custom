@@ -218,4 +218,27 @@
             }
         }
     }
+
+    // 侧栏动态块的编辑器占位：外观由前台 PHP 渲染，这里只给一个可辨认的框
+    .iro-block-placeholder {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 1rem;
+        text-align: center;
+        text-indent: 0 !important;
+        color: #505050;
+        background: rgba(255, 255, 255, 0.5);
+        border: 0.1rem dashed #d0d0d0;
+        border-radius: 0.5rem;
+
+        strong {
+            font-size: 1rem;
+        }
+
+        span {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    }
 }

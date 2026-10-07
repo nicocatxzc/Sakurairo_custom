@@ -1,0 +1,54 @@
+.toc-widget {
+    // 主题原样式给 #toc 加了浮层外框（绝对定位的 .toc-container 里那一套），
+    // 侧栏里只要列表，所以把外框与定位全部退回静态
+    #toc {
+        position: static;
+        width: auto;
+        max-height: 70dvh;
+        padding: 0;
+        overflow-y: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    // 原样式给每一层 .toc-list 都加了 1rem 左内边距，这里只去掉根层，
+    // 层级缩进继续沿用原样式
+    #toc > .toc-list {
+        padding-left: 0;
+    }
+
+    #toc .toc-list .toc-link {
+        display: block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        overflow-wrap: break-word;
+        color: var(--word-color-first);
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        text-decoration: none;
+        transition:
+            color 0.3s ease,
+            background 0.3s ease;
+
+        &:hover {
+            color: var(--button-bg);
+            background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
+        }
+    }
+
+    // 当前阅读位置：主题色加粗。原样式的竖条靠绝对定位，落在侧栏里位置不可靠，去掉
+    #toc .toc-list .is-active-link {
+        color: var(--button-bg);
+        font-weight: 600;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    // 没有标题可生成时整块不占位（连标题一起）
+    &:has(#toc:empty) {
+        display: none;
+    }
+}

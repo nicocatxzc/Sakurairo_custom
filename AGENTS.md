@@ -40,7 +40,7 @@ Sakurairo/
 ├── inc/
 │   ├── api.php + api/       # REST 路由注册与各命名空间的实现
 │   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts，workspace 成员）
-│   │   ├── src/             # 编辑器源码（index.js 汇总 modules/*）
+│   │   ├── src/             # 编辑器源码（index.js 汇总 editor/* 与 tools/*）
 │   │   ├── build/           # 构建产物（不入库，PHP 引用）
 │   │   ├── render.php       # 前台 shortcode / block 渲染
 │   │   └── iro_blocks.php   # 编辑器资源入队与配置注入
