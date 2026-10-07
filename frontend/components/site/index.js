@@ -1,4 +1,4 @@
-import "./widget";
+import "./widget/toolbar";
 import "./particle";
 import "./search_form";
 import "./progress_bar";

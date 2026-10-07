@@ -95,7 +95,7 @@ global $iro_only_template;
             </div>
 
             <!-- 小组件 -->
-            <?php require_once get_theme_file_path('/frontend/components/site/widget.php'); ?>
+            <?php require_once get_theme_file_path('/frontend/components/site/widget/toolbar.php'); ?>
             <!-- model start -->
             <?php if (iro_opt("nav_menu_search_switch", true)): ?>
                 <?php require_once get_theme_file_path('/frontend/components/site/search_form.php'); ?>
