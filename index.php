@@ -5,7 +5,7 @@ global $iro_only_template;
 <?php if ($iro_only_template): ?>
     <?php
     if (is_home() || is_archive() || is_author() || is_search()) {
-        require_once get_template_directory() . '/frontend/components/post/list.php';
+        require_once get_theme_file_path('/frontend/components/post/list.php');
     }
     if ($iro_only_template == "comment_list") {
         // 没有文章密码且评论已开启
@@ -14,13 +14,13 @@ global $iro_only_template;
         endif;
     }
     if ($iro_only_template == "bangumi_list") {
-        require_once get_template_directory() . '/frontend/components/page/template/bangumi.php';
+        require_once get_theme_file_path('/frontend/components/page/template/bangumi.php');
     }
     if ($iro_only_template == "bilibili_favlist") {
-        require_once get_template_directory() . '/frontend/components/page/template/bilibili_favlist.php';
+        require_once get_theme_file_path('/frontend/components/page/template/bilibili_favlist.php');
     }
     if ($iro_only_template == "steam_list") {
-        require_once get_template_directory() . '/frontend/components/page/template/steam.php';
+        require_once get_theme_file_path('/frontend/components/page/template/steam.php');
     }
     ?>
 <?php else: ?>
@@ -45,16 +45,16 @@ global $iro_only_template;
         <!-- layout start -->
         <div class="background">
             <!-- 导航区域 -->
-            <?php require_once get_template_directory() . '/frontend/components/site/progress_bar.php'; ?>
+            <?php require_once get_theme_file_path('/frontend/components/site/progress_bar.php'); ?>
             <?php if (iro_opt('nav_style_select', 'sakura') === 'island'): ?>
-                <?php require_once get_template_directory() . '/frontend/components/navbar/island.php'; ?>
+                <?php require_once get_theme_file_path('/frontend/components/navbar/island.php'); ?>
             <?php else: ?>
-                <?php require_once get_template_directory() . '/frontend/components/navbar/sakura.php'; ?>
+                <?php require_once get_theme_file_path('/frontend/components/navbar/sakura.php'); ?>
             <?php endif; ?>
-            <?php require_once get_template_directory() . '/frontend/components/navbar/mobile.php'; ?>
+            <?php require_once get_theme_file_path('/frontend/components/navbar/mobile.php'); ?>
 
             <!-- 主页封面 -->
-            <?php require_once get_template_directory() . '/frontend/components/homepage/cover.php'; ?>
+            <?php require_once get_theme_file_path('/frontend/components/homepage/cover.php'); ?>
 
             <div class="layout-slot">
                 <div class="background-filter"></div>
@@ -67,19 +67,19 @@ global $iro_only_template;
                         <?php endif; ?>
                         <?php
                         if ($is_home) {
-                            require_once get_template_directory() . '/frontend/components/page/home.php';
+                            require_once get_theme_file_path('/frontend/components/page/home.php');
                         } elseif (is_single() || is_page()) {
-                            require_once get_template_directory() . '/frontend/components/page/post.php';
+                            require_once get_theme_file_path('/frontend/components/page/post.php');
                         } elseif (is_search()) {
-                            require_once get_template_directory() . '/frontend/components/page/search.php';
+                            require_once get_theme_file_path('/frontend/components/page/search.php');
                         } elseif (is_author()) {
-                            require_once get_template_directory() . '/frontend/components/page/author.php';
+                            require_once get_theme_file_path('/frontend/components/page/author.php');
                         } elseif (is_archive()) {
-                            require_once get_template_directory() . '/frontend/components/page/archive.php';
+                            require_once get_theme_file_path('/frontend/components/page/archive.php');
                             // } elseif (is_404()) {
-                            //     require_once get_template_directory() . '/components/404.php';
+                            //     require_once get_theme_file_path('/components/404.php');
                         } else {
-                            require_once get_template_directory() . '/frontend/components/default.php';
+                            require_once get_theme_file_path('/frontend/components/default.php');
                         }
                         ?>
                         <?php if (!$is_home): ?>
@@ -90,15 +90,15 @@ global $iro_only_template;
                 <!-- pjax end -->
                 <?php
                 get_footer();
-                require_once get_template_directory() . '/frontend/components/site/particle.php';
+                require_once get_theme_file_path('/frontend/components/site/particle.php');
                 ?>
             </div>
 
             <!-- 小组件 -->
-            <?php require_once get_template_directory() . '/frontend/components/site/widget.php'; ?>
+            <?php require_once get_theme_file_path('/frontend/components/site/widget.php'); ?>
             <!-- model start -->
             <?php if (iro_opt("nav_menu_search_switch", true)): ?>
-                <?php require_once get_template_directory() . '/frontend/components/site/search_form.php'; ?>
+                <?php require_once get_theme_file_path('/frontend/components/site/search_form.php'); ?>
             <?php endif; ?>
             <div id="site-model-slot" class="flex-center"></div>
             <!-- model end -->

@@ -1,4 +1,4 @@
-<?php require_once get_template_directory() . '/frontend/components/post/head_metas.php'; ?>
+<?php require_once get_theme_file_path('/frontend/components/post/head_metas.php'); ?>
 <div class="page-header only-word">
     <?php iro_content_container_start(); ?>
     <header class="post-header">

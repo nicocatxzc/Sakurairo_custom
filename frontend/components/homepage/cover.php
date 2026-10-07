@@ -66,17 +66,17 @@
                                     </p>
                                 </div>
                             <?php endif; ?>
-                            <?php require_once get_template_directory() . '/frontend/components/homepage/social_links.php'; ?>
+                            <?php require_once get_theme_file_path('/frontend/components/homepage/social_links.php'); ?>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
         </figure>
-        <?php require_once get_template_directory() . '/frontend/components/homepage/wave.php'; ?>
+        <?php require_once get_theme_file_path('/frontend/components/homepage/wave.php'); ?>
     </div>
 <?php endif; ?>
 <?php //只引入一次，如果封面未开启但波浪开启且全屏定位则导入 
 ?>
 <?php if (iro_opt('homepage_wave_position', 'cover') === 'window'): ?>
-    <?php require_once get_template_directory() . '/frontend/components/homepage/wave.php'; ?>
+    <?php require_once get_theme_file_path('/frontend/components/homepage/wave.php'); ?>
 <?php endif; ?>

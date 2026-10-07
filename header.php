@@ -60,7 +60,7 @@ if (is_customize_preview()) { // 模版中加载，解决其他位置获取不�
 
     <?php
     // 前端主题样式
-    require get_template_directory() . '/frontend/theme_style_vars.php';
+    require get_theme_file_path('/frontend/theme_style_vars.php');
     ?>
     <?= iro_opt("custom_site_header"); ?>
 

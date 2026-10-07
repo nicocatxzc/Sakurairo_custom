@@ -17,6 +17,6 @@ if ($term && ! is_wp_error($term)) {
             <p><?= $term_description ?></p>
         <?php endif; ?>
     </header>
-    <?php require_once get_template_directory() . '/frontend/components/post/list.php'; ?>
+    <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
     <?php iro_content_container_end() ?>
 </div>

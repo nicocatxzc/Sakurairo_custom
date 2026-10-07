@@ -2,14 +2,14 @@
         <article class="post">
             <?php
             if (has_post_thumbnail()) {
-                require get_template_directory() . '/frontend/components/post/header_with_image.php';
+                require get_theme_file_path('/frontend/components/post/header_with_image.php');
             } else {
-                require get_template_directory() . '/frontend/components/post/header.php';
+                require get_theme_file_path('/frontend/components/post/header.php');
             }
             ?>
             <?php iro_content_container_start() ?>
             <article class="post-content">
-                <?php require get_template_directory() . '/frontend/components/post/render.php'; ?>
+                <?php require get_theme_file_path('/frontend/components/post/render.php'); ?>
             </article>
             <?php if ((is_single() && iro_opt("page_post_toc", true)) || (is_page() && iro_opt("page_page_toc", false))): ?>
                 <div class="toc-container toc">
@@ -17,9 +17,9 @@
                 </div>
             <?php endif; ?>
             <?php iro_content_container_end() ?>
-            <?php require get_template_directory() . '/frontend/components/post/footer.php'; ?>
+            <?php require get_theme_file_path('/frontend/components/post/footer.php'); ?>
         </article>
-        <?php require get_template_directory() . '/frontend/components/post/navigator.php'; ?>
+        <?php require get_theme_file_path('/frontend/components/post/navigator.php'); ?>
 <?php endwhile;
 endif; ?>
 <?php

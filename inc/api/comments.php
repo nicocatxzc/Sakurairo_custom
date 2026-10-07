@@ -1,5 +1,5 @@
 <?php
-require_once get_template_directory() . "/frontend/components/comment/card.php";
+require_once get_theme_file_path('/frontend/components/comment/card.php');
 add_filter(
     'rest_allow_anonymous_comments',
     function ($allow, $request) {

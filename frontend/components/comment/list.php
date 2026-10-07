@@ -9,7 +9,7 @@ if (!$iro_only_template): ?>
     <?php endif ?>
     <?php if (have_comments()) : ?>
         <?php
-        require_once get_template_directory() . "/frontend/components/comment/card.php";
+        require_once get_theme_file_path("/frontend/components/comment/card.php");
         wp_list_comments([
             'style'      => 'ol',
             'short_ping' => true,

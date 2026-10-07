@@ -1,5 +1,5 @@
 <?php
-require_once get_template_directory() . "/frontend/components/comment/form_data.php";
+require_once get_theme_file_path("/frontend/components/comment/form_data.php");
 $post_comment_args = iro_comment_form_data();
 ?>
 

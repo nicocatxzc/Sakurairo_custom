@@ -16,7 +16,7 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
                 <?= iro_opt("homepage_show_title", [])["text"] ?? "" ?>
             </h2>
         <?php
-            require_once get_template_directory() . '/frontend/components/homepage/show.php';
+            require_once get_theme_file_path('/frontend/components/homepage/show.php');
             break;
         case 'post_list':
         ?>
@@ -25,12 +25,12 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
                 <?= iro_opt("homepage_post_list_title", [])["text"] ?? "" ?>
             </h2>
     <?php
-            require_once get_template_directory() . '/frontend/components/post/list.php';
+            require_once get_theme_file_path('/frontend/components/post/list.php');
             break;
         case 'static_page':
             if (get_post(iro_opt("homepage_static_page_id"))) {
                 setup_postdata((iro_opt("homepage_static_page_id")));
-                require_once get_template_directory() . '/frontend/components/post/render.php';
+                require_once get_theme_file_path('/frontend/components/post/render.php');
                 wp_reset_postdata();
             }
             break;
