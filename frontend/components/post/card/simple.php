@@ -35,14 +35,22 @@
             <!-- Icon: fa-icon-solid:tags -->
             <i class="fa-icon-solid fa-tags icon"></i>
             <?php
-            foreach (wp_get_post_tags() as $tag) :
+            // wp_get_post_tags() 不传文章 ID 时不会回退到全局 $post，必须显式传入
+            $tags = wp_get_post_tags(get_the_ID());
             ?>
-                <a href="<?= esc_url(get_tag_link($tag->term_id)) ?>" class="tag">
-                    #<?= esc_html($tag->name) ?>
-                </a>
-            <?php
-            endforeach;
-            ?>
+            <?php if ($tags) : ?>
+                <?php
+                foreach ($tags as $tag) :
+                ?>
+                    <a href="<?= esc_url(get_tag_link($tag->term_id)) ?>" class="tag">
+                        #<?= esc_html($tag->name) ?>
+                    </a>
+                <?php
+                endforeach;
+                ?>
+            <?php else : ?>
+                <span class="no-tags"><?= __("无标签", 'sakurairo') ?></span>
+            <?php endif; ?>
         </div>
         <?php foreach (iro_opt('post_card_metas', ['category', 'views']) as $meta) :
             switch ($meta):
