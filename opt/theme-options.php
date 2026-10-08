@@ -68,6 +68,55 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'iro_llms_txt',
+                'type' => 'switcher',
+                'title' => __('使用主题提供的llms.txt', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id' => 'iro_llms_recommend_mode',
+                'type' => 'select',
+                'title' => __('llms.txt 文章列表来源', 'sakurairo'),
+                'desc' => __('决定 llms.txt 中“文章”部分的内容', 'sakurairo'),
+                'dependency' => ['iro_llms_txt', '==', 'true', '', 'true'],
+                'options' => [
+                    'latest' => __('按最新', 'sakurairo'),
+                    'views' => __('按浏览量', 'sakurairo'),
+                    'custom' => __('站长自定义', 'sakurairo'),
+                ],
+                'default' => 'latest'
+            ],
+
+            [
+                'id' => 'iro_llms_post_limit',
+                'type' => 'number',
+                'title' => __('llms.txt 文章条数上限', 'sakurairo'),
+                'desc' => __('文件需要小到能进模型上下文，超出部分不会被列出', 'sakurairo'),
+                'dependency' => ['iro_llms_txt', '==', 'true', '', 'true'],
+                'default' => 20
+            ],
+
+            [
+                'id' => 'iro_llms_recommend_items',
+                'type' => 'repeater',
+                'title' => __('llms.txt 自定义文章', 'sakurairo'),
+                'desc' => __('按这里的顺序输出，失效或加密的文章会被忽略', 'sakurairo'),
+                'dependency' => ['iro_llms_recommend_mode', '==', 'custom', '', 'true'],
+                'fields' => [
+                    [
+                        'id' => 'post',
+                        'type' => 'select',
+                        'title' => __('文章', 'sakurairo'),
+                        // 文章可能很多，交给 ajax 搜索而不是一次性列出全部
+                        'options' => 'posts',
+                        'chosen' => true,
+                        'ajax' => true,
+                    ],
+                ],
+            ],
+
+            [
                 'id'     => 'iro_meta_keywords',
                 'type'   => 'text',
                 'title'  => __('站点关键词', 'sakurairo'),
@@ -81,6 +130,13 @@ if (class_exists('Sakurairo_CSF')) {
                 'title'  => __('站点描述', 'sakurairo'),
                 'dependency' => ['iro_seo', '!=', 'off', '', 'true'],
                 'desc'   => __('提供一些关于网站内容的描述，控制在120字以内，它将出现在搜索引擎搜索结果条目的下方', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'iro_llms_desc',
+                'type' => 'textarea',
+                'title' => __('站点描述', 'sakurairo'),
+                'desc' => __('提供一些关于网站内容的描述，控制在300字以内', 'sakurairo'),
             ],
 
         ]

@@ -90,6 +90,8 @@ require_once get_template_directory() . '/inc/blocks/iro_blocks.php';
 require_once get_template_directory() . '/inc/functions/seo.php';
 // 站点地图
 require_once get_template_directory() . '/inc/functions/sitemap.php';
+// llms.txt
+require_once get_template_directory() . '/inc/functions/llms.php';
 // AI 服务
 require_once get_template_directory() . '/inc/functions/ai/provider.php';
 require_once get_template_directory() . '/inc/functions/ai/tools.php';
