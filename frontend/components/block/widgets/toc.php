@@ -1,5 +1,5 @@
 <?php
-// 目录容器：目录内容由 tocbot（frontend/components/page/post.js）扫正文标题生成
+// 目录容器：目录内容由 tocbot 扫正文标题生成
 $toc_title = $attributes['title'] ?? '';
 ?>
 <div class="iro-widget-tools iro-widget-tools-toc">

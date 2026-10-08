@@ -7,8 +7,7 @@
     flex-direction: column;
     gap: 1rem;
 
-    // 自带标题的核心小工具（搜索等）；主题自己的工具块标题在
-    // frontend/components/block/widgets/tools.scss
+    // 自带标题的核心小工具
     label {
         position: relative;
         margin: 0 0 0.75rem 1rem;

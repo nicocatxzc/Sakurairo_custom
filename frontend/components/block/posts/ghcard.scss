@@ -8,7 +8,7 @@
 
     --max-width: 75dvw;
 
-    // 设计稿 25rem × 7.5rem：占位尺寸由容器决定，比例由 aspect-ratio 决定。
+    // 设计 25rem × 7.5rem：占位尺寸由容器决定，比例由 aspect-ratio 决定。
     // 低版本浏览器不支持长度相除
     width: min(100%, var(--max-width), var(--design-width));
     aspect-ratio: 25 / 7.5;
