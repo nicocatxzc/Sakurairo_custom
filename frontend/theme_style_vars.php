@@ -25,6 +25,16 @@
         --border-sketch: 0.1rem solid rgba(var(--border-color-sketch), 0.1);
         --border-shine: 0.1rem solid rgb(var(--border-color-shine));
 
+        <?php // 工具块（frontend/components/block/widgets）的卡片外观：
+        // 背景与描边由「侧边栏组件背景」一起开关，圆角由「侧边栏项目圆角」。
+        // 边框取 --border-sketch 而不是裸的 --border-color-sketch：深色模式把后者
+        // 整体换成了 rgba()，直接拼 rgba(var(...)) 会失效。
+        // 变量挂在组件上而不是侧栏上，工具块放进正文里同样成立
+        ?>--iro-widget-tools-background: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--widget-background-color)" : "transparent" ?>;
+        --iro-widget-tools-border: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--border-sketch)" : "none" ?>;
+        --iro-widget-tools-radius: <?= iro_opt("layout_side_bar_item_radius", 0.6) ?>rem;
+        --iro-column-radius: <?= iro_opt("layout_side_bar_radius", 0.6) ?>rem;
+
         --page-background-color: rgba(255, 255, 255, var(--background-transparency));
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }

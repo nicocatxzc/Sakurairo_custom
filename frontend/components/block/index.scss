@@ -1,5 +1,4 @@
-@use "./bvideo.scss";
-@use "./conversation.scss";
-@use "./ghcard.scss";
-@use "./notice.scss";
-@use "./showcard.scss";
+// 正文内容块
+@use "./posts/index.scss" as posts;
+// 工具块
+@use "./widgets/index.scss" as widgets;

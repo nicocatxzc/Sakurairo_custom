@@ -1,18 +1,21 @@
-// 栏目容器把若干块包成一栏
+// 栏目容器把若干块包成一栏；它只是分组，自己不画卡片
 // 没被容器包住的块照常随正文滚走
-.iro-column {
+.iro-widget-tools-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    border-radius: var(--side_bar_radius);
 }
 
-.site-side-bar.with-background .iro-column {
-    background-color: var(--widget-background-color);
+// 整栏背景与圆角只在侧栏里给，分别对应「侧边栏整体背景」「侧边栏圆角」
+.site-side-bar.with-background .iro-widget-tools-column {
     padding: 1rem;
+    border-radius: var(--iro-column-radius);
+    background-color: var(--widget-background-color);
 }
 
-.site-side-bar .widget_block:has(> .iro-column.sticky) {
+// 小工具区里每个小工具外面都有 widget_block 包裹层，吸附必须落在包裹层上：
+// 包裹层才是吸附的包含块，贴在容器自身上会因为没有行程而不动
+.site-side-bar .widget_block:has(> .iro-widget-tools-column.sticky) {
     position: sticky;
     top: var(--layout-sticky-top, 0);
     // 让下方栏目从背景过去
@@ -20,7 +23,7 @@
 }
 
 // 正文里直接用栏目容器时没有包裹层，吸附落在容器自身
-.iro-column.sticky {
+.iro-widget-tools-column.sticky {
     position: sticky;
     top: var(--layout-sticky-top, 0);
     z-index: 1;

@@ -1,0 +1,30 @@
+// 工具块的通用外壳：与侧栏无关，放进正文里同样成立（各块只是更推荐塞进小工具区）
+// 卡片外观（背景 / 描边 / 圆角）全部由主题设置经 CSS 变量给到，见 frontend/theme_style_vars.php
+// 圆角变量取自「侧边栏项目圆角」，背景开关取自「侧边栏组件背景」，关掉时背景与描边一起消失
+.iro-widget-tools {
+    padding: 1rem;
+    border: var(--iro-widget-tools-border);
+    border-radius: var(--iro-widget-tools-radius);
+    background-color: var(--iro-widget-tools-background);
+}
+
+.iro-widget-tools-title {
+    position: relative;
+    margin: 0 0 0.75rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--word-color-first);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -1rem;
+        width: 0.25rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        background: var(--button-bg);
+        transform: translateY(-50%);
+    }
+}
+

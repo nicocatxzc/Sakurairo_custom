@@ -26,9 +26,9 @@ $author_tag_count = wp_count_terms(['taxonomy' => 'post_tag', 'hide_empty' => tr
 $author_category_count = is_wp_error($author_category_count) ? 0 : (int) $author_category_count;
 $author_tag_count = is_wp_error($author_tag_count) ? 0 : (int) $author_tag_count;
 ?>
-<section class="iro-sidebar-author">
+<section class="iro-widget-tools iro-widget-tools-author">
     <?php if ($author_title): ?>
-        <h2 class="iro-side-bar-title"><?= esc_html($author_title) ?></h2>
+        <h2 class="iro-widget-tools-title"><?= esc_html($author_title) ?></h2>
     <?php endif ?>
 
     <picture class="author-avatar">

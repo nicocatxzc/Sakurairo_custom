@@ -1,6 +1,5 @@
-.toc-widget {
-    // 主题原样式给 #toc 加了浮层外框，
-    // 侧栏里只要列表，所以把外框与定位全部退回静态
+.iro-widget-tools-toc {
+    // 主题原样式给 #toc 加了浮层外框，这里只要列表，把外框与定位全部退回静态
     #toc {
         // relative 而非 static：tocbot 同步目录滚动位置时用 activeItem.offsetTop，
         // 它相对最近的定位祖先，static 会算到吸附容器上，条目一多目录就滚错位置

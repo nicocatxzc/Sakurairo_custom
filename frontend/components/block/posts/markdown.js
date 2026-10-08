@@ -1,4 +1,4 @@
-import parseMarkdown from "../../app/utils/parseMarkdown";
+import parseMarkdown from "../../../app/utils/parseMarkdown";
 
 _iro.hooks.onPageLoaded(async () => {
     const markdown = document.querySelectorAll(".wp-block-hachimi-markdown");

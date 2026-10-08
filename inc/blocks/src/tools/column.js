@@ -46,7 +46,7 @@ const lang = createI18n({
 function edit({ attributes, setAttributes }) {
     const { sticky } = attributes;
     const blockProps = useBlockProps({
-        className: `iro-column${sticky ? " sticky" : ""}`,
+        className: `iro-widget-tools-column${sticky ? " sticky" : ""}`,
     });
 
     return (
@@ -72,18 +72,30 @@ function edit({ attributes, setAttributes }) {
     );
 }
 
-function save({ attributes }) {
-    const { sticky } = attributes;
-    const blockProps = useBlockProps.save({
-        className: `iro-column${sticky ? " sticky" : ""}`,
-    });
-
-    return (
-        <div {...blockProps}>
-            <InnerBlocks.Content />
-        </div>
-    );
+// 动态块：容器元素由前台 PHP 输出（frontend/components/block/widgets/column.php），
+// 内容里只留内部块，所以改吸附/圆角这类外观不需要重存文章
+function save() {
+    return <InnerBlocks.Content />;
 }
+
+// 旧版本把容器元素一起存进了内容里，保留旧 markup 让已有内容能自动升级
+const deprecated = [
+    {
+        attributes: { sticky: { type: "boolean", default: false } },
+        save({ attributes }) {
+            const { sticky } = attributes;
+            const blockProps = useBlockProps.save({
+                className: `iro-column${sticky ? " sticky" : ""}`,
+            });
+
+            return (
+                <div {...blockProps}>
+                    <InnerBlocks.Content />
+                </div>
+            );
+        },
+    },
+];
 
 export default function columnBlock() {
     registerBlockType("sakurairo/column", {
@@ -101,5 +113,6 @@ export default function columnBlock() {
         },
         edit,
         save,
+        deprecated,
     });
 }

@@ -7,7 +7,7 @@ if (!is_array($menu_items)) {
 }
 ?>
 <?php if ($menu_items): ?>
-    <nav class="iro-sidebar-menu">
+    <nav class="iro-widget-tools iro-widget-tools-menu">
         <ul class="menu">
             <?php foreach ($menu_items as $item): ?>
                 <?php $has_children = !empty($item['children']); ?>

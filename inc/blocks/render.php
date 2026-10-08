@@ -216,16 +216,17 @@ add_action('init', function () {
      */
     foreach (
         [
-            'sidebar-author' => 'side_bar_author.php',
-            'sidebar-terms'  => 'side_bar_terms.php',
-            'sidebar-menu'   => 'side_bar_menu.php',
-            'sidebar-toc'    => 'side_bar_toc.php',
-        ] as $sidebar_block => $sidebar_template
+            'sidebar-author' => 'author.php',
+            'sidebar-terms'  => 'terms.php',
+            'sidebar-menu'   => 'menu.php',
+            'sidebar-toc'    => 'toc.php',
+            'column'         => 'column.php',
+        ] as $tools_block => $tools_template
     ) {
-        register_block_type('sakurairo/' . $sidebar_block, [
-            'render_callback' => function ($attributes) use ($sidebar_template) {
+        register_block_type('sakurairo/' . $tools_block, [
+            'render_callback' => function ($attributes, $content = '') use ($tools_template) {
                 ob_start();
-                require get_theme_file_path('/frontend/components/site/widget/' . $sidebar_template);
+                require get_theme_file_path('/frontend/components/block/widgets/' . $tools_template);
                 return ob_get_clean();
             },
         ]);
@@ -346,7 +347,7 @@ function hachimi_render_ghcard($args)
     $data_info = hachimi_encode_data($data);
 
     ob_start();
-    require get_template_directory() . '/frontend/components/block/ghcard.php';
+    require get_template_directory() . '/frontend/components/block/posts/ghcard.php';
     return ob_get_clean();
 }
 
@@ -366,7 +367,7 @@ function hachimi_render_notice($args)
     $data_info = hachimi_encode_data($data);
 
     ob_start();
-    require get_template_directory() . '/frontend/components/block/notice.php';
+    require get_template_directory() . '/frontend/components/block/posts/notice.php';
     return ob_get_clean();
 }
 
@@ -389,7 +390,7 @@ function hachimi_render_showcard($args)
     $data_info = hachimi_encode_data($data);
 
     ob_start();
-    require get_template_directory() . '/frontend/components/block/showcard.php';
+    require get_template_directory() . '/frontend/components/block/posts/showcard.php';
     return ob_get_clean();
 }
 
@@ -417,7 +418,7 @@ function hachimi_render_conversations($args)
     $data_info = hachimi_encode_data($data);
 
     ob_start();
-    require get_template_directory() . '/frontend/components/block/conversation.php';
+    require get_template_directory() . '/frontend/components/block/posts/conversation.php';
     return ob_get_clean();
 }
 
@@ -442,6 +443,6 @@ function hachimi_render_bilibili($args)
     $data_info = hachimi_encode_data($data);
 
     ob_start();
-    require get_template_directory() . '/frontend/components/block/bvideo.php';
+    require get_template_directory() . '/frontend/components/block/posts/bvideo.php';
     return ob_get_clean();
 }

@@ -58,7 +58,8 @@ const onClickTocLink = (event) => {
 };
 
 _iro.hooks.onPageLoaded(async () => {
-    const toc = document.querySelector(".toc");
+    // 认 #toc 而不是 .toc：内建目录与侧栏目录块的外层类名不一样，只有 #toc 是二者共有的
+    const toc = document.querySelector("#toc");
     if (!toc) return;
     // tocbot 已打进启动 chunk，这里只控制初始化时机
     const { default: tocbot } = await import("tocbot");

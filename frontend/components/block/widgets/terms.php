@@ -23,8 +23,8 @@ if ($terms_title === '') {
     $terms_title = get_taxonomy($terms_taxonomy)->labels->name;
 }
 ?>
-<section class="iro-sidebar-terms">
-    <h2 class="iro-side-bar-title"><?= esc_html($terms_title) ?></h2>
+<section class="iro-widget-tools iro-widget-tools-terms">
+    <h2 class="iro-widget-tools-title"><?= esc_html($terms_title) ?></h2>
 
     <ul class="terms-<?= $terms_style ?>">
         <?php foreach ($terms as $term): ?>

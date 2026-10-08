@@ -32,7 +32,7 @@ function collapse() {
  * 初始化：侧栏在 pjax 容器之外，服务端渲染一次，只需绑定一次
  */
 function initSideBarMenu() {
-    const el = document.querySelector(".iro-sidebar-menu");
+    const el = document.querySelector(".iro-widget-tools-menu");
     if (!el || el === menu) return;
 
     menu = el;

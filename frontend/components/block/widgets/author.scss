@@ -1,13 +1,5 @@
-.site-side-bar.with-items-bg {
-    .iro-sidebar-author {
-        background-color: var(--widget-background-color);
-    }
-}
-
-.iro-sidebar-author {
+.iro-widget-tools-author {
     text-align: center;
-    padding: 1rem;
-    border-radius: var(--side_bar_item_radius);
 
     .author-avatar {
         display: block;
