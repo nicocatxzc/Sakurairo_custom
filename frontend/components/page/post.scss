@@ -6,6 +6,12 @@ article.post {
 .post-content {
     width: 100%;
     margin-top: 1rem;
+
+    // 标题是锚点目标：固定导航栏会盖住落点，留出这段距离后
+    // hash 跳转（带锚点打开页面）与目录里的 scrollIntoView 都落在导航栏下方
+    :is(h1, h2, h3, h4, h5, h6) {
+        scroll-margin-top: var(--layout-sticky-top, 0);
+    }
 }
 .toc {
     flex-shrink: 0;

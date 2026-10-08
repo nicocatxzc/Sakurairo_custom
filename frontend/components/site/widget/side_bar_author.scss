@@ -1,5 +1,13 @@
+.site-side-bar.with-items-bg {
+    .iro-sidebar-author {
+        background-color: var(--widget-background-color);
+    }
+}
+
 .iro-sidebar-author {
     text-align: center;
+    padding: 1rem;
+    border-radius: var(--side_bar_item_radius);
 
     .author-avatar {
         display: block;
@@ -8,7 +16,11 @@
         margin: 0 auto;
         overflow: hidden;
         border-radius: 50%;
-        background-color: color-mix(in srgb, var(--word-color-first) 8%, transparent);
+        background-color: color-mix(
+            in srgb,
+            var(--word-color-first) 8%,
+            transparent
+        );
         box-shadow: var(--widget-shadow-shine);
 
         img {

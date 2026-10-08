@@ -1,22 +1,21 @@
-// 栏目容器：侧栏里把若干块包成一栏，可选整栏吸附、可选整体背景
-// （背景跟随 layout_side_bar_background，规则见文件末尾）。
-// 侧栏是整条全高轨道，吸附元素的包含块就是它，行程等于整条正文；
-// 没被容器包住的块照常随正文滚走。
+// 栏目容器把若干块包成一栏
+// 没被容器包住的块照常随正文滚走
 .iro-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    border-radius: var(--side_bar_radius);
 }
 
-// 侧栏里每个块都被小工具区包了一层 .widget_block，它只等于内容高度——
-// 吸附元素的包含块就是它，行程因此为 0（表现为完全不动），
-// 所以吸附要落在包裹层上（它的包含块是整条 8850px 的侧栏轨道）。
+.site-side-bar.with-background .iro-column {
+    background-color: var(--widget-background-color);
+    padding: 1rem;
+}
+
 .site-side-bar .widget_block:has(> .iro-column.sticky) {
     position: sticky;
     top: var(--layout-sticky-top, 0);
-    // 排在后面的块会从它下面滑过，抬一层保证吸附内容始终可读。
-    // 行程受轨道（正文 + 导航 + 评论，页脚在网格之外）限制，
-    // 滚到轨道末尾被顶走是预期效果，不是 bug。
+    // 让下方栏目从背景过去
     z-index: 1;
 }
 
@@ -25,12 +24,4 @@
     position: sticky;
     top: var(--layout-sticky-top, 0);
     z-index: 1;
-}
-
-// 开启「侧边栏整体背景」时，背景画在栏目容器上：
-// 负外边距抵消轨道的 1rem 内边距，卡片铺满整条轨道，卡片内文字仍与裸块对齐
-.site-side-bar.with-background .iro-column {
-    background-color: var(--widget-background-color);
-    margin-inline: -1rem;
-    padding: 1rem;
 }

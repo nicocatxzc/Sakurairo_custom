@@ -287,6 +287,26 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'layout_side_bar_radius',
+                'type' => 'slider',
+                'title' => __('侧边栏圆角', 'sakurairo'),
+                'step' => '0.01',
+                'unit' => 'rem',
+                'max' => '2',
+                'default' => '0.6'
+            ],
+
+            [
+                'id' => 'layout_side_bar_item_radius',
+                'type' => 'slider',
+                'title' => __('侧边栏项目圆角', 'sakurairo'),
+                'step' => '0.01',
+                'unit' => 'rem',
+                'max' => '2',
+                'default' => '0.6'
+            ],
+
+            [
                 'type'    => 'subheading',
                 'content' => __('其他', 'sakurairo'),
             ],
