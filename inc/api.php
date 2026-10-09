@@ -339,6 +339,48 @@ add_action('rest_api_init', function () {
         )
     );
 
+    // 多语言内容总览：面板在 inc/ai 的「文章翻译」，接口与 AI 工具页同样只对管理员开放
+    if (iro_i18n_enabled()) {
+        require_once get_template_directory() . '/inc/api/i18n.php';
+
+        register_rest_route(
+            'sakura/v1',
+            '/i18n/overview',
+            array(
+                'methods' => 'GET',
+                'callback' => 'iro_i18n_rest_overview',
+                'permission_callback' => 'iro_rest_check_permission',
+            )
+        );
+        register_rest_route(
+            'sakura/v1',
+            '/i18n/backfill',
+            array(
+                'methods' => 'POST',
+                'callback' => 'iro_i18n_rest_backfill',
+                'permission_callback' => 'iro_rest_check_permission',
+            )
+        );
+        register_rest_route(
+            'sakura/v1',
+            '/i18n/repair-language',
+            array(
+                'methods' => 'POST',
+                'callback' => 'iro_i18n_rest_repair_language',
+                'permission_callback' => 'iro_rest_check_permission',
+            )
+        );
+        register_rest_route(
+            'sakura/v1',
+            '/i18n/rename-slugs',
+            array(
+                'methods' => 'POST',
+                'callback' => 'iro_i18n_rest_rename_slugs',
+                'permission_callback' => 'iro_rest_check_permission',
+            )
+        );
+    }
+
     // 页脚播放器
     require_once get_template_directory() . '/inc/api/player.php';
     register_rest_route(

@@ -282,7 +282,7 @@ function iro_i18n_group_map(int $post_id): array
 }
 
 /**
- * 批量解析多个关联标识的版本归属，供总览页避免逐行查询
+ * 批量解析多个关联标识的版本归属，供总览面板避免逐行查询
  *
  * @param string[] $paths
  * @return array<string,array<string,WP_Post>>

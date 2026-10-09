@@ -2,14 +2,17 @@
 import { computed, markRaw, ref } from "vue";
 import {
     ChatDotRound,
+    DocumentCopy,
     Files,
     Menu,
     Monitor,
     Setting,
 } from "@element-plus/icons-vue";
+import { aiOptions } from "../config";
 import PanelConfig from "./PanelConfig.vue";
 import PanelChat from "./PanelChat.vue";
 import PanelSyetem from "./PanelSystem.vue";
+import PanelTranslation from "./PanelTranslation.vue";
 import PostManagement from "./PostManagement.vue";
 
 const t = window.iroI18n.t;
@@ -24,6 +27,17 @@ const panels = [
         icon: markRaw(Files),
         component: PostManagement,
     },
+    // 多语言模块没开时该面板没有可展示的数据，直接不登记
+    ...(aiOptions.i18n
+        ? [
+              {
+                  key: "translation",
+                  label: t("文章翻译"),
+                  icon: markRaw(DocumentCopy),
+                  component: PanelTranslation,
+              },
+          ]
+        : []),
     {
         key: "chat",
         label: t("测试对话"),

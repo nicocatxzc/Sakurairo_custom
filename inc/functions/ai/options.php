@@ -26,6 +26,8 @@ function iro_ai_panel_config(): array
         'configured' => iro_ai_api_key() !== '',
         // 面板工具项：接入工具时用该过滤器追加 ['id' => ..., 'label' => ...]
         'tools' => apply_filters('iro_ai_panel_tools', []),
+        // 「文章翻译」面板只在多语言模块开启时登记，没开时该面板没有可展示的数据
+        'i18n' => iro_i18n_enabled(),
     ];
 }
 

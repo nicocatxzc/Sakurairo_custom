@@ -8,6 +8,7 @@ function readAiOptions() {
         apiBase: "",
         configured: false,
         tools: [],
+        i18n: false,
     };
 
     const el = document.getElementById("iro_ai_config");

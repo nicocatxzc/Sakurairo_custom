@@ -1,5 +1,5 @@
 <?php
-// 内容国际化后台管理
+// 内容国际化后台管理：列表列、语言筛选、编辑页面板与批量维护动作
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -40,7 +40,7 @@ function iro_i18n_status_cell(array $row): string
  * 同组各语言版本的标记，只取参与语言，缺一不可地显示出来
  *
  * @param array<string,WP_Post> $map
- * @return array<int,array{code:string,name:string,state:string,label:string,url:string}>
+ * @return array<int,array{code:string,default:bool,name:string,state:string,label:string,url:string}>
  */
 function iro_i18n_language_statuses(array $map): array
 {
@@ -70,11 +70,13 @@ function iro_i18n_language_statuses(array $map): array
         }
 
         $rows[] = [
-            'code'  => $code,
-            'name'  => iro_i18n_language_name($code),
-            'state' => $code === $default ? 'default' : $state,
-            'label' => $label,
-            'url'   => $url,
+            'code'    => $code,
+            // 默认语言只多一个标记，状态照旧按版本情况判定：原文那一版不会被判定成待同步
+            'default' => $code === $default,
+            'name'    => iro_i18n_language_name($code),
+            'state'   => $state,
+            'label'   => $label,
+            'url'     => $url,
         ];
     }
 
@@ -320,28 +322,6 @@ function iro_i18n_render_version_note(WP_Post $post): void
 }
 
 /**
- * 手动触发一次「原文语言归位」，供站长在改过默认语言后自行校正
- */
-function iro_i18n_handle_repair_language(): void
-{
-    if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('权限不足。', 'sakurairo'));
-    }
-
-    check_admin_referer('iro_i18n_repair_language');
-
-    $fixed = iro_i18n_repair_default_language();
-
-    update_option('iro_i18n_default_repair', $fixed);
-
-    wp_safe_redirect(add_query_arg([
-        'page'              => 'iro-i18n',
-        'iro_i18n_repaired' => $fixed,
-    ], admin_url('tools.php')));
-    exit;
-}
-
-/**
  * 把早期副本的别名改成「原文别名 + 语言代号」
  *
  * 早期副本与原文同名，被 WordPress 自动接上了 `-2`、`-3`；那串数字既不稳定也
@@ -399,209 +379,6 @@ function iro_i18n_rename_translation_slugs(): int
     }
 
     return $renamed;
-}
-
-/**
- * 把手动触发的别名规范化
- */
-function iro_i18n_handle_rename_slugs(): void
-{
-    if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('权限不足。', 'sakurairo'));
-    }
-
-    check_admin_referer('iro_i18n_rename_slugs');
-
-    $renamed = iro_i18n_rename_translation_slugs();
-
-    wp_safe_redirect(add_query_arg([
-        'page'            => 'iro-i18n',
-        'iro_i18n_renamed' => $renamed,
-    ], admin_url('tools.php')));
-    exit;
-}
-
-/**
- * 翻译总览：按关联标识列出各组语言覆盖情况，并支持一次性补齐关联与副本
- */
-function iro_i18n_render_overview_page(): void
-{
-    if (!current_user_can('edit_posts')) {
-        wp_die(esc_html__('权限不足。', 'sakurairo'));
-    }
-
-    $post_types = iro_i18n_supported_post_types();
-    $paged      = max(1, (int) ($_GET['paged'] ?? 1));
-    $per_page   = 50;
-
-    $query = new WP_Query([
-        'post_type'      => $post_types,
-        'post_status'    => 'publish',
-        'posts_per_page' => $per_page,
-        'paged'          => $paged,
-        'orderby'        => 'ID',
-        'order'          => 'DESC',
-        'meta_query'     => [
-            [
-                'key'     => IRO_I18N_PATH_META,
-                'compare' => 'EXISTS',
-            ],
-        ],
-    ]);
-
-    $paths = [];
-
-    foreach ($query->posts as $post) {
-        $path = iro_i18n_get_path($post->ID);
-
-        if ($path !== '') {
-            $paths[$path] = true;
-        }
-    }
-
-    $translations = iro_i18n_paths_translations(array_keys($paths), $post_types);
-?>
-    <div class="wrap">
-        <h1><?php esc_html_e('翻译总览', 'sakurairo'); ?></h1>
-
-        <p class="description">
-            <?php esc_html_e('列出已建立语言关联的内容，以及各语言的版本状态。未翻译的副本默认是草稿，填好内容改成发布即可接手同一关联标识。', 'sakurairo'); ?>
-        </p>
-
-        <p class="description">
-            <?= esc_html(sprintf(
-                /* translators: 1: 默认语言名与代号 2: 站点语言 3: 该默认语言的路由前缀 */
-                __('默认语言是「%1$s」（跟随站点语言 %2$s），无前缀路径即属于它；其余语言通过 /%3$s/ 之类的前缀访问。', 'sakurairo'),
-                iro_i18n_language_label(iro_i18n_default_language()),
-                iro_i18n_site_locale(),
-                iro_i18n_prefix(iro_i18n_default_language())
-            )) ?>
-        </p>
-
-        <?php if (isset($_GET['iro_i18n_repaired'])) : ?>
-            <div class="notice notice-success is-dismissible">
-                <p><?= esc_html(sprintf(
-                        /* translators: %d: 改动的篇数 */
-                        __('已把 %d 条原文的语言标记归位到默认语言。', 'sakurairo'),
-                        (int) $_GET['iro_i18n_repaired']
-                    )) ?></p>
-            </div>
-        <?php endif; ?>
-
-        <?php if (iro_i18n_autofuzzy_enabled()) : ?>
-            <p class="description">
-                <?php esc_html_e('标记为「待同步」的版本说明原文在此之后改动过，它的内容仍然在线，只是会在前台挂出可能过期的提示；把译文核对一遍并重新发布即视为已对齐。', 'sakurairo'); ?>
-            </p>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['iro_i18n_backfilled'])) : ?>
-            <div class="notice notice-success is-dismissible">
-                <p><?= esc_html(sprintf(
-                        /* translators: %d: 补齐的内容数量 */
-                        __('已为 %d 条内容补齐语言关联与未翻译副本。', 'sakurairo'),
-                        (int) $_GET['iro_i18n_backfilled']
-                    )) ?></p>
-            </div>
-        <?php endif; ?>
-
-        <form method="post" action="<?= esc_url(admin_url('admin-post.php')) ?>" style="margin:12px 0;">
-            <?php wp_nonce_field('iro_i18n_backfill'); ?>
-            <input type="hidden" name="action" value="iro_i18n_backfill">
-            <button type="submit" class="button">
-                <?php esc_html_e('为全部已发布内容补齐关联与未翻译副本', 'sakurairo'); ?>
-            </button>
-        </form>
-
-        <?php if (current_user_can('manage_options')) : ?>
-            <form method="post" action="<?= esc_url(admin_url('admin-post.php')) ?>" style="margin:12px 0;">
-                <?php wp_nonce_field('iro_i18n_repair_language'); ?>
-                <input type="hidden" name="action" value="iro_i18n_repair_language">
-                <button type="submit" class="button">
-                    <?php esc_html_e('把原文的语言标记归位到默认语言', 'sakurairo'); ?>
-                </button>
-                <span class="description">
-                    <?php esc_html_e('只动「关联标识等于自身别名」且没有副本标记的内容，即真正的原文。', 'sakurairo'); ?>
-                </span>
-            </form>
-
-            <form method="post" action="<?= esc_url(admin_url('admin-post.php')) ?>" style="margin:12px 0;">
-                <?php wp_nonce_field('iro_i18n_rename_slugs'); ?>
-                <input type="hidden" name="action" value="iro_i18n_rename_slugs">
-                <button type="submit" class="button">
-                    <?php esc_html_e('规范化译文别名（原文别名 + 语言代号）', 'sakurairo'); ?>
-                </button>
-                <span class="description">
-                    <?php esc_html_e('把早期被 WordPress 接上 -2、-3 的译文别名改成「-zh-tw」这类形式；会改动已发布译文的地址。', 'sakurairo'); ?>
-                </span>
-            </form>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['iro_i18n_renamed'])) : ?>
-            <div class="notice notice-success is-dismissible">
-                <p><?= esc_html(sprintf(
-                        /* translators: %d: 改名的篇数 */
-                        __('已规范化 %d 条译文的别名。', 'sakurairo'),
-                        (int) $_GET['iro_i18n_renamed']
-                    )) ?></p>
-            </div>
-        <?php endif; ?>
-
-        <table class="widefat striped">
-            <thead>
-                <tr>
-                    <th><?php esc_html_e('内容', 'sakurairo'); ?></th>
-                    <th><?php esc_html_e('关联标识', 'sakurairo'); ?></th>
-                    <?php foreach (iro_i18n_languages() as $code) : ?>
-                        <th><?= esc_html(iro_i18n_language_name($code)) ?></th>
-                    <?php endforeach; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($query->posts === []) : ?>
-                    <tr>
-                        <td colspan="<?= esc_attr((string) (2 + count(iro_i18n_languages()))) ?>">
-                            <?php esc_html_e('还没有建立语言关联的内容。编辑并保存一次，或点上方按钮批量补齐。', 'sakurairo'); ?>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
-                <?php foreach ($query->posts as $post) : ?>
-                    <?php
-                    $map       = $translations[iro_i18n_get_path($post->ID)] ?? [];
-                    $post_type = get_post_type_object($post->post_type);
-                    ?>
-                    <tr>
-                        <td>
-                            <a href="<?= esc_url((string) get_edit_post_link($post->ID, 'raw')) ?>">
-                                <?= esc_html(get_the_title($post)) ?>
-                            </a>
-                            <span class="description">（<?= esc_html($post_type ? $post_type->labels->singular_name : $post->post_type) ?>）</span>
-                        </td>
-                        <td><code><?= esc_html(iro_i18n_get_path($post->ID)) ?></code></td>
-                        <?php foreach (iro_i18n_language_statuses($map) as $row) : ?>
-                            <td><?= wp_kses_post(iro_i18n_status_cell($row)) ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <?php if ($query->max_num_pages > 1) : ?>
-            <div class="tablenav bottom">
-                <div class="tablenav-pages">
-                    <?= wp_kses_post(paginate_links([
-                        'base'      => add_query_arg('paged', '%#%'),
-                        'format'    => '',
-                        'current'   => $paged,
-                        'total'     => (int) $query->max_num_pages,
-                        'prev_text' => __('«', 'sakurairo'),
-                        'next_text' => __('»', 'sakurairo'),
-                    ])) ?>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
-<?php
 }
 
 /**
@@ -778,15 +555,13 @@ function iro_i18n_maybe_adopt_untagged_language(): void
 
 /**
  * 批量补齐：为尚无关联字段的已发布内容补关联、补语言标记，并同步未翻译副本
+ *
+ * 面板上的按钮走 REST（inc/api/i18n.php），这里只负责改动并回传条数。
+ *
+ * @return int 补齐的内容数量
  */
-function iro_i18n_handle_backfill(): void
+function iro_i18n_backfill_translations(): int
 {
-    if (!current_user_can('edit_posts')) {
-        wp_die(esc_html__('权限不足。', 'sakurairo'));
-    }
-
-    check_admin_referer('iro_i18n_backfill');
-
     $count = 0;
 
     foreach (iro_i18n_posts_without_language() as $post) {
@@ -831,31 +606,10 @@ function iro_i18n_handle_backfill(): void
         $count++;
     }
 
-    wp_safe_redirect(add_query_arg([
-        'page'                 => 'iro-i18n',
-        'iro_i18n_backfilled'  => $count,
-    ], admin_url('tools.php')));
-    exit;
+    return $count;
 }
 
 if (iro_i18n_enabled()) {
-    add_action('admin_menu', function () {
-        if (!current_user_can('edit_posts')) {
-            return;
-        }
-
-        add_management_page(
-            __('翻译总览', 'sakurairo'),
-            __('翻译总览', 'sakurairo'),
-            'edit_posts',
-            'iro-i18n',
-            'iro_i18n_render_overview_page'
-        );
-    });
-
-    add_action('admin_post_iro_i18n_backfill', 'iro_i18n_handle_backfill');
-    add_action('admin_post_iro_i18n_repair_language', 'iro_i18n_handle_repair_language');
-    add_action('admin_post_iro_i18n_rename_slugs', 'iro_i18n_handle_rename_slugs');
     add_action('add_meta_boxes', 'iro_i18n_register_meta_box');
     add_action('admin_init', 'iro_i18n_maybe_repair_default_language');
     add_action('admin_init', 'iro_i18n_maybe_adopt_untagged_language');
