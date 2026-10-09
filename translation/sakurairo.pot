@@ -262,6 +262,10 @@ msgstr ""
 msgid "置顶"
 msgstr ""
 
+#: frontend/components/post/card/simple.php:52
+msgid "无标签"
+msgstr ""
+
 #: frontend/components/post/head_metas.php:44
 msgid "次阅读"
 msgstr ""

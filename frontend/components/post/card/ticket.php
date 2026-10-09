@@ -21,7 +21,7 @@
 
     <div class="post-date">
         <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
-            <?= __("更新于：", 'sakurairo') ?><?= get_the_modified_date('Y' . __("年", "sakurairo") . 'm' . __("月", "sakurairo") . 'd' . __("日", 'sakurairo')) ?>
+            <?= __("更新于：", 'sakurairo') ?><?= get_the_modified_date(iro_i18n_date_format()) ?>
         </time>
         <?php if (is_sticky()) : ?>
             <div class="sticky">&#x2605;&#xFE0E;<?= __("置顶", 'sakurairo') ?></div>

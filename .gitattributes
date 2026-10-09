@@ -1,0 +1,3 @@
+# 仓库里存 LF；Windows 的 core.autocrlf=true 会把工作区改成 CRLF，从而让 shell 脚本在 WSL 下
+# 直接语法报错（package.sh 曾在第 13 行 `die() {` 处失败）。这条只针对脚本。
+*.sh text eol=lf

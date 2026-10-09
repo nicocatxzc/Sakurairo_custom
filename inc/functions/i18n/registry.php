@@ -19,35 +19,40 @@ if (!defined('ABSPATH')) {
  * 内置语言定义
  *
  * `prefix` 只用于 URL 前缀，其余场景一律用数组键（代号）。
+ * `date_format` 是 `wp_date()` 的格式串，见 `iro_i18n_date_format()`。
  *
- * @return array<string,array{prefix:string,name:string,locale:string,locales:string[]}>
+ * @return array<string,array{prefix:string,name:string,locale:string,locales:string[],date_format:string}>
  */
 function iro_i18n_language_definitions(): array
 {
     return [
         'zh-cn' => [
-            'prefix'  => 'cn',
-            'name'    => '简中',
-            'locale'  => 'zh_CN',
-            'locales' => ['zh_cn', 'zh-hans', 'zh_hans'],
+            'prefix'      => 'cn',
+            'name'        => '简中',
+            'locale'      => 'zh_CN',
+            'locales'     => ['zh_cn', 'zh-hans', 'zh_hans'],
+            'date_format' => 'Y年m月d日',
         ],
         'zh-tw' => [
-            'prefix'  => 'tw',
-            'name'    => '繁中',
-            'locale'  => 'zh_TW',
-            'locales' => ['zh_tw', 'zh-hant', 'zh_hant'],
+            'prefix'      => 'tw',
+            'name'        => '繁中',
+            'locale'      => 'zh_TW',
+            'locales'     => ['zh_tw', 'zh-hant', 'zh_hant'],
+            'date_format' => 'Y年m月d日',
         ],
         'en-us' => [
-            'prefix'  => 'en',
-            'name'    => '英语',
-            'locale'  => 'en_US',
-            'locales' => ['en_us', 'en_gb', 'en_ca', 'en_au', 'en_nz'],
+            'prefix'      => 'en',
+            'name'        => '英语',
+            'locale'      => 'en_US',
+            'locales'     => ['en_us', 'en_gb', 'en_ca', 'en_au', 'en_nz'],
+            'date_format' => 'M j, Y',
         ],
         'ja' => [
-            'prefix'  => 'jp',
-            'name'    => '日语',
-            'locale'  => 'ja',
-            'locales' => ['ja', 'ja_jp'],
+            'prefix'      => 'jp',
+            'name'        => '日语',
+            'locale'      => 'ja',
+            'locales'     => ['ja', 'ja_jp'],
+            'date_format' => 'Y年m月d日',
         ],
     ];
 }
@@ -261,6 +266,24 @@ function iro_i18n_default_language(): string
 function iro_i18n_locale(string $code): string
 {
     return iro_i18n_language_definitions()[$code]['locale'] ?? iro_i18n_site_locale();
+}
+
+/**
+ * 当前语言的日期展示格式
+ *
+ * 日期格式**不能**由译文片段拼装。`wp_date()`/`date_i18n()` 把格式串里每一个字符都当格式符
+ * 解释，而英文译文 `Year`、`Month`、`Day` 里的 `e`、`a`、`r`、`o`、`t`、`h` 会被就地展开成
+ * 时区名、上下午、RFC 日期等，整串日期直接变成乱码。所以每种语言各写一条完整格式。
+ *
+ * 模块未启用时跟随 WordPress 自己的 locale（含登录用户语言），此时主题文案由站点语言包
+ * 决定，日期就该跟它一致，而不是跟着访问者的浏览器。
+ */
+function iro_i18n_date_format(): string
+{
+    $definitions = iro_i18n_language_definitions();
+    $code        = iro_i18n_enabled() ? iro_i18n_current_language() : iro_i18n_code_from_locale(get_locale());
+
+    return (string) ($definitions[$code]['date_format'] ?? $definitions['zh-cn']['date_format'] ?? 'Y-m-d');
 }
 
 /**

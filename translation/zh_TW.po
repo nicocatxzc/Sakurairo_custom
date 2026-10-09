@@ -262,6 +262,10 @@ msgstr "更新於："
 msgid "置顶"
 msgstr "置頂"
 
+#: frontend/components/post/card/simple.php:52
+msgid "无标签"
+msgstr "無標籤"
+
 #: frontend/components/post/head_metas.php:44
 msgid "次阅读"
 msgstr "次瀏覽"

@@ -36,6 +36,7 @@ trap cleanup EXIT
 
 need_cmd pnpm
 need_cmd node
+need_cmd msgfmt
 need_cmd zip
 
 log "开始打包 $NAME $VERSION"
@@ -63,7 +64,8 @@ tar -cf - -C "$ROOT" \
     --exclude=node_modules --exclude=.git --exclude=./temp --exclude='*.zip' \
     . | tar -xf - -C "$TARGET"
 
-if command -v msgfmt >/dev/null 2>&1 && [[ -d "$ROOT/translation" ]]; then
+# WordPress 在主题目录下按 languages/<locale>.mo 加载，因此 .po 的文件名必须等于该语言的 locale
+if [[ -d "$ROOT/translation" ]]; then
     for po in "$ROOT"/translation/*.po; do
         [[ -e "$po" ]] || continue
         locale="$(basename "$po" .po)"

@@ -756,9 +756,15 @@ function iro_i18n_text_domains(): array
 /**
  * 让 WordPress 的 locale 跟随本次请求的语言
  *
- * `determine_locale` 决定「取哪份 .mo」，`wp_loaded` 上再真正切一次：
- * 文本域是惰性加载的，切完把主题域重新载一遍即可。请求结束 PHP 进程回收，
- * 无需手动还原，因此这是「临时切换」，不会写进任何持久化状态。
+ * `determine_locale` 只决定「取哪份 .mo」，它管不到 `$wp_locale`：月份、星期、上下午名都住在
+ * `WP_Locale` 里，而那是 `wp-settings.php` 按**站点语言**建好的，早于本模块。不重建它，英文页面的
+ * `M` 会渲染成「9 月」。
+ *
+ * 这里不走 `switch_to_locale()`：它开头就比 `determine_locale()` 与目标 locale，而本模块的
+ * `determine_locale` 过滤器已经让两者相等，于是恒返回 false；它另一个前置条件
+ * `get_available_languages()` 只扫 `WP_LANG_DIR`，也看不到主题 `languages/` 下的语言包。
+ * 所以照 `WP_Locale_Switcher::change_locale()` 的步骤自己走一遍。语言在这里是「本次请求临时切」，
+ * 请求结束随进程回收，不写任何持久化状态。
  */
 function iro_i18n_switch_locale(): void
 {
@@ -768,35 +774,45 @@ function iro_i18n_switch_locale(): void
 
     $locale = iro_i18n_locale(iro_i18n_current_language());
 
-    if ($locale === '' || $locale === get_locale()) {
+    // `$wp_locale` 与核心语言包都是按站点语言建的，请求语言就是站点语言时没有可重建的东西
+    if ($locale === '' || $locale === iro_i18n_site_locale()) {
         return;
     }
 
-    if (!switch_to_locale($locale)) {
-        return;
-    }
+    load_default_textdomain($locale);
 
+    $GLOBALS['wp_locale'] = new WP_Locale();
+
+    // 文本域是惰性加载的，卸掉让它们按新 locale 重新载一次
     foreach (iro_i18n_text_domains() as $domain) {
-        $domain = (string) $domain;
-        $mofile = (string) apply_filters('load_textdomain_mofile', '', $domain, $locale);
-
-        if ($mofile !== '') {
-            load_textdomain($domain, $mofile, $locale);
-            continue;
-        }
-
-        // 过滤器没给路径时按标准位置载入主题语言包
-        load_theme_textdomain($domain, get_template_directory() . '/languages');
+        unload_textdomain((string) $domain, true);
+        get_translations_for_domain((string) $domain);
     }
 }
 
 /**
  * 让 `determine_locale()` 在前台返回本次请求的语言
  *
- * 早于 `wp_loaded` 的代码（以及 `get_locale()` 的直接调用）都要靠这条。
+ * 早于 `wp_loaded` 的代码（以及按需加载语言包的 `_load_textdomain_just_in_time()`）都要靠这条。
  * 后台不动：那边由 WordPress 的用户语言设置负责。
  */
 function iro_i18n_filter_determine_locale(string $locale): string
+{
+    if (!iro_i18n_is_frontend()) {
+        return $locale;
+    }
+
+    return iro_i18n_locale(iro_i18n_current_language());
+}
+
+/**
+ * 让 `get_locale()` 在前台返回本次请求的语言
+ *
+ * 与 `determine_locale` 问的不是同一件事：那条决定「取哪份 .mo」，这条是「这个请求算哪种语言」，
+ * `number_format_i18n()`、日期与数字格式化都会问它。走过滤器而不是改 `$GLOBALS['locale']`，
+ * 与 `WP_Locale_Switcher` 的做法一致。
+ */
+function iro_i18n_filter_locale(string $locale): string
 {
     if (!iro_i18n_is_frontend()) {
         return $locale;
@@ -889,10 +905,10 @@ if (iro_i18n_enabled()) {
      * 因此在这里（解析请求之前）就能得出结果。
      */
     add_filter('determine_locale', 'iro_i18n_filter_determine_locale', 25);
+    add_filter('locale', 'iro_i18n_filter_locale', 25);
     /**
-     * 真正切换 locale。放在 `wp_loaded`：它早于 `wp()` 触发的 `parse_request`，
-     * 但那时 `REQUEST_URI` 已经就绪，足够定语言；而 `init`（用户语言那一步）已经跑完，
-     * 顺序上正好由我们收口。
+     * 重建 `$wp_locale` 与核心语言包。放在 `wp_loaded`：它早于 `wp()` 触发的 `parse_request`，
+     * 也早于任何模板输出；而 `init`（用户语言那一步）已经跑完，顺序上正好由我们收口。
      */
     add_action('wp_loaded', 'iro_i18n_switch_locale', 5);
 

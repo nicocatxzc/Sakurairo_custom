@@ -2,10 +2,9 @@
 /**
  * 注入给前台的界面语言
  *
- * 不能只用 `get_locale()`：本文件在 `functions.php` 载入期就被求值，早于多语言模块
- * 在 `wp_loaded` 上的临时切换，那时拿到的还是站点基础 locale；带语言前缀的页面上
- * 浏览器会看到 `<html lang>` 与实际供给不一致。前台直接问多语言模块，后台与登录页
- * 仍走 `get_locale()`（那里的界面语言由用户设置决定）。
+ * 前台直接问多语言模块要「本次请求的语言」，而不是 `get_locale()`：本文件在 `functions.php`
+ * 载入期就被求值，语言判定是模块自己的事，这样不依赖此刻已注册了哪些 locale 过滤器。
+ * 后台与登录页仍走 `get_locale()`（那里的界面语言由用户设置决定）。
  */
 function iro_get_theme_config_language(): string
 {
