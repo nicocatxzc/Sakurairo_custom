@@ -7,8 +7,6 @@ if (!defined('ABSPATH')) {
 $iro_i18n_dir = __DIR__ . '/';
 
 require_once $iro_i18n_dir . 'registry.php';
-// 代号迁移要早于分类法注册，否则会先按新代号建出重复术语
-require_once $iro_i18n_dir . 'migrate.php';
 require_once $iro_i18n_dir . 'taxonomy.php';
 require_once $iro_i18n_dir . 'path.php';
 require_once $iro_i18n_dir . 'lang.php';
