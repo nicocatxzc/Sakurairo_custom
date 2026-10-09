@@ -763,11 +763,19 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'footer_html_content',
+                'type'     => 'code_editor',
+                'sanitize' => false,
+                'title' => __('页尾内容', 'sakurairo'),
+                'desc' => __('版权、备案号一类需要跟着访客语言切换的页脚文案', 'sakurairo'),
+            ],
+
+            [
                 'id' => 'footer_html',
                 'type'     => 'code_editor',
                 'sanitize' => false,
-                'title' => __('页尾html代码', 'sakurairo'),
-                'desc' => __('可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全', 'sakurairo'),
+                'title' => __('页尾脚本与样式', 'sakurairo'),
+                'desc' => __('统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」里的内容仍从这里输出', 'sakurairo'),
             ],
 
             [
@@ -2796,6 +2804,17 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('译文时效提示', 'sakurairo'),
                 'label'   => __('开启后，原文改动会让其余语言的译文标记为待同步，并在前台提示读者该页可能已过期', 'sakurairo'),
                 'default' => true,
+            ],
+
+            [
+                'id'       => 'iro_i18n_user_content',
+                'type'     => 'code_editor',
+                'sanitize' => false,
+                'title'    => __('自定义内容翻译', 'sakurairo'),
+                'desc'     => __('以原文为键、语言代号为子键的 JSON。前台导航菜单标题这类站长自己写的内容会自动登记进来（子键留空即尚未翻译），非默认语言的条目填上译文即可生效。', 'sakurairo'),
+                'settings' => [
+                    'mode' => 'application/json',
+                ],
             ],
         ]
     ]);

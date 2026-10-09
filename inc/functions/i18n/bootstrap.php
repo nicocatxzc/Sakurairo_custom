@@ -12,6 +12,7 @@ require_once $iro_i18n_dir . 'migrate.php';
 require_once $iro_i18n_dir . 'taxonomy.php';
 require_once $iro_i18n_dir . 'path.php';
 require_once $iro_i18n_dir . 'lang.php';
+require_once $iro_i18n_dir . 'user_content.php';
 require_once $iro_i18n_dir . 'sync.php';
 require_once $iro_i18n_dir . 'fuzzy.php';
 require_once $iro_i18n_dir . 'admin.php';

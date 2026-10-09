@@ -266,6 +266,14 @@ msgstr "置頂"
 msgid "无标签"
 msgstr "無標籤"
 
+#: inc/functions/seo.php:149
+msgid "关于 “%s” 的搜索结果"
+msgstr "關於 “%s” 的搜尋結果"
+
+#: inc/functions/seo.php:191
+msgid "搜索：%s"
+msgstr "搜尋：%s"
+
 #: frontend/components/post/head_metas.php:44
 msgid "次阅读"
 msgstr "次瀏覽"
@@ -1043,15 +1051,25 @@ msgstr "頁尾櫻花"
 msgid "页尾字体"
 msgstr "頁尾字體"
 
-#: opt/customizer/init.php:695 opt/theme-options.php:609
-msgid "页尾html代码"
-msgstr "頁尾 html 代碼"
+#: opt/customizer/init.php:751 opt/theme-options.php:769
+msgid "页尾内容"
+msgstr "頁尾內容"
 
-#: opt/customizer/init.php:696 opt/theme-options.php:610
+#: opt/customizer/init.php:752 opt/theme-options.php:770
+msgid "版权、备案号一类需要跟着访客语言切换的页脚文案"
+msgstr "版權、備案號一類需要跟著訪客語言切換的頁尾文案"
+
+#: opt/customizer/init.php:761 opt/theme-options.php:777
+msgid "页尾脚本与样式"
+msgstr "頁尾腳本與樣式"
+
+#: opt/customizer/init.php:762 opt/theme-options.php:778
 msgid ""
-"可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全"
+"统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」"
+"里的内容仍从这里输出"
 msgstr ""
-"可以在此處編寫頁腳內容，也可以加入能接受延遲載入的統計代碼，請確保它們安全"
+"統計程式碼、腳本與樣式等不需要翻譯的片段，請確保它們安全。早期版本寫在"
+"「頁尾 html 代碼」裡的內容仍從這裡輸出"
 
 #: opt/customizer/init.php:710 opt/theme-options.php:621
 msgid "页脚一言"

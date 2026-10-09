@@ -27,6 +27,9 @@ function iro_comment_form_data($args = array(), $post = null)
     $required_indicator = ' ' . wp_required_field_indicator();
     $required_text      = ' ' . wp_required_field_message();
 
+    // 设置项留空表示用主题自带文案，此时不能当作用户内容去查译文
+    $submit_button_text = (string) iro_opt("comment_submit_button_text");
+
     // 默认字段
     $fields = array(
         'author' => iro_comment_form_field_author(
@@ -116,7 +119,7 @@ function iro_comment_form_data($args = array(), $post = null)
 
         'cancel_reply_link' => __('Cancel reply'),
 
-        'label_submit' => iro_opt("comment_submit_button_text", __('Submit✈️', 'sakurairo')),
+        'label_submit' => $submit_button_text === '' ? __('Submit✈️', 'sakurairo') : iro__($submit_button_text),
 
         'submit_button' => iro_comment_form_submit_button(),
 
@@ -385,7 +388,7 @@ function iro_comment_form_field_comment(
             ?>></textarea>
 
         <span class="placeholder">
-            <?= iro_opt("comment_input_place_holder", "") ?>
+            <?= iro__((string) iro_opt("comment_input_place_holder", "")) ?>
         </span>
     </p>
 

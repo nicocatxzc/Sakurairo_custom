@@ -16,7 +16,7 @@ $iro_menu_options = iro_get_navigation();
             <span
                 class="site-title"
                 style=" font-family: <?= iro_opt("nav_title_font") ?> ">
-                <?= iro_opt("nav_title") ?>
+                <?= iro__((string) iro_opt("nav_title")) ?>
             </span>
         </a>
     </div>
@@ -32,18 +32,18 @@ $iro_menu_options = iro_get_navigation();
                 <?php foreach ($iro_menu_options as $item): ?>
                     <?php if (!empty($item['children'])): ?>
                         <li style="margin: 0 <?= iro_opt("navbar_option_margin", 0.3) ?>rem;">
-                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html($item['title']) ?></a>
+                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html(iro__($item['title'])) ?></a>
                             <ul class="sub-menu" style="border-radius: <?= iro_opt("nav_menu_cover_radius", 0.6) ?>;">
                                 <?php foreach ($item['children'] as $child): ?>
                                     <li class="flex-center">
-                                        <a href="<?= esc_url($child['url']) ?>"><?= esc_html($child['title']) ?></a>
+                                        <a href="<?= esc_url($child['url']) ?>"><?= esc_html(iro__($child['title'])) ?></a>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
                     <?php else: ?>
                         <li>
-                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html($item['title']) ?></a>
+                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html(iro__($item['title'])) ?></a>
                         </li>
                     <?php endif; ?>
                 <?php endforeach; ?>

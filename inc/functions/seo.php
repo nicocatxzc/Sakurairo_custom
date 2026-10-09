@@ -146,11 +146,11 @@ function iro_get_description_text(int $max = 240): string
             $desc = iro_clean_text((string) $author->description);
         }
     } elseif (is_search()) {
-        $desc = iro_clean_text(sprintf('关于 “%s” 的搜索结果', get_search_query()));
+        $desc = iro_clean_text(sprintf(__('关于 “%s” 的搜索结果', 'sakurairo'), get_search_query()));
     }
 
     if ($desc === '') {
-        $desc = iro_clean_text((string) iro_opt('iro_meta_description'));
+        $desc = iro_clean_text(iro__((string) iro_opt('iro_meta_description')));
     }
     if ($desc === '') {
         $desc = iro_clean_text((string) get_bloginfo('description'));
@@ -188,7 +188,7 @@ function iro_get_og_title(): string
         return (string) get_the_author_meta('display_name', get_queried_object_id());
     }
     if (is_search()) {
-        return sprintf('搜索：%s', get_search_query());
+        return sprintf(__('搜索：%s', 'sakurairo'), get_search_query());
     }
     if (is_front_page() || is_home()) {
         return (string) get_bloginfo('name');
@@ -304,7 +304,7 @@ function iro_build_breadcrumb_jsonld($post): ?array
     $items[] = [
         '@type'    => 'ListItem',
         'position' => $position++,
-        'name'     => '首页',
+        'name'     => iro__('首页'),
         'item'     => home_url('/'),
     ];
 

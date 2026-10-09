@@ -32,7 +32,7 @@
                                 font-size: <?= iro_opt("cover_title", [])["size"] ?? 5 ?>rem;
                                 color: <?= iro_opt("cover_title", [])["color"] ?? "#FFF" ?>;
                             ">
-                                <?= iro_opt("cover_title", [])["text"] ?? "" ?>
+                                <?= iro__((string) (iro_opt("cover_title", [])["text"] ?? "")) ?>
                             </h1>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -48,7 +48,7 @@
                                         <i class="fa-icon-solid fa-quote-left"></i>
                                     <?php endif; ?>
                                     <span id="typed" class="typed">
-                                        <?= iro_opt("cover_typedjs_placeholder") ?>
+                                        <?= iro__((string) iro_opt("cover_typedjs_placeholder")) ?>
                                     </span>
                                     <?php if (iro_opt("cover_typedjs_mark")): ?>
                                         <i class="fa-icon-solid fa-quote-right"></i>
@@ -62,7 +62,7 @@
                                             font-family:<?= iro_opt("cover_signature", [])["font"] ?? "" ?>;
                                             font-size:<?= iro_opt("cover_signature", [])["size"] ?? 1 ?>rem;
                                         ">
-                                        <?= iro_opt("cover_signature", [])["text"] ?? "" ?>
+                                        <?= iro__((string) (iro_opt("cover_signature", [])["text"] ?? "")) ?>
                                     </p>
                                 </div>
                             <?php endif; ?>

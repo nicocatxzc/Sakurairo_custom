@@ -270,6 +270,14 @@ msgstr "トップに固定"
 msgid "无标签"
 msgstr "タグなし"
 
+#: inc/functions/seo.php:149
+msgid "关于 “%s” 的搜索结果"
+msgstr "「%s」の検索結果"
+
+#: inc/functions/seo.php:191
+msgid "搜索：%s"
+msgstr "検索：%s"
+
 #: frontend/components/post/head_metas.php:44
 msgid "次阅读"
 msgstr "回閲覧"
@@ -1075,16 +1083,26 @@ msgstr "ページ末尾の桜花"
 msgid "页尾字体"
 msgstr "ページ末尾フォント"
 
-#: opt/customizer/init.php:695 opt/theme-options.php:609
-msgid "页尾html代码"
-msgstr "フッターHTMLコード"
+#: opt/customizer/init.php:751 opt/theme-options.php:769
+msgid "页尾内容"
+msgstr "ページ末尾コンテンツ"
 
-#: opt/customizer/init.php:696 opt/theme-options.php:610
+#: opt/customizer/init.php:752 opt/theme-options.php:770
+msgid "版权、备案号一类需要跟着访客语言切换的页脚文案"
+msgstr "著作権表記や届出番号など、閲覧者の言語に合わせて切り替えたいフッターの文言"
+
+#: opt/customizer/init.php:761 opt/theme-options.php:777
+msgid "页尾脚本与样式"
+msgstr "ページ末尾のスクリプトとスタイル"
+
+#: opt/customizer/init.php:762 opt/theme-options.php:778
 msgid ""
-"可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全"
+"统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」"
+"里的内容仍从这里输出"
 msgstr ""
-"ここにフッターの内容を記述できます。遅延読み込みを受け付ける統計コードを追加"
-"することもできます。安全であることを確認してください。"
+"統計コードやスクリプト、スタイルなど翻訳が不要な断片です。安全であることを確認"
+"してください。以前のバージョンで「フッターHTMLコード」に書いた内容もここから"
+"出力されます。"
 
 #: opt/customizer/init.php:710 opt/theme-options.php:621
 msgid "页脚一言"

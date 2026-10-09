@@ -6,7 +6,7 @@
         ?>
         <li class="showcard">
             <div class="title">
-                <h3><?= $showcard["title"] ?></h3>
+                <h3><?= iro__((string) ($showcard["title"] ?? "")) ?></h3>
             </div>
             <a
                 href="<?= $target ?>"
@@ -31,7 +31,7 @@
                     </picture>
                 </div>
                 <div class="card-info">
-                    <p class="card-desc"><?= $showcard["description"] ?></p>
+                    <p class="card-desc"><?= iro__((string) ($showcard["description"] ?? "")) ?></p>
                 </div>
             </a>
         </li>

@@ -63,14 +63,14 @@ $icons_map = [
                         target="_blank"
                         rel="noopener noreferrer"
                         <?php endif; ?>
-                        aria-label="<?= esc_attr(__("点击访问", 'sakurairo') . ($item['title'] ?? '')) ?>"
-                        title="<?= esc_attr(__("点击访问", 'sakurairo') . ($item['title'] ?? '')) ?>">
+                        aria-label="<?= esc_attr(__("点击访问", 'sakurairo') . iro__((string) ($item['title'] ?? ''))) ?>"
+                        title="<?= esc_attr(__("点击访问", 'sakurairo') . iro__((string) ($item['title'] ?? ''))) ?>">
                         <picture class="nuxtpic social-img">
                             <?= iro_media_optimize_image_formats(
                                 iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH) . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp',
                                 ['height' => '2.2rem'],
                                 [
-                                    'alt' => $item['title'] ?? '',
+                                    'alt' => iro__((string) ($item['title'] ?? '')),
                                     'loading' => 'lazy',
                                 ]
                             ) ?>

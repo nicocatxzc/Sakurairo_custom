@@ -13,7 +13,7 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
     ?>
             <h2 class="block-title flex-center">
                 <i class="<?= iro_opt("homepage_show_title", [])["icon"] ?? "" ?>"></i>
-                <?= iro_opt("homepage_show_title", [])["text"] ?? "" ?>
+                <?= iro__((string) (iro_opt("homepage_show_title", [])["text"] ?? "")) ?>
             </h2>
         <?php
             require_once get_theme_file_path('/frontend/components/homepage/show.php');
@@ -22,7 +22,7 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
         ?>
             <h2 class="block-title flex-center">
                 <i class="<?= iro_opt("homepage_post_list_title", [])["icon"] ?? "" ?>"></i>
-                <?= iro_opt("homepage_post_list_title", [])["text"] ?? "" ?>
+                <?= iro__((string) (iro_opt("homepage_post_list_title", [])["text"] ?? "")) ?>
             </h2>
     <?php
             require_once get_theme_file_path('/frontend/components/post/list.php');

@@ -267,6 +267,14 @@ msgstr "Pinned"
 msgid "无标签"
 msgstr "No tags"
 
+#: inc/functions/seo.php:149
+msgid "关于 “%s” 的搜索结果"
+msgstr "Search results for “%s”"
+
+#: inc/functions/seo.php:191
+msgid "搜索：%s"
+msgstr "Search: %s"
+
 #: frontend/components/post/head_metas.php:44
 msgid "次阅读"
 msgstr "views"
@@ -1056,15 +1064,26 @@ msgstr "Footer cherry blossoms"
 msgid "页尾字体"
 msgstr "Footer font"
 
-#: opt/customizer/init.php:695 opt/theme-options.php:609
-msgid "页尾html代码"
-msgstr "Footer HTML code"
+#: opt/customizer/init.php:751 opt/theme-options.php:769
+msgid "页尾内容"
+msgstr "Footer content"
 
-#: opt/customizer/init.php:696 opt/theme-options.php:610
-msgid "可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全"
+#: opt/customizer/init.php:752 opt/theme-options.php:770
+msgid "版权、备案号一类需要跟着访客语言切换的页脚文案"
+msgstr "Footer text such as a copyright line or a filing number that should follow the visitor's language"
+
+#: opt/customizer/init.php:761 opt/theme-options.php:777
+msgid "页尾脚本与样式"
+msgstr "Footer scripts and styles"
+
+#: opt/customizer/init.php:762 opt/theme-options.php:778
+msgid ""
+"统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」"
+"里的内容仍从这里输出"
 msgstr ""
-"You can write footer content here, or include statistics code that supports "
-"deferred loading—please ensure they are secure"
+"Fragments that need no translation, such as statistics code, scripts and "
+"styles—please ensure they are secure. Content written under \"Footer HTML "
+"code\" in earlier versions is still output from here"
 
 #: opt/customizer/init.php:710 opt/theme-options.php:621
 msgid "页脚一言"

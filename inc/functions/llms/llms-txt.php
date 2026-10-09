@@ -105,7 +105,7 @@ function iro_llms_details(): array
  */
 function iro_llms_summary(): string
 {
-    $desc = iro_clean_text((string) iro_opt('iro_llms_desc', ''));
+    $desc = iro_clean_text(iro__((string) iro_opt('iro_llms_desc', '')));
 
     return $desc !== '' ? $desc : iro_clean_text((string) iro_get_description_text(240));
 }

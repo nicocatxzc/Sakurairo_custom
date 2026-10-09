@@ -9,6 +9,7 @@
     <?php endif; ?>
     <?php require_once get_theme_file_path('/frontend/components/site/footer/hitokoto.php'); ?>
     <div class="site-info">
+        <?= iro__((string) iro_opt("footer_html_content")) ?>
         <?= iro_opt("footer_html") ?>
     </div>
     <?php require_once get_theme_file_path('/frontend/components/site/footer/theme_info.php'); ?>

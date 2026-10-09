@@ -746,10 +746,20 @@ $sections = [
             ],
             [
                 'type'        => 'code',
+                'settings'    => 'footer_html_content',
+                'iro_key'     => 'footer_html_content',
+                'label'       => esc_html__('页尾内容', 'sakurairo'),
+                'description' => esc_html__('版权、备案号一类需要跟着访客语言切换的页脚文案', 'sakurairo'),
+                'choices'     => ['language' => 'html'],
+                // 与页尾脚本共用同一个容器，实时预览会覆盖彼此，直接整页刷新
+                'transport'   => 'refresh',
+            ],
+            [
+                'type'        => 'code',
                 'settings'    => 'footer_html',
                 'iro_key'     => 'footer_html',
-                'label'       => esc_html__('页尾html代码', 'sakurairo'),
-                'description' => esc_html__('可以在此处编写页脚内容，也可以加入能接受延迟加载的统计代码，请确保它们安全', 'sakurairo'),
+                'label'       => esc_html__('页尾脚本与样式', 'sakurairo'),
+                'description' => esc_html__('统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」里的内容仍从这里输出', 'sakurairo'),
                 'choices'     => ['language' => 'html'],
                 'transport'   => 'postMessage',
                 'js_vars'     => [
