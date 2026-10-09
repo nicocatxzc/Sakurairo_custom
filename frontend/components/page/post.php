@@ -10,6 +10,9 @@
             <article class="post">
                 <?php iro_content_container_start() ?>
                 <article class="post-content">
+                    <?php if (iro_i18n_enabled()): ?>
+                        <?php require get_theme_file_path('/frontend/components/post/translation_notice.php'); ?>
+                    <?php endif; ?>
                     <?php require get_theme_file_path('/frontend/components/post/render.php'); ?>
                 </article>
                 <?php // 仅限单栏，多栏时目录交给侧栏的「目录容器」块

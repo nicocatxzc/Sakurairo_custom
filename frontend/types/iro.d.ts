@@ -89,12 +89,24 @@ interface IroThemeConfig {
     [key: string]: unknown;
 }
 
+/** 语言切换器的一项，对应多语言模块的 iro_i18n_language_links() */
+interface IroLangLink {
+    code?: string;
+    name?: string;
+    url?: string;
+    current?: boolean;
+    exists?: boolean;
+    prefix?: string;
+    edit?: string;
+}
+
 /** 对应 #iro_page_config */
 interface IroPageConfig {
     post_id?: number;
     post_image?: string;
     is_home?: boolean;
     is_singular?: boolean;
+    langs?: IroLangLink[];
     [key: string]: unknown;
 }
 

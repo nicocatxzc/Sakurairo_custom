@@ -70,6 +70,10 @@ if (!is_array($iro_menu_options)) {
         <?php endif; ?>
     </div>
 
+    <?php if (iro_i18n_enabled()): ?>
+        <?php require get_template_directory() . '/frontend/components/navbar/lang_switcher.php'; ?>
+    <?php endif; ?>
+
     <?php if (iro_opt('nav_user_menu', true)): ?>
         <div class="user">
             <div class="avatar-wrapper">

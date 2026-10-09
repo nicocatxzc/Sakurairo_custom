@@ -1,0 +1,50 @@
+.translation-notice {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--word-color-first);
+    border: 1px solid rgba(var(--border-color-sketch), 0.16);
+    border-left-width: 3px;
+    border-radius: 8px;
+    background: rgba(var(--border-color-sketch), 0.04);
+
+    .icon {
+        flex-shrink: 0;
+    }
+
+    .notice-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .notice-link {
+        flex-shrink: 0;
+        color: var(--active-color);
+        white-space: nowrap;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    // 待同步：内容仍然可读，用暖色提示而不是错误色
+    &.is-outdated {
+        border-left-color: #dba617;
+
+        .icon {
+            color: #dba617;
+        }
+    }
+
+    &.is-untranslated {
+        border-left-color: var(--active-color);
+
+        .icon {
+            color: var(--active-color);
+        }
+    }
+}

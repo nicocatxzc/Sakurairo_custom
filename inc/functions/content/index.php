@@ -33,6 +33,8 @@ add_filter('the_content_feed', 'toc_support');
 require_once get_template_directory() . '/inc/functions/content/post_views.php';
 // wp_query干预
 require_once get_template_directory() . '/inc/functions/content/query.php';
+// 多语言查询隔离
+require_once get_template_directory() . '/inc/functions/content/i18n_query.php';
 // 统计信息
 require_once get_template_directory() . '/inc/functions/content/statistical.php';
 // 文章字数

@@ -42,6 +42,10 @@ if (!is_array($iro_menu_options)) {
         </button>
     <?php endif; ?>
 
+    <?php if (iro_i18n_enabled()): ?>
+        <?php require get_template_directory() . '/frontend/components/navbar/lang_switcher.php'; ?>
+    <?php endif; ?>
+
     <?php if (iro_opt('nav_user_menu', true)): ?>
         <button
             type="button"

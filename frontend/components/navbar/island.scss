@@ -49,9 +49,10 @@
         pointer-events: auto;
     }
 
-    // 站标 / 搜索区 / 用户区 三个胶囊
+    // 站标 / 菜单 / 语言 / 用户区 四个胶囊
     .site-branding,
     .menu-wrapper,
+    .lang-switcher,
     .user {
         position: relative;
         display: flex;

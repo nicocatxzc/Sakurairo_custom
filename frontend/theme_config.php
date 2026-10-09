@@ -1,8 +1,25 @@
 <?php
+/**
+ * 注入给前台的界面语言
+ *
+ * 不能只用 `get_locale()`：本文件在 `functions.php` 载入期就被求值，早于多语言模块
+ * 在 `wp_loaded` 上的临时切换，那时拿到的还是站点基础 locale；带语言前缀的页面上
+ * 浏览器会看到 `<html lang>` 与实际供给不一致。前台直接问多语言模块，后台与登录页
+ * 仍走 `get_locale()`（那里的界面语言由用户设置决定）。
+ */
+function iro_get_theme_config_language(): string
+{
+    if (function_exists('iro_i18n_current_language') && iro_i18n_is_frontend()) {
+        return iro_i18n_locale(iro_i18n_current_language());
+    }
+
+    return get_locale();
+}
+
 function iro_get_basic_theme_config(): array
 {
     return [
-        'language' => esc_js(str_replace('-', '_', get_locale())),
+        'language' => esc_js(str_replace('-', '_', iro_get_theme_config_language())),
         'api'      => esc_url_raw(rest_url()),
         'ajaxurl'  => admin_url('admin-ajax.php'),
         'iro_api'  => esc_url_raw(rest_url('sakura/v1')),
@@ -57,6 +74,8 @@ function iro_front_theme_config()
         "post_image" => iro_media_optimize_image_url(get_the_post_thumbnail_url($post, 'full')),
         "is_home" => is_home(),
         "is_singular" => is_singular(),
+        // 导航栏在 pjax 容器之外，语言列表得随每次页面加载一起换，所以挂在页面配置里
+        "langs" => iro_i18n_enabled() ? iro_i18n_language_links() : [],
     ];
     ?>
 

@@ -2750,6 +2750,58 @@ if (class_exists('Sakurairo_CSF')) {
 
     Sakurairo_CSF::createSection($prefix, [
         'parent' => 'others',
+        'title' => __('国际化', 'sakurairo'),
+        'icon' => 'fa fa-language',
+        'fields' => [
+
+            [
+                'id'    => 'iro_i18n_switch',
+                'type'  => 'switcher',
+                'title' => __('站点国际化', 'sakurairo'),
+                'label'   => __('开启后，主题将为站点提供能力范围内的多语言支持', 'sakurairo'),
+                'default' => false,
+            ],
+
+            array(
+                'id'         => 'iro_i18n_languages',
+                'type'       => 'checkbox',
+                'title'      => '需要支持的语言',
+                'desc'       => esc_html__('代号是全站统一标识（设置项、语言标记、术语别名）；URL 前缀只出现在地址栏。默认语言跟随「设置 → 常规 → 站点语言」。', 'sakurairo'),
+                'options'    => array(
+                    'zh-cn' => '简中',
+                    'zh-tw' => '繁中',
+                    'en-us' => '英语',
+                    'ja'    => '日语',
+
+                ),
+            ),
+
+            array(
+                'id'      => 'iro_i18n_default_language',
+                'type'    => 'radio',
+                'title'   => __('默认语言', 'sakurairo'),
+                'desc'    => esc_html__('留空即跟随站点语言；只有站点语言不在启用列表里时才需要指定。', 'sakurairo'),
+                'options' => array(
+                    ''      => '跟随站点语言',
+                    'zh-cn' => '简中',
+                    'zh-tw' => '繁中',
+                    'en-us' => '英语',
+                    'ja'    => '日语',
+                ),
+            ),
+
+            [
+                'id'    => 'iro_i18n_autofuzzy',
+                'type'  => 'switcher',
+                'title' => __('译文时效提示', 'sakurairo'),
+                'label'   => __('开启后，原文改动会让其余语言的译文标记为待同步，并在前台提示读者该页可能已过期', 'sakurairo'),
+                'default' => true,
+            ],
+        ]
+    ]);
+
+    Sakurairo_CSF::createSection($prefix, [
+        'parent' => 'others',
         'title' => __('低使用选项', 'sakurairo'),
         'icon' => 'fa fa-low-vision',
         'fields' => [

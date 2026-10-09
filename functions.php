@@ -17,7 +17,7 @@ define('BASIC_VISION_RESOURCE_PATH', 'https://s.nmxc.ltd/sakurairo_vision/@3.0/'
 // 设置框架
 require_once get_template_directory() . '/inc/theme_init/iro_opt.php';
 
-$iro_options=get_option('iro_options');
+$iro_options = get_option('iro_options');
 global $iro_options;
 
 // 屏蔽php日志信息
@@ -62,6 +62,8 @@ switch (iro_opt('iro_update_source')) {
 require_once get_template_directory() . '/inc/theme_init/support.php';
 // 载入翻译
 require_once get_template_directory() . '/inc/theme_init/translation.php';
+// 内容国际化支持
+require_once get_template_directory() . '/inc/functions/i18n/bootstrap.php';
 // 载入shuoshuo文章类型
 require_once get_template_directory() . '/inc/theme_init/shuoshuo.php';
 // 工具函数

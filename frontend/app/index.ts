@@ -173,6 +173,12 @@ if (!_iro.isBackend) {
         _iro.user = JSON.parse(
             document.querySelector("#iro_user_config")?.innerHTML ?? "{}",
         );
+
+        // swup 只替换列出的容器，<html> 不在其中，所以换页后语言标记会停在上一页；
+        // 服务端每次渲染都给了正确值，这里按它补一次
+        if (_iro.config.language) {
+            document.documentElement.lang = _iro.config.language;
+        }
     }
     _iro.hooks.onPageLoaded(initFrontConfig);
 

@@ -1,0 +1,159 @@
+// 语言切换器在桌面（island / sakura）与窄屏（mobile）两套导航里形态不同：
+// 桌面是胶囊上的下拉，窄屏是全宽面板。两套导航都复用这一份样式。
+.lang-switcher {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .lang-toggle {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        height: 100%;
+        padding: 0 10px;
+        font-size: inherit;
+        color: var(--word-color-first);
+        background: transparent;
+        border: 0;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+
+        &:hover,
+        &[aria-expanded="true"] {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: var(--active-color);
+        }
+    }
+
+    .lang-current {
+        white-space: nowrap;
+    }
+
+    .lang-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 20;
+        min-width: 8rem;
+        padding: 6px;
+        margin: 6px 0 0;
+        list-style: none;
+        background: var(--widget-background-color);
+        border: 1px solid rgba(var(--border-color-sketch), 0.12);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: all 0.25s ease-out;
+    }
+
+    // 悬浮即展开，与导航栏菜单一致。只限桌面：触屏没有可靠的 hover 结束时机，
+    // 会在点完之后把菜单留在展开状态
+    @media screen and (min-width: 861px) {
+        &:hover {
+            .lang-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    // 点击展开：键盘与触屏走这条
+    &.show {
+        .lang-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    }
+
+    .lang-menu a {
+        display: block;
+        padding: 6px 10px;
+        color: var(--word-color-first);
+        white-space: nowrap;
+        border-radius: 8px;
+        // 预留左侧高亮条的宽度，hover 时不会引起文字位移
+        border-left: 2px solid transparent;
+        transition: all 0.3s ease-out;
+
+        // 只换文字色在条目多时几乎看不出鼠标停在哪一项，因此加左侧高亮条；
+        // 填充用 `--widget-background-reverse`（亮色模式下是深色、暗色模式下是白色），
+        // 与下拉底色同源反向，两种模式都能拉开区别，也不依赖某种导航形态的局部变量。
+        &:hover {
+            color: var(--active-color);
+            background-color: rgba(var(--widget-background-reverse), 0.08);
+            border-left-color: var(--active-color);
+        }
+
+        &.current {
+            font-weight: 600;
+            color: var(--active-color);
+        }
+
+        // 该语言下还没有版本：点了会退回原文，先说明白
+        &.missing {
+            opacity: 0.6;
+        }
+    }
+}
+
+// 窄屏：与 mobile.scss 的 .menu-toggle / .user-toggle 同一个尺寸，展开时铺满一行
+@media screen and (max-width: 860px) {
+    .lang-switcher {
+        flex-shrink: 0;
+
+        .lang-toggle {
+            width: 2.4rem;
+            height: 2.4rem;
+            padding: 0;
+            justify-content: center;
+            border: 0.1rem solid transparent;
+            border-radius: 0.5rem;
+
+            .icon {
+                transform: scale(1.5);
+            }
+
+            .lang-current {
+                display: none;
+            }
+
+            &:hover {
+                border: var(--border-active);
+                background: transparent;
+                color: var(--active-color);
+            }
+        }
+
+        .lang-menu {
+            position: fixed;
+            top: 3rem;
+            left: 0;
+            right: 0;
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            background: rgba(var(--widget-background), 0.9);
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            transform: none;
+            backdrop-filter: saturate(180%) blur(10px);
+        }
+
+        &.show .lang-menu {
+            transform: none;
+        }
+
+        .lang-menu a {
+            padding: 0.75rem 1.25rem;
+            white-space: normal;
+            border-radius: 0;
+            border-bottom: 0.1rem solid rgba(var(--border-color-sketch), 0.1);
+        }
+    }
+}
