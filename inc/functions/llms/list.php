@@ -3,7 +3,6 @@
 /**
  * 渲染文章列表
  */
-
 function iro_llms_render_list(): void
 {
     $GLOBALS['iro_only_template'] = true;

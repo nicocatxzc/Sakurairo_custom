@@ -3,10 +3,6 @@
 /**
  * 渲染文章标题和正文
  */
-
-/**
- * @param int $post_id 分发层已确认本次是 singular 请求
- */
 function iro_llms_render_markdown(int $post_id): void
 {
     $post = get_post($post_id);

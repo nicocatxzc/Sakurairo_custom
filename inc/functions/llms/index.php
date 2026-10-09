@@ -11,17 +11,16 @@ require_once __DIR__ . '/list.php';
 require_once __DIR__ . '/post.php';
 
 if (iro_opt('iro_llms_txt', false)) {
-    // 把 .md 形态的请求路径摘掉后缀，必须早于 WP 解析请求
-    //
-    // 摘掉之后 /category/foo.md 与 /category/foo/ 落到完全相同的主查询上，不必自己实现
-    // 「路径 → 查询参数」的映射，模板里的 have_posts() / is_singular() 也就都能直接用。
-    // index.md 是「无文件名地址」的 md 形态（站点根就是 /index.md），摘掉整个文件名。
+    // 把 .md 形态的请求路径摘掉后缀，让wp主查询完成解析，必须早于 WP 解析请求
+    // 摘掉后核心自动映射，模板里的 have_posts() 都能直接用。
     // WP::parse_request() 在 init 之后才跑，所以这里改 REQUEST_URI 还来得及。
     add_action('init', static function (): void {
         $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
 
+        // 主页
         if (preg_match('#index\.md(?=\?|$)#', $uri)) {
             $uri = (string) preg_replace('#index\.md(?=\?|$)#', '', $uri, 1);
+        // 其他
         } elseif (preg_match('#\.md(?=\?|$)#', $uri)) {
             $uri = (string) preg_replace('#\.md(?=\?|$)#', '', $uri, 1);
         } else {
@@ -29,7 +28,7 @@ if (iro_opt('iro_llms_txt', false)) {
         }
 
         $_SERVER['REQUEST_URI'] = $uri;
-        // 与 $iro_only_template 同类：置位后页面里的组件可以据此改用「只取内容」的形态
+        // 全局生命本次渲染只需要正文
         $GLOBALS['iro_is_md_template'] = true;
     }, 0);
 
@@ -75,6 +74,7 @@ add_action('after_switch_theme', static function (): void {
 
 function iro_llms_dispatch(): void
 {
+    // llms.txt
     if (get_query_var(IRO_LLMS_ROUTE_VAR) === 'txt') {
         iro_llms_render_txt();
         exit;
@@ -87,20 +87,19 @@ function iro_llms_dispatch(): void
     // 查询参数形态在这里才认出来，同样在劫持时置位
     $GLOBALS['iro_is_md_template'] = true;
 
-    // 正文：文章与页面
+    // 文章和页面
     if (is_singular()) {
         iro_llms_render_markdown(get_queried_object_id());
         exit;
     }
 
-    // 列表：首页与分类、标签归档。判定顺序与 index.php 的分发保持一致，
-    // 静态首页也按首页处理
+    // 首页/分类和标签
     if (is_home() || is_front_page() || is_category() || is_tag()) {
         iro_llms_render_list();
         exit;
     }
 
-    // 其余类型（订阅、搜索、作者页等）没有「只取内容」的形态，回落到正常地址
+    // 其余未制作独立模板的页面类型
     wp_safe_redirect(iro_llms_proper_url(), 302);
     exit;
 }
