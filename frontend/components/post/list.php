@@ -25,7 +25,7 @@
         <?php iro_post_pagination(); ?>
     <?php else: ?>
         <div v-else class="empty-state">
-            <i name="fa-icon-solid fa-inbox"></i>
+            <i class="fa-icon-solid fa-inbox"></i>
             <p><?= __("暂时还没有内容哦。",'sakurairo') ?></p>
         </div>
     <?php endif; ?>
