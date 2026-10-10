@@ -143,8 +143,8 @@ if (iro_i18n_enabled()) {
                         $cell = $row['url'] === ''
                             ? '<span class="description">' . esc_html($row['label']) . '</span>'
                             : '<a href="' . esc_url($row['url']) . '"'
-                                . ($row['state'] === 'outdated' ? ' style="color:#b32d2e;font-weight:600;"' : '')
-                                . '>' . esc_html($row['label']) . '</a>';
+                            . ($row['state'] === 'outdated' ? ' style="color:#b32d2e;font-weight:600;"' : '')
+                            . '>' . esc_html($row['label']) . '</a>';
 
                         echo '<li style="margin:0 0 4px;">';
                         echo '<strong>' . esc_html($row['name']) . '</strong>：';
@@ -159,22 +159,22 @@ if (iro_i18n_enabled()) {
                     $code = iro_i18n_post_language($post->ID);
                     $name = iro_i18n_language_name($code);
 ?>
-    <p class="description" style="margin-top:8px;">
-        <?= esc_html(sprintf(
-            /* translators: 1: 语言代号 2: 该语言的 URL 前缀 */
-            __('本页语言标识为 %1$s，对外地址前缀 /%2$s/；默认语言没有前缀。', 'sakurairo'),
-            $code,
-            iro_i18n_prefix($code)
-        )) ?>
-    </p>
-    <p class="description">
-        <?= esc_html(sprintf(
-            /* translators: %s: 语言名与代号 */
-            __('用编辑器里的 AI 区块翻译时，目标语言选「%s」。', 'sakurairo'),
-            $name === $code ? $code : $name . '（' . $code . '）'
-        )) ?>
-    </p>
-<?php
+                <p class="description" style="margin-top:8px;">
+                    <?= esc_html(sprintf(
+                        /* translators: 1: 语言代号 2: 该语言的 URL 前缀 */
+                        __('本页语言标识为 %1$s，对外地址前缀 /%2$s/；默认语言没有前缀。', 'sakurairo'),
+                        $code,
+                        iro_i18n_prefix($code)
+                    )) ?>
+                </p>
+                <p class="description">
+                    <?= esc_html(sprintf(
+                        /* translators: %s: 语言名与代号 */
+                        __('用编辑器里的 AI 区块翻译时，目标语言选「%s」。', 'sakurairo'),
+                        $name === $code ? $code : $name . '（' . $code . '）'
+                    )) ?>
+                </p>
+                <?php
                     /**
                      * 版本对齐情况：原文这一版是什么时候改的、本页是否落后
                      *
@@ -186,33 +186,33 @@ if (iro_i18n_enabled()) {
 
                         if ($source instanceof WP_Post) {
                             $outdated = iro_i18n_translation_outdated($post->ID);
-?>
-    <p class="description" style="margin-top:8px;">
-        <?php if ($outdated) : ?>
-            <?= esc_html(sprintf(
-                /* translators: 1: 原文最后改动时间 2: 译文对齐到的那一版时间 */
-                __('原文最后改动于 %1$s，本页译文对齐的是 %2$s 那一版。', 'sakurairo'),
-                iro_i18n_source_version($source->ID),
-                iro_i18n_source_version($post->ID)
-            )) ?>
-            <strong style="color:#b32d2e;"><?= esc_html__('译文已落后，前台会提示读者。', 'sakurairo') ?></strong>
-        <?php else : ?>
-            <?= esc_html(sprintf(
-                /* translators: %s: 原文最后改动时间 */
-                __('译文已对齐原文 %s 那一版。', 'sakurairo'),
-                iro_i18n_source_version($post->ID)
-            )) ?>
-        <?php endif; ?>
-    </p>
-    <p style="margin:0;">
-        <a class="button button-small" href="<?= esc_url((string) get_edit_post_link($source->ID, 'raw')) ?>">
-            <?= esc_html__('打开原文', 'sakurairo') ?>
-        </a>
-        <a class="button button-small" href="<?= esc_url(iro_i18n_translation_permalink($source)) ?>" target="_blank" rel="noopener">
-            <?= esc_html__('查看原文前台页面', 'sakurairo') ?>
-        </a>
-    </p>
-<?php
+                ?>
+                        <p class="description" style="margin-top:8px;">
+                            <?php if ($outdated) : ?>
+                                <?= esc_html(sprintf(
+                                    /* translators: 1: 原文最后改动时间 2: 译文对齐到的那一版时间 */
+                                    __('原文最后改动于 %1$s，本页译文对齐的是 %2$s 那一版。', 'sakurairo'),
+                                    iro_i18n_source_version($source->ID),
+                                    iro_i18n_source_version($post->ID)
+                                )) ?>
+                                <strong style="color:#b32d2e;"><?= esc_html__('译文已落后，前台会提示读者。', 'sakurairo') ?></strong>
+                            <?php else : ?>
+                                <?= esc_html(sprintf(
+                                    /* translators: %s: 原文最后改动时间 */
+                                    __('译文已对齐原文 %s 那一版。', 'sakurairo'),
+                                    iro_i18n_source_version($post->ID)
+                                )) ?>
+                            <?php endif; ?>
+                        </p>
+                        <p style="margin:0;">
+                            <a class="button button-small" href="<?= esc_url((string) get_edit_post_link($source->ID, 'raw')) ?>">
+                                <?= esc_html__('打开原文', 'sakurairo') ?>
+                            </a>
+                            <a class="button button-small" href="<?= esc_url(iro_i18n_translation_permalink($source)) ?>" target="_blank" rel="noopener">
+                                <?= esc_html__('查看原文前台页面', 'sakurairo') ?>
+                            </a>
+                        </p>
+        <?php
                         }
                     }
 
@@ -355,16 +355,16 @@ if (iro_i18n_enabled()) {
         $current = isset($_GET[IRO_I18N_LANGUAGE_TAXONOMY])
             ? sanitize_key((string) wp_unslash($_GET[IRO_I18N_LANGUAGE_TAXONOMY]))
             : '';
-?>
-    <label class="screen-reader-text" for="iro_i18n_language_filter"><?php esc_html_e('按语言筛选', 'sakurairo'); ?></label>
-    <select name="<?= esc_attr(IRO_I18N_LANGUAGE_TAXONOMY) ?>" id="iro_i18n_language_filter">
-        <option value=""><?php esc_html_e('全部语言', 'sakurairo'); ?></option>
-        <?php foreach (iro_i18n_languages() as $code) : ?>
-            <option value="<?= esc_attr($code) ?>" <?php selected($current, $code); ?>>
-                <?= esc_html(iro_i18n_language_name($code)) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+        ?>
+        <label class="screen-reader-text" for="iro_i18n_language_filter"><?php esc_html_e('按语言筛选', 'sakurairo'); ?></label>
+        <select name="<?= esc_attr(IRO_I18N_LANGUAGE_TAXONOMY) ?>" id="iro_i18n_language_filter">
+            <option value=""><?php esc_html_e('全部语言', 'sakurairo'); ?></option>
+            <?php foreach (iro_i18n_languages() as $code) : ?>
+                <option value="<?= esc_attr($code) ?>" <?php selected($current, $code); ?>>
+                    <?= esc_html(iro_i18n_language_name($code)) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
 <?php
     });
 

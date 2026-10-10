@@ -813,11 +813,11 @@ if (iro_i18n_enabled()) {
                 continue;
             }
 ?>
-        <link rel="alternate" hreflang="<?= esc_attr($link['code']) ?>" href="<?= esc_url($link['url']) ?>">
-    <?php
+            <link rel="alternate" hreflang="<?= esc_attr($link['code']) ?>" href="<?= esc_url($link['url']) ?>">
+        <?php
         }
         ?>
-    <link rel="alternate" hreflang="x-default" href="<?= esc_url(iro_i18n_prefix_url(home_url('/'), iro_i18n_default_language())) ?>">
+        <link rel="alternate" hreflang="x-default" href="<?= esc_url(iro_i18n_prefix_url(home_url('/'), iro_i18n_default_language())) ?>">
 <?php
     }, 2);
 

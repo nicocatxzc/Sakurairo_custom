@@ -72,11 +72,13 @@ function iro_i18n_sync_translations(int $post_id): void
             IRO_I18N_SKELETON_META => '1',
         ];
 
-        foreach ((array) apply_filters('iro_i18n_skeleton_meta_whitelist', [
-            '_wp_page_template',
-            '_wp_footnotes',
-            'wp_pattern_sync_status',
-        ]) as $key) {
+        foreach (
+            (array) apply_filters('iro_i18n_skeleton_meta_whitelist', [
+                '_wp_page_template',
+                '_wp_footnotes',
+                'wp_pattern_sync_status',
+            ]) as $key
+        ) {
             $value = get_post_meta($post->ID, (string) $key, true);
 
             if ($value !== '' && $value !== null) {

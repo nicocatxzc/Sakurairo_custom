@@ -162,10 +162,12 @@ function iro_i18n_default_language(): string
     $languages = iro_i18n_languages();
     $fallback  = $languages === [] ? 'zh-cn' : $languages[0];
 
-    foreach ([
-        (string) apply_filters('iro_i18n_default_language', ''),
-        (string) iro_opt('iro_i18n_default_language', ''),
-    ] as $explicit) {
+    foreach (
+        [
+            (string) apply_filters('iro_i18n_default_language', ''),
+            (string) iro_opt('iro_i18n_default_language', ''),
+        ] as $explicit
+    ) {
         if ($explicit !== '' && in_array($explicit, $languages, true)) {
             return $explicit;
         }
@@ -240,4 +242,3 @@ function iro_i18n_is_default_language(string $code): bool
 {
     return $code === iro_i18n_default_language();
 }
-

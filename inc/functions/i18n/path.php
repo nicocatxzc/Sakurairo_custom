@@ -283,4 +283,3 @@ function iro_i18n_skeleton_post_name(string $path, string $code): string
 
     return (string) apply_filters('iro_i18n_skeleton_post_name', $slug . '-' . $code, $path, $code);
 }
-
