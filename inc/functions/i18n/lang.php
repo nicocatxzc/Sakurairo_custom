@@ -622,14 +622,16 @@ function iro_i18n_match_slug(string $rest): ?array
     for ($index = count($segments) - 1; $index >= 0; $index--) {
         $slug = (string) $segments[$index];
 
-        foreach (get_posts([
-            'name'             => $slug,
-            'post_type'        => iro_i18n_supported_post_types(),
-            'post_status'      => ['publish'],
-            'posts_per_page'   => 5,
-            'suppress_filters' => false,
-            'no_found_rows'    => true,
-        ]) as $post) {
+        foreach (
+            get_posts([
+                'name'             => $slug,
+                'post_type'        => iro_i18n_supported_post_types(),
+                'post_status'      => ['publish'],
+                'posts_per_page'   => 5,
+                'suppress_filters' => false,
+                'no_found_rows'    => true,
+            ]) as $post
+        ) {
             // 只认本语言已发布的版本：草稿副本是给译者预备的落点，不该被访客走到
             if (iro_i18n_post_language($post->ID) !== $language) {
                 continue;
@@ -677,7 +679,7 @@ function iro_i18n_filter_post_link(string $url, $post): string
 }
 
 /**
- * 访客偏好语言与当前地址不一致时，把人送到该语言的正确地址
+ * 访客偏好语言与当前地址不一致时，把用户送到该语言的正确地址
  *
  * 两种情形分别处理：
  *
@@ -872,10 +874,10 @@ function iro_i18n_output_head_links(): void
             continue;
         }
 ?>
-    <link rel="alternate" hreflang="<?= esc_attr($link['code']) ?>" href="<?= esc_url($link['url']) ?>">
-<?php
+        <link rel="alternate" hreflang="<?= esc_attr($link['code']) ?>" href="<?= esc_url($link['url']) ?>">
+    <?php
     }
-?>
+    ?>
     <link rel="alternate" hreflang="x-default" href="<?= esc_url(iro_i18n_prefix_url(home_url('/'), iro_i18n_default_language())) ?>">
 <?php
 }
@@ -902,7 +904,7 @@ if (iro_i18n_enabled()) {
     /**
      * determine_locale 走用户语言时我们排它后面，把它在前台的决定覆盖掉。
      * 语言判定只读 `$_SERVER['REQUEST_URI']` 与 cookie，不依赖查询变量，
-     * 因此在这里（解析请求之前）就能得出结果。
+     * 因此在解析请求之前就能得出结果。
      */
     add_filter('determine_locale', 'iro_i18n_filter_determine_locale', 25);
     add_filter('locale', 'iro_i18n_filter_locale', 25);
