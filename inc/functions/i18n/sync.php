@@ -25,20 +25,27 @@ function iro_i18n_existing_statuses(): array
  * 逐区块翻译工具打开副本即可直接对着区块翻译；留空的话区块编辑器里是空文档，
  * 所有区块翻译能力都无从谈起。副本默认留成草稿：不会以未翻译内容出现在前台，
  * 也不会被收录，译者填完内容后改成发布即接手同一路径。
+ *
+ * 幂等：已有版本（含草稿与回收站）的语言一律跳过，因此可以反复调用，
+ * 面板的批量补齐也靠它把后来新增语言、或被永久删掉的副本补回来。
+ *
+ * @return int 这次新建的副本份数
  */
-function iro_i18n_sync_translations(int $post_id): void
+function iro_i18n_sync_translations(int $post_id): int
 {
     // 自动复制未翻译副本的总开关
     if (!apply_filters('iro_i18n_autocopy_enabled', true)) {
-        return;
+        return 0;
     }
 
     $path = iro_i18n_get_path($post_id);
     $post = get_post($post_id);
 
     if ($path === '' || !$post instanceof WP_Post) {
-        return;
+        return 0;
     }
+
+    $copies = 0;
 
     $post_type = $post->post_type ?: 'post';
 
@@ -111,6 +118,7 @@ function iro_i18n_sync_translations(int $post_id): void
             continue;
         }
 
+        $copies++;
         $skeleton_id = (int) $created;
 
         // 术语不能在 wp_insert_post 的同一次调用里给：默认语言术语会覆盖掉译文语言
@@ -147,6 +155,8 @@ function iro_i18n_sync_translations(int $post_id): void
 
         do_action('iro_i18n_skeleton_created', $skeleton_id, $post_id, $code);
     }
+
+    return $copies;
 }
 
 /**

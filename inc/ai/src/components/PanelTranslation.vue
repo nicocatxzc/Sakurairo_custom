@@ -64,6 +64,10 @@ function stateLabel(state) {
     return t(STATE_LABELS[state] ?? state);
 }
 
+function languageName(code) {
+    return languages.value.find((lang) => lang.code === code)?.name ?? code;
+}
+
 async function load() {
     loading.value = true;
 
@@ -93,7 +97,7 @@ function onSearch() {
     load();
 }
 
-// 三个动作共用一套编排：确认 → 调用 → 回显条数 → 重新拉取
+// 三个动作共用一套编排：确认 → 调用 → 回显结果 → 重新拉取
 async function act(action, label, success) {
     try {
         await ElMessageBox.confirm(
@@ -114,7 +118,7 @@ async function act(action, label, success) {
 
     try {
         const data = await aiApi[action]();
-        ElMessage.success(success(data.count ?? 0));
+        ElMessage.success(success(data));
         await load();
     } catch (error) {
         ElMessage.error(error.message);
@@ -127,7 +131,20 @@ function backfill() {
     return act(
         "i18nBackfill",
         t("为全部已发布内容补齐关联与未翻译副本"),
-        (count) => t("已为 {count} 条内容补齐语言关联与未翻译副本。", { count }),
+        (data) => {
+            const { checked = 0, marked = 0, linked = 0, copies = 0 } = data;
+
+            // 一条都没改时要说清核对过多少条：否则「0 条」看起来就像按钮没生效
+            return marked + linked + copies === 0
+                ? t(
+                      "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。",
+                      { checked },
+                  )
+                : t(
+                      "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。",
+                      { checked, marked, linked, copies },
+                  );
+        },
     );
 }
 
@@ -135,7 +152,7 @@ function repairLanguage() {
     return act(
         "i18nRepairLanguage",
         t("把原文的语言标记归位到默认语言"),
-        (count) => t("已把 {count} 条原文的语言标记归位到默认语言。", { count }),
+        (data) => t("已把 {count} 条原文的语言标记归位到默认语言。", { count: data.count ?? 0 }),
     );
 }
 
@@ -143,7 +160,7 @@ function renameSlugs() {
     return act(
         "i18nRenameSlugs",
         t("规范化译文别名（原文别名 + 语言代号）"),
-        (count) => t("已规范化 {count} 条译文的别名。", { count }),
+        (data) => t("已规范化 {count} 条译文的别名。", { count: data.count ?? 0 }),
     );
 }
 
@@ -163,7 +180,7 @@ onMounted(load);
         </div>
 
         <el-text size="small" type="info">
-            {{ t("列出已建立语言关联的内容，以及各语言的版本状态。未翻译的副本默认是草稿，填好内容改成发布即可接手同一关联标识。") }}
+            {{ t("每篇内容只登记一行：同一关联标识的各语言版本合并在该行内，内容列显示站点语言的版本，各语言列指向该语言版本的编辑页。未翻译的副本默认是草稿，填好内容改成发布即可接手同一关联标识。") }}
         </el-text>
 
         <el-text v-if="autofuzzy" size="small" type="info">
@@ -197,6 +214,11 @@ onMounted(load);
                         <div class="iro-ai-translation__meta">
                             <el-tag size="small" effect="plain">
                                 {{ t(TYPE_LABELS[row.type] ?? row.type) }}
+                            </el-tag>
+                            <!-- 站点语言那一版不在时，内容列是别的语言，标明是哪一种 -->
+                            <el-tag v-if="row.lang !== defaultLanguage?.code" size="small" effect="plain"
+                                type="warning">
+                                {{ t(languageName(row.lang)) }}
                             </el-tag>
                         </div>
                     </template>
@@ -270,6 +292,9 @@ onMounted(load);
     }
 
     &__meta {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
         margin-top: 0.25rem;
     }
 
