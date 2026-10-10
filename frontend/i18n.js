@@ -14,6 +14,14 @@ const MESSAGES = {
         "点击显示验证码": "點擊顯示驗證碼",
         "验证码": "驗證碼",
         "点击刷新": "點擊重新整理",
+        // 首次访问的语言询问
+        "简中": "簡中",
+        "繁中": "繁中",
+        "英语": "英語",
+        "日语": "日本語",
+        "要切换到「{name}」版本吗？": "要切換到「{name}」版本嗎？",
+        "是": "是",
+        "否": "否",
     },
     en_US: {
         // 文章代码块
@@ -26,6 +34,14 @@ const MESSAGES = {
         "点击显示验证码": "Click to show the captcha",
         "验证码": "Captcha",
         "点击刷新": "Click to refresh",
+        // 首次访问的语言询问
+        "简中": "Simplified Chinese",
+        "繁中": "Traditional Chinese",
+        "英语": "English",
+        "日语": "Japanese",
+        "要切换到「{name}」版本吗？": "Switch to the {name} version?",
+        "是": "Yes",
+        "否": "No",
     },
     ja: {
         // 文章代码块
@@ -38,6 +54,14 @@ const MESSAGES = {
         "点击显示验证码": "クリックして認証コードを表示",
         "验证码": "認証コード",
         "点击刷新": "クリックして更新",
+        // 首次访问的语言询问
+        "简中": "簡体字中国語",
+        "繁中": "繁体字中国語",
+        "英语": "英語",
+        "日语": "日本語",
+        "要切换到「{name}」版本吗？": "「{name}」版に切り替えますか？",
+        "是": "はい",
+        "否": "いいえ",
     },
 };
 
@@ -64,14 +88,16 @@ function currentLocale() {
  * 翻译一段文本，支持 {name} 占位符
  * @param {string} text 中文原文
  * @param {Record<string, string | number>} [params] 占位符参数
+ * @param {string} [locale] 指定按哪种语言翻，省略时用当前页面语言
+ *   （首次访问的询问要用「被问的那个人」的语言说出来，见 lang_switcher.js）
  * @returns {string}
  */
-function translate(text, params) {
+function translate(text, params, locale) {
     if (typeof text !== "string") {
         return text;
     }
 
-    const dict = MESSAGES[currentLocale()];
+    const dict = MESSAGES[locale ? normalizeLocale(locale) : currentLocale()];
     let result =
         dict && Object.prototype.hasOwnProperty.call(dict, text)
             ? dict[text]

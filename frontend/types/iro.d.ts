@@ -98,6 +98,8 @@ interface IroLangLink {
     exists?: boolean;
     prefix?: string;
     edit?: string;
+    /** 该语言的浏览器 locale 候选，已归一化成小写 + 下划线 */
+    locales?: string[];
 }
 
 /** 对应 #iro_page_config */
@@ -179,8 +181,16 @@ type IroMessageType = "success" | "warning" | "info" | "error";
 
 /** 对应 frontend/i18n.js 导出的翻译对象，可调用或使用 .t() */
 interface IroI18n {
-    (text: string, params?: Record<string, string | number>): string;
-    t(text: string, params?: Record<string, string | number>): string;
+    (
+        text: string,
+        params?: Record<string, string | number>,
+        locale?: string,
+    ): string;
+    t(
+        text: string,
+        params?: Record<string, string | number>,
+        locale?: string,
+    ): string;
     readonly locale: string;
 }
 

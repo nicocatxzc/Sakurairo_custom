@@ -67,9 +67,11 @@ function iro_i18n_request_prefix(): string
 /**
  * 本次请求的语言代号
  *
- * 优先级：URL 前缀 > 访客偏好 cookie > 站点默认语言。
- * 前缀排在最前，因为它是访客这一次明确的导航意图；cookie 只是「上次选过什么」，
- * 不该把已经点进 `/en-us/…` 的人再拽回别处。
+ * 只由地址决定：带前缀就是那一种，无前缀就是站点默认语言。
+ *
+ * 渲染不看 cookie、也不看 `Accept-Language`：同一份 HTML 必须对所有人一致，否则页面
+ * 缓存与爬虫拿到的东西会随访客而变。访客选过什么只用于跳转——答过首次访问询问的访客
+ * 访问无前缀地址时会被搬到他的语言（见下面 `template_redirect` 上那条闭包）。
  */
 function iro_i18n_current_language(): string
 {
@@ -85,9 +87,7 @@ function iro_i18n_current_language(): string
         }
     }
 
-    $visitor = iro_i18n_visitor_language();
-
-    return $visitor !== '' ? $visitor : iro_i18n_default_language();
+    return iro_i18n_default_language();
 }
 
 /**
@@ -160,7 +160,10 @@ function iro_i18n_translation_permalink(WP_Post $post): string
  * 链接不在这里拼前缀：单篇内容的地址由 `post_link` / `page_link` 过滤器带，
  * 归档与首页才用 `iro_i18n_prefix_url()`，免得同一段前缀被加两次。
  *
- * @return array<int,array{code:string,name:string,url:string,current:bool,exists:bool,prefix:string,edit:string}>
+ * `locales` 是该语言的浏览器 locale 候选（已归一化成小写 + 下划线），交给前台判断
+ * 「访客偏好的是不是这一种」：这张表只在语言定义里写一份，前台不另抄。
+ *
+ * @return array<int,array{code:string,name:string,url:string,current:bool,exists:bool,prefix:string,edit:string,locales:string[]}>
  */
 function iro_i18n_language_links(): array
 {
@@ -170,8 +173,9 @@ function iro_i18n_language_links(): array
         return $cache;
     }
 
-    $current = iro_i18n_current_language();
-    $post_id = is_singular() ? (int) get_queried_object_id() : 0;
+    $current     = iro_i18n_current_language();
+    $definitions = iro_i18n_language_definitions();
+    $post_id     = is_singular() ? (int) get_queried_object_id() : 0;
     // 本次请求的单篇内容与它的基准路径：切换器与 hreflang 都从这一份数据里取
     $post  = [
         'id'   => $post_id,
@@ -236,6 +240,13 @@ function iro_i18n_language_links(): array
             'exists'  => $post['path'] === '' || isset($map[$code]),
             'prefix'  => iro_i18n_prefix($code),
             'edit'    => isset($map[$code]) ? (string) get_edit_post_link($map[$code]->ID, 'raw') : '',
+            'locales' => array_values(array_unique(array_map(
+                static fn(string $item): string => strtolower(str_replace('-', '_', $item)),
+                array_merge(
+                    [(string) ($definitions[$code]['locale'] ?? '')],
+                    (array) ($definitions[$code]['locales'] ?? [])
+                )
+            ))),
         ];
     }
 
@@ -578,20 +589,55 @@ if (iro_i18n_enabled()) {
     }, 5);
 
     /**
-     * 访客偏好语言与当前地址不一致时，把用户送到该语言的正确地址
+     * 访客答过语言选择（cookie）时，把他送到该语言的同一页
      *
-     * 只有一种情形要动：地址不带前缀、访客偏好也不是默认语言，就补上该语言的前缀——
-     * 这就是「首次访问按浏览器偏好识别语言」的落地方式。
+     * 只认 cookie，不看 `Accept-Language`：爬虫不会带这个 cookie，因此不会被跳转，
+     * 也就没有「按语言给不同结果」的嫌疑；没答过询问的访客也不会被搬走——他先看到
+     * 当前语言的页面，再由前台问要不要换。
      *
-     * 反向不成立：带前缀的地址一律按前缀服务，哪怕 cookie 里存的是默认语言。前缀是访客
-     * 这一次的导航意图（见 `iro_i18n_current_language()`），按 cookie 把它剥掉会让
-     * 「`/en/…` 是英文版还是被拽回中文」取决于浏览器里存过什么；默认语言的版本本来就
-     * 住在无前缀地址上，缺的只是这一个入口。
+     * 只搬无前缀地址。带前缀的地址是访客这一次明确的导航意图（切换器也是先写 cookie
+     * 再跳到目标地址），按 cookie 改掉它会让分享出去的译文链接失效。
      *
-     * 单篇在这里放行：无前缀地址就是它的默认语言版本，译文有自己的前缀地址。
-     * 查询已经跑完，此时才判得出「这是个正常归档还是 404」，据此决定要不要按偏好跳转。
+     * 单篇只在该语言真的有版本时才过去：没有版本时带前缀的地址会被
+     * `iro_i18n_parse_request()` 收敛回原文，一来一回就是死循环。
      */
     add_action('template_redirect', function (): void {
+        if (iro_i18n_request_prefix() !== '') {
+            return;
+        }
+
+        $cookie = isset($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])
+            ? strtolower(trim((string) wp_unslash($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])))
+            : '';
+
+        // 没答过、答的不是启用语言、或者地址已经就是那一种，都没有可搬的
+        if (!in_array($cookie, iro_i18n_languages(), true) || $cookie === iro_i18n_current_language()) {
+            return;
+        }
+
+        if (is_singular()) {
+            $post = get_queried_object();
+            $path = $post instanceof WP_Post ? iro_i18n_get_path($post->ID) : '';
+
+            if ($path === '') {
+                return;
+            }
+
+            $target = iro_i18n_translation_post($path, $cookie, [$post->post_type]);
+
+            if (!$target instanceof WP_Post) {
+                return;
+            }
+
+            wp_safe_redirect(iro_i18n_translation_permalink($target), 302);
+            exit;
+        }
+
+        // 首页、归档、搜索：把当前路径原样搬到该语言的前缀下
+        if (!is_home() && !is_front_page() && !is_archive() && !is_search()) {
+            return;
+        }
+
         // 订阅源与 sitemap 走自己的路由，别把它们的地址改掉
         $request = trim((string) ($GLOBALS['wp']->request ?? ''), '/');
 
@@ -599,21 +645,8 @@ if (iro_i18n_enabled()) {
             return;
         }
 
-        $preferred = iro_i18n_visitor_language();
-        $target    = $preferred === '' ? '' : iro_i18n_prefix($preferred);
-
-        if (
-            $target === ''
-            || $preferred === iro_i18n_default_language()
-            || iro_i18n_request_prefix() !== ''
-            || is_singular()
-        ) {
-            return;
-        }
-
-        $url = home_url('/' . $target . '/' . ($request === '' ? '' : $request . '/'));
-
-        // 保留查询串，否则 `?s=` 之类的参数会被丢掉
+        // 无前缀请求的 `$wp->request` 不含前缀，可以直接原样搬（带前缀的上面已经放行）
+        $url   = home_url('/' . iro_i18n_prefix($cookie) . '/' . ($request === '' ? '' : $request . '/'));
         $query = (string) ($_SERVER['QUERY_STRING'] ?? '');
 
         wp_safe_redirect($query === '' ? $url : $url . '?' . $query, 302);
@@ -629,6 +662,9 @@ if (iro_i18n_enabled()) {
      *
      * 在查询之后按结果判断：主查询已经把这篇查出来了，不必再去逐段猜别名，
      * 顺带覆盖 `?p=123` 这种没有别名的形态。
+     *
+     * 判定只看内容与地址，不看 cookie、也不看 `Accept-Language`，所以爬虫拿到的页面
+     * 与真实访客一致，不存在「按语言给不同结果」的嫌疑。
      */
     add_action('template_redirect', function (): void {
         if (iro_i18n_request_prefix() !== '' || !is_singular() || is_feed()) {

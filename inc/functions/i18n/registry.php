@@ -144,70 +144,14 @@ function iro_i18n_site_locale(): string
     return $locale === '' ? 'en_US' : $locale;
 }
 
-/** 访客语言选择的 cookie 名；前台切换器与服务端都认这一个 */
-const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
-
 /**
- * 访客语言：显式选择的 cookie 优先，其次浏览器偏好
+ * 访客语言选择的 cookie 名
  *
- * 服务端是唯一权威——前台切换器只负责把选择写进 cookie，并跳到服务端为这一语言
- * 算好的地址，不由前端拼 URL，也不在前端判定语言。cookie 的值是统一语言代号
- * （`zh-cn`／`en-us`），不是 URL 前缀。
- *
- * 没有 cookie 时解析 `Accept-Language` 的 q 值排序，逐个归并到语言代号，
- * 第一个命中的即为偏好语言。
+ * 前台在首次访问的询问里写入（见 `frontend/components/navbar/lang_switcher.js`），
+ * 服务端只在一个地方读它：答过询问的访客访问无前缀地址时，把他搬到该语言的同一页。
+ * 语言本身不靠它——渲染出来的页面只由地址决定。
  */
-function iro_i18n_visitor_language(): string
-{
-    $cookie = isset($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])
-        ? strtolower(trim((string) wp_unslash($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])))
-        : '';
-
-    if (in_array($cookie, iro_i18n_languages(), true)) {
-        return $cookie;
-    }
-
-    $header = (string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
-
-    if ($header === '') {
-        return '';
-    }
-
-    $candidates = [];
-
-    foreach (explode(',', $header) as $position => $part) {
-        $pieces = explode(';', trim($part));
-        $locale = trim((string) array_shift($pieces));
-        $weight = 1.0;
-
-        foreach ($pieces as $piece) {
-            $piece = trim($piece);
-
-            if (stripos($piece, 'q=') === 0) {
-                $weight = (float) substr($piece, 2);
-            }
-        }
-
-        // 权重相同就按声明顺序，用下标做次级排序键
-        $candidates[] = ['locale' => $locale, 'weight' => $weight, 'order' => $position];
-    }
-
-    usort($candidates, static fn(array $a, array $b): int => $b['weight'] <=> $a['weight'] ?: $a['order'] <=> $b['order']);
-
-    foreach ($candidates as $candidate) {
-        if ($candidate['weight'] <= 0.0) {
-            continue;
-        }
-
-        $code = iro_i18n_code_from_locale((string) $candidate['locale']);
-
-        if ($code !== '' && in_array($code, iro_i18n_languages(), true)) {
-            return $code;
-        }
-    }
-
-    return '';
-}
+const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
 
 /**
  * 默认语言：无前缀路径所代表的语言
