@@ -73,6 +73,8 @@ function iro_front_theme_config()
         "post_image" => iro_media_optimize_image_url(get_the_post_thumbnail_url($post, 'full')),
         "is_home" => is_home(),
         "is_singular" => is_singular(),
+        // `<html lang>` 也要跟着换页更新，而主题配置那个节点不在 pjax 容器里，读不到新值
+        "language" => str_replace('-', '_', iro_get_theme_config_language()),
         // 导航栏在 pjax 容器之外，语言列表得随每次页面加载一起换，所以挂在页面配置里
         "langs" => iro_i18n_enabled() ? iro_i18n_language_links() : [],
     ];

@@ -84,14 +84,6 @@ function iro_i18n_languages(): array
 }
 
 /**
- * 代号是否为内置语言
- */
-function iro_i18n_is_language(string $code): bool
-{
-    return isset(iro_i18n_language_definitions()[$code]);
-}
-
-/**
  * 代号对应的 URL 前缀，未知代号原样返回
  *
  * 未知代号意味着有过滤器新增了语言却没给前缀，那种情况下用代号兜底比返回空串安全。
@@ -99,41 +91,6 @@ function iro_i18n_is_language(string $code): bool
 function iro_i18n_prefix(string $code): string
 {
     return iro_i18n_language_definitions()[$code]['prefix'] ?? $code;
-}
-
-/**
- * 全部内置语言的路由前缀
- *
- * @return string[]
- */
-function iro_i18n_prefixes(): array
-{
-    return array_values(array_map(
-        static fn(array $definition): string => (string) $definition['prefix'],
-        iro_i18n_language_definitions()
-    ));
-}
-
-/**
- * URL 前缀反查回代号，对不上返回空串
- *
- * 比较不区分大小写：URL 里的前缀可能被判成大写，而代号是全小写。
- */
-function iro_i18n_code_by_prefix(string $prefix): string
-{
-    $prefix = strtolower(trim($prefix));
-
-    if ($prefix === '') {
-        return '';
-    }
-
-    foreach (iro_i18n_language_definitions() as $code => $definition) {
-        if (strtolower((string) $definition['prefix']) === $prefix) {
-            return (string) $code;
-        }
-    }
-
-    return '';
 }
 
 /**
@@ -187,43 +144,65 @@ function iro_i18n_site_locale(): string
     return $locale === '' ? 'en_US' : $locale;
 }
 
+/** 访客语言选择的 cookie 名；前台切换器与服务端都认这一个 */
+const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
+
 /**
  * 访客语言：显式选择的 cookie 优先，其次浏览器偏好
  *
- * 服务端是唯一权威——前台切换器只负责把选择写进 cookie 后重新问一次服务端，
- * 不由前端拼 URL，也不在前端判定语言。
+ * 服务端是唯一权威——前台切换器只负责把选择写进 cookie，并跳到服务端为这一语言
+ * 算好的地址，不由前端拼 URL，也不在前端判定语言。cookie 的值是统一语言代号
+ * （`zh-cn`／`en-us`），不是 URL 前缀。
+ *
+ * 没有 cookie 时解析 `Accept-Language` 的 q 值排序，逐个归并到语言代号，
+ * 第一个命中的即为偏好语言。
  */
 function iro_i18n_visitor_language(): string
 {
-    return iro_i18n_cookie_language() ?: iro_i18n_browser_language();
-}
+    $cookie = isset($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])
+        ? strtolower(trim((string) wp_unslash($_COOKIE[IRO_I18N_LANGUAGE_COOKIE])))
+        : '';
 
-/**
- * 把 locale 归并到启用语言，对不上返回空串
- *
- * 依次尝试：同语言变体完全命中 → 同主语言的其它变体
- * （站点是 `en_GB`、只启用了 `en-us` 时不该丢掉英语）。
- */
-function iro_i18n_match_languages(string $locale): string
-{
-    $languages = iro_i18n_languages();
-    $code      = iro_i18n_code_from_locale($locale);
-
-    if ($code !== '' && in_array($code, $languages, true)) {
-        return $code;
+    if (in_array($cookie, iro_i18n_languages(), true)) {
+        return $cookie;
     }
 
-    $primary = strtok($locale, '-_');
+    $header = (string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
 
-    if ($primary === false || $primary === '') {
+    if ($header === '') {
         return '';
     }
 
-    foreach ($languages as $candidate) {
-        $candidate_primary = strtok((string) $candidate, '-_');
+    $candidates = [];
 
-        if ($candidate_primary !== false && strcasecmp($candidate_primary, (string) $primary) === 0) {
-            return $candidate;
+    foreach (explode(',', $header) as $position => $part) {
+        $pieces = explode(';', trim($part));
+        $locale = trim((string) array_shift($pieces));
+        $weight = 1.0;
+
+        foreach ($pieces as $piece) {
+            $piece = trim($piece);
+
+            if (stripos($piece, 'q=') === 0) {
+                $weight = (float) substr($piece, 2);
+            }
+        }
+
+        // 权重相同就按声明顺序，用下标做次级排序键
+        $candidates[] = ['locale' => $locale, 'weight' => $weight, 'order' => $position];
+    }
+
+    usort($candidates, static fn(array $a, array $b): int => $b['weight'] <=> $a['weight'] ?: $a['order'] <=> $b['order']);
+
+    foreach ($candidates as $candidate) {
+        if ($candidate['weight'] <= 0.0) {
+            continue;
+        }
+
+        $code = iro_i18n_code_from_locale((string) $candidate['locale']);
+
+        if ($code !== '' && in_array($code, iro_i18n_languages(), true)) {
+            return $code;
         }
     }
 
@@ -248,9 +227,30 @@ function iro_i18n_default_language(): string
         }
     }
 
-    $site = iro_i18n_match_languages(iro_i18n_site_locale());
+    // 站点语言归并到启用语言：先看同语言变体，再看同主语言的其它变体
+    // （站点是 `en_GB`、只启用了 `en-us` 时不该丢掉英语）
+    $site = iro_i18n_site_locale();
+    $code = iro_i18n_code_from_locale($site);
 
-    return $site !== '' ? $site : $fallback;
+    if ($code !== '' && in_array($code, $languages, true)) {
+        return $code;
+    }
+
+    $primary = strtok($site, '-_');
+
+    if ($primary === false || $primary === '') {
+        return $fallback;
+    }
+
+    foreach ($languages as $candidate) {
+        $candidate_primary = strtok((string) $candidate, '-_');
+
+        if ($candidate_primary !== false && strcasecmp($candidate_primary, (string) $primary) === 0) {
+            return $candidate;
+        }
+    }
+
+    return $fallback;
 }
 
 /**
@@ -290,16 +290,6 @@ function iro_i18n_language_name(string $code): string
 }
 
 /**
- * 后台展示用的「名称（代号）」
- */
-function iro_i18n_language_label(string $code): string
-{
-    $name = iro_i18n_language_name($code);
-
-    return $name === $code ? $code : $name . '（' . $code . '）';
-}
-
-/**
  * 启用语言是否为默认语言
  */
 function iro_i18n_is_default_language(string $code): bool
@@ -307,21 +297,3 @@ function iro_i18n_is_default_language(string $code): bool
     return $code === iro_i18n_default_language();
 }
 
-/**
- * 未翻译副本的默认状态
- *
- * 副本是为译者准备的落点，默认留成草稿：既不会以空页面出现在前台，
- * 也不会被收录；译者填完内容改成发布即可接手同一路径。
- */
-function iro_i18n_skeleton_status(): string
-{
-    return (string) apply_filters('iro_i18n_skeleton_status', 'draft');
-}
-
-/**
- * 自动复制未翻译副本的总开关
- */
-function iro_i18n_autocopy_enabled(): bool
-{
-    return (bool) apply_filters('iro_i18n_autocopy_enabled', true);
-}

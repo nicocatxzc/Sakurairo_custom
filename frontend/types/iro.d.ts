@@ -106,6 +106,7 @@ interface IroPageConfig {
     post_image?: string;
     is_home?: boolean;
     is_singular?: boolean;
+    language?: string;
     langs?: IroLangLink[];
     [key: string]: unknown;
 }

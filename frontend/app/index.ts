@@ -174,10 +174,12 @@ if (!_iro.isBackend) {
             document.querySelector("#iro_user_config")?.innerHTML ?? "{}",
         );
 
-        // swup 只替换列出的容器，<html> 不在其中，所以换页后语言标记会停在上一页；
-        // 服务端每次渲染都给了正确值，这里按它补一次
-        if (_iro.config.language) {
-            document.documentElement.lang = _iro.config.language;
+        // swup 只替换列出的容器，<html> 与那个主题配置节点都不在其中，换页后语言标记
+        // 会停在上一页，也只能停在上一页；页面配置每次换页都重建，按它补一次
+        const language = _iro.page?.language || _iro.config.language;
+
+        if (language) {
+            document.documentElement.lang = language;
         }
     }
     _iro.hooks.onPageLoaded(initFrontConfig);

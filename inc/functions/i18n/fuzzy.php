@@ -29,20 +29,6 @@ function iro_i18n_autofuzzy_enabled(): bool
 }
 
 /**
- * 把旧实现留下的标题前缀摘掉显示
- *
- * 早期版本在标记待同步时把前缀直接写进了 `post_title`。现在标记不再动标题，
- * 但库里可能还留着，这里只在输出时摘掉，不写库——编辑器读出干净标题后一保存，
- * 前缀自然就没了；若在这里写库又要处理「写库触发钩子」那一圈问题，不值得。
- */
-function iro_i18n_strip_legacy_prefix(string $title): string
-{
-    return strpos($title, IRO_I18N_LEGACY_FUZZY_PREFIX) === 0
-        ? ltrim(substr($title, strlen(IRO_I18N_LEGACY_FUZZY_PREFIX)))
-        : $title;
-}
-
-/**
  * 内容版本号：只取内容字段，忽略 post_modified_gmt 之类的记账字段
  */
 function iro_i18n_source_hash(?WP_Post $post = null): string
@@ -136,142 +122,135 @@ function iro_i18n_translation_outdated(int $post_id): bool
     return $recorded !== iro_i18n_source_hash($source);
 }
 
-/**
- * 原文改动后，把同组其余语言的对齐记录清掉，使它们转入待同步
- *
- * 直接删记录而不是写新版本号：删掉之后统一按「原文最后改动是否晚于译文最后改动」
- * 比较，对从未记录过的历史译文同样成立。
- *
- * @return array<int,WP_Post> 变为待同步的译文
- */
-function iro_i18n_clear_translation_baseline(int $post_id): array
-{
-    if (!iro_i18n_autofuzzy_enabled() || !iro_i18n_is_base_post($post_id)) {
-        return [];
-    }
-
-    $path = iro_i18n_get_path($post_id);
-
-    if ($path === '') {
-        return [];
-    }
-
-    $affected = [];
-
-    foreach (iro_i18n_get_group($path, [get_post_type($post_id) ?: 'post']) as $translation) {
-        // 原文自己、回收站里的版本、还没人接手的副本都不算「落后」
-        if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
-            continue;
-        }
-
-        if (get_post_meta($translation->ID, IRO_I18N_SOURCE_HASH, true) === '') {
-            continue;
-        }
-
-        delete_post_meta($translation->ID, IRO_I18N_SOURCE_HASH);
-        delete_post_meta($translation->ID, IRO_I18N_SOURCE_AT);
-
-        $affected[] = $translation;
-    }
-
-    if ($affected !== []) {
-        iro_i18n_flush_group_cache();
-    }
-
-    return $affected;
-}
-
-/**
- * 保存时维护版本号
- *
- * 原文发布时把它自己与全部译文重新对齐：草稿阶段的反复修改不该让线上译文
- * 一次次变成待同步，真正算数的是「原文发布出去的这一版」。
- * 译文发布时对齐到原文当前版本号，视为译者已核对过。
- */
-function iro_i18n_sync_versions(int $post_id, WP_Post $post): void
-{
-    if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
-        return;
-    }
-
-    if ($post->post_status !== 'publish' || iro_i18n_is_skeleton($post_id)) {
-        return;
-    }
-
-    $path = iro_i18n_get_path($post_id);
-
-    if ($path === '') {
-        return;
-    }
-
-    if (!iro_i18n_is_base_post($post_id)) {
-        // 译文发布：对齐到它所依据的原文版本
-        $source = iro_i18n_group_source($post_id);
-
-        if ($source instanceof WP_Post) {
-            iro_i18n_mark_synced($post, $source);
-        }
-
-        return;
-    }
-
-    iro_i18n_mark_synced($post, $post);
-
-    foreach (iro_i18n_get_group($path, [$post->post_type]) as $translation) {
-        if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
-            continue;
-        }
-
-        iro_i18n_mark_synced($translation, $post);
-    }
-}
-
-/**
- * 原文内容变更 → 译文进入待同步
- */
-function iro_i18n_handle_post_updated(int $post_id, WP_Post $after, WP_Post $before): void
-{
-    if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
-        return;
-    }
-
-    if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
-        return;
-    }
-
-    if (!in_array($after->post_type, iro_i18n_supported_post_types(), true) || $after->post_status === 'trash') {
-        return;
-    }
-
-    // 内容没变就不算变更，避免插件写 meta 也把全站译文标成待同步
-    if (!iro_i18n_content_changed($before, $after)) {
-        return;
-    }
-
-    // 人一动它就不再是「未翻译」占位：去掉副本标记，前台改挂「可能过期」提示而非「尚未翻译」
-    iro_i18n_clear_skeleton($post_id);
-
-    iro_i18n_clear_translation_baseline($post_id);
-}
-
-/**
- * 只比较内容字段，忽略 post_modified_gmt 之类的记账字段
- */
-function iro_i18n_content_changed(WP_Post $before, WP_Post $after): bool
-{
-    foreach (['post_title', 'post_content', 'post_excerpt'] as $field) {
-        if ($before->$field !== $after->$field) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 if (iro_i18n_enabled()) {
-    // 顺序要紧：sync.php 的 save_post(20) 会顺手派生副本，
-    // 这里必须在那之后跑，否则标记的是「还没有译文」的那一轮
-    add_action('post_updated', 'iro_i18n_handle_post_updated', 20, 3);
-    add_action('save_post', 'iro_i18n_sync_versions', 25, 2);
-    add_filter('the_title', 'iro_i18n_strip_legacy_prefix');
+    /**
+     * 原文内容变更 → 译文进入待同步
+     *
+     * 记录直接删掉而不写新版本号：删掉之后统一按「原文最后改动是否晚于译文最后改动」
+     * 比较，对从未记录过的历史译文同样成立。
+     *
+     * 顺序要紧：sync.php 的 save_post(20) 会顺手派生副本，
+     * 这里必须在那之后跑，否则标记的是「还没有译文」的那一轮。
+     */
+    add_action('post_updated', function (int $post_id, WP_Post $after, WP_Post $before): void {
+        if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
+            return;
+        }
+
+        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+            return;
+        }
+
+        if (!in_array($after->post_type, iro_i18n_supported_post_types(), true) || $after->post_status === 'trash') {
+            return;
+        }
+
+        // 内容没变就不算变更，避免插件写 meta 也把全站译文标成待同步
+        $changed = false;
+
+        foreach (['post_title', 'post_content', 'post_excerpt'] as $field) {
+            if ($before->$field !== $after->$field) {
+                $changed = true;
+                break;
+            }
+        }
+
+        if (!$changed) {
+            return;
+        }
+
+        // 人一动它就不再是「未翻译」占位：去掉副本标记，前台改挂「可能过期」提示而非「尚未翻译」
+        if (get_post_meta($post_id, IRO_I18N_SKELETON_META, true) === '1') {
+            delete_post_meta($post_id, IRO_I18N_SKELETON_META);
+        }
+
+        if (!iro_i18n_is_base_post($post_id)) {
+            return;
+        }
+
+        $path = iro_i18n_get_path($post_id);
+
+        if ($path === '') {
+            return;
+        }
+
+        $baseline_dropped = false;
+
+        foreach (iro_i18n_get_group($path, [get_post_type($post_id) ?: 'post']) as $translation) {
+            // 原文自己、回收站里的版本、还没人接手的副本都不算「落后」
+            if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
+                continue;
+            }
+
+            if (get_post_meta($translation->ID, IRO_I18N_SOURCE_HASH, true) === '') {
+                continue;
+            }
+
+            delete_post_meta($translation->ID, IRO_I18N_SOURCE_HASH);
+            delete_post_meta($translation->ID, IRO_I18N_SOURCE_AT);
+
+            $baseline_dropped = true;
+        }
+
+        if ($baseline_dropped) {
+            iro_i18n_flush_group_cache();
+        }
+    }, 20, 3);
+
+    /**
+     * 保存时维护版本号
+     *
+     * 原文发布时把它自己与全部译文重新对齐：草稿阶段的反复修改不该让线上译文
+     * 一次次变成待同步，真正算数的是「原文发布出去的这一版」。
+     * 译文发布时对齐到原文当前版本号，视为译者已核对过。
+     */
+    add_action('save_post', function (int $post_id, WP_Post $post): void {
+        if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
+            return;
+        }
+
+        if ($post->post_status !== 'publish' || iro_i18n_is_skeleton($post_id)) {
+            return;
+        }
+
+        $path = iro_i18n_get_path($post_id);
+
+        if ($path === '') {
+            return;
+        }
+
+        if (!iro_i18n_is_base_post($post_id)) {
+            // 译文发布：对齐到它所依据的原文版本
+            $source = iro_i18n_group_source($post_id);
+
+            if ($source instanceof WP_Post) {
+                iro_i18n_mark_synced($post, $source);
+            }
+
+            return;
+        }
+
+        iro_i18n_mark_synced($post, $post);
+
+        foreach (iro_i18n_get_group($path, [$post->post_type]) as $translation) {
+            if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
+                continue;
+            }
+
+            iro_i18n_mark_synced($translation, $post);
+        }
+    }, 25, 2);
+
+    /**
+     * 把旧实现留下的标题前缀摘掉显示
+     *
+     * 早期版本在标记待同步时把前缀直接写进了 `post_title`。现在标记不再动标题，
+     * 但库里可能还留着，这里只在输出时摘掉，不写库——编辑器读出干净标题后一保存，
+     * 前缀自然就没了；若在这里写库又要处理「写库触发钩子」那一圈问题，不值得。
+     */
+    add_filter('the_title', function (string $title): string {
+        return strpos($title, IRO_I18N_LEGACY_FUZZY_PREFIX) === 0
+            ? ltrim(substr($title, strlen(IRO_I18N_LEGACY_FUZZY_PREFIX)))
+            : $title;
+    });
 }

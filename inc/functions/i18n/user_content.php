@@ -63,24 +63,6 @@ function iro_i18n_user_content_state(): array
 }
 
 /**
- * 原文在指定语言下的译文，没有译文或译文为空时返回空串
- *
- * 语言代号省略时取本次请求的语言。
- */
-function iro_i18n_user_content_translation(string $text, ?string $code = null): string
-{
-    $entry = iro_i18n_user_content_state()['data'][$text] ?? null;
-
-    if (!is_array($entry)) {
-        return '';
-    }
-
-    $value = $entry[$code ?? iro_i18n_current_language()] ?? '';
-
-    return is_scalar($value) ? trim((string) $value) : '';
-}
-
-/**
  * 需要为之补录译文的语言代号
  *
  * 默认语言的原文就是设置项的键本身，不给自己留空位：留了反而会被当成一条待填的译文。
@@ -119,151 +101,132 @@ function &iro_i18n_user_content_pending(): array
 }
 
 /**
- * 把没有译文的原文登记回设置项
- *
- * 原文来自站长自己填的菜单标题，不含访客输入，因此不需要权限判定；反过来也意味着
- * **不要**把文章标题这类会无限增长的动态值交给 `iro__()`，否则设置项会被撑爆。
- */
-function iro_i18n_collect_user_content(string $text): void
-{
-    if ($text === '' || !iro_i18n_enabled() || !iro_is_frontend()) {
-        return;
-    }
-
-    $state = iro_i18n_user_content_state();
-
-    // 设置项的 JSON 解析不了就不回写，理由见 iro_i18n_user_content_state()
-    if (!$state['readable']) {
-        return;
-    }
-
-    if (!apply_filters('iro_i18n_collect_user_content', true)) {
-        return;
-    }
-
-    $entry = $state['data'][$text] ?? null;
-
-    // 已经登记过、每种语言也都留了位置，请求结束时就没有可写的了，连队都不必排
-    if (is_array($entry) && array_diff(iro_i18n_user_content_targets(), array_keys($entry)) === []) {
-        return;
-    }
-
-    $pending        = &iro_i18n_user_content_pending();
-    $pending[$text] = true;
-}
-
-/**
- * 把本次请求登记到的原文合并进设置项
- *
- * 合并前重新读一次 option：渲染期间可能有别的写入，拿请求开始时的快照写回会把它们抹掉。
- */
-function iro_i18n_flush_user_content(): void
-{
-    $pending = &iro_i18n_user_content_pending();
-
-    if ($pending === []) {
-        return;
-    }
-
-    $texts   = array_keys($pending);
-    $pending = [];
-
-    $options = get_option('iro_options');
-    $raw     = is_array($options) ? ($options['iro_i18n_user_content'] ?? '') : '';
-
-    if (!is_string($raw) || trim($raw) === '') {
-        $data = [];
-    } else {
-        $data = json_decode($raw, true);
-
-        // 手写的 JSON 解析不了就不动它，理由见 iro_i18n_user_content_state()
-        if (!is_array($data)) {
-            return;
-        }
-    }
-
-    $targets = iro_i18n_user_content_targets();
-    $changed = false;
-
-    foreach ($texts as $text) {
-        $entry = $data[$text] ?? [];
-
-        // 手写成了标量，不动它
-        if (!is_array($entry)) {
-            continue;
-        }
-
-        foreach ($targets as $code) {
-            if (array_key_exists($code, $entry)) {
-                continue;
-            }
-
-            $entry[$code] = '';
-            $changed      = true;
-        }
-
-        $data[$text] = $entry;
-    }
-
-    if (!$changed) {
-        return;
-    }
-
-    $encoded = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-    // 原文里混进非法 UTF-8 之类会编码失败，此时写入等于清空设置项
-    if (!is_string($encoded)) {
-        return;
-    }
-
-    iro_opt_update('iro_i18n_user_content', $encoded);
-}
-
-/**
- * 把设置项里的译文接进 `gettext`
- *
- * 挂在主题自己的文案域上，让语言包优先。
- */
-function iro_i18n_filter_user_content_gettext(string $translation, string $text, string $domain): string
-{
-    if (!iro_i18n_enabled() || !iro_is_frontend()) {
-        return $translation;
-    }
-
-    if (!isset(iro_i18n_user_content_state()['data'][$text]) || !in_array($domain, iro_i18n_text_domains(), true)) {
-        return $translation;
-    }
-
-    // 语言包已经给出译文就不动它
-    if ($translation !== $text) {
-        return $translation;
-    }
-
-    $value = iro_i18n_user_content_translation($text);
-
-    return $value === '' ? $translation : $value;
-}
-
-/**
  * 用于用户生成内容的翻译，未翻译项登记进设置
  *
  * 模块未启用、或语言包与设置项都没有译文时返回原文，因此模板可以无条件调用它。
+ * 登记的原文来自站长自己填的菜单标题，不含访客输入，因此不需要权限判定；反过来也
+ * 意味着**不要**把文章标题这类会无限增长的动态值交给它，否则设置项会被撑爆。
  */
 function iro__(string $text): string
 {
     $translated = translate($text, 'sakurairo');
 
     // 拿到空串按没有译文处理，别把前台文案清空
-    if ($translated === '' || $translated === $text) {
-        iro_i18n_collect_user_content($text);
+    if ($translated !== '' && $translated !== $text) {
+        return $translated;
+    }
 
+    if ($text === '' || !iro_i18n_enabled() || !iro_is_frontend()) {
         return $text;
     }
 
-    return $translated;
+    $state = iro_i18n_user_content_state();
+
+    // 设置项的 JSON 解析不了就不回写，理由见 iro_i18n_user_content_state()
+    if (!$state['readable'] || !apply_filters('iro_i18n_collect_user_content', true)) {
+        return $text;
+    }
+
+    $entry = $state['data'][$text] ?? null;
+
+    // 已经登记过、每种语言也都留了位置，请求结束时就没有可写的了，连队都不必排
+    if (!is_array($entry) || array_diff(iro_i18n_user_content_targets(), array_keys($entry)) !== []) {
+        $pending        = &iro_i18n_user_content_pending();
+        $pending[$text] = true;
+    }
+
+    return $text;
 }
 
 if (iro_i18n_enabled()) {
-    add_filter('gettext', 'iro_i18n_filter_user_content_gettext', 10, 3);
-    add_action('shutdown', 'iro_i18n_flush_user_content');
+    /**
+     * 把设置项里的译文接进 `gettext`
+     *
+     * 挂在主题自己的文案域上，让语言包优先。
+     */
+    add_filter('gettext', function (string $translation, string $text, string $domain): string {
+        if (!iro_i18n_enabled() || !iro_is_frontend()) {
+            return $translation;
+        }
+
+        if (!isset(iro_i18n_user_content_state()['data'][$text]) || !in_array($domain, iro_i18n_text_domains(), true)) {
+            return $translation;
+        }
+
+        // 语言包已经给出译文就不动它
+        if ($translation !== $text) {
+            return $translation;
+        }
+
+        $entry = iro_i18n_user_content_state()['data'][$text] ?? null;
+        $value = is_array($entry) ? ($entry[iro_i18n_current_language()] ?? '') : '';
+        $value = is_scalar($value) ? trim((string) $value) : '';
+
+        return $value === '' ? $translation : $value;
+    }, 10, 3);
+
+    /**
+     * 把本次请求登记到的原文合并进设置项
+     *
+     * 合并前重新读一次 option：渲染期间可能有别的写入，拿请求开始时的快照写回会把它们抹掉。
+     */
+    add_action('shutdown', function (): void {
+        $pending = &iro_i18n_user_content_pending();
+
+        if ($pending === []) {
+            return;
+        }
+
+        $texts   = array_keys($pending);
+        $pending = [];
+
+        $options = get_option('iro_options');
+        $raw     = is_array($options) ? ($options['iro_i18n_user_content'] ?? '') : '';
+
+        if (!is_string($raw) || trim($raw) === '') {
+            $data = [];
+        } else {
+            $data = json_decode($raw, true);
+
+            // 手写的 JSON 解析不了就不动它，理由见 iro_i18n_user_content_state()
+            if (!is_array($data)) {
+                return;
+            }
+        }
+
+        $changed = false;
+
+        foreach ($texts as $text) {
+            $entry = $data[$text] ?? [];
+
+            // 手写成了标量，不动它
+            if (!is_array($entry)) {
+                continue;
+            }
+
+            foreach (iro_i18n_user_content_targets() as $code) {
+                if (array_key_exists($code, $entry)) {
+                    continue;
+                }
+
+                $entry[$code] = '';
+                $changed      = true;
+            }
+
+            $data[$text] = $entry;
+        }
+
+        if (!$changed) {
+            return;
+        }
+
+        $encoded = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        // 原文里混进非法 UTF-8 之类会编码失败，此时写入等于清空设置项
+        if (!is_string($encoded)) {
+            return;
+        }
+
+        iro_opt_update('iro_i18n_user_content', $encoded);
+    });
 }

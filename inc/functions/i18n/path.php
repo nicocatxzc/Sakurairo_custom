@@ -33,28 +33,11 @@ function iro_i18n_is_skeleton(int $post_id): bool
 }
 
 /**
- * 副本被人工编辑过就不再是「未翻译」占位，去掉副本标记
- *
- * 留着标记会让它一直被当成空副本：既不参与待同步传播，面板上也永远显示未翻译。
- */
-function iro_i18n_clear_skeleton(int $post_id): void
-{
-    if (iro_i18n_is_skeleton($post_id)) {
-        delete_post_meta($post_id, IRO_I18N_SKELETON_META);
-    }
-}
-
-/**
  * 读取文章的语言关联字段
  */
 function iro_i18n_get_path(int $post_id): string
 {
     return (string) get_post_meta($post_id, IRO_I18N_PATH_META, true);
-}
-
-function iro_i18n_set_path(int $post_id, string $path): void
-{
-    update_post_meta($post_id, IRO_I18N_PATH_META, $path);
 }
 
 /**
@@ -94,7 +77,7 @@ function iro_i18n_ensure_path(int $post_id): string
     $path = iro_i18n_compute_path($post_id);
 
     if ($path !== '') {
-        iro_i18n_set_path($post_id, $path);
+        update_post_meta($post_id, IRO_I18N_PATH_META, $path);
     }
 
     return $path;
@@ -282,56 +265,6 @@ function iro_i18n_group_map(int $post_id): array
 }
 
 /**
- * 批量解析多个关联标识的版本归属，供总览面板避免逐行查询
- *
- * @param string[] $paths
- * @return array<string,array<string,WP_Post>>
- */
-function iro_i18n_paths_translations(array $paths, array $post_types = []): array
-{
-    $paths = array_values(array_filter(array_map('strval', $paths), static fn(string $path): bool => $path !== ''));
-
-    if ($paths === []) {
-        return [];
-    }
-
-    $query = new WP_Query([
-        'post_type'              => $post_types === [] ? iro_i18n_supported_post_types() : $post_types,
-        'post_status'            => iro_i18n_existing_statuses(),
-        'posts_per_page'         => -1,
-        'orderby'                => 'ID',
-        'order'                  => 'ASC',
-        'ignore_sticky_posts'    => true,
-        'no_found_rows'          => true,
-        'update_post_term_cache' => false,
-        'meta_query'             => [
-            [
-                'key'     => IRO_I18N_PATH_META,
-                'value'   => $paths,
-                'compare' => 'IN',
-            ],
-        ],
-    ]);
-
-    if ($query->posts !== []) {
-        // 语言判定依赖术语缓存，这里一次性预热，避免每篇各查一次
-        update_object_term_cache(wp_list_pluck($query->posts, 'ID'), IRO_I18N_LANGUAGE_TAXONOMY);
-    }
-
-    $map = [];
-
-    foreach ($query->posts as $post) {
-        $path = iro_i18n_get_path($post->ID);
-
-        if ($path !== '') {
-            $map[$path][iro_i18n_post_language($post->ID)] = $post;
-        }
-    }
-
-    return $map;
-}
-
-/**
  * 未翻译副本的别名：原文别名 + 语言代号
  *
  * WordPress 要求同一 post_type 下别名唯一，副本没法与原文同名（同名时
@@ -351,54 +284,3 @@ function iro_i18n_skeleton_post_name(string $path, string $code): string
     return (string) apply_filters('iro_i18n_skeleton_post_name', $slug . '-' . $code, $path, $code);
 }
 
-/**
- * 去掉一段路径末尾的语言代号后缀，得到候选的基准路径
- *
- * 逐段从长到短尝试，因此 `a/b-post-en-us` 会依次试出
- * `a/b-post`、`a/b`。只有真的命中某个组时调用方才该采用它。
- *
- * @return string[]
- */
-function iro_i18n_path_variants(string $path): array
-{
-    $segments = array_values(array_filter(explode('/', $path), static fn(string $part): bool => $part !== ''));
-    $variants = [];
-
-    foreach (array_keys(iro_i18n_language_definitions()) as $code) {
-        $suffix = '-' . $code;
-
-        for ($take = count($segments); $take > 0; $take--) {
-            $head = array_slice($segments, 0, $take);
-            $last = (string) end($head);
-
-            if (substr($last, -strlen($suffix)) !== $suffix) {
-                continue;
-            }
-
-            $stripped = substr($last, 0, -strlen($suffix));
-
-            if ($stripped === '') {
-                continue;
-            }
-
-            // 末段被剥空就整个丢掉该段，否则替换回本段
-            $head[$take - 1] = $stripped;
-            $variants[]      = implode('/', $head);
-        }
-    }
-
-    // 早期副本用的是 WordPress 自动接上的 -2 / -3，同样要能匹配回组
-    for ($take = count($segments); $take > 0; $take--) {
-        $head = array_slice($segments, 0, $take);
-        $last = (string) end($head);
-
-        if (!preg_match('/^(.*)-\d+$/', $last, $matches) || $matches[1] === '') {
-            continue;
-        }
-
-        $head[$take - 1] = $matches[1];
-        $variants[]      = implode('/', $head);
-    }
-
-    return array_values(array_unique(array_filter($variants, static fn(string $item): bool => $item !== '')));
-}

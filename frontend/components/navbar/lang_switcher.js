@@ -1,8 +1,10 @@
-// 语言切换：只把选择写进 cookie，然后让服务端按 cookie 重新决定该给哪个地址。
+// 语言切换：把选择写进 cookie，再跳到服务端为这一语言算好的地址。
 //
-// 不读页面的 hreflang、也不拼任何 URL —— swup 只替换列出的容器，页面 <head> 里的
-// alternate 链接不会跟着换页更新，进文章页后读到的是上一篇的旧值。地址一律由服务端
-// 在 302 里给出，前台只负责去掉旧前缀再重新发一次请求。
+// 不自己剥掉前缀重新请求：各语言版本的别名并不相同（译文是 foo-en-us，早期副本是
+// WordPress 接上的 -2、-3），去前缀的那条路径属于原文，按它解析只会给回同一个版本，
+// 选默认语言时表现为「跳过去还是原来那一篇」。也不读 <head> 里的 alternate ——
+// swup 只替换列出的容器，那些链接换页后还是上一篇的旧值。地址一律取页面配置里的
+// langs[].url，它每次换页都会随 #iro_page_config 重建。
 //
 // 导航栏在 pjax 容器之外，语言列表挂在会被替换的 #iro_page_config 上，
 // 所以每次页面加载都要按新配置重建菜单。
@@ -53,11 +55,10 @@ function markCurrent(switcher, code) {
     });
 }
 
-/** 让服务端按新 cookie 重新判定当前地址；`cache: false` 保证不是复用缓存页面 */
-function reloadForLanguage() {
-    // 必须去掉旧的语言前缀再请求：服务端按「URL 前缀 > cookie」判定，带着旧前缀
-    // 去问只会拿回同一种语言，选默认语言时尤其明显——默认语言没有前缀可回。
-    const target = stripLangPrefix(window.location.href);
+/** 跳到该语言版本的地址；`cache: false` 保证不是复用缓存页面 */
+function navigateToLanguage(url) {
+    // 服务端给的是这一语言的规范地址；拿不到时退化成剥掉前缀再问一次
+    const target = String(url ?? "") || stripLangPrefix(window.location.href);
 
     if (typeof _iro.navigate === "function") {
         _iro.navigate(target, { cache: false });
@@ -120,7 +121,7 @@ _iro.hooks.onPageLoaded(() => {
                     await rememberLanguage(code);
                     markCurrent(switcher, code);
                     closeLangSwitchers();
-                    reloadForLanguage();
+                    navigateToLanguage(lang.url);
                 });
 
                 item.append(link);

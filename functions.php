@@ -62,13 +62,13 @@ switch (iro_opt('iro_update_source')) {
 require_once get_template_directory() . '/inc/theme_init/support.php';
 // 载入翻译
 require_once get_template_directory() . '/inc/theme_init/translation.php';
-// 内容国际化支持
-require_once get_template_directory() . '/inc/functions/i18n/bootstrap.php';
 // 载入shuoshuo文章类型
 require_once get_template_directory() . '/inc/theme_init/shuoshuo.php';
 // 工具函数
 require_once get_template_directory() . '/inc/functions/tools.php';
 require_once get_template_directory() . '/inc/functions/ip.php';
+// 内容国际化支持
+require_once get_template_directory() . '/inc/functions/i18n/bootstrap.php';
 // 全站优化
 require_once get_template_directory() . '/inc/functions/optimize/index.php';
 // 页脚播放器
