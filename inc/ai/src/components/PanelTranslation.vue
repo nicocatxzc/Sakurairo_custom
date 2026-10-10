@@ -47,12 +47,15 @@ const defaultNote = computed(() => {
         return "";
     }
 
+    // 举例要用「其它语言」的前缀：默认语言自己的前缀不是其余语言的入口
+    const sample = languages.value.find((item) => !item.is_default) ?? lang;
+
     return t(
         "默认语言是「{label}」（跟随站点语言 {locale}），无前缀路径即属于它；其余语言通过 /{prefix}/ 之类的前缀访问。",
         {
             label: `${t(lang.name)}（${lang.code}）`,
             locale: locale.value,
-            prefix: lang.prefix,
+            prefix: sample.prefix,
         },
     );
 });

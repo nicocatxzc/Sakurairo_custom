@@ -44,7 +44,15 @@ function iro_i18n_is_frontend(): bool
         return false;
     }
 
-    return !(defined('REST_REQUEST') && REST_REQUEST);
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return false;
+    }
+
+    /**
+     * `wp-login.php` 与 `xmlrpc.php` 不经过 `is_admin()`，但同属后台入口与后台接口。
+     * `$pagenow` 由 `wp-includes/vars.php` 在插件加载前设好。
+     */
+    return !in_array((string) ($GLOBALS['pagenow'] ?? ''), ['wp-login.php', 'xmlrpc.php'], true);
 }
 
 /**
@@ -836,9 +844,16 @@ function iro_i18n_disable_canonical(string|false $redirect): string|false
  *
  * 只改语言标记，不切 WordPress 的 locale：译文是人工写的独立文章，
  * 主题文案的翻译由站点自身的语言包负责，两者不该互相牵动。
+ *
+ * 后台与登录页不动：那里的这个标记是 WordPress 的用户语言，后台界面（AI 面板按
+ * `document.documentElement.lang` 选文案）读的正是它。
  */
 function iro_i18n_language_attributes(string $output): string
 {
+    if (!iro_i18n_is_frontend()) {
+        return $output;
+    }
+
     $locale = iro_i18n_locale(iro_i18n_current_language());
 
     $replaced = preg_replace('/\blang=(["\']).*?\1/i', 'lang="' . esc_attr($locale) . '"', $output, 1);
