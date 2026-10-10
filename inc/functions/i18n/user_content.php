@@ -126,7 +126,7 @@ function &iro_i18n_user_content_pending(): array
  */
 function iro_i18n_collect_user_content(string $text): void
 {
-    if ($text === '' || !iro_i18n_enabled() || !iro_i18n_is_frontend()) {
+    if ($text === '' || !iro_i18n_enabled() || !iro_is_frontend()) {
         return;
     }
 
@@ -222,11 +222,11 @@ function iro_i18n_flush_user_content(): void
 /**
  * 把设置项里的译文接进 `gettext`
  *
- * 挂在主题自己的文案域上：UGC 与主题文案混在同一个域里，正是「语言包优先」这条规则成立的前提。
+ * 挂在主题自己的文案域上，让语言包优先。
  */
 function iro_i18n_filter_user_content_gettext(string $translation, string $text, string $domain): string
 {
-    if (!iro_i18n_enabled() || !iro_i18n_is_frontend()) {
+    if (!iro_i18n_enabled() || !iro_is_frontend()) {
         return $translation;
     }
 
@@ -245,10 +245,7 @@ function iro_i18n_filter_user_content_gettext(string $translation, string $text,
 }
 
 /**
- * 取用户内容在本次请求语言下的译文
- *
- * 前台模板里凡站长自己写的内容（导航菜单标题等）都走这个函数而不是 `__()`。
- * 后台仍用 `__()`：那边读的是设置项原文，跟着访客语言变会让站长没法编辑。
+ * 用于用户生成内容的翻译，未翻译项登记进设置
  *
  * 模块未启用、或语言包与设置项都没有译文时返回原文，因此模板可以无条件调用它。
  */

@@ -8,7 +8,7 @@
  */
 function iro_get_theme_config_language(): string
 {
-    if (function_exists('iro_i18n_current_language') && iro_i18n_is_frontend()) {
+    if (function_exists('iro_i18n_current_language') && iro_is_frontend()) {
         return iro_i18n_locale(iro_i18n_current_language());
     }
 

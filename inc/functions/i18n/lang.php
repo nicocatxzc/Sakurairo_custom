@@ -26,36 +26,6 @@ const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
 const IRO_I18N_LANGUAGE_COOKIE_TTL = 34560000;
 
 /**
- * 本模块只对前台生效
- *
- * 后台的语言列、语言筛选、翻译面板是管理功能，读写的是「内容被标成了哪种语言」，
- * 不该跟着访客偏好走；后台的界面语言仍由 WordPress 的用户语言设置决定。
- *
- * `determine_locale` 可能在很早就被调用（插件加载阶段就在 `is_admin()` 定义之前），
- * 因此这里先确认函数存在。
- */
-function iro_i18n_is_frontend(): bool
-{
-    if (!function_exists('is_admin')) {
-        return false;
-    }
-
-    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
-        return false;
-    }
-
-    if (defined('REST_REQUEST') && REST_REQUEST) {
-        return false;
-    }
-
-    /**
-     * `wp-login.php` 与 `xmlrpc.php` 不经过 `is_admin()`，但同属后台入口与后台接口。
-     * `$pagenow` 由 `wp-includes/vars.php` 在插件加载前设好。
-     */
-    return !in_array((string) ($GLOBALS['pagenow'] ?? ''), ['wp-login.php', 'xmlrpc.php'], true);
-}
-
-/**
  * cookie 里的语言，未设置或对不上启用集合时返回空串
  *
  * 值就是统一语言代号（`zh-cn`／`en-us`），因此前端写进去的必须是代号，
@@ -387,7 +357,7 @@ function iro_i18n_parse_request(WP $wp): void
      * 语言前缀与语言分类法查询变量都是前台概念。后台列表的语言筛选正是靠
      * `?iro_lang=` 参数工作，若在这里一起拦掉，筛选链接会被 302 打回首页。
      */
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return;
     }
 
@@ -778,7 +748,7 @@ function iro_i18n_text_domains(): array
  */
 function iro_i18n_switch_locale(): void
 {
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return;
     }
 
@@ -808,7 +778,7 @@ function iro_i18n_switch_locale(): void
  */
 function iro_i18n_filter_determine_locale(string $locale): string
 {
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return $locale;
     }
 
@@ -824,7 +794,7 @@ function iro_i18n_filter_determine_locale(string $locale): string
  */
 function iro_i18n_filter_locale(string $locale): string
 {
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return $locale;
     }
 
@@ -850,7 +820,7 @@ function iro_i18n_disable_canonical(string|false $redirect): string|false
  */
 function iro_i18n_language_attributes(string $output): string
 {
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return $output;
     }
 

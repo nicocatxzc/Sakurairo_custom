@@ -231,3 +231,27 @@ function iro_swr_refresh(string $key, callable $refresh_callback): void
         }
     }, PHP_INT_MAX);
 }
+
+/**
+ * 判断是否是前台
+ */
+function iro_is_frontend(): bool
+{
+    if (!function_exists('is_admin')) {
+        return false;
+    }
+
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return false;
+    }
+
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return false;
+    }
+
+    /**
+     * `wp-login.php` 与 `xmlrpc.php` 不经过 `is_admin()`，但同属后台入口与后台接口。
+     * `$pagenow` 由 `wp-includes/vars.php` 在插件加载前设好。
+     */
+    return !in_array((string) ($GLOBALS['pagenow'] ?? ''), ['wp-login.php', 'xmlrpc.php'], true);
+}

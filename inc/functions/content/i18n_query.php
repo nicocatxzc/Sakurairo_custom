@@ -90,7 +90,7 @@ function iro_i18n_query_needs_language(WP_Query $query): bool
 {
     global $wp_the_query;
 
-    if (!iro_i18n_is_frontend()) {
+    if (!iro_is_frontend()) {
         return false;
     }
 
