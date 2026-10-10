@@ -46,7 +46,7 @@
                         <span>
                             <i class="fa-icon-solid fa-folder-open"></i>
                             <a href="<?= esc_url(get_category_link($categories[0]->term_id)) ?>">
-                                <?= esc_html($categories[0]->name) ?>
+                                <?= iro__($categories[0]->name) ?>
                             </a>
                         </span>
                     <?php else : ?>

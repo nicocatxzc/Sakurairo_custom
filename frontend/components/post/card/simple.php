@@ -25,7 +25,7 @@
             foreach (get_the_category() as $category) :
             ?>
                 <a href="<?= esc_url(get_category_link($category->term_id)) ?>" class="category">
-                    <?= esc_html($category->name) ?>
+                    <?= iro__($category->name) ?>
                 </a>
             <?php
             endforeach;
@@ -43,7 +43,7 @@
                 foreach ($tags as $tag) :
                 ?>
                     <a href="<?= esc_url(get_tag_link($tag->term_id)) ?>" class="tag">
-                        #<?= esc_html($tag->name) ?>
+                        #<?= iro__($tag->name) ?>
                     </a>
                 <?php
                 endforeach;
