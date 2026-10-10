@@ -218,7 +218,7 @@ if (iro_i18n_enabled()) {
 
                     if (iro_i18n_autofuzzy_enabled()) {
                         echo '<p class="description" style="margin-top:8px;">'
-                            . esc_html__('原文内容改动后，其余语言版本会在前台挂出「译文可能已过期」的提示；把译文核对一遍并重新发布即视为已对齐。', 'sakurairo')
+                            . esc_html__('原文重新发布后，其余语言版本会在前台挂出「译文可能已过期」的提示；把译文核对一遍并重新发布即视为已对齐。', 'sakurairo')
                             . '</p>';
                     }
                 },

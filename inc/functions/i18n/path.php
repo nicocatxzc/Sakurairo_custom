@@ -18,13 +18,11 @@ const IRO_I18N_PATH_META = '_iro_i18n_path';
 const IRO_I18N_SKELETON_META = '_iro_i18n_skeleton';
 
 /**
- * 译文所依据的原文版本：原文内容指纹（见 fuzzy.php 的 iro_i18n_source_hash）
+ * 译文的版本号记录（见 fuzzy.php）
  *
- * 原文每改一次指纹就变，同组的译文指纹对不上即为「待同步」。
+ * 原文自己存的是它当前生效的那一版，即最近一次脱离草稿态保存时的时间戳
+ * （post_modified_gmt）；译文存的是它当初对齐到的那一版。两者对不上即为「待同步」。
  */
-const IRO_I18N_SOURCE_HASH = '_iro_i18n_source_hash';
-
-/** 原文改动的时间，仅供后台显示「原文最后改动于…」 */
 const IRO_I18N_SOURCE_AT = '_iro_i18n_source_at';
 
 function iro_i18n_is_skeleton(int $post_id): bool

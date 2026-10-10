@@ -3,14 +3,19 @@
 /**
  * 译文时效：原文改过之后，译文自动进入「待同步」并在前台挂出提示
  *
- * 判定方式是版本号，不是状态标记：
- * 基准版本（原文）每改一次内容，版本号就变一次；译文记着自己当初对齐的那一枚版本号，
- * 对不上就是待同步。因此它有三个状态，且全部由数据推导，不需要人工解除：
+ * 判定方式是版本号，不做内容比较：译文记着自己当初对齐的那一版原文的版本号
+ * （post_modified_gmt），与原文当前那一枚对不上就是待同步。因此它有三个状态，
+ * 且全部由数据推导，不需要人工解除：
  * - 无版本：该语言还没有版本（由 sync.php 建副本，或译者尚未接手）；
- * - 已同步：译文版本号 = 原文当前版本号；
- * - 待同步：原文在此之后改过，译文与最新原文可能有差异。
+ * - 已同步：译文对齐的版本号 = 原文当前的版本号；
+ * - 待同步：原文在此之后又认可过新版，译文与最新原文可能有差异。
+ *
+ * 只有脱离草稿态的保存才算认可一版：原文还在草稿里时不参与比较，草稿阶段的反复修改
+ * 不该让线上译文一次次变成待同步；原文一发布，它的版本号就前进，译文随之变成待同步。
  *
  * 刻意不做的事：
+ * - 不比内容：自动建出的占位副本正文与原文逐字相同，按内容去猜「这一版算不算数」
+ *   只会把占位副本和真正的译文认成同一版；版本号是 WordPress 自己的记账事实。
  * - 不动译文的状态与标题（保持在线状态）；
  * - 不留修订或内容快照（diff没有意义），
  *   改由前台提示 + 一键跳回原文最新版承担。
@@ -29,32 +34,24 @@ function iro_i18n_autofuzzy_enabled(): bool
 }
 
 /**
- * 内容版本号：只取内容字段，忽略 post_modified_gmt 之类的记账字段
+ * 原文当前的版本号
+ *
+ * 按库里的当前值读，而不是手上对象的属性：同一次请求里那个对象可能是早先取回并缓存进
+ * 组查询的旧快照，直接读它会把刚发布出去的原文看成还没改过。
  */
-function iro_i18n_source_hash(?WP_Post $post = null): string
+function iro_i18n_source_stamp(WP_Post $source): string
 {
-    $post = $post instanceof WP_Post ? $post : get_post();
-
-    if (!$post instanceof WP_Post) {
-        return '';
-    }
-
-    return md5(implode("\0", [
-        (string) $post->post_title,
-        (string) $post->post_content,
-        (string) $post->post_excerpt,
-    ]));
+    return (string) get_post_field('post_modified_gmt', $source->ID);
 }
 
 /**
- * 让 `$translation` 对齐到 `$source` 当前的内容版本
+ * 让 `$translation` 对齐到 `$source` 当前的版本号
  *
  * 「原文自身」也会记录一份：面板要靠它显示原文这一版是什么时候改的。
  */
 function iro_i18n_mark_synced(WP_Post $translation, WP_Post $source): void
 {
-    update_post_meta($translation->ID, IRO_I18N_SOURCE_HASH, iro_i18n_source_hash($source));
-    update_post_meta($translation->ID, IRO_I18N_SOURCE_AT, (string) $source->post_modified_gmt);
+    update_post_meta($translation->ID, IRO_I18N_SOURCE_AT, iro_i18n_source_stamp($source));
 }
 
 /**
@@ -93,6 +90,7 @@ function iro_i18n_source_version(int $post_id): string
 /**
  * 译文是否落后于原文
  *
+ * 只比版本号：原文当前的版本号 vs 译文对齐到的那一版。
  * 未翻译副本不算：它是「无版本」状态的载体，另有单独提示。
  */
 function iro_i18n_translation_outdated(int $post_id): bool
@@ -107,109 +105,36 @@ function iro_i18n_translation_outdated(int $post_id): bool
 
     $source = iro_i18n_group_source($post_id);
 
-    // 原文不在库里（或未发布）就无从比较，按已同步处理，不打扰读者
+    // 原文不在库里（或还没发布）就无从比较，按已同步处理，不打扰读者。
+    // 原文还在草稿阶段的那些修改正落在这一支，因此不会惊动线上译文。
     if (!$source instanceof WP_Post) {
         return false;
     }
 
-    $recorded = (string) get_post_meta($post_id, IRO_I18N_SOURCE_HASH, true);
+    $recorded = (string) get_post_meta($post_id, IRO_I18N_SOURCE_AT, true);
+    $current  = iro_i18n_source_stamp($source);
 
-    // 缺记录的历史译文：退回按时间判断，原文最后改动晚于译文即为落后
+    // 缺记录的历史译文：退回比它自己的最后改动时间，原文这一版更晚即为落后
     if ($recorded === '') {
-        return $source->post_modified_gmt > (string) get_post_field('post_modified_gmt', $post_id);
+        return $current > (string) get_post_field('post_modified_gmt', $post_id);
     }
 
-    return $recorded !== iro_i18n_source_hash($source);
+    return $recorded !== $current;
 }
 
 if (iro_i18n_enabled()) {
     /**
-     * 原文内容变更 → 译文进入待同步
-     *
-     * 记录直接删掉而不写新版本号：删掉之后统一按「原文最后改动是否晚于译文最后改动」
-     * 比较，对从未记录过的历史译文同样成立。
-     *
-     * 顺序要紧：sync.php 的 save_post(20) 会顺手派生副本，
-     * 这里必须在那之后跑，否则标记的是「还没有译文」的那一轮。
-     */
-    add_action('post_updated', function (int $post_id, WP_Post $after, WP_Post $before): void {
-        if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
-            return;
-        }
-
-        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
-            return;
-        }
-
-        if (!in_array($after->post_type, iro_i18n_supported_post_types(), true) || $after->post_status === 'trash') {
-            return;
-        }
-
-        // 内容没变就不算变更，避免插件写 meta 也把全站译文标成待同步
-        $changed = false;
-
-        foreach (['post_title', 'post_content', 'post_excerpt'] as $field) {
-            if ($before->$field !== $after->$field) {
-                $changed = true;
-                break;
-            }
-        }
-
-        if (!$changed) {
-            return;
-        }
-
-        // 人一动它就不再是「未翻译」占位：去掉副本标记，前台改挂「可能过期」提示而非「尚未翻译」
-        if (get_post_meta($post_id, IRO_I18N_SKELETON_META, true) === '1') {
-            delete_post_meta($post_id, IRO_I18N_SKELETON_META);
-        }
-
-        if (!iro_i18n_is_base_post($post_id)) {
-            return;
-        }
-
-        $path = iro_i18n_get_path($post_id);
-
-        if ($path === '') {
-            return;
-        }
-
-        $baseline_dropped = false;
-
-        foreach (iro_i18n_get_group($path, [get_post_type($post_id) ?: 'post']) as $translation) {
-            // 原文自己、回收站里的版本、还没人接手的副本都不算「落后」
-            if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
-                continue;
-            }
-
-            if (get_post_meta($translation->ID, IRO_I18N_SOURCE_HASH, true) === '') {
-                continue;
-            }
-
-            delete_post_meta($translation->ID, IRO_I18N_SOURCE_HASH);
-            delete_post_meta($translation->ID, IRO_I18N_SOURCE_AT);
-
-            $baseline_dropped = true;
-        }
-
-        if ($baseline_dropped) {
-            iro_i18n_flush_group_cache();
-        }
-    }, 20, 3);
-
-    /**
      * 保存时维护版本号
      *
-     * 原文发布时把它自己与全部译文重新对齐：草稿阶段的反复修改不该让线上译文
-     * 一次次变成待同步，真正算数的是「原文发布出去的这一版」。
-     * 译文发布时对齐到原文当前版本号，视为译者已核对过。
+     * 只有脱离草稿态的那一次保存才算认可一版：原文由此有了新的版本号，译文记下它对齐的是哪一版。
+     * 原文认可新版时刻意不去同步译文——译文正是该变成待同步的那一方。
      */
     add_action('save_post', function (int $post_id, WP_Post $post): void {
         if (!iro_i18n_enabled() || !iro_i18n_autofuzzy_enabled()) {
             return;
         }
 
-        if ($post->post_status !== 'publish' || iro_i18n_is_skeleton($post_id)) {
+        if (!in_array($post->post_status, iro_i18n_accepted_statuses(), true) || iro_i18n_is_skeleton($post_id)) {
             return;
         }
 
@@ -219,8 +144,8 @@ if (iro_i18n_enabled()) {
             return;
         }
 
+        // 译文脱离草稿态：认作译者已核对过，对齐到原文当前的版本号
         if (!iro_i18n_is_base_post($post_id)) {
-            // 译文发布：对齐到它所依据的原文版本
             $source = iro_i18n_group_source($post_id);
 
             if ($source instanceof WP_Post) {
@@ -231,14 +156,6 @@ if (iro_i18n_enabled()) {
         }
 
         iro_i18n_mark_synced($post, $post);
-
-        foreach (iro_i18n_get_group($path, [$post->post_type]) as $translation) {
-            if ($translation->ID === $post_id || $translation->post_status === 'trash' || iro_i18n_is_skeleton($translation->ID)) {
-                continue;
-            }
-
-            iro_i18n_mark_synced($translation, $post);
-        }
     }, 25, 2);
 
     /**

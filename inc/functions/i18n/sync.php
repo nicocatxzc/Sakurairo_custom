@@ -19,6 +19,17 @@ function iro_i18n_existing_statuses(): array
 }
 
 /**
+ * 「已脱离草稿态」的内容状态
+ *
+ * 到了这些状态就说明作者或译者已经把这一版交出去了，版本号从此刻起生效；
+ * 草稿阶段的反复保存不算新版，否则线上译文会跟着草稿一次次变成待同步。
+ */
+function iro_i18n_accepted_statuses(): array
+{
+    return ['publish', 'future', 'pending', 'private'];
+}
+
+/**
  * 为一份原文补齐其余语言的未翻译副本
  *
  * 副本的正文按原文逐区块原样复制（区块注释、区块属性都不动），这样官方 AI 之类的
@@ -213,6 +224,12 @@ if (iro_i18n_enabled()) {
         iro_i18n_adopt_default_language($post_id);
 
         if (iro_i18n_is_skeleton($post_id)) {
+            // 副本脱离草稿态就算被接手：占位与否只看状态，不看内容——
+            // 副本正文是原文的逐字拷贝，拿内容比较分不出「还没人动过」和「作者改的就是这一版」
+            if (in_array($post->post_status, iro_i18n_accepted_statuses(), true)) {
+                delete_post_meta($post_id, IRO_I18N_SKELETON_META);
+            }
+
             return;
         }
 
