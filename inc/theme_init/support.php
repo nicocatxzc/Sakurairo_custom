@@ -156,7 +156,7 @@ add_action('widgets_init', function () {
     register_sidebar([
         'name'          => __('Sakurairo侧边栏二', 'sakurairo'),
         'id'            => 'iro_side_bar_second',
-        'description'   => __('需启用至少三栏布局来使用它', 'sakurairo'),
+        'description'   => __('需启用三栏布局来使用它', 'sakurairo'),
         'before_widget' => '<div id="%1$s" class="%2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h2 class="iro_side_bar_title">',

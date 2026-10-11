@@ -147,9 +147,9 @@ function iro_i18n_site_locale(): string
 /**
  * 访客语言选择的 cookie 名
  *
- * 前台在首次访问的询问里写入（见 `frontend/components/navbar/lang_switcher.js`），
+ * 前台在首次访问的询问里写入，
  * 服务端只在一个地方读它：答过询问的访客访问无前缀地址时，把他搬到该语言的同一页。
- * 语言本身不靠它——渲染出来的页面只由地址决定。
+ * 渲染出来的页面只由地址决定。
  */
 const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
 
