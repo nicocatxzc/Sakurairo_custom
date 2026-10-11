@@ -2,3 +2,7 @@
 @use "./posts/index.scss" as posts;
 // 工具块
 @use "./widgets/index.scss" as widgets;
+// 页面占位模板
+@use "./pages/index.scss" as pages;
+// 装饰块
+@use "./decorate/index.scss" as decorate;

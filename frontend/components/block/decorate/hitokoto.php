@@ -19,12 +19,12 @@ if (!function_exists('iro_get_custom_hitokoto')) {
 ?>
 <?php if (iro_opt('footer_hitokoto_select', 'off') != "off"): ?>
     <?php if (iro_opt('footer_hitokoto_select') == "api"): ?>
-        <p id="footer_hitokoto" class="hitokoto"></p>
+        <p class="hitokoto"></p>
     <?php endif; ?>
     <?php if (iro_opt('footer_hitokoto_select') == "custom"): ?>
-        <p id="footer_hitokoto" class="hitokoto"><?= iro_get_custom_hitokoto() ?></p>
+        <p class="hitokoto"><?= iro_get_custom_hitokoto() ?></p>
     <?php endif; ?>
     <?php if (iro_opt('footer_hitokoto_select') == "both"): ?>
-        <p id="footer_hitokoto" class="hitokoto"><?= mt_rand(0, 1) ? iro_get_custom_hitokoto() : "" ?></p>
+        <p class="hitokoto"><?= mt_rand(0, 1) ? iro_get_custom_hitokoto() : "" ?></p>
     <?php endif; ?>
 <?php endif; ?>

@@ -6,15 +6,19 @@ import noticeBlock from "./editor/notice";
 import showcardBlock from "./editor/showcard";
 import conversationBlock from "./editor/converstation";
 import bilibiliBlock from "./editor/bilibili";
-import templateBlocks from "./editor/template";
 import markdownBlock from "./editor/markdown";
 import ghcard from "./editor/ghcard";
+// 页面占位模板
+import templateBlocks from "./pages/template";
 // 推荐放在小工具里的块
 import authorBlock from "./tools/author";
 import termsBlock from "./tools/terms";
 import menuBlock from "./tools/menu";
 import tocBlock from "./tools/toc";
 import columnBlock from "./tools/column";
+// 装饰块
+import hitokotoBlock from "./decorate/hitokoto";
+import sakuraIconBlock from "./decorate/sakura-icon";
 import "./style.scss";
 
 domReady(() => {
@@ -32,6 +36,14 @@ domReady(() => {
             slug: "sakurairo-tools",
             title: "Sakurairo Tools",
         },
+        {
+            slug: "sakurairo-decorate",
+            title: "Sakurairo Decorate",
+        },
+        {
+            slug: "sakurairo-pages",
+            title: "Sakurairo Pages",
+        },
         ...existing.slice(1),
     ];
 
@@ -47,15 +59,19 @@ export default function initBlocks() {
         showcardBlock();
         conversationBlock();
         bilibiliBlock();
-        templateBlocks();
         markdownBlock();
         ghcard();
+        // 页面占位模板
+        templateBlocks();
         // 推荐放在小工具里的块
         authorBlock();
         termsBlock();
         menuBlock();
         tocBlock();
         columnBlock();
+        // 装饰块
+        hitokotoBlock();
+        sakuraIconBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

@@ -8,7 +8,7 @@ switch (iro_opt("footer_style_select", "sakura")) {
         break;
 
     default:
-        require_once get_theme_file_path('/frontend/components/site/footer/island.php');
+        require_once get_theme_file_path('/frontend/components/site/footer/sakura.php');
         break;
 }
 wp_footer();

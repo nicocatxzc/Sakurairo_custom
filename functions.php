@@ -81,7 +81,7 @@ require_once get_template_directory() . '/inc/functions/custom/register.php';
 // 中国本地化
 require_once get_template_directory() . '/inc/functions/wp_cn.php';
 // 载入区块渲染
-require_once get_template_directory() . '/inc/blocks/render.php';
+require_once get_template_directory() . '/frontend/components/block/render.php';
 // 载入函数组件
 require_once get_template_directory() . '/frontend/components/component_register.php';
 // 载入内容相关资源

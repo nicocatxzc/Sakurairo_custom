@@ -2,3 +2,10 @@
 import "./posts/markdown"
 // 工具块
 import "./widgets/menu"
+// 页面占位模板
+import "./pages/archive"
+import "./pages/bangumi"
+import "./pages/bilibili_favlist"
+import "./pages/steam"
+// 装饰块
+import "./decorate/hitokoto"

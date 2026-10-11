@@ -208,47 +208,47 @@ msgstr "Search"
 msgid "个结果"
 msgstr "Results"
 
-#: frontend/components/page/template/archive.php:20
+#: frontend/components/block/pages/archive.php:20
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
 msgid "年"
 msgstr "Year"
 
-#: frontend/components/page/template/archive.php:20
+#: frontend/components/block/pages/archive.php:20
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
 msgid "月"
 msgstr "Month"
 
-#: frontend/components/page/template/archive.php:20
+#: frontend/components/block/pages/archive.php:20
 #: frontend/components/post/card/simple.php:18
 #: frontend/components/post/card/ticket.php:13
 #: frontend/components/post/card/with_image.php:13
 msgid "日"
 msgstr "Day"
 
-#: frontend/components/page/template/bangumi.php:44
+#: frontend/components/block/pages/bangumi.php:44
 msgid "上映日期："
 msgstr "Upload Date:"
 
-#: frontend/components/page/template/bangumi.php:48
+#: frontend/components/block/pages/bangumi.php:48
 msgid "观看进度："
 msgstr "Viewing Progress:"
 
-#: frontend/components/page/template/bilibili_favlist.php:102
-#: frontend/components/page/template/bilibili_favlist.php:103
+#: frontend/components/block/pages/bilibili_favlist.php:102
+#: frontend/components/block/pages/bilibili_favlist.php:103
 msgid "暂无简介"
 msgstr "No introduction yet"
 
-#: frontend/components/page/template/friend_link.php:80
+#: frontend/components/block/pages/friend_link.php:80
 #: frontend/components/post/card/ticket.php:44
 #: frontend/components/post/card/with_image.php:44
 msgid "未分类"
 msgstr "Uncategorized"
 
-#: frontend/components/page/template/steam.php:20
+#: frontend/components/block/pages/steam.php:20
 msgid "暂无游戏数据"
 msgstr "No game data yet"
 

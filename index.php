@@ -14,13 +14,13 @@ global $iro_only_template;
         endif;
     }
     if ($iro_only_template == "bangumi_list") {
-        require_once get_theme_file_path('/frontend/components/page/template/bangumi.php');
+        require_once get_theme_file_path('/frontend/components/block/pages/bangumi.php');
     }
     if ($iro_only_template == "bilibili_favlist") {
-        require_once get_theme_file_path('/frontend/components/page/template/bilibili_favlist.php');
+        require_once get_theme_file_path('/frontend/components/block/pages/bilibili_favlist.php');
     }
     if ($iro_only_template == "steam_list") {
-        require_once get_theme_file_path('/frontend/components/page/template/steam.php');
+        require_once get_theme_file_path('/frontend/components/block/pages/steam.php');
     }
     ?>
 <?php else: ?>

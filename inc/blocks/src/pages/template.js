@@ -7,7 +7,7 @@ function createTemplateBlock({ name, title, icon = "layout" }) {
         title,
         icon: icon,
         apiVersion: 3,
-        category: "sakurairo",
+        category: "sakurairo-pages",
 
         supports: {
             html: false,

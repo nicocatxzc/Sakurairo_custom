@@ -32,7 +32,9 @@ Sakurairo/
 │   ├── components/          # ★ 每个组件「PHP 局部 + JS 行为 + SCSS」成对出现
 │   │   ├── index.js         # 组件 JS 的聚合入口（新增组件 JS 必须在此登记）
 │   │   ├── component_register.php  # PHP「函数组件」注册
-│   │   └── block/ comment/ homepage/ navbar/ page/ post/ site/ slots/ icons/
+│   │   ├── block/           # 区块：posts/ widgets/ pages/ decorate/ 四个分区的 PHP 局部 + JS/SCSS 聚合
+│   │   │   └── render.php   # 前台 shortcode / block 渲染
+│   │   └── comment/ homepage/ navbar/ page/ post/ site/ slots/ icons/
 │   ├── theme_config.php     # 把后端配置注入为 JSON <script>
 │   ├── theme_style_vars.php # 输出全局/动态 CSS 变量
 │   ├── types/               # 手写全局类型声明 + unplugin 自动生成的 d.ts（均入库）
@@ -40,9 +42,8 @@ Sakurairo/
 ├── inc/
 │   ├── api.php + api/       # REST 路由注册与各命名空间的实现
 │   ├── blocks/              # ★ 古腾堡编辑器工程（@wordpress/scripts，workspace 成员）
-│   │   ├── src/             # 编辑器源码（index.js 汇总 editor/* 与 tools/*）
+│   │   ├── src/             # 编辑器源码（index.js 汇总 editor/* tools/* pages/* decorate/*）
 │   │   ├── build/           # 构建产物（不入库，PHP 引用）
-│   │   ├── render.php       # 前台 shortcode / block 渲染
 │   │   └── iro_blocks.php   # 编辑器资源入队与配置注入
 │   ├── ai/                  # ★ AI 后台面板工程（Vite + Vue，workspace 成员）：src/ 源码 + dist/ 产物（不入库）
 │   ├── functions/           # 后端功能模块：tools/ip/seo/nav_bar/operator/cust_wp/wp_cn/sitemap/smtp/player/enqueue_assets
@@ -125,7 +126,7 @@ Sakurairo/
 
 ### 3.9 区块与 AI 面板
 
-- 编辑器区块在 `inc/blocks/src/`，前台渲染与 shortcode 在 `inc/blocks/render.php`；编辑器资源的入队实现里有**刻意的双重注册**（外层文档 + 区块画布），不要当成冗余删掉。
+- 编辑器区块在 `inc/blocks/src/`，前台渲染与 shortcode 在 `frontend/components/block/render.php`；编辑器资源的入队实现里有**刻意的双重注册**（外层文档 + 区块画布），不要当成冗余删掉。
 - AI 面板是独立后台工程（`inc/ai/` + `inc/functions/ai/`），前台不加载，产物由 PHP 以模块脚本加载。
 - AI 能力依赖较新的 WordPress 特性：相关 PHP 靠**能力检测**（类/函数是否存在）提前 `return`，旧版本下后台看不到入口属预期行为，不要当 bug 去补依赖。
 - AI 面板用样式隔离容器（Shadow DOM）避免被后台样式污染，新增样式不要假设全局 CSS 会命中。

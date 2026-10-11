@@ -1,0 +1,19 @@
+.sakura-icon {
+    width: 2rem;
+    height: 2rem;
+
+    i {
+        width: 100%;
+        height: 100%;
+        animation: slow-rotate 10s linear infinite;
+    }
+}
+
+@keyframes slow-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

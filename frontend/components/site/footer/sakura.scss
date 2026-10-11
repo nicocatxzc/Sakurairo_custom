@@ -8,22 +8,4 @@
     .theme-info a {
         color: var(--word-color-third);
     }
-    .sakura-icon {
-        height: 2rem;
-        width: 2rem;
-        i {
-            height: 100%;
-            width: 100%;
-            animation: slow-rotate 10s linear infinite;
-        }
-    }
-}
-
-@keyframes slow-rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }

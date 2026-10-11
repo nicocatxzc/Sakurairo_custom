@@ -11,7 +11,7 @@ const lang = createI18n({
         contentPanel: "内容",
         titleLabel: "标题",
         titleHelp: "留空则不显示标题",
-        note: "目录由正文标题自动生成，前台交给 tocbot 填充；没有标题时不显示。",
+        note: "目录将会根据正文标题自动生成；没有标题时不显示。",
     },
     "zh-TW": {
         blockTitle: "目錄容器",
