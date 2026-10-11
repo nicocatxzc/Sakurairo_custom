@@ -1,0 +1,11 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 3,
+    "templateParts": [
+        {
+            "name": "site-footer",
+            "title": "页脚",
+            "area": "footer"
+        }
+    ]
+}

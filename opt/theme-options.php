@@ -730,9 +730,11 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'    => 'footer_style_select',
                 'type'  => 'select',
                 'title' => __('页尾样式', 'sakurairo'),
+                'desc' => __('选择自定义后，前往后台「外观 → 设计 → 区块样板 → 所有模板组件」编排页脚，同时下方部分选项将不再适用', 'sakurairo'),
                 'options'     => [
                     'sakura'  => __('sakura经典样式', 'sakurairo'),
                     'island'  => __('iro浮动样式', 'sakurairo'),
+                    'custom'  => __('自定义', 'sakurairo'),
                 ],
                 "default" => "sakura",
             ],

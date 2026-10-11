@@ -53,6 +53,9 @@ if (!function_exists('akina_setup')) {
 
         add_filter('pre_option_link_manager_enabled', '__return_true');
 
+        // 支持区块化
+        add_theme_support( 'block-template-parts' );
+
         // 优化代码
         //去除头部冗余代码
         remove_action('wp_head', 'feed_links_extra', 3);
