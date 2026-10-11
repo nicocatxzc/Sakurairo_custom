@@ -3114,10 +3114,10 @@ if (class_exists('Sakurairo_CSF')) {
                 'title' => __('主题更新源', 'sakurairo'),
                 'options'     => [
                     'github'  => $vision_resource_basepath . 'options/update_source_github.webp',
-                    'upyun'  => $vision_resource_basepath . 'options/update_source_wafpro.webp',
-                    'official_building'  => $vision_resource_basepath . 'options/update_source_iro.webp',
+                    // 'upyun'  => $vision_resource_basepath . 'options/update_source_wafpro.webp',
+                    // 'official_building'  => $vision_resource_basepath . 'options/update_source_iro.webp',
                 ],
-                'desc' => __('如果你使用中国大陆境内的服务器，请使用又拍云源或主题官方源作为主题更新源', 'sakurairo'),
+                // 'desc' => __('如果你使用中国大陆境内的服务器，请使用又拍云源或主题官方源作为主题更新源', 'sakurairo'),
                 'default'     => 'github'
             ],
 
@@ -3129,22 +3129,22 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('请将 <strong>确保你已经充分了解参与测试的风险，并愿意自行承担一切后果</strong>（包括但不限于可能的数据丢失）之后引号中的文字复制到选项文本框中：<strong>「我同意并愿意承担一切意外后果」</strong>', 'sakurairo'),
             ],
 
-            [
-                'id' => 'iro_update_channel',
-                'type' => 'radio',
-                'title' => __('主题更新通道', 'sakurairo'),
-                'dependency' => [
-                    ['channel_validate_value', '==', 'I agree and am willing to bear all unexpected consequences'],
-                    ['iro_update_source', '==', 'official_building'],
-                ],
-                'desc' => __('可以在这里切换更新通道，以参与新版本的测试', 'sakurairo'),
-                'options' => [
-                    'stable' => __('稳定版通道', 'sakurairo'),
-                    'beta' => __('测试版通道', 'sakurairo'),
-                    'preview' => __('预览版通道', 'sakurairo'),
-                ],
-                'default' => 'stable'
-            ],
+            // [
+            //     'id' => 'iro_update_channel',
+            //     'type' => 'radio',
+            //     'title' => __('主题更新通道', 'sakurairo'),
+            //     'dependency' => [
+            //         ['channel_validate_value', '==', 'I agree and am willing to bear all unexpected consequences'],
+            //         ['iro_update_source', '==', 'official_building'],
+            //     ],
+            //     'desc' => __('可以在这里切换更新通道，以参与新版本的测试', 'sakurairo'),
+            //     'options' => [
+            //         'stable' => __('稳定版通道', 'sakurairo'),
+            //         'beta' => __('测试版通道', 'sakurairo'),
+            //         'preview' => __('预览版通道', 'sakurairo'),
+            //     ],
+            //     'default' => 'stable'
+            // ],
 
             [
                 'type' => 'subheading',
