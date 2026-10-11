@@ -27,28 +27,28 @@
 
         flex-direction: column;
     }
-}
-.search-header {
-    .search-title {
-        width: 100%;
-    }
-    .close.button {
-        position: absolute;
-        right: 1rem;
-        top: 1rem;
-        .icon {
-            color: var(--word-color-first);
-            transform: scale(1.5);
-            cursor: pointer;
-            &:hover {
-                color: var(--active-color);
+    .search-header {
+        .search-title {
+            width: 100%;
+        }
+        .close.button {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            .icon {
+                color: var(--word-color-first);
+                transform: scale(1.5);
+                cursor: pointer;
+                &:hover {
+                    color: var(--active-color);
+                }
             }
         }
-    }
-    .tip {
-        font-weight: 400;
-        width: 100%;
-        color: var(--word-color-second);
+        .tip {
+            font-weight: 400;
+            width: 100%;
+            color: var(--word-color-second);
+        }
     }
 }
 .search-input-wrapper {
