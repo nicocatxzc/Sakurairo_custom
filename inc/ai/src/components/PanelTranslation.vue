@@ -156,14 +156,6 @@ function repairLanguage() {
     );
 }
 
-function renameSlugs() {
-    return act(
-        "i18nRenameSlugs",
-        t("规范化译文别名（原文别名 + 语言代号）"),
-        (data) => t("已规范化 {count} 条译文的别名。", { count: data.count ?? 0 }),
-    );
-}
-
 onMounted(load);
 </script>
 
@@ -195,12 +187,6 @@ onMounted(load);
             <el-tooltip :content="t('只动「关联标识等于自身别名」且没有副本标记的内容，即真正的原文。')" placement="top">
                 <el-button size="small" :loading="acting === 'i18nRepairLanguage'" @click="repairLanguage">
                     {{ t("把原文的语言标记归位到默认语言") }}
-                </el-button>
-            </el-tooltip>
-
-            <el-tooltip :content="t('把早期被 WordPress 接上 -2、-3 的译文别名改成「-zh-tw」这类形式；会改动已发布译文的地址。')" placement="top">
-                <el-button size="small" :loading="acting === 'i18nRenameSlugs'" @click="renameSlugs">
-                    {{ t("规范化译文别名（原文别名 + 语言代号）") }}
                 </el-button>
             </el-tooltip>
         </div>

@@ -5,7 +5,7 @@
  *
  * 面板本体是 Vue 应用，这里只做数据组装与批量维护动作的入口：分组、状态判定与
  * 归位的实现在 inc/functions/i18n 下，与编辑页的语言面板共用同一套；只有这里
- * 独有的批量动作（补齐、规范化别名）就地实现，因为它们只有这一个调用方。
+ * 独有的批量动作（补齐、语言归位）就地实现，因为它们只有这一个调用方。
  *
  * 只回代号不回文案：状态与语言名由面板自己的字典翻译（inc/ai/i18n.js），
  * 与「文章管理」面板把内容类型代号交给前端翻译的做法一致。
@@ -303,67 +303,5 @@ function iro_i18n_rest_backfill(): WP_REST_Response
 // 把原文的语言标记归位到默认语言
 function iro_i18n_rest_repair_language(): WP_REST_Response
 {
-    $count = iro_i18n_repair_default_language();
-
-    // 与原后台动作一致：手动归位同样落下哨兵，免得 admin_init 再全表扫一遍
-    update_option('iro_i18n_default_repair', $count);
-
-    return rest_ensure_response(['count' => $count]);
-}
-
-/**
- * 规范化译文别名（原文别名 + 语言代号）
- *
- * 早期副本与原文同名，被 WordPress 自动接上了 `-2`、`-3`；那串数字既不稳定也
- * 看不出属于哪种语言。这里按现在的规则重命名，让别名与语言一一对应。
- * 只动别名，不动关联字段与语言标记，因此分组关系不受影响。
- */
-function iro_i18n_rest_rename_slugs(): WP_REST_Response
-{
-    $renamed = 0;
-
-    foreach (iro_i18n_languages() as $code) {
-        if (iro_i18n_is_default_language($code)) {
-            continue;
-        }
-
-        $posts = get_posts([
-            'post_type'        => iro_i18n_supported_post_types(),
-            'post_status'      => iro_i18n_existing_statuses(),
-            'posts_per_page'   => -1,
-            'orderby'          => 'ID',
-            'order'            => 'ASC',
-            'suppress_filters' => false,
-            'no_found_rows'    => true,
-            'meta_query'       => [
-                [
-                    'key'   => IRO_I18N_POST_LANG_META,
-                    'value' => $code,
-                ],
-            ],
-        ]);
-
-        foreach ($posts as $post) {
-            $path = iro_i18n_get_path($post->ID);
-
-            if ($path === '' || iro_i18n_is_base_post($post->ID)) {
-                continue;
-            }
-
-            $expected = iro_i18n_skeleton_post_name($path, $code);
-
-            if ($post->post_name === $expected) {
-                continue;
-            }
-
-            wp_update_post([
-                'ID'        => $post->ID,
-                'post_name' => $expected,
-            ]);
-
-            $renamed++;
-        }
-    }
-
-    return rest_ensure_response(['count' => $renamed]);
+    return rest_ensure_response(['count' => iro_i18n_repair_default_language()]);
 }

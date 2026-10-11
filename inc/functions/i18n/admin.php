@@ -230,20 +230,6 @@ if (iro_i18n_enabled()) {
     });
 
     /**
-     * 后台自动跑一次归位，避免站长升级后还得自己发现「原文被标成了日语」
-     *
-     * 写标记 option 的时机要在归位之后并带一篇哨兵：直接写常量的话，
-     * 归位自身出错时会被永久跳过。
-     */
-    add_action('admin_init', function (): void {
-        if (!iro_i18n_enabled() || get_option('iro_i18n_default_repair') !== false) {
-            return;
-        }
-
-        update_option('iro_i18n_default_repair', iro_i18n_repair_default_language());
-    });
-
-    /**
      * 后台自动跑一次语言归位：给全部尚无语言标记的内容认领默认语言
      *
      * 语言判定把「没有标记」当作默认语言，查询侧也照此排除；数据侧若一直空着，

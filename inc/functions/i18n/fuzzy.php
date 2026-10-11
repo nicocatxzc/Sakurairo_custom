@@ -1,9 +1,9 @@
 <?php
 
 /**
- * 译文时效：原文改过之后，译文自动进入「待同步」并在前台挂出提示
+ * 、原文改过之后，译文自动进入 已过时 并在前台挂出提示
  *
- * 判定方式是版本号，不做内容比较：译文记着自己当初对齐的那一版原文的版本号
+ * 判定方式只有版本号：译文记着自己当初对齐的那一版原文的版本号
  * （post_modified_gmt），与原文当前那一枚对不上就是待同步。因此它有三个状态，
  * 且全部由数据推导，不需要人工解除：
  * - 无版本：该语言还没有版本（由 sync.php 建副本，或译者尚未接手）；
@@ -24,9 +24,6 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
-/** 旧实现写进标题里的待同步前缀，仅用于给已有数据收尾 */
-const IRO_I18N_LEGACY_FUZZY_PREFIX = '【待同步】';
 
 function iro_i18n_autofuzzy_enabled(): bool
 {
@@ -157,17 +154,4 @@ if (iro_i18n_enabled()) {
 
         iro_i18n_mark_synced($post, $post);
     }, 25, 2);
-
-    /**
-     * 把旧实现留下的标题前缀摘掉显示
-     *
-     * 早期版本在标记待同步时把前缀直接写进了 `post_title`。现在标记不再动标题，
-     * 但库里可能还留着，这里只在输出时摘掉，不写库——编辑器读出干净标题后一保存，
-     * 前缀自然就没了；若在这里写库又要处理「写库触发钩子」那一圈问题，不值得。
-     */
-    add_filter('the_title', function (string $title): string {
-        return strpos($title, IRO_I18N_LEGACY_FUZZY_PREFIX) === 0
-            ? ltrim(substr($title, strlen(IRO_I18N_LEGACY_FUZZY_PREFIX)))
-            : $title;
-    });
 }

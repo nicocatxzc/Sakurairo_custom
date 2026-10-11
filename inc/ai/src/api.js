@@ -53,9 +53,8 @@ export const aiApi = {
     savePostDescription: (id, value) =>
         request("/ai/posts/description", { method: "PUT", data: { id, value } }),
 
-    // 多语言内容总览：读取列表用 GET，三个维护动作都只回改动条数
+    // 多语言内容总览：读取列表用 GET，两个维护动作都只回改动条数
     i18nOverview: (params = {}) => request(`/i18n/overview?${toQuery(params)}`),
     i18nBackfill: () => request("/i18n/backfill", { method: "POST" }),
     i18nRepairLanguage: () => request("/i18n/repair-language", { method: "POST" }),
-    i18nRenameSlugs: () => request("/i18n/rename-slugs", { method: "POST" }),
 };

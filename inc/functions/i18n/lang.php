@@ -479,18 +479,6 @@ if (iro_i18n_enabled()) {
             $candidates = array_merge($candidates, [$candidate], $variants);
         }
 
-        // 早期副本用的是 WordPress 自动接上的 -2 / -3，同样要能匹配回组
-        for ($take = count($segments); $take > 0; $take--) {
-            $head = array_slice($segments, 0, $take);
-
-            if (!preg_match('/^(.*)-\d+$/', (string) end($head), $matches) || $matches[1] === '') {
-                continue;
-            }
-
-            $head[$take - 1] = $matches[1];
-            $candidates[]    = implode('/', $head);
-        }
-
         // 末段最后试
         $candidates[] = (string) end($segments);
 
@@ -659,9 +647,9 @@ if (iro_i18n_enabled()) {
     /**
      * 无前缀地址上是别的语言的版本时，收敛回它自己的前缀地址
      *
-     * 前缀路由只接管带前缀的请求，无前缀的那条由核心按别名解析，而副本别名是 WordPress
-     * 为避开重名接上的 `-2`、`-3`（新副本是 `foo-en-us`）——于是 `/share/foo-2/` 会把英文版
-     * 原样服务在默认语言的地址下：语言隔离失效，同一篇内容还多出一个入口。
+     * 前缀路由只接管带前缀的请求，无前缀的那条由核心按别名解析，而副本别名是自动生成的
+     * `foo-en-us`——于是 `/share/foo-en-us/` 会把英文版原样服务在默认语言的地址下：
+     * 语言隔离失效，同一篇内容还多出一个入口。
      *
      * 在查询之后按结果判断：主查询已经把这篇查出来了，不必再去逐段猜别名，
      * 顺带覆盖 `?p=123` 这种没有别名的形态。

@@ -173,10 +173,9 @@ function iro_i18n_flush_group_cache(): void
 /**
  * 按基准路径取某语言的版本
  *
- * `$prefer_base` 为真时优先返回基准版本（原文）：默认语言的「这一篇」就是原文，
- * 同组里可能同时存在早期版本留下的同名副本，不能随手取第一篇。
+ * 同组里可能同时存在基准版本与副本，这里优先返回副本那一份，基准版本（原文）只作兜底。
  */
-function iro_i18n_get_translation(string $path, string $code, array $post_types = [], bool $prefer_base = false): ?WP_Post
+function iro_i18n_get_translation(string $path, string $code, array $post_types = []): ?WP_Post
 {
     $fallback = null;
 
@@ -185,16 +184,7 @@ function iro_i18n_get_translation(string $path, string $code, array $post_types 
             continue;
         }
 
-        if (iro_i18n_is_base_post($post->ID)) {
-            if ($prefer_base) {
-                return $post;
-            }
-
-            $fallback = $fallback ?? $post;
-            continue;
-        }
-
-        if (!$prefer_base) {
+        if (!iro_i18n_is_base_post($post->ID)) {
             return $post;
         }
 

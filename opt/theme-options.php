@@ -767,7 +767,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type'     => 'code_editor',
                 'sanitize' => false,
                 'title' => __('页尾内容', 'sakurairo'),
-                'desc' => __('版权、备案号一类需要跟着访客语言切换的页脚文案', 'sakurairo'),
+                'desc' => __('版权、备案号等页脚文案', 'sakurairo'),
             ],
 
             [
@@ -775,7 +775,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type'     => 'code_editor',
                 'sanitize' => false,
                 'title' => __('页尾脚本与样式', 'sakurairo'),
-                'desc' => __('统计代码、脚本与样式等不需要翻译的片段，请确保它们安全。早期版本写在「页尾html代码」里的内容仍从这里输出', 'sakurairo'),
+                'desc' => __('统计代码、脚本与样式等不可见代码，请确保它们安全。', 'sakurairo'),
             ],
 
             [

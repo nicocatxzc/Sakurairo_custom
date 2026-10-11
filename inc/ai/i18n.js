@@ -138,8 +138,6 @@ const MESSAGES = {
         "为全部已发布内容补齐关联与未翻译副本": "為全部已發佈內容補齊關聯與未翻譯副本",
         "把原文的语言标记归位到默认语言": "把原文的語言標記歸位到預設語言",
         "只动「关联标识等于自身别名」且没有副本标记的内容，即真正的原文。": "只動「關聯識別碼等於自身別名」且沒有副本標記的內容，即真正的原文。",
-        "规范化译文别名（原文别名 + 语言代号）": "正規化譯文別名（原文別名 + 語言代號）",
-        "把早期被 WordPress 接上 -2、-3 的译文别名改成「-zh-tw」这类形式；会改动已发布译文的地址。": "把早期被 WordPress 接上 -2、-3 的譯文別名改成「-zh-tw」這類形式；會改動已發佈譯文的位址。",
         "还没有建立语言关联的内容。编辑并保存一次，或点上方按钮批量补齐。": "還沒有建立語言關聯的內容。編輯並儲存一次，或點上方按鈕批次補齊。",
         "确认": "確認",
         "继续": "繼續",
@@ -148,7 +146,6 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "已核對 {checked} 筆已發佈內容，語言標記、關聯識別碼與未翻譯副本都已齊全，無需改動。",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "已核對 {checked} 筆已發佈內容：新增語言標記 {marked} 筆、關聯識別碼 {linked} 筆、未翻譯副本 {copies} 份。",
         "已把 {count} 条原文的语言标记归位到默认语言。": "已把 {count} 筆原文的語言標記歸位到預設語言。",
-        "已规范化 {count} 条译文的别名。": "已正規化 {count} 筆譯文的別名。",
     },
     en_US: {
         "是": "Yes",
@@ -278,8 +275,6 @@ const MESSAGES = {
         "为全部已发布内容补齐关联与未翻译副本": "Create groups and untranslated copies for all published content",
         "把原文的语言标记归位到默认语言": "Move the language tag of source content back to the default language",
         "只动「关联标识等于自身别名」且没有副本标记的内容，即真正的原文。": "Only content whose group key equals its own slug and which carries no copy flag — that is, genuine source content.",
-        "规范化译文别名（原文别名 + 语言代号）": "Normalize translation slugs (source slug + language code)",
-        "把早期被 WordPress 接上 -2、-3 的译文别名改成「-zh-tw」这类形式；会改动已发布译文的地址。": "Rewrites translation slugs that WordPress suffixed with -2 or -3 into forms such as “-zh-tw”. This changes the URLs of published translations.",
         "还没有建立语言关联的内容。编辑并保存一次，或点上方按钮批量补齐。": "No content has a language group yet. Edit and save once, or use the button above to backfill.",
         "确认": "Confirm",
         "继续": "Continue",
@@ -288,7 +283,6 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "Checked {checked} published items; language tags, group keys and untranslated copies are all in place, so nothing changed.",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "Checked {checked} published items: added {marked} language tags, {linked} group keys and {copies} untranslated copies.",
         "已把 {count} 条原文的语言标记归位到默认语言。": "Moved the language tag of {count} source items back to the default language.",
-        "已规范化 {count} 条译文的别名。": "Normalized the slugs of {count} translations.",
     },
     ja: {
         "是": "はい",
@@ -418,8 +412,6 @@ const MESSAGES = {
         "为全部已发布内容补齐关联与未翻译副本": "公開済みの全コンテンツに関連付けと未翻訳の複製を補完",
         "把原文的语言标记归位到默认语言": "原文の言語タグをデフォルト言語に戻す",
         "只动「关联标识等于自身别名」且没有副本标记的内容，即真正的原文。": "「関連キーが自身のスラッグと等しく」かつ複製フラグのないコンテンツ、つまり本当の原文だけを対象にします。",
-        "规范化译文别名（原文别名 + 语言代号）": "訳文のスラッグを正規化（原文スラッグ + 言語コード）",
-        "把早期被 WordPress 接上 -2、-3 的译文别名改成「-zh-tw」这类形式；会改动已发布译文的地址。": "以前に WordPress が -2、-3 を付けた訳文のスラッグを「-zh-tw」のような形式に書き換えます。公開済み訳文の URL が変わります。",
         "还没有建立语言关联的内容。编辑并保存一次，或点上方按钮批量补齐。": "言語の関連付けが済んだコンテンツはまだありません。一度編集して保存するか、上のボタンで一括補完してください。",
         "确认": "確認",
         "继续": "続行",
@@ -428,7 +420,6 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "{checked} 件の公開済みコンテンツを確認しました。言語タグ・関連キー・未翻訳の複製はすべて揃っており、変更はありません。",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "{checked} 件の公開済みコンテンツを確認しました：言語タグ {marked} 件、関連キー {linked} 件、未翻訳の複製 {copies} 件を追加しました。",
         "已把 {count} 条原文的语言标记归位到默认语言。": "{count} 件の原文の言語タグをデフォルト言語に戻しました。",
-        "已规范化 {count} 条译文的别名。": "{count} 件の訳文のスラッグを正規化しました。",
     },
 };
 
