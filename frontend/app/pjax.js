@@ -1,7 +1,5 @@
 import Swup from "swup";
 
-import { stripLangPrefix } from "./utils/langPrefix.js";
-
 const swup = _iro.isBackend
     ? null
     : new Swup({
@@ -19,8 +17,7 @@ const swup = _iro.isBackend
           animationSelector: false,
 
           scrollTo: (event) => {
-              // 归档分页可能带语言前缀（/en/page/2/），先剥掉再判断
-              const url = stripLangPrefix(event.to.url).replace(
+              const url = event.to.url.replace(
                   window.location.origin,
                   "",
               );

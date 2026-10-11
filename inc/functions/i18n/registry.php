@@ -1,14 +1,11 @@
 <?php
 
 /**
- * 多语言注册表：语言集合、默认语言、locale 与路由前缀映射
+ * 多语言注册表：语言集合、默认语言与 locale
  *
- * 一个语言有两个标识，职责不同，不要混用：
- * - **代号**：全站统一标识，用在设置项、post meta、术语别名、后台展示。
- *   形如 `zh-cn`、`en-us`，与官方 AI 插件（ai/content-translation）的语言枚举同构；
- * - **前缀**：只出现在 URL 上，取简化形态 `cn`、`en`、`jp`、`tw`。
- *
- * 两者在 `iro_i18n_language_definitions()` 里成对声明，代码里不要再手写字面量。
+ * 语言只有一个标识：**代号**，全站统一使用，用在设置项、post meta、术语别名、
+ * 后台展示与 AI 面板的字典键。形如 `zh-cn`、`en-us`，与官方 AI 插件
+ * （ai/content-translation）的语言枚举同构。地址上不带语言，语言版本靠别名区分。
  */
 
 if (!defined('ABSPATH')) {
@@ -18,37 +15,34 @@ if (!defined('ABSPATH')) {
 /**
  * 内置语言定义
  *
- * `prefix` 只用于 URL 前缀，其余场景一律用数组键（代号）。
+ * 数组键就是语言代号，其余场景一律用它，不要在别处手写语言字面量。
+ * `locales` 是浏览器 locale 候选，前台首访询问靠它判断访客偏好。
  * `date_format` 是 `wp_date()` 的格式串，见 `iro_i18n_date_format()`。
  *
- * @return array<string,array{prefix:string,name:string,locale:string,locales:string[],date_format:string}>
+ * @return array<string,array{name:string,locale:string,locales:string[],date_format:string}>
  */
 function iro_i18n_language_definitions(): array
 {
     return [
         'zh-cn' => [
-            'prefix'      => 'cn',
             'name'        => '简中',
             'locale'      => 'zh_CN',
             'locales'     => ['zh_cn', 'zh-hans', 'zh_hans'],
             'date_format' => 'Y年m月d日',
         ],
         'zh-tw' => [
-            'prefix'      => 'tw',
             'name'        => '繁中',
             'locale'      => 'zh_TW',
             'locales'     => ['zh_tw', 'zh-hant', 'zh_hant'],
             'date_format' => 'Y年m月d日',
         ],
         'en-us' => [
-            'prefix'      => 'en',
             'name'        => '英语',
             'locale'      => 'en_US',
             'locales'     => ['en_us', 'en_gb', 'en_ca', 'en_au', 'en_nz'],
             'date_format' => 'M j, Y',
         ],
         'ja' => [
-            'prefix'      => 'jp',
             'name'        => '日语',
             'locale'      => 'ja',
             'locales'     => ['ja', 'ja_jp'],
@@ -81,16 +75,6 @@ function iro_i18n_languages(): array
         array_map('strval', $configured),
         static fn(string $code): bool => isset($definitions[$code])
     ));
-}
-
-/**
- * 代号对应的 URL 前缀，未知代号原样返回
- *
- * 未知代号意味着有过滤器新增了语言却没给前缀，那种情况下用代号兜底比返回空串安全。
- */
-function iro_i18n_prefix(string $code): string
-{
-    return iro_i18n_language_definitions()[$code]['prefix'] ?? $code;
 }
 
 /**
@@ -147,14 +131,13 @@ function iro_i18n_site_locale(): string
 /**
  * 访客语言选择的 cookie 名
  *
- * 前台在首次访问的询问里写入，
- * 服务端只在一个地方读它：答过询问的访客访问无前缀地址时，把他搬到该语言的同一页。
- * 渲染出来的页面只由地址决定。
+ * 前台在首次访问的询问里写入，服务端在两处读它：列表与归档按它筛选内容，
+ * 答过询问的访客再访问默认语言的原文时，会被搬到该语言的同一篇。
  */
 const IRO_I18N_LANGUAGE_COOKIE = 'iro-language';
 
 /**
- * 默认语言：无前缀路径所代表的语言
+ * 默认语言：原文所属的语言
  * 优先级：显式设置项 → 站点语言 → 启用语言的第一个。
  */
 function iro_i18n_default_language(): string

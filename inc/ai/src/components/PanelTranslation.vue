@@ -39,7 +39,7 @@ const defaultLanguage = computed(
     () => languages.value.find((lang) => lang.is_default) ?? null,
 );
 
-// 默认语言是哪一种、其余语言走什么前缀，由服务端给出的事实拼出来
+// 默认语言是哪一种，由服务端给出的事实拼出来
 const defaultNote = computed(() => {
     const lang = defaultLanguage.value;
 
@@ -47,15 +47,11 @@ const defaultNote = computed(() => {
         return "";
     }
 
-    // 举例要用「其它语言」的前缀：默认语言自己的前缀不是其余语言的入口
-    const sample = languages.value.find((item) => !item.is_default) ?? lang;
-
     return t(
-        "默认语言是「{label}」（跟随站点语言 {locale}），无前缀路径即属于它；其余语言通过 /{prefix}/ 之类的前缀访问。",
+        "默认语言是「{label}」（跟随站点语言 {locale}）；其余语言的译文是独立的一篇内容，靠关联字段与原文归组。",
         {
             label: `${t(lang.name)}（${lang.code}）`,
             locale: locale.value,
-            prefix: sample.prefix,
         },
     );
 });
@@ -219,7 +215,6 @@ onMounted(load);
                 <el-table-column v-for="lang in languages" :key="lang.code" min-width="120">
                     <template #header>
                         <span>{{ t(lang.name) }}</span>
-                        <code v-if="!lang.is_default" class="iro-ai-translation__prefix">/{{ lang.prefix }}/</code>
                     </template>
                     <template #default="{ row }">
                         <el-tag v-if="row.cells[lang.code]" size="small" effect="plain"
@@ -282,12 +277,6 @@ onMounted(load);
         align-items: center;
         gap: 0.25rem;
         margin-top: 0.25rem;
-    }
-
-    &__prefix {
-        margin-left: 0.25rem;
-        font-size: 11px;
-        color: var(--el-text-color-secondary);
     }
 
     // 标签里的链接跟标签同色，避免出现两种强调色

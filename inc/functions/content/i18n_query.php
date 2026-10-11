@@ -107,24 +107,37 @@ function iro_i18n_filter_frontend_query(WP_Query $query): void
         return;
     }
 
-    $clause = iro_i18n_current_language_tax_clause();
+    /**
+     * 语言收窄只对列表有意义。指名到篇的查询（`?p=`、`/foo-ja/` 这类）不按语言收窄：
+     * 收窄会让语言标记与访客 cookie 不一致的副本页在自己的主查询里被排除掉，直接 404。
+     * 访客要看的就是这一篇，不是「当前语言的列表」。
+     */
+    if (!$query->is_singular) {
+        $clause = iro_i18n_current_language_tax_clause();
 
-    if ($clause !== []) {
-        $tax_query = (array) $query->get('tax_query');
+        if ($clause !== []) {
+            $tax_query = (array) $query->get('tax_query');
 
-        // 已经按语言限定过的查询不再叠加（例如主题自身的推荐位查询）
-        foreach ($tax_query as $existing) {
-            if (is_array($existing) && ($existing['taxonomy'] ?? '') === IRO_I18N_LANGUAGE_TAXONOMY) {
-                return;
+            // 已经按语言限定过的查询不再叠加（例如主题自身的推荐位查询）
+            foreach ($tax_query as $existing) {
+                if (is_array($existing) && ($existing['taxonomy'] ?? '') === IRO_I18N_LANGUAGE_TAXONOMY) {
+                    return;
+                }
             }
+
+            $tax_query[] = $clause;
+
+            $query->set('tax_query', $tax_query);
         }
-
-        $tax_query[] = $clause;
-
-        $query->set('tax_query', $tax_query);
     }
 
-    // 未翻译副本即使是发布状态也不该出现在列表里
+    /**
+     * 未翻译副本即使是发布状态也不该出现在前台查询里
+     *
+     * 单篇也必须挡：遗留数据里有和原文**同别名**的草稿副本（早期副本没接语言代号），
+     * 而指名到篇的查询不带状态条件，草稿副本更新在前，核心会按结果第一篇的状态裁决，
+     * 把原文一起清掉 —— 表现就是原文地址 404，再被 `_wp_old_slug` 接到别的语言版本上。
+     */
     $meta_query = (array) $query->get('meta_query');
 
     foreach ($meta_query as $existing) {

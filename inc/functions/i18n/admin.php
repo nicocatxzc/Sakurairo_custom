@@ -159,14 +159,6 @@ if (iro_i18n_enabled()) {
                     $code = iro_i18n_post_language($post->ID);
                     $name = iro_i18n_language_name($code);
 ?>
-                <p class="description" style="margin-top:8px;">
-                    <?= esc_html(sprintf(
-                        /* translators: 1: 语言代号 2: 该语言的 URL 前缀 */
-                        __('本页语言标识为 %1$s，对外地址前缀 /%2$s/；默认语言没有前缀。', 'sakurairo'),
-                        $code,
-                        iro_i18n_prefix($code)
-                    )) ?>
-                </p>
                 <p class="description">
                     <?= esc_html(sprintf(
                         /* translators: %s: 语言名与代号 */
@@ -313,11 +305,6 @@ if (iro_i18n_enabled()) {
 
                 echo '<strong>' . esc_html(iro_i18n_language_name($code)) . '</strong>';
                 echo '<br><span class="description">' . esc_html($label) . '</span>';
-
-                // 代号与 URL 前缀是两个值，列表里一并给出，省得去设置页反查
-                if ($code !== iro_i18n_default_language()) {
-                    echo '<br><code style="font-size:11px;">' . esc_html(iro_i18n_prefix($code)) . '/</code>';
-                }
 
                 // 这里刻意不查同组版本：列表每行都查会拖慢后台，关联明细留给编辑页的面板
                 if (iro_i18n_get_path($post_id) === '' && !iro_i18n_is_skeleton($post_id)) {

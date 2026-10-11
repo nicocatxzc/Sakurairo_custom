@@ -1,18 +1,16 @@
 // 语言切换：把选择写进 cookie，再跳到服务端为这一语言算好的地址。
 //
-// 不自己剥掉前缀重新请求：各语言版本的别名并不相同（译文是 foo-en-us，早期副本是
-// WordPress 接上的 -2、-3），去前缀的那条路径属于原文，按它解析只会给回同一个版本，
-// 选默认语言时表现为「跳过去还是原来那一篇」。也不读 <head> 里的 alternate ——
-// swup 只替换列出的容器，那些链接换页后还是上一篇的旧值。地址一律取页面配置里的
-// langs[].url，它每次换页都会随 #iro_page_config 重建。
+// 不自己从当前地址推算目标：各语言版本的别名并不相同（译文是 foo-ja，早期副本是
+// WordPress 接上的 -2、-3），目标地址一律取页面配置里的 langs[].url——单篇是那一篇
+// 该语言版本的固定链接；列表与归档各语言共用同一个地址，那里留空表示「就停在本页」。
+// 也不读 <head> 里的 alternate：swup 只替换列出的容器，那些链接换页后还是上一篇的旧值。
 //
 // 首次访问（cookie 里还没有答案）另问一次「要不要换成你那种语言」：服务端不按
-// Accept-Language 跳转，只在答过之后按这个 cookie 把无前缀地址搬到答过的那一种语言
-// （爬虫不带 cookie，所以不会被跳转）。问与换本身都发生在前台。
+// Accept-Language 跳转，只在答过之后按这个 cookie 决定界面语言与列表筛选
+// （爬虫不带 cookie，拿到的永远是默认语言那一份）。问与换本身都发生在前台。
 //
 // 导航栏在 pjax 容器之外，语言列表挂在会被替换的 #iro_page_config 上，
 // 所以每次页面加载都要按新配置重建菜单。
-import { stripLangPrefix } from "../../app/utils/langPrefix.js";
 // 静态引入：app/index 里那份是动态加载的，首屏钩子执行时可能还没到位
 import { confirmDialog } from "../../app/utils/message.js";
 
@@ -61,10 +59,19 @@ function markCurrent(switcher, code) {
     });
 }
 
-/** 跳到该语言版本的地址；`cache: false` 保证不是复用缓存页面 */
+/**
+ * 跳到该语言版本的地址
+ *
+ * 目标就是本页（列表与归档各语言共用同一个地址）时整页重载：切语言要在服务端按新
+ * cookie 重算界面与筛选，而 Swup 导航到同一个地址不会重新取页面。
+ */
 function navigateToLanguage(url) {
-    // 服务端给的是这一语言的规范地址；拿不到时退化成剥掉前缀再问一次
-    const target = String(url ?? "") || stripLangPrefix(window.location.href);
+    const target = String(url ?? "") || window.location.href;
+
+    if (new URL(target, window.location.href).href === window.location.href) {
+        window.location.reload();
+        return;
+    }
 
     if (typeof _iro.navigate === "function") {
         _iro.navigate(target, { cache: false });
@@ -134,12 +141,14 @@ async function askForLanguage(langs) {
 
     // 页面没有他那种语言的版本、或者他本来就在看那一种，都没什么可问的
     if (!current || !preferred || preferred.code === current.code) return;
-    if (preferred.exists !== true || !preferred.url) return;
+    if (preferred.exists !== true) return;
 
-    // 目标地址与当前地址是同一条（草稿副本会退回原文）时也不问，换了等于没换
+    // 单篇的目标地址与本页相同（该语言只有草稿副本，链接退回原文）时也不问：换了等于没换。
+    // 列表与归档各语言共用同一个地址，那里的切换会换掉界面与筛选，照问。
     if (
-        new URL(preferred.url, window.location.href).pathname ===
-        window.location.pathname
+        _iro.page?.is_singular &&
+        new URL(preferred.url || window.location.href, window.location.href)
+            .pathname === window.location.pathname
     ) {
         return;
     }

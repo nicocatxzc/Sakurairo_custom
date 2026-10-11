@@ -93,10 +93,10 @@ interface IroThemeConfig {
 interface IroLangLink {
     code?: string;
     name?: string;
+    /** 该语言版本的地址；列表与归档各语言共用同一地址，那时为空串（停在本页） */
     url?: string;
     current?: boolean;
     exists?: boolean;
-    prefix?: string;
     edit?: string;
     /** 该语言的浏览器 locale 候选，已归一化成小写 + 下划线 */
     locales?: string[];

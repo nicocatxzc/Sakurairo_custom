@@ -16,11 +16,11 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * 面板的列定义：语言代号、字典键、URL 前缀与是否为默认语言
+ * 面板的列定义：语言代号、字典键与是否为默认语言
  *
  * `name` 取 `iro_i18n_language_name()` 的中文名，它同时是面板字典里的键。
  *
- * @return array<int,array{code:string,name:string,prefix:string,is_default:bool}>
+ * @return array<int,array{code:string,name:string,is_default:bool}>
  */
 function iro_i18n_rest_languages(): array
 {
@@ -31,7 +31,6 @@ function iro_i18n_rest_languages(): array
         $rows[] = [
             'code'       => $code,
             'name'       => iro_i18n_language_name($code),
-            'prefix'     => iro_i18n_prefix($code),
             'is_default' => $code === $default,
         ];
     }

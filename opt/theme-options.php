@@ -2774,7 +2774,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'         => 'iro_i18n_languages',
                 'type'       => 'checkbox',
                 'title'      => '需要支持的语言',
-                'desc'       => esc_html__('代号是全站统一标识（设置项、语言标记、术语别名）；URL 前缀只出现在地址栏。默认语言跟随「设置 → 常规 → 站点语言」。', 'sakurairo'),
+                'desc'       => esc_html__('代号是全站统一标识（设置项、语言标记、术语别名）；默认语言跟随「设置 → 常规 → 站点语言」。', 'sakurairo'),
                 'options'    => array(
                     'zh-cn' => '简中',
                     'zh-tw' => '繁中',
