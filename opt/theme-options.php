@@ -2811,7 +2811,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'type'     => 'code_editor',
                 'sanitize' => false,
                 'title'    => __('自定义内容翻译', 'sakurairo'),
-                'desc'     => __('以原文为键、语言代号为子键的 JSON。前台导航菜单标题这类站长自己写的内容会自动登记进来（子键留空即尚未翻译），非默认语言的条目填上译文即可生效。', 'sakurairo'),
+                'desc'     => __('以原文为键、语言代号为子键的 JSON。非主题自带文本会在首次渲染后自动收录，非默认语言的条目填上译文即可生效。', 'sakurairo'),
                 'settings' => [
                     'mode' => 'application/json',
                 ],
@@ -2940,15 +2940,15 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'id'    => 'iro_image_optimize',
                 'type'  => 'switcher',
-                'title' => __('全站webp优化', 'sakurairo'),
-                'label'   => __('将源站所有图片优化至webp，你的原图不会丢失', 'sakurairo'),
+                'title' => __('全站图像优化', 'sakurairo'),
+                'label'   => __('将源站所有图片优化至avif/webp，你的原图不会丢失', 'sakurairo'),
                 'default' => false,
             ],
 
             [
                 'id'    => 'iro_image_quality',
                 'type' => 'slider',
-                'title' => __('webp优化图像质量', 'sakurairo'),
+                'title' => __('优化图像质量', 'sakurairo'),
                 'label'   => __('质量越高图片越清晰，但体积也越大，首屏速度也越慢', 'sakurairo'),
                 'step' => '1',
                 'min' => '70',
@@ -2967,7 +2967,7 @@ if (class_exists('Sakurairo_CSF')) {
             [
                 'type'    => 'content',
                 'content' => '<p style="margin:0 0 10px;color:#666;">'
-                    . esc_html__('调整优化质量会按新参数重新生成缓存，旧缓存文件不会自动清理，可点击下方链接清理。', 'sakurairo')
+                    . esc_html__('调整优化质量会按新参数重新生成缓存，旧缓存文件会在七天后被自动回收，也可点击下方链接立即清理。', 'sakurairo')
                     . '</p>'
                     . '<a href="' . esc_url(admin_url('admin.php?iro_act=clear_media_cache')) . '" target="_blank" class="button">'
                     . esc_html__('一键清除图片缓存', 'sakurairo')

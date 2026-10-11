@@ -201,7 +201,7 @@ if (iro_i18n_enabled()) {
      * 保存只对该分类法支持的类型生效，且必须跳过自动保存与修订
      *
      * 只对「原始内容」生效：自动建出来的副本不再派生子副本。关联字段任何状态都落库，
-     * 但副本只在内容真正发布后才派生，否则一篇写着玩的草稿会在后台留下三份同样没用的草稿副本。
+     * 原文只在发布后才新建多语言副本，防止测试文章生成无效数据。
      */
     add_action('save_post', function (int $post_id, ?WP_Post $post = null): void {
         if (!iro_i18n_enabled()) {
@@ -224,8 +224,7 @@ if (iro_i18n_enabled()) {
         iro_i18n_adopt_default_language($post_id);
 
         if (iro_i18n_is_skeleton($post_id)) {
-            // 副本脱离草稿态就算被接手：占位与否只看状态，不看内容——
-            // 副本正文是原文的逐字拷贝，拿内容比较分不出「还没人动过」和「作者改的就是这一版」
+            // 副本脱离草稿态就算被认可
             if (in_array($post->post_status, iro_i18n_accepted_statuses(), true)) {
                 delete_post_meta($post_id, IRO_I18N_SKELETON_META);
             }

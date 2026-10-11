@@ -54,7 +54,7 @@ const COPY_ICON_SVG = /* html */ `
 `;
 
 // 与古腾堡代码块共用同一份语言表，这里只取 value 当自动识别的候选集。
-// 不传候选集时 hljs 会拿全部 193 种语言去试，实测一个 35 字符的块要 400 ms 以上。
+// 不传候选集时 hljs 会拿全部 193 种语言逐个尝试
 const AUTO_LANGUAGES = HLJS_LANGUAGES.map(({ value }) => value);
 
 // 处理pre标签
