@@ -235,6 +235,13 @@ _iro.hooks.onPageLoaded(() => {
             const result = await response.json();
 
             if (!response.ok) {
+                // 验证码已被服务端作废时旧 id 不再可用
+                if (result?.data?.refresh) {
+                    document.dispatchEvent(
+                        new CustomEvent("captcha:refresh", { detail: {} }),
+                    );
+                }
+
                 throw new Error(
                     result?.message || result?.msg || "评论提交失败。",
                 );

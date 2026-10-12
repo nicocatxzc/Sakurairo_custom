@@ -12,6 +12,9 @@ class IroCaptcha
     // WordPress Transient 前缀
     private const CACHE_PREFIX = 'sakura_captcha_';
 
+    // 同一个验证码允许的试错次数，用尽即销毁
+    private const MAX_ATTEMPTS = 5;
+
     public function __construct()
     {
         $this->captchaText = '';
@@ -27,7 +30,7 @@ class IroCaptcha
      */
     private function create_captcha(): void
     {
-        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $characters = '23456789ABDEFGHJKLMNPQRTYabdefghijkmnpqrtuy';
         $length = strlen($characters);
 
         $captcha = '';
@@ -51,10 +54,13 @@ class IroCaptcha
 
         $cache_key = self::CACHE_PREFIX . $id;
 
-        // 服务端保存正确答案，5 分钟后自动过期
+        // 服务端保存正确答案与已试错次数，5 分钟后自动过期
         set_transient(
             $cache_key,
-            $this->captchaText,
+            [
+                'text'  => $this->captchaText,
+                'fails' => 0,
+            ],
             self::CACHE_TTL
         );
 
@@ -266,20 +272,26 @@ class IroCaptcha
             ];
         }
 
-        // 从 WordPress Transient 获取正确答案
+        // 从 WordPress Transient 获取正确答案与已试错次数
         $expected = get_transient(self::CACHE_PREFIX . $id);
 
         // 不存在 = 已过期 / 已经被删除 / 无效 ID
         if ($expected === false) {
             return [
-                'stat' => false,
-                'data' => '',
-                'msg'  => __('验证码已过期。', 'sakurairo'),
+                'stat'    => false,
+                'data'    => '',
+                'refresh' => true,
+                'msg'     => __('验证码已过期。', 'sakurairo'),
             ];
         }
 
+        // 计数是后加的，滚动更新期间可能读到上一版遗留的纯字符串
+        $record = is_array($expected)
+            ? $expected
+            : ['text' => (string) $expected, 'fails' => 0];
+
         // 验证验证码
-        if (hash_equals((string) $expected, $captcha)) {
+        if (hash_equals((string) ($record['text'] ?? ''), $captcha)) {
             // 验证成功后立即销毁，保证验证码只能使用一次
             $this->destroy_captcha($id);
 
@@ -289,6 +301,30 @@ class IroCaptcha
                 'msg'  => '',
             ];
         }
+
+        $fails = (int) ($record['fails'] ?? 0) + 1;
+
+        // 试错次数用尽：直接销毁，调用方据此让前端换一张新图
+        if ($fails >= self::MAX_ATTEMPTS) {
+            $this->destroy_captcha($id);
+
+            return [
+                'stat'    => false,
+                'data'    => '',
+                'refresh' => true,
+                'msg'     => __('验证码错误次数过多，已失效，请刷新后重新输入。', 'sakurairo'),
+            ];
+        }
+
+        // 计数与答案同键保存，过期与销毁都不必额外清理；读改写不加锁，并发请求可能少记一次
+        set_transient(
+            self::CACHE_PREFIX . $id,
+            [
+                'text'  => (string) ($record['text'] ?? ''),
+                'fails' => $fails,
+            ],
+            self::CACHE_TTL
+        );
 
         return [
             'stat' => false,

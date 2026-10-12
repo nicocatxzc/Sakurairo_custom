@@ -73,6 +73,7 @@ function iro_rest_comment_captcha_check(
                 [
                     'status' => 400,
                     'stat' => false,
+                    'refresh' => !empty($result['refresh']),
                     'data' => '',
                     'msg'  => $result['msg']
                         ?? __('验证码校验失败', 'sakurairo'),

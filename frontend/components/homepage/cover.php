@@ -25,14 +25,16 @@
                                 ) ?>
                             </picture>
                         <?php else: ?>
+                            <?php $cover_title_text = iro__((string) (iro_opt("cover_title", [])["text"] ?? "")); ?>
                             <h1
-                                class="cover-title"
+                                class="cover-title <?= iro_opt("cover_focus_style", "text") == "mashiro_text" ? "glitch" : "" ?>"
+                                data-text="<?= esc_attr($cover_title_text) ?>"
                                 style="
                                 font-family: <?= iro_opt("cover_title", [])["font"] ?? "" ?>;
                                 font-size: <?= iro_opt("cover_title", [])["size"] ?? 5 ?>rem;
                                 color: <?= iro_opt("cover_title", [])["color"] ?? "#FFF" ?>;
                             ">
-                                <?= iro__((string) (iro_opt("cover_title", [])["text"] ?? "")) ?>
+                                <?= $cover_title_text ?>
                             </h1>
                         <?php endif; ?>
                     <?php endif; ?>
