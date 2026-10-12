@@ -117,8 +117,8 @@ msgstr "You must be <a href=\"%s\">logged in</a> to post a comment."
 msgid "条评论"
 msgstr "Comments"
 
-#: frontend/components/homepage/social_links.php:36
-#: frontend/components/homepage/social_links.php:37
+#: frontend/components/block/decorate/social-links.php:36
+#: frontend/components/block/decorate/social-links.php:37
 msgid "点击访问"
 msgstr "Click to visit"
 

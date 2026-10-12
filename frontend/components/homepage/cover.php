@@ -25,37 +25,23 @@
                                 ) ?>
                             </picture>
                         <?php else: ?>
-                            <?php $cover_title_text = iro__((string) (iro_opt("cover_title", [])["text"] ?? "")); ?>
-                            <h1
-                                class="cover-title <?= iro_opt("cover_focus_style", "text") == "mashiro_text" ? "glitch" : "" ?>"
-                                data-text="<?= esc_attr($cover_title_text) ?>"
-                                style="
-                                font-family: <?= iro_opt("cover_title", [])["font"] ?? "" ?>;
-                                font-size: <?= iro_opt("cover_title", [])["size"] ?? 5 ?>rem;
-                                color: <?= iro_opt("cover_title", [])["color"] ?? "#FFF" ?>;
-                            ">
-                                <?= $cover_title_text ?>
-                            </h1>
+                            <?= iro_render_decorate('focus-title', [
+                                'text' => iro__((string) (iro_opt("cover_title", [])["text"] ?? "")),
+                                'effect' => iro_opt("cover_focus_style", "text") == "mashiro_text",
+                                'font' => iro_opt("cover_title", [])["font"] ?? "",
+                                'size' => iro_opt("cover_title", [])["size"] ?? 5,
+                                'color' => iro_opt("cover_title", [])["color"] ?? "#FFF",
+                            ]) ?>
                         <?php endif; ?>
                     <?php endif; ?>
 
                     <?php if (iro_opt("cover_infor_bar_switch", true)): ?>
-                        <div class="socials" style="
-                        border-radius:<?= iro_opt("cover_infor_bar_radius", 1) ?>rem;
-                        ">
+                        <?php ob_start(); ?>
                             <?php if (iro_opt("cover_typedjs")): ?>
-                                <div
-                                    class="typed-container">
-                                    <?php if (iro_opt("cover_typedjs_mark")): ?>
-                                        <i class="fa-icon-solid fa-quote-left"></i>
-                                    <?php endif; ?>
-                                    <span id="typed" class="typed">
-                                        <?= iro__((string) iro_opt("cover_typedjs_placeholder")) ?>
-                                    </span>
-                                    <?php if (iro_opt("cover_typedjs_mark")): ?>
-                                        <i class="fa-icon-solid fa-quote-right"></i>
-                                    <?php endif; ?>
-                                </div>
+                                <?= iro_render_decorate('typed', [
+                                    'mark' => (bool) iro_opt("cover_typedjs_mark"),
+                                    'placeholder' => iro__((string) iro_opt("cover_typedjs_placeholder")),
+                                ]) ?>
                             <?php endif; ?>
                             <?php if (iro_opt("cover_signature", [])["text"] ?? ""): ?>
                                 <div class="signature">
@@ -68,8 +54,15 @@
                                     </p>
                                 </div>
                             <?php endif; ?>
-                            <?php require_once get_theme_file_path('/frontend/components/homepage/social_links.php'); ?>
-                        </div>
+                            <?= iro_render_decorate('social-links') ?>
+                        <?php
+                        // 常规渲染即把预设参数当区块参数填进去
+                        echo iro_render_decorate('widgets-container', [
+                            'radius' => iro_opt("cover_infor_bar_radius", 1),
+                            'padding' => 1,
+                            'preset' => true,
+                        ], ob_get_clean());
+                        ?>
                     <?php endif; ?>
                 </div>
             </div>

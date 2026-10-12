@@ -118,8 +118,8 @@ msgstr "コメントを投稿するには<a href=\"%s\">ログイン</a>する�
 msgid "条评论"
 msgstr "コメント"
 
-#: frontend/components/homepage/social_links.php:36
-#: frontend/components/homepage/social_links.php:37
+#: frontend/components/block/decorate/social-links.php:36
+#: frontend/components/block/decorate/social-links.php:37
 msgid "点击访问"
 msgstr "クリックしてアクセス"
 

@@ -1,5 +1,5 @@
 @layer blocks {
-    // 提示块：外观对齐前台 frontend/components/block/posts/notice.scss 的 .block-notice
+    // 提示块
     .shortcodestyle,
     .shortcodestyle * {
         box-sizing: border-box;
@@ -247,5 +247,39 @@
         min-height: 2.5rem;
         outline: 0.1rem dashed #d0d0d0;
         outline-offset: 0.25rem;
+    }
+
+    // 动态布局容器
+    .iro-widgets-container {
+        padding: var(--iro-widgets-padding, 1rem);
+        border-radius: var(--iro-widgets-radius, 1rem);
+        background: rgba(255, 255, 255, 0.5);
+        border: 0.1rem solid #ffffff;
+        text-indent: 0 !important;
+    }
+
+    // 打字机
+    .typed-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-indent: 0 !important;
+    }
+
+    // 长条状占位
+    .iro-block-placeholder-bar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 2.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    // 聚焦文字
+    .cover-title {
+        margin: 0;
+        text-align: center;
+        text-indent: 0 !important;
     }
 }

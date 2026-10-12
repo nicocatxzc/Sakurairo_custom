@@ -18,10 +18,12 @@ const lang = createI18n({
 
 /**
  * 动态块的编辑器占位符
- * @param {{title: string, summary?: string}} props
+ * @param {{title: string, summary?: string, variant?: string}} props
  */
-export default function Placeholder({ title, summary }) {
-    const blockProps = useBlockProps({ className: "iro-block-placeholder" });
+export default function Placeholder({ title, summary, variant }) {
+    const blockProps = useBlockProps({
+        className: `iro-block-placeholder${variant ? ` iro-block-placeholder-${variant}` : ""}`,
+    });
 
     return (
         <div {...blockProps} contentEditable={false}>

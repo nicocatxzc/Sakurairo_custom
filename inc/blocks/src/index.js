@@ -19,6 +19,10 @@ import columnBlock from "./tools/column";
 // 装饰块
 import hitokotoBlock from "./decorate/hitokoto";
 import sakuraIconBlock from "./decorate/sakura-icon";
+import focusTitleBlock from "./decorate/focus-title";
+import typedBlock from "./decorate/typed";
+import socialLinksBlock from "./decorate/social-links";
+import widgetsContainerBlock from "./decorate/widgets-container";
 import "./style.scss";
 
 domReady(() => {
@@ -72,6 +76,10 @@ export default function initBlocks() {
         // 装饰块
         hitokotoBlock();
         sakuraIconBlock();
+        focusTitleBlock();
+        typedBlock();
+        socialLinksBlock();
+        widgetsContainerBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

@@ -1,0 +1,10 @@
+// 布局无关的容器：只给外观，尺寸与排列由外层布局或内部块决定
+.iro-widgets-container {
+    padding: var(--iro-widgets-padding, 1rem);
+    border-radius: var(--iro-widgets-radius, 1rem);
+
+    color: var(--word-color-first);
+    background-color: rgb(var(--widget-background), 0.6);
+    border: var(--border);
+    white-space: normal;
+}

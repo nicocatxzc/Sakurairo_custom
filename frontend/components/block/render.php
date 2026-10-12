@@ -235,17 +235,17 @@ add_action('init', function () {
     /*
      * 装饰块
      */
-    foreach (['hitokoto', 'sakura-icon'] as $decorate_block) {
+    foreach (['hitokoto', 'sakura-icon', 'focus-title', 'typed', 'social-links', 'widgets-container'] as $decorate_block) {
         register_block_type('sakurairo/' . $decorate_block, [
-            'render_callback' => function () use ($decorate_block) {
-                return iro_render_decorate($decorate_block);
+            'render_callback' => function ($attributes, $content = '') use ($decorate_block) {
+                return iro_render_decorate($decorate_block, $attributes, $content);
             },
         ]);
     }
 }, 999);
 
 // 装饰块：页脚等模板与区块共用同一份渲染
-function iro_render_decorate(string $template): string
+function iro_render_decorate(string $template, array $attributes = [], string $content = ''): string
 {
     ob_start();
     require get_theme_file_path('/frontend/components/block/decorate/' . $template . '.php');

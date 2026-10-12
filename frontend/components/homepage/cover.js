@@ -4,7 +4,6 @@ import {
     loadColorFromUrl,
 } from "../../app/utils/themeColor";
 
-let typedInstance = null;
 let coverObjectUrl = null;
 let coverRequestId = 0;
 
@@ -90,7 +89,7 @@ async function applyArticleBackgroundColor() {
     }
 }
 
-_iro.hooks.onPageLoaded(async () => {
+_iro.hooks.onPageLoaded(() => {
     const cover = document.querySelector(".homepage-cover");
     const isHome = isHomePage();
     const config = _iro?.config ?? {};
@@ -127,24 +126,6 @@ _iro.hooks.onPageLoaded(async () => {
         _iro?.page?.is_singular
     ) {
         applyArticleBackgroundColor();
-    }
-
-    // 封面打字机
-    const typed_config = _iro?.config?.typed_config;
-    if (typedInstance) {
-        typedInstance.destroy();
-    }
-    if (typed_config) {
-        const config = JSON.parse(typed_config);
-        const typed_el = document.querySelector("#typed");
-        if (typed_el) {
-            typed_el.innerHTML = "";
-            // typed.js 已打进启动 chunk，这里只控制初始化时机
-            const { default: Typed } = await import("typed.js");
-            if (document.querySelector("#typed") === typed_el) {
-                typedInstance = new Typed(typed_el, config);
-            }
-        }
     }
 
     const video = document.querySelector(".cover-video");

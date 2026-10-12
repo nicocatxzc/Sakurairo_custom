@@ -114,8 +114,8 @@ msgstr "您必須<a href=\"%s\">登入</a>才能發表評論。"
 msgid "条评论"
 msgstr "條評論"
 
-#: frontend/components/homepage/social_links.php:36
-#: frontend/components/homepage/social_links.php:37
+#: frontend/components/block/decorate/social-links.php:36
+#: frontend/components/block/decorate/social-links.php:37
 msgid "点击访问"
 msgstr "點擊訪問"
 

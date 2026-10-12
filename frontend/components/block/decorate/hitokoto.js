@@ -1,5 +1,4 @@
 _iro.hooks.onPageLoaded(async () => {
-    // 同一页可以有多个一言（正文、页脚、模板组件），所以按 class 全量扫描；
     // PHP 预渲染过的（custom / both 抽中）带内容，只有空节点才去请求 API
     const nodes = document.querySelectorAll(".hitokoto");
     if (!nodes.length) return;

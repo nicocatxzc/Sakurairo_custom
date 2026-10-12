@@ -9,3 +9,5 @@ import "./pages/bilibili_favlist"
 import "./pages/steam"
 // 装饰块
 import "./decorate/hitokoto"
+import "./decorate/typed"
+import "./decorate/social-links"

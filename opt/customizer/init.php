@@ -1360,7 +1360,7 @@ $sections = [
                 'choices'   => ['min' => 0, 'max' => 5, 'step' => 0.01],
                 'output'    => [
                     [
-                        'element'       => '.homepage-cover .socials',
+                        'element'       => '.homepage-cover .iro-widgets-container',
                         'property'      => 'border-radius',
                         'value_pattern' => '$rem !important',
                     ],
@@ -1435,7 +1435,7 @@ $sections = [
                 'transport'   => 'postMessage',
                 'js_vars'     => [
                     [
-                        'element'  => '#typed',
+                        'element'  => '.homepage-cover .typed',
                         'function' => 'html',
                     ],
                 ],
