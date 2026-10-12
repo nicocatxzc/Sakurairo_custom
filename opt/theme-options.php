@@ -1159,7 +1159,7 @@ if (class_exists('Sakurairo_CSF')) {
                     'off' => __('无', 'sakurairo'),
                     'avatar' => __('头像', 'sakurairo'),
                     'text' => __('文字', 'sakurairo'),
-                    // 'mashiro_text' => __('Mashiro特效文字', 'sakurairo'),
+                    'mashiro_text' => __('Mashiro特效文字', 'sakurairo'),
                 ],
                 'dependency' => [
                     ['cover_switch', '==', 'true', '', 'true'],

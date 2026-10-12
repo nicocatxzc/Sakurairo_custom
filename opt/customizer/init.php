@@ -1264,6 +1264,7 @@ $sections = [
                     'off'          => esc_html__('无', 'sakurairo'),
                     'avatar'       => esc_html__('头像', 'sakurairo'),
                     'text'         => esc_html__('文字', 'sakurairo'),
+                    'mashiro_text' => esc_html__('Mashiro特效文字', 'sakurairo'),
                 ],
                 'active_callback' => [
                     [
