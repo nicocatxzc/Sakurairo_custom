@@ -82,6 +82,9 @@ function iro_i18n_translation_permalink(WP_Post $post): string
  * `locales` 是该语言的浏览器 locale 候选（已归一化成小写 + 下划线），交给前台判断
  * 「访客偏好的是不是这一种」：这张表只在语言定义里写一份，前台不另抄。
  *
+ * `name` 是该语言自己的名字（`English`、`日本語`），**不是**当前界面语言下的译名：
+ * 切换器要的是「访客认出自己那种语言」，一个英文访客在中文界面上也得看见 English。
+ *
  * @return array<int,array{code:string,name:string,url:string,current:bool,exists:bool,edit:string,locales:string[]}>
  */
 function iro_i18n_language_links(): array
@@ -123,7 +126,7 @@ function iro_i18n_language_links(): array
 
         $links[] = [
             'code'    => $code,
-            'name'    => iro_i18n_language_name($code),
+            'name'    => iro_i18n_language_native_name($code),
             'url'     => $url,
             'current' => $code === $current,
             'exists'  => $post['path'] === '' || isset($map[$code]),

@@ -16,34 +16,40 @@ if (!defined('ABSPATH')) {
  * 内置语言定义
  *
  * 数组键就是语言代号，其余场景一律用它，不要在别处手写语言字面量。
+ * `name` 是站内的中文短名（「英语」），后台列表与 AI 面板的字典键都用它；
+ * `native` 是语言自己的名字（English），前台切换器用它，见 `iro_i18n_language_native_name()`。
  * `locales` 是浏览器 locale 候选，前台首访询问靠它判断访客偏好。
  * `date_format` 是 `wp_date()` 的格式串，见 `iro_i18n_date_format()`。
  *
- * @return array<string,array{name:string,locale:string,locales:string[],date_format:string}>
+ * @return array<string,array{name:string,native:string,locale:string,locales:string[],date_format:string}>
  */
 function iro_i18n_language_definitions(): array
 {
     return [
         'zh-cn' => [
             'name'        => '简中',
+            'native'      => '简体中文',
             'locale'      => 'zh_CN',
             'locales'     => ['zh_cn', 'zh-hans', 'zh_hans'],
             'date_format' => 'Y年m月d日',
         ],
         'zh-tw' => [
             'name'        => '繁中',
+            'native'      => '繁體中文',
             'locale'      => 'zh_TW',
             'locales'     => ['zh_tw', 'zh-hant', 'zh_hant'],
             'date_format' => 'Y年m月d日',
         ],
         'en-us' => [
             'name'        => '英语',
+            'native'      => 'English',
             'locale'      => 'en_US',
             'locales'     => ['en_us', 'en_gb', 'en_ca', 'en_au', 'en_nz'],
             'date_format' => 'M j, Y',
         ],
         'ja' => [
             'name'        => '日语',
+            'native'      => '日本語',
             'locale'      => 'ja',
             'locales'     => ['ja', 'ja_jp'],
             'date_format' => 'Y年m月d日',
@@ -230,6 +236,20 @@ function iro_i18n_date_format(): string
 function iro_i18n_language_name(string $code): string
 {
     return iro_i18n_language_definitions()[$code]['name'] ?? $code;
+}
+
+/**
+ * 语言自己的名字（endonym），前台语言切换器用它
+ *
+ * 切换器要让访客认出自己那一项：「英语」「日语」只在中文界面里成立，一个英文访客在
+ * 中文页面上找不到 "English"。所以这里取各语言的自称，**不按当前界面语言翻译**，
+ * 也不进前台文案字典（`frontend/i18n.js`）——那本字典按 key 翻，语言名进不去。
+ *
+ * 后台仍用 `iro_i18n_language_name()`：那边是站长视角的中文界面，AI 面板还拿它当字典键。
+ */
+function iro_i18n_language_native_name(string $code): string
+{
+    return iro_i18n_language_definitions()[$code]['native'] ?? $code;
 }
 
 /**

@@ -92,6 +92,7 @@ interface IroThemeConfig {
 /** 语言切换器的一项，对应多语言模块的 iro_i18n_language_links() */
 interface IroLangLink {
     code?: string;
+    /** 该语言自己的名字（English、日本語），不随当前界面语言翻译 */
     name?: string;
     /** 该语言版本的地址；列表与归档各语言共用同一地址，那时为空串（停在本页） */
     url?: string;

@@ -5,6 +5,9 @@
 // 该语言版本的固定链接；列表与归档各语言共用同一个地址，那里留空表示「就停在本页」。
 // 也不读 <head> 里的 alternate：swup 只替换列出的容器，那些链接换页后还是上一篇的旧值。
 //
+// 条目的文字一律用那一种语言自己的写法（简体中文、English、日本語），不按当前界面语言
+// 翻译：切换器要的是让访客认出自己那一项，中文界面上的 "English" 也得是 English。
+//
 // 首次访问（cookie 里还没有答案）另问一次「要不要换成你那种语言」：服务端不按
 // Accept-Language 跳转，只在答过之后按这个 cookie 决定界面语言与列表筛选
 // （爬虫不带 cookie，拿到的永远是默认语言那一份）。问与换本身都发生在前台。
@@ -16,7 +19,9 @@ import { confirmDialog } from "../../app/utils/message.js";
 
 const LANG_COOKIE = "iro-language";
 const LANG_COOKIE_MAX_AGE = 34560000;
-const LANG_MISSING_SUFFIX = "（未翻译）";
+// 该语言下还没有版本时的标记，按**该条目自己的语言**翻译（下面的 langs[].code），
+// 与语言名一致：整条菜单项都是那一种语言写的，不跟着当前界面的语言走
+const LANG_MISSING_KEY = "（未翻译）";
 
 let outsideBound = false;
 
@@ -156,7 +161,7 @@ async function askForLanguage(langs) {
     const swap = await confirmDialog(
         _iro.i18n(
             "要切换到「{name}」版本吗？",
-            { name: _iro.i18n(preferred.name, null, preferred.code) },
+            { name: preferred.name },
             preferred.code,
         ),
         {
@@ -214,7 +219,7 @@ _iro.hooks.onPageLoaded(() => {
                 link.href = window.location.href;
                 link.textContent = lang.exists
                     ? lang.name
-                    : lang.name + LANG_MISSING_SUFFIX;
+                    : lang.name + _iro.i18n(LANG_MISSING_KEY, null, code);
                 link.classList.toggle("current", lang.current === true);
                 link.classList.toggle("missing", lang.exists !== true);
                 link.dataset.lang = code;
