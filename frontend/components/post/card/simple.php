@@ -12,14 +12,12 @@
     </a>
     <div class="post-metas">
         <div class="post-meta-date">
-            <!-- Icon: fa-icon-solid:calendar -->
             <i class="fa-icon-solid fa-calendar icon"></i>
             <time datetime="<?= esc_attr(get_the_modified_date('Y-m-d\TH:i:s')) ?>">
                 <?= __("更新于：", 'sakurairo') ?><?= get_the_modified_date(iro_i18n_date_format()) ?>
             </time>
         </div>
         <div class="post-meta-categories">
-            <!-- Icon: fa-icon-solid:folder-open -->
             <i class="fa-icon-solid fa-folder-open"></i>
             <?php
             foreach (get_the_category() as $category) :
@@ -32,7 +30,6 @@
             ?>
         </div>
         <div class="post-meta-tags">
-            <!-- Icon: fa-icon-solid:tags -->
             <i class="fa-icon-solid fa-tags icon"></i>
             <?php
             // wp_get_post_tags() 不传文章 ID 时不会回退到全局 $post，必须显式传入

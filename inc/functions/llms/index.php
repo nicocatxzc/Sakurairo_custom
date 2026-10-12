@@ -20,7 +20,7 @@ if (iro_opt('iro_llms_txt', false)) {
         // 主页
         if (preg_match('#index\.md(?=\?|$)#', $uri)) {
             $uri = (string) preg_replace('#index\.md(?=\?|$)#', '', $uri, 1);
-        // 其他
+            // 其他
         } elseif (preg_match('#\.md(?=\?|$)#', $uri)) {
             $uri = (string) preg_replace('#\.md(?=\?|$)#', '', $uri, 1);
         } else {
@@ -30,6 +30,17 @@ if (iro_opt('iro_llms_txt', false)) {
         $_SERVER['REQUEST_URI'] = $uri;
         // 全局生命本次渲染只需要正文
         $GLOBALS['iro_is_md_template'] = true;
+
+        global $iro_options;
+        // 移除无效的响应式图像
+        $iro_options["iro_image_optimize"] = false;
+
+        // 移除wp自带的响应式图像
+        add_filter('wp_get_attachment_image_attributes', function ($attr, $attachment, $size) {
+            unset($attr['srcset'], $attr['sizes']);
+            return $attr;
+        }, 10, 3);
+        
     }, 0);
 
     add_action('init', 'iro_llms_register_routes', 10);
@@ -99,8 +110,20 @@ function iro_llms_dispatch(): void
         exit;
     }
 
-    // 其余未制作独立模板的页面类型
-    wp_safe_redirect(iro_llms_proper_url(), 302);
+    // 其余未制作独立模板的页面类型302回原页面
+    wp_safe_redirect(
+        function (): string {
+            $request = trim((string) ($GLOBALS['wp']->request ?? ''), '/');
+            $url     = $request === '' ? home_url('/') : home_url('/' . $request);
+
+            // 搜索这类靠查询串的地址要把参数带走
+            $args = wp_unslash($_GET);
+            unset($args['md']);
+
+            return $args === [] ? $url : add_query_arg($args, $url);
+        },
+        302
+    );
     exit;
 }
 
@@ -157,10 +180,7 @@ function iro_llms_current_md_url(): string
 }
 
 /**
- * 只取内容的链接形态：去掉结尾斜杠后补 .md
- *
- * 站点根（含子目录安装）没有可加后缀的路径段，按规范落到 index.md；
- * 未开启伪静态时固定链接带查询串（?p=123），也没有可加后缀的路径，改用等价的 ?md 参数
+ * 渲染llms.txt专用链接
  */
 function iro_llms_markdown_url(string $url): string
 {
@@ -175,24 +195,10 @@ function iro_llms_markdown_url(string $url): string
     $path = rtrim((string) parse_url($url, PHP_URL_PATH), '/');
     $home = rtrim((string) parse_url(home_url('/'), PHP_URL_PATH), '/');
 
+    // 首页
     if ($path === $home) {
         return rtrim($url, '/') . '/index.md';
     }
 
     return rtrim($url, '/') . '.md';
-}
-
-/**
- * 当前请求对应的正常地址：回落目标里不该再带着 md 标记
- */
-function iro_llms_proper_url(): string
-{
-    $request = trim((string) ($GLOBALS['wp']->request ?? ''), '/');
-    $url     = $request === '' ? home_url('/') : home_url('/' . $request);
-
-    // 搜索这类靠查询串的地址要把参数带走
-    $args = wp_unslash($_GET);
-    unset($args['md']);
-
-    return $args === [] ? $url : add_query_arg($args, $url);
 }
