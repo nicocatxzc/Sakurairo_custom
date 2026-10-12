@@ -1,14 +1,21 @@
+f<?php
+    switch (iro_opt("footer_style_select", "sakura")) {
+        case 'island':
+            require_once get_theme_file_path('/frontend/components/site/footer/island.php');
+            break;
+        case 'custom':
+    ?>
+<footer
+    class="site-footer">
+    <?php
+            block_template_part('site-footer');
+    ?>
+</footer>
 <?php
-switch (iro_opt("footer_style_select", "sakura")) {
-    case 'island':
-        require_once get_theme_file_path('/frontend/components/site/footer/island.php');
-        break;
-    case 'custom':
-        block_template_part('site-footer');
-        break;
+            break;
 
-    default:
-        require_once get_theme_file_path('/frontend/components/site/footer/sakura.php');
-        break;
-}
-wp_footer();
+        default:
+            require_once get_theme_file_path('/frontend/components/site/footer/sakura.php');
+            break;
+    }
+    wp_footer();

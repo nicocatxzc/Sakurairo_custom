@@ -6,6 +6,11 @@
             "name": "site-footer",
             "title": "页脚",
             "area": "footer"
+        },
+        {
+            "name": "site-cover",
+            "title": "封面",
+            "area": "footer"
         }
     ]
 }
