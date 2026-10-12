@@ -372,18 +372,11 @@ add_action('rest_api_init', function () {
         );
         register_rest_route(
             'sakura/v1',
-            '/i18n/sync-terms',
+            '/i18n/sync-attributes',
             array(
                 'methods' => 'POST',
-                'callback' => 'iro_i18n_rest_sync_terms',
+                'callback' => 'iro_i18n_rest_sync_attributes',
                 'permission_callback' => 'iro_rest_check_permission',
-                'args' => array(
-                    'post' => array(
-                        'required' => true,
-                        'type'     => 'integer',
-                        'minimum'  => 1,
-                    ),
-                ),
             )
         );
     }

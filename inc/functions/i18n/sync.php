@@ -80,20 +80,62 @@ function iro_i18n_term_ids(int $post_id, string $taxonomy): array
 }
 
 /**
- * 把原文的分类与标签同步给同组其它语言版本
+ * 副本要接手的编辑器管理字段
  *
- * 分类与标签只有原文一个来源：副本是原文派生出来的，它自己不会长出新分类，原文调整
- * 之后必须再同步一次，否则译者接手时看到的分类和原文对不上。
+ * 这些字段决定内容在前台与编辑器里怎么呈现（特色图片、页面模板、脚注数据、同步样板
+ * 状态），少一个副本就和原文不一样。刻意采用白名单：统计、SEO、主题自身的元数据逐条
+ * 覆盖会污染副本，比漏拷更难排查。
  *
- * 区块编辑器先保存文章、后写分类，派生副本的那一刻分类还没落库，因此派生路径上这条
- * 同步在请求结束前还要再跑一次（见下面的 `rest_after_insert_*`）。
+ * @return string[]
+ */
+function iro_i18n_copyable_meta_keys(): array
+{
+    return array_values(array_filter(array_map('strval', (array) apply_filters(
+        'iro_i18n_skeleton_meta_whitelist',
+        [
+            '_thumbnail_id',
+            '_wp_page_template',
+            '_wp_footnotes',
+            'wp_pattern_sync_status',
+        ]
+    ))));
+}
+
+/**
+ * 上列字段的当前值，只留非空的（建副本时用：副本本来就没有这些字段）
+ *
+ * @return array<string,mixed>
+ */
+function iro_i18n_copyable_meta(int $post_id): array
+{
+    $values = [];
+
+    foreach (iro_i18n_copyable_meta_keys() as $key) {
+        $value = get_post_meta($post_id, $key, true);
+
+        if ($value !== '' && $value !== null) {
+            $values[$key] = $value;
+        }
+    }
+
+    return $values;
+}
+
+/**
+ * 把原文的分类、标签与编辑器管理字段同步给同组其它语言版本
+ *
+ * 这些属性只有原文一个来源：副本是原文派生出来的，它自己不会长出新分类，原文调整
+ * 之后必须再同步一次，否则译者接手时看到的分类、特色图片和原文对不上。
+ *
+ * 区块编辑器先保存文章、后写分类与特色图片，派生副本的那一刻它们还没落库，因此派生
+ * 路径上这条同步在请求结束前还要再跑一次（见下面的 `rest_after_insert_*`）。
  *
  * @param bool $skeletons_only 只同步「未翻译副本」。自动同步用它：译者自己写过的版本
  *                             已脱离副本身份，该在编辑页面板上按需拉取，
  *                             不该被原文的每次保存悄悄覆盖。
  * @return int 被同步的版本数
  */
-function iro_i18n_sync_terms(int $post_id, bool $skeletons_only = false): int
+function iro_i18n_sync_attributes(int $post_id, bool $skeletons_only = false): int
 {
     $post = get_post($post_id);
     $path = iro_i18n_get_path($post_id);
@@ -102,7 +144,7 @@ function iro_i18n_sync_terms(int $post_id, bool $skeletons_only = false): int
         return 0;
     }
 
-    // 术语一律取自原文：在译文上点同步也是把原文的属性拉过来，不是反向推回去
+    // 属性一律取自原文：在译文上点同步也是把原文的属性拉过来，不是反向推回去
     $source = iro_i18n_group_source($post_id);
     $source = $source instanceof WP_Post ? $source : $post;
 
@@ -127,10 +169,87 @@ function iro_i18n_sync_terms(int $post_id, bool $skeletons_only = false): int
             wp_set_object_terms($version->ID, $term_ids, $taxonomy, false);
         }
 
+        // 原文没有的字段要清掉：手动同步是「让副本和原文一致」，
+        // 留下原文已经撤掉的特色图片比不同步更难解释
+        foreach (iro_i18n_copyable_meta_keys() as $key) {
+            $value = get_post_meta($source->ID, $key, true);
+
+            if ($value === '' || $value === null) {
+                delete_post_meta($version->ID, $key);
+                continue;
+            }
+
+            update_post_meta($version->ID, $key, $value);
+        }
+
         $synced++;
     }
 
     return $synced;
+}
+
+/**
+ * 把全站内容的属性同步给各自的语言版本
+ *
+ * 一行 = 一组内容，属性一律取自本组的原文：同组只跑一次，否则一组四篇会把同一份属性
+ * 反反复复写四遍。内容来源优先取站点语言那一版（原文的正身），它不在时才退到组里
+ * 最早的一篇——原文的别名被改过之后就不再满足「基准版本」的判定。
+ *
+ * @return array{groups:int,synced:int} 核对过的组数与被同步的版本数
+ */
+function iro_i18n_sync_all_attributes(): array
+{
+    $default = iro_i18n_default_language();
+
+    $query = new WP_Query([
+        'post_type'              => iro_i18n_supported_post_types(),
+        'post_status'            => 'publish',
+        'posts_per_page'         => -1,
+        'orderby'                => 'ID',
+        'order'                  => 'ASC',
+        'ignore_sticky_posts'    => true,
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
+        'meta_query'             => [
+            [
+                'key'     => IRO_I18N_PATH_META,
+                'compare' => 'EXISTS',
+            ],
+        ],
+    ]);
+
+    // 语言判定逐篇要用术语，缓存先一次性预热
+    if ($query->posts !== []) {
+        update_object_term_cache(wp_list_pluck($query->posts, 'ID'), IRO_I18N_LANGUAGE_TAXONOMY);
+    }
+
+    $donors = [];
+
+    foreach ($query->posts as $post) {
+        if (iro_i18n_is_skeleton($post->ID)) {
+            continue;
+        }
+
+        $path = iro_i18n_get_path($post->ID);
+
+        if ($path === '') {
+            continue;
+        }
+
+        $key = $post->post_type . '|' . $path;
+
+        if (!isset($donors[$key]) || iro_i18n_post_language($post->ID) === $default) {
+            $donors[$key] = (int) $post->ID;
+        }
+    }
+
+    $synced = 0;
+
+    foreach ($donors as $post_id) {
+        $synced += iro_i18n_sync_attributes($post_id);
+    }
+
+    return ['groups' => count($donors), 'synced' => $synced];
 }
 
 /**
@@ -139,8 +258,8 @@ function iro_i18n_sync_terms(int $post_id, bool $skeletons_only = false): int
  * 副本的正文按原文逐区块原样复制（区块注释、区块属性都不动），这样官方 AI 之类的
  * 逐区块翻译工具打开副本即可直接对着区块翻译；留空的话区块编辑器里是空文档，
  * 所有区块翻译能力都无从谈起。副本默认留成草稿：不会以未翻译内容出现在前台，
- * 也不会被收录，译者填完内容后改成发布即接手同一路径。分类与标签也一并接手，
- * 见 `iro_i18n_sync_terms()`。
+ * 也不会被收录，译者填完内容后改成发布即接手同一路径。分类、标签与特色图片等属性
+ * 也一并接手，见 `iro_i18n_sync_attributes()`。
  *
  * 幂等：已有版本（含草稿与回收站）的语言一律跳过，因此可以反复调用，
  * 面板的批量补齐也靠它把后来新增语言、或被永久删掉的副本补回来。
@@ -176,31 +295,10 @@ function iro_i18n_sync_translations(int $post_id): int
             continue;
         }
 
-        /**
-         * 副本要接手的编辑器管理字段
-         *
-         * 这些字段决定区块在前台与编辑器里怎么渲染（页面模板、脚注数据、同步样板状态），
-         * 少一个就会让副本的区块行为和原文不一致。刻意采用白名单：
-         * 逐条覆盖统计、SEO、主题自身的元数据会污染副本，比漏拷更难排查。
-         */
         $meta = [
             IRO_I18N_PATH_META     => $path,
             IRO_I18N_SKELETON_META => '1',
-        ];
-
-        foreach (
-            (array) apply_filters('iro_i18n_skeleton_meta_whitelist', [
-                '_wp_page_template',
-                '_wp_footnotes',
-                'wp_pattern_sync_status',
-            ]) as $key
-        ) {
-            $value = get_post_meta($post->ID, (string) $key, true);
-
-            if ($value !== '' && $value !== null) {
-                $meta[(string) $key] = $value;
-            }
-        }
+        ] + iro_i18n_copyable_meta($post->ID);
 
         $created = wp_insert_post([
             'post_type'    => $post_type,
@@ -236,11 +334,11 @@ function iro_i18n_sync_translations(int $post_id): int
         do_action('iro_i18n_skeleton_created', $skeleton_id, $post_id, $code);
     }
 
-    // 分类与标签在副本都建好之后统一搬一次。术语不能在 wp_insert_post 的同一次调用里
-    // 给：那次插入会先落一颗默认语言（分类法的默认术语、分类的「未分类」），
+    // 分类、标签与特色图片在副本都建好之后统一搬一次。术语不能在 wp_insert_post 的
+    // 同一次调用里给：那次插入会先落一颗默认语言（分类法的默认术语、分类的「未分类」），
     // 与正文同步派生副本的顺序纠缠在一起
     if ($copies > 0) {
-        iro_i18n_sync_terms($post_id, true);
+        iro_i18n_sync_attributes($post_id, true);
     }
 
     return $copies;
@@ -273,19 +371,45 @@ function iro_i18n_adopt_default_language(int $post_id): void
 }
 
 /**
- * 区块编辑器写完分类与标签之后把副本的术语再同步一次
+ * 区块编辑器写完分类与特色图片之后再同步一次
  *
- * REST 请求的顺序是「保存文章 → 写分类」，派生副本的 save_post 那一刻分类还没落库，
- * 副本拿到的是「未分类」；术语落库之后必须再同步一次，否则新文章的副本永远停在
- * 未分类。保存流程里那次同步对传统编辑器（分类随文章一起提交）已经足够。
+ * REST 请求的顺序是「保存文章 → 写分类与特色图片」，派生副本的 save_post 那一刻它们
+ * 还没落库，副本拿到的是「未分类」与空特色图片；落库之后必须再同步一次，否则新文章的
+ * 副本永远停在未分类。保存流程里那次同步对传统编辑器（属性随文章一起提交）已经足够。
  */
-function iro_i18n_sync_terms_after_rest(WP_Post $post): void
+function iro_i18n_sync_attributes_after_rest(WP_Post $post): void
 {
     if (iro_i18n_is_skeleton($post->ID) || wp_is_post_revision($post->ID) || wp_is_post_autosave($post->ID)) {
         return;
     }
 
-    iro_i18n_sync_terms($post->ID, true);
+    iro_i18n_sync_attributes($post->ID, true);
+}
+
+/**
+ * 特色图片单独挂一条：任何编辑器都是先保存文章、后写特色图片关联
+ *
+ * 区块编辑器由 `rest_after_insert_*` 兜住，传统编辑器与直接调用 `set_post_thumbnail()`
+ * 的路径只有这一条。值没变时 WordPress 不会触发钩子，因此同步写回副本的那几次不会
+ * 变成来回递归。
+ *
+ * @param int    $meta_id  无关，钩子签名要求
+ * @param int    $post_id  关联的那篇内容
+ * @param string $meta_key 被写的字段名
+ */
+function iro_i18n_sync_attributes_after_thumbnail(int $meta_id, int $post_id, string $meta_key): void
+{
+    if ($meta_key !== '_thumbnail_id') {
+        return;
+    }
+
+    $post = get_post($post_id);
+
+    if (!$post instanceof WP_Post || !in_array($post->post_type, iro_i18n_supported_post_types(), true)) {
+        return;
+    }
+
+    iro_i18n_sync_attributes($post_id, true);
 }
 
 if (iro_i18n_enabled()) {
@@ -332,6 +456,9 @@ if (iro_i18n_enabled()) {
     }, 20, 3);
 
     foreach (iro_i18n_supported_post_types() as $post_type) {
-        add_action("rest_after_insert_{$post_type}", 'iro_i18n_sync_terms_after_rest', 20);
+        add_action("rest_after_insert_{$post_type}", 'iro_i18n_sync_attributes_after_rest', 20);
     }
+
+    add_action('added_post_meta', 'iro_i18n_sync_attributes_after_thumbnail', 20, 3);
+    add_action('updated_post_meta', 'iro_i18n_sync_attributes_after_thumbnail', 20, 3);
 }

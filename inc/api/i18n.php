@@ -306,13 +306,12 @@ function iro_i18n_rest_repair_language(): WP_REST_Response
 }
 
 /**
- * 把原文的分类与标签同步给同组其它语言版本
+ * 把全站内容的属性同步给各自的语言版本
  *
- * 传组内哪一篇都行：术语一律取自本组的原文，见 `iro_i18n_sync_terms()`。
+ * 分类、标签、特色图片这些属性只有原文一个来源，这里一次核对全站，
+ * 见 `iro_i18n_sync_all_attributes()`。
  */
-function iro_i18n_rest_sync_terms(WP_REST_Request $request): WP_REST_Response
+function iro_i18n_rest_sync_attributes(): WP_REST_Response
 {
-    return rest_ensure_response([
-        'synced' => iro_i18n_sync_terms((int) $request->get_param('post')),
-    ]);
+    return rest_ensure_response(iro_i18n_sync_all_attributes());
 }

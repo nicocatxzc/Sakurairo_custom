@@ -155,18 +155,18 @@ if (iro_i18n_enabled()) {
 
                     echo '</ul>';
 
-                    // 原文改过分类之后副本不会自己变，给一次手动拉取的口子；
+                    // 原文改过属性之后副本不会自己变，给一次手动拉取的口子；
                     // 自动同步只覆盖未翻译副本，译者写过的版本由这里按需覆盖
                     if (count($group) > 1) :
 ?>
                 <p style="margin:12px 0 4px;">
                     <a class="button button-small"
-                        href="<?= esc_url(wp_nonce_url(admin_url('admin-post.php?action=iro_i18n_sync_terms&post=' . $post->ID), 'iro_i18n_sync_terms_' . $post->ID)) ?>">
-                        <?= esc_html__('同步原文的分类与标签', 'sakurairo') ?>
+                        href="<?= esc_url(wp_nonce_url(admin_url('admin-post.php?action=iro_i18n_sync_attributes&post=' . $post->ID), 'iro_i18n_sync_attributes_' . $post->ID)) ?>">
+                        <?= esc_html__('同步原文的属性', 'sakurairo') ?>
                     </a>
                 </p>
                 <p class="description">
-                    <?= esc_html__('把原文的分类与标签覆盖到本组的其它语言版本。', 'sakurairo') ?>
+                    <?= esc_html__('把原文的分类、标签与特色图片等属性覆盖到本组的其它语言版本。', 'sakurairo') ?>
                 </p>
 <?php
                     endif;
@@ -239,21 +239,21 @@ if (iro_i18n_enabled()) {
     });
 
     /**
-     * 编辑页「同步原文的分类与标签」的落点
+     * 编辑页「同步原文的属性」的落点
      *
      * 走 admin-post 而不是 REST：编辑页是整页表单，手上没有 REST 的 nonce，
      * 而这个动作只需要一次跳转加一条提示。
      */
-    add_action('admin_post_iro_i18n_sync_terms', function (): void {
+    add_action('admin_post_iro_i18n_sync_attributes', function (): void {
         $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
 
-        check_admin_referer('iro_i18n_sync_terms_' . $post_id);
+        check_admin_referer('iro_i18n_sync_attributes_' . $post_id);
 
         if (!current_user_can('edit_post', $post_id)) {
             wp_die(esc_html__('没有权限同步这篇内容的语言版本。', 'sakurairo'));
         }
 
-        $synced = iro_i18n_sync_terms($post_id);
+        $synced = iro_i18n_sync_attributes($post_id);
 
         wp_safe_redirect(add_query_arg(
             'iro_i18n_synced',
@@ -272,7 +272,7 @@ if (iro_i18n_enabled()) {
         echo '<div class="notice notice-success is-dismissible"><p>'
             . esc_html(sprintf(
                 /* translators: %d: 被同步的语言版本数 */
-                __('已把原文的分类与标签同步到 %d 个语言版本。', 'sakurairo'),
+                __('已把原文的属性同步到 %d 个语言版本。', 'sakurairo'),
                 (int) $_GET['iro_i18n_synced']
             ))
             . '</p></div>';
