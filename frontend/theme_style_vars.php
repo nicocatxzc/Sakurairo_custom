@@ -25,7 +25,7 @@
         --border-sketch: 0.1rem solid rgba(var(--border-color-sketch), 0.1);
         --border-shine: 0.1rem solid rgb(var(--border-color-shine));
 
-        <?php 
+        <?php
         // 侧栏工具块外观
         ?>--iro-widget-tools-background: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--widget-background-color)" : "transparent" ?>;
         --iro-widget-tools-border: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--border-sketch)" : "none" ?>;
@@ -181,7 +181,7 @@
     }
 </style>
 
-<?php //字体延迟解锁 
+<?php //字体延迟解锁
 ?>
 <?php if (iro_opt("extra_fonts", []) != []): ?>
     <style id="iro_extra_fonts" media="not all">
@@ -193,7 +193,7 @@
             font-display: swap;
         }
 
-        <?php endforeach; ?>
+        <?php endforeach; ?><?= iro_get_wp_fonts_style() ?>
     </style>
 <?php endif; ?>
 

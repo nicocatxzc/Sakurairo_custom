@@ -20,3 +20,4 @@ const IRO_MEDIA_AVIF_MIN_PNG_DENSITY = 0.5;
 require_once get_template_directory() . '/inc/functions/optimize/slow_net.php';
 require_once get_template_directory() . '/inc/functions/optimize/image_server.php';
 require_once get_template_directory() . '/inc/functions/optimize/optimize_image.php';
+require_once get_template_directory() . '/inc/functions/optimize/wp_fonts.php';
