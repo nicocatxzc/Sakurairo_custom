@@ -32,18 +32,18 @@ if (!is_array($iro_menu_options)) {
                 <?php foreach ($iro_menu_options as $item): ?>
                     <?php if (!empty($item['children'])): ?>
                         <li>
-                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html(iro__($item['title'])) ?></a>
+                            <a href="<?= esc_url($item['url']) ?>"><?= iro__($item['title']) ?></a>
                             <ul class="sub-menu">
                                 <?php foreach ($item['children'] as $child): ?>
                                     <li>
-                                        <a href="<?= esc_url($child['url']) ?>"><?= esc_html(iro__($child['title'])) ?></a>
+                                        <a href="<?= esc_url($child['url']) ?>"><?= iro__($child['title']) ?></a>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
                     <?php else: ?>
                         <li>
-                            <a href="<?= esc_url($item['url']) ?>"><?= esc_html(iro__($item['title'])) ?></a>
+                            <a href="<?= esc_url($item['url']) ?>"><?= iro__($item['title']) ?></a>
                         </li>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -52,7 +52,7 @@ if (!is_array($iro_menu_options)) {
         <?php // 文章页滚到标题之上时顶替菜单行，开关与动画见 island.scss / island.js。
         // 位置始终渲染：pjax 不重渲染导航栏，从首页切进文章时也得有这个地方，文字由 island.js 补 
         ?>
-        <span class="nav-article-title"><?= is_singular() ? esc_html(get_the_title(get_queried_object_id())) : '' ?></span>
+        <span class="nav-article-title"><?= is_singular() ? get_the_title(get_queried_object_id()) : '' ?></span>
         <?php // 搜索与骰子始终渲染：两种状态之间切换的是类，不重建 DOM 
         ?>
         <?php if (iro_opt("nav_menu_search_switch", true)): ?>
@@ -95,7 +95,7 @@ if (!is_array($iro_menu_options)) {
                 <?php endif; ?>
                 <div class="user-menu">
                     <div class="user-menu-info">
-                        <span class="name"><?= is_user_logged_in() ? esc_html($current_user->display_name) : __("游客", 'sakurairo') ?></span>
+                        <span class="name"><?= is_user_logged_in() ? $current_user->display_name : __("游客", 'sakurairo') ?></span>
                     </div>
                     <div class="user-menu-option">
                         <?php if (is_user_logged_in()): ?>
