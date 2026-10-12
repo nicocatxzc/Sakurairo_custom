@@ -127,7 +127,8 @@ if (iro_i18n_enabled()) {
                 'iro_i18n_translations',
                 __('多语言', 'sakurairo'),
                 function (WP_Post $post): void {
-                    $path = iro_i18n_get_path($post->ID);
+                    $group = iro_i18n_group_map($post->ID);
+                    $path  = iro_i18n_get_path($post->ID);
 
                     if ($path === '') {
                         // 保存一次即会补上，这里先按当前别名展示预期值
@@ -138,7 +139,7 @@ if (iro_i18n_enabled()) {
                     echo '<p><strong>' . esc_html__('关联标识', 'sakurairo') . '</strong><br><code>' . esc_html($path) . '</code></p>';
                     echo '<ul style="margin:0;">';
 
-                    foreach (iro_i18n_language_statuses(iro_i18n_group_map($post->ID)) as $row) {
+                    foreach (iro_i18n_language_statuses($group) as $row) {
                         // 待同步优先于其它状态显示
                         $cell = $row['url'] === ''
                             ? '<span class="description">' . esc_html($row['label']) . '</span>'
@@ -153,6 +154,22 @@ if (iro_i18n_enabled()) {
                     }
 
                     echo '</ul>';
+
+                    // 原文改过分类之后副本不会自己变，给一次手动拉取的口子；
+                    // 自动同步只覆盖未翻译副本，译者写过的版本由这里按需覆盖
+                    if (count($group) > 1) :
+?>
+                <p style="margin:12px 0 4px;">
+                    <a class="button button-small"
+                        href="<?= esc_url(wp_nonce_url(admin_url('admin-post.php?action=iro_i18n_sync_terms&post=' . $post->ID), 'iro_i18n_sync_terms_' . $post->ID)) ?>">
+                        <?= esc_html__('同步原文的分类与标签', 'sakurairo') ?>
+                    </a>
+                </p>
+                <p class="description">
+                    <?= esc_html__('把原文的分类与标签覆盖到本组的其它语言版本。', 'sakurairo') ?>
+                </p>
+<?php
+                    endif;
 
                     // 副本正文是原文的逐区块拷贝，因此官方 AI 插件的区块翻译可以直接在编辑器里用；
                     // 这里点明该在它的语言选择器里挑哪一项，避免译者选错语言
@@ -219,6 +236,46 @@ if (iro_i18n_enabled()) {
                 'default'
             );
         }
+    });
+
+    /**
+     * 编辑页「同步原文的分类与标签」的落点
+     *
+     * 走 admin-post 而不是 REST：编辑页是整页表单，手上没有 REST 的 nonce，
+     * 而这个动作只需要一次跳转加一条提示。
+     */
+    add_action('admin_post_iro_i18n_sync_terms', function (): void {
+        $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+
+        check_admin_referer('iro_i18n_sync_terms_' . $post_id);
+
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_die(esc_html__('没有权限同步这篇内容的语言版本。', 'sakurairo'));
+        }
+
+        $synced = iro_i18n_sync_terms($post_id);
+
+        wp_safe_redirect(add_query_arg(
+            'iro_i18n_synced',
+            $synced,
+            (string) get_edit_post_link($post_id, 'raw')
+        ));
+        exit;
+    });
+
+    // 同步结果只在跳回来的那一次显示
+    add_action('admin_notices', function (): void {
+        if (!isset($_GET['iro_i18n_synced'])) {
+            return;
+        }
+
+        echo '<div class="notice notice-success is-dismissible"><p>'
+            . esc_html(sprintf(
+                /* translators: %d: 被同步的语言版本数 */
+                __('已把原文的分类与标签同步到 %d 个语言版本。', 'sakurairo'),
+                (int) $_GET['iro_i18n_synced']
+            ))
+            . '</p></div>';
     });
 
     /**

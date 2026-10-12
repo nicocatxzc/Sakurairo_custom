@@ -304,3 +304,15 @@ function iro_i18n_rest_repair_language(): WP_REST_Response
 {
     return rest_ensure_response(['count' => iro_i18n_repair_default_language()]);
 }
+
+/**
+ * 把原文的分类与标签同步给同组其它语言版本
+ *
+ * 传组内哪一篇都行：术语一律取自本组的原文，见 `iro_i18n_sync_terms()`。
+ */
+function iro_i18n_rest_sync_terms(WP_REST_Request $request): WP_REST_Response
+{
+    return rest_ensure_response([
+        'synced' => iro_i18n_sync_terms((int) $request->get_param('post')),
+    ]);
+}

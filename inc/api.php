@@ -370,6 +370,22 @@ add_action('rest_api_init', function () {
                 'permission_callback' => 'iro_rest_check_permission',
             )
         );
+        register_rest_route(
+            'sakura/v1',
+            '/i18n/sync-terms',
+            array(
+                'methods' => 'POST',
+                'callback' => 'iro_i18n_rest_sync_terms',
+                'permission_callback' => 'iro_rest_check_permission',
+                'args' => array(
+                    'post' => array(
+                        'required' => true,
+                        'type'     => 'integer',
+                        'minimum'  => 1,
+                    ),
+                ),
+            )
+        );
     }
 
     // 页脚播放器

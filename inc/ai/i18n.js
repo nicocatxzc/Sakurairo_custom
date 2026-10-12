@@ -146,6 +146,10 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "已核對 {checked} 筆已發佈內容，語言標記、關聯識別碼與未翻譯副本都已齊全，無需改動。",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "已核對 {checked} 筆已發佈內容：新增語言標記 {marked} 筆、關聯識別碼 {linked} 筆、未翻譯副本 {copies} 份。",
         "已把 {count} 条原文的语言标记归位到默认语言。": "已把 {count} 筆原文的語言標記歸位到預設語言。",
+        "分类与标签": "分類與標籤",
+        "同步原文": "同步原文",
+        "把原文的分类与标签覆盖到本组的其它语言版本。": "把原文的分類與標籤覆蓋到本組的其它語言版本。",
+        "已把原文的分类与标签同步到 {synced} 个语言版本。": "已把原文的分類與標籤同步到 {synced} 個語言版本。",
     },
     en_US: {
         "是": "Yes",
@@ -283,6 +287,10 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "Checked {checked} published items; language tags, group keys and untranslated copies are all in place, so nothing changed.",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "Checked {checked} published items: added {marked} language tags, {linked} group keys and {copies} untranslated copies.",
         "已把 {count} 条原文的语言标记归位到默认语言。": "Moved the language tag of {count} source items back to the default language.",
+        "分类与标签": "Categories & tags",
+        "同步原文": "Sync source",
+        "把原文的分类与标签覆盖到本组的其它语言版本。": "Overwrite the categories and tags of the other language versions with the source's.",
+        "已把原文的分类与标签同步到 {synced} 个语言版本。": "Synced the source's categories and tags to {synced} language versions.",
     },
     ja: {
         "是": "はい",
@@ -420,6 +428,10 @@ const MESSAGES = {
         "已核对 {checked} 条已发布内容，语言标记、关联标识与未翻译副本都已齐全，无需改动。": "{checked} 件の公開済みコンテンツを確認しました。言語タグ・関連キー・未翻訳の複製はすべて揃っており、変更はありません。",
         "已核对 {checked} 条已发布内容：新增语言标记 {marked} 条、关联标识 {linked} 条、未翻译副本 {copies} 份。": "{checked} 件の公開済みコンテンツを確認しました：言語タグ {marked} 件、関連キー {linked} 件、未翻訳の複製 {copies} 件を追加しました。",
         "已把 {count} 条原文的语言标记归位到默认语言。": "{count} 件の原文の言語タグをデフォルト言語に戻しました。",
+        "分类与标签": "カテゴリーとタグ",
+        "同步原文": "原文を同期",
+        "把原文的分类与标签覆盖到本组的其它语言版本。": "原文のカテゴリーとタグを、同じグループの他言語版に上書きします。",
+        "已把原文的分类与标签同步到 {synced} 个语言版本。": "原文のカテゴリーとタグを {synced} 件の言語版に同期しました。",
     },
 };
 

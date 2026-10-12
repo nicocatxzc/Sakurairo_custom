@@ -57,4 +57,6 @@ export const aiApi = {
     i18nOverview: (params = {}) => request(`/i18n/overview?${toQuery(params)}`),
     i18nBackfill: () => request("/i18n/backfill", { method: "POST" }),
     i18nRepairLanguage: () => request("/i18n/repair-language", { method: "POST" }),
+    i18nSyncTerms: (post) =>
+        request("/i18n/sync-terms", { method: "POST", data: { post } }),
 };

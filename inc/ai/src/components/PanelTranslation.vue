@@ -75,6 +75,10 @@ async function load() {
             cells: Object.fromEntries(
                 (item.statuses ?? []).map((cell) => [cell.code, cell]),
             ),
+            // 状态为「无版本」的语言没有可同步的对象，用它决定这一行要不要给同步按钮
+            versions: (item.statuses ?? []).filter(
+                (cell) => cell.state !== "missing",
+            ).length,
         }));
         languages.value = data.languages ?? [];
         locale.value = data.locale ?? "";
@@ -152,6 +156,24 @@ function repairLanguage() {
     );
 }
 
+// 原文的分类与标签是唯一来源，副本不会自己变；改完原文在这一行推一次
+async function syncTerms(row) {
+    acting.value = `i18nSyncTerms-${row.id}`;
+
+    try {
+        const data = await aiApi.i18nSyncTerms(row.id);
+        ElMessage.success(
+            t("已把原文的分类与标签同步到 {synced} 个语言版本。", {
+                synced: data.synced ?? 0,
+            }),
+        );
+    } catch (error) {
+        ElMessage.error(error.message);
+    } finally {
+        acting.value = "";
+    }
+}
+
 onMounted(load);
 </script>
 
@@ -209,6 +231,18 @@ onMounted(load);
                 <el-table-column :label="t('关联标识')" min-width="180">
                     <template #default="{ row }">
                         <code>{{ row.path }}</code>
+                    </template>
+                </el-table-column>
+
+                <el-table-column :label="t('分类与标签')" width="110" align="center">
+                    <template #default="{ row }">
+                        <el-tooltip v-if="row.versions > 1" :content="t('把原文的分类与标签覆盖到本组的其它语言版本。')"
+                            placement="top">
+                            <el-button size="small" link type="primary"
+                                :loading="acting === `i18nSyncTerms-${row.id}`" @click="syncTerms(row)">
+                                {{ t("同步原文") }}
+                            </el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
 

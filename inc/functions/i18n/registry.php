@@ -78,6 +78,20 @@ function iro_i18n_languages(): array
 }
 
 /**
+ * 内置语言的全部代号，与「站点此刻启用了哪几种」无关
+ *
+ * 已经有内容的语言标记必须按它解读：站长关掉某种语言只是不再新建、不再投喂该语言的
+ * 副本，旧内容仍然属于那种语言。读取时若也按启用项过滤，那些内容会一夜之间被认成
+ * 默认语言，列表、组内对照与保存归位全都跟着错。
+ *
+ * @return string[]
+ */
+function iro_i18n_known_languages(): array
+{
+    return array_keys(iro_i18n_language_definitions());
+}
+
+/**
  * 把一个 locale 写法归并到语言代号，对不上返回空串
  *
  * 逐个比对候选写法而不是全等：WordPress 的 locale 形态不统一

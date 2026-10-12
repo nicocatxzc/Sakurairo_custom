@@ -32,12 +32,15 @@ function iro_i18n_supported_post_types(): array
 
 /**
  * 文章当前的语言标记；未标记的历史内容一律按默认语言看待
+ *
+ * 标记一律按内置语言解读，不看此刻启用了哪几种：关掉某种语言之后那些版本仍然
+ * 是那种语言，若在这里按启用项过滤，它们会被认成默认语言。
  */
 function iro_i18n_post_language(int $post_id): string
 {
     $stored = (string) get_post_meta($post_id, IRO_I18N_POST_LANG_META, true);
 
-    if (in_array($stored, iro_i18n_languages(), true)) {
+    if (in_array($stored, iro_i18n_known_languages(), true)) {
         return $stored;
     }
 
@@ -55,7 +58,7 @@ function iro_i18n_post_language(int $post_id): string
             $code = $term->slug;
         }
 
-        if (in_array($code, iro_i18n_languages(), true)) {
+        if (in_array($code, iro_i18n_known_languages(), true)) {
             return $code;
         }
     }
@@ -65,7 +68,7 @@ function iro_i18n_post_language(int $post_id): string
 
 function iro_i18n_post_has_language(int $post_id): bool
 {
-    if (in_array((string) get_post_meta($post_id, IRO_I18N_POST_LANG_META, true), iro_i18n_languages(), true)) {
+    if (in_array((string) get_post_meta($post_id, IRO_I18N_POST_LANG_META, true), iro_i18n_known_languages(), true)) {
         return true;
     }
 
@@ -76,7 +79,7 @@ function iro_i18n_post_has_language(int $post_id): bool
 
 function iro_i18n_set_post_language(int $post_id, string $code): void
 {
-    if (!in_array($code, iro_i18n_languages(), true)) {
+    if (!in_array($code, iro_i18n_known_languages(), true)) {
         return;
     }
 
