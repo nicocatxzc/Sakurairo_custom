@@ -6,19 +6,19 @@ import Placeholder from "../placeholder";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "一言",
-        note: "内容按「页脚 → 一言」设置输出：API 模式留空由前台请求填充，自定义与混合模式在服务端预渲染。",
+        note: "随机展示一句话，内容来自「页脚 → 一言」设置。",
     },
     "zh-TW": {
         blockTitle: "一言",
-        note: "內容依「頁腳 → 一言」設定輸出：API 模式留空由前台請求填充，自訂與混合模式在伺服器端預先渲染。",
+        note: "隨機顯示一句話，內容來自「頁腳 → 一言」設定。",
     },
     ja: {
         blockTitle: "ひとこと",
-        note: "「フッター → ひとこと」の設定に従います。API モードは空で出力しフロント側が取得、カスタムとミックスはサーバー側で描画します。",
+        note: "一文をランダムに表示します。内容は「フッター → ひとこと」の設定から取得します。",
     },
     en: {
         blockTitle: "Hitokoto",
-        note: "Output follows the “Footer → Hitokoto” setting: API mode stays empty and is filled on the front end, custom and mixed modes are pre-rendered on the server.",
+        note: "Shows a random quote; the content comes from the “Footer → Hitokoto” settings.",
     },
 });
 

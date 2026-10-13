@@ -7,10 +7,10 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "聚焦文字",
-        description: "封面标题那类大号文字，可切换普通文字与 Mashiro 特效文字。",
+        description: "大号文字标题，可切换普通文字与特效文字。",
         settingPanel: "文字设置",
         effectLabel: "特效文字",
-        effectHelp: "开启后使用 Mashiro 的 glitch 抖动效果（悬停时通道分离）。",
+        effectHelp: "开启后使用 Mashiro 特效文字效果。",
         fontLabel: "字体",
         fontHelp: "font-family 值，例如 “Noto Serif SC”，留空则跟随主题。",
         sizeLabel: "大小",
@@ -26,10 +26,10 @@ const lang = createI18n({
     },
     "zh-TW": {
         blockTitle: "聚焦文字",
-        description: "封面標題那類大號文字，可切換一般文字與 Mashiro 特效文字。",
+        description: "大號文字標題，可切換一般文字與特效文字。",
         settingPanel: "文字設定",
         effectLabel: "特效文字",
-        effectHelp: "開啟後使用 Mashiro 的 glitch 抖動效果（滑鼠移入時通道分離）。",
+        effectHelp: "開啟後使用 Mashiro 特效文字效果。",
         fontLabel: "字體",
         fontHelp: "font-family 值，例如 “Noto Serif SC”，留空則跟隨主題。",
         sizeLabel: "大小",
@@ -46,10 +46,10 @@ const lang = createI18n({
     ja: {
         blockTitle: "フォーカス文字",
         description:
-            "カバーのタイトルのような大きな文字。通常の文字と Mashiro のエフェクト文字を切り替えられます。",
+            "大きな文字のタイトル。通常の文字とエフェクト文字を切り替えられます。",
         settingPanel: "文字設定",
         effectLabel: "エフェクト文字",
-        effectHelp: "有効にすると Mashiro のグリッチ効果（ホバーでチャンネルがずれる）を使います。",
+        effectHelp: "有効にすると Mashiro のエフェクト文字を使います。",
         fontLabel: "フォント",
         fontHelp: "font-family の値（例 “Noto Serif SC”）。空ならテーマに従います。",
         sizeLabel: "サイズ",
@@ -66,10 +66,10 @@ const lang = createI18n({
     en: {
         blockTitle: "Focus Text",
         description:
-            "Large display text like the cover title, switchable between plain text and the Mashiro glitch effect.",
+            "A large text heading, switchable between plain text and effect text.",
         settingPanel: "Text settings",
-        effectLabel: "Glitch effect",
-        effectHelp: "Uses Mashiro's glitch effect: the colour channels split on hover.",
+        effectLabel: "Effect text",
+        effectHelp: "Uses the Mashiro effect text style.",
         fontLabel: "Font",
         fontHelp: "A font-family value such as “Noto Serif SC”; leave empty to follow the theme.",
         sizeLabel: "Size",

@@ -7,7 +7,7 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "栏目容器",
-        description: "把侧栏里若干块包成一栏；开启吸附后这一栏会停在视口里。",
+        description: "把若干块包成一栏，可选整栏背景、圆角与吸附。",
         settingPanel: "栏目设置",
         appearancePanel: "栏目外观",
         stickyLabel: "整栏吸附",
@@ -19,7 +19,7 @@ const lang = createI18n({
     },
     "zh-TW": {
         blockTitle: "欄目容器",
-        description: "把側欄裡若干區塊包成一欄；開啟吸附後這一欄會停在視口裡。",
+        description: "把若干區塊包成一欄，可選整欄背景、圓角與吸附。",
         settingPanel: "欄目設定",
         appearancePanel: "欄目外觀",
         stickyLabel: "整欄吸附",
@@ -32,7 +32,7 @@ const lang = createI18n({
     ja: {
         blockTitle: "カラムコンテナ",
         description:
-            "サイドバーの複数ブロックを 1 つのカラムにまとめます。追従を有効にすると表示されたままになります。",
+            "複数のブロックを 1 つのカラムにまとめます。背景・角丸・追従を選べます。",
         settingPanel: "カラム設定",
         appearancePanel: "カラムの外観",
         stickyLabel: "カラムを追従",
@@ -46,7 +46,7 @@ const lang = createI18n({
     en: {
         blockTitle: "Column Container",
         description:
-            "Groups sidebar blocks into one column; enable sticky to keep it in the viewport.",
+            "Groups blocks into one column, with optional background, corner radius and sticky behaviour.",
         settingPanel: "Column settings",
         appearancePanel: "Column appearance",
         stickyLabel: "Sticky column",

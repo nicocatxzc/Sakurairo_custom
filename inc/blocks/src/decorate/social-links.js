@@ -5,20 +5,20 @@ import Placeholder from "../placeholder";
 
 const lang = createI18n({
     "zh-CN": {
-        blockTitle: "社交图标条",
-        note: "长条状的社交图标占位；图标与链接来自「封面 → 社交区域」设置。",
+        blockTitle: "社交区域",
+        note: "社交图标占位；图标与链接来自「封面 → 社交区域」设置。",
     },
     "zh-TW": {
-        blockTitle: "社交圖示列",
-        note: "長條狀的社交圖示佔位；圖示與連結來自「封面 → 社交區域」設定。",
+        blockTitle: "社交區域",
+        note: "社交圖示佔位；圖示與連結來自「封面 → 社交區域」設定。",
     },
     ja: {
-        blockTitle: "ソーシャルアイコン列",
-        note: "横長のソーシャルアイコンのプレースホルダー。アイコンとリンクは「カバー → ソーシャル」の設定から取得します。",
+        blockTitle: "ソーシャル",
+        note: "ソーシャルアイコンのプレースホルダー。アイコンとリンクは「カバー → ソーシャル」の設定から取得します。",
     },
     en: {
-        blockTitle: "Social Icon Bar",
-        note: "A bar-shaped placeholder for the social icons; icons and links come from the “Cover → Social” settings.",
+        blockTitle: "Social",
+        note: "Placeholder for the social icons; icons and links come from the “Cover → Social” settings.",
     },
 });
 

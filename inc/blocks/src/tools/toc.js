@@ -11,28 +11,28 @@ const lang = createI18n({
         contentPanel: "内容",
         titleLabel: "标题",
         titleHelp: "留空则不显示标题",
-        note: "目录将会根据正文标题自动生成；没有标题时不显示。",
+        note: "根据正文标题自动生成目录；没有标题时不显示。",
     },
     "zh-TW": {
         blockTitle: "目錄容器",
         contentPanel: "內容",
         titleLabel: "標題",
         titleHelp: "留空則不顯示標題",
-        note: "目錄由正文標題自動生成，前台交給 tocbot 填充；沒有標題時不顯示。",
+        note: "依正文標題自動生成目錄；沒有標題時不顯示。",
     },
     ja: {
         blockTitle: "目次コンテナ",
         contentPanel: "内容",
         titleLabel: "タイトル",
         titleHelp: "空の場合はタイトルを表示しません",
-        note: "目次は本文の見出しから自動生成され、フロント側で tocbot が描画します。見出しが無い場合は表示されません。",
+        note: "本文の見出しから目次を自動生成します。見出しが無い場合は表示されません。",
     },
     en: {
         blockTitle: "TOC Container",
         contentPanel: "Content",
         titleLabel: "Title",
         titleHelp: "Empty hides the title",
-        note: "Built from the post headings and filled by tocbot on the front end; hidden when there are no headings.",
+        note: "Builds a table of contents from the post headings; hidden when there are none.",
     },
 });
 

@@ -7,7 +7,7 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "动态布局容器",
-        description: "自带圆角与内边距的卡片容器，宽度按父容器的百分比。",
+        description: "把若干块包成一个卡片容器，宽度、圆角与内边距可调。",
         settingPanel: "容器设置",
         widthLabel: "宽度（%）",
         radiusLabel: "圆角",
@@ -17,7 +17,7 @@ const lang = createI18n({
     },
     "zh-TW": {
         blockTitle: "動態佈局容器",
-        description: "自帶圓角與內邊距的卡片容器，寬度依父容器的百分比。",
+        description: "把若干區塊包成一個卡片容器，寬度、圓角與內邊距可調。",
         settingPanel: "容器設定",
         widthLabel: "寬度（%）",
         radiusLabel: "圓角",
@@ -28,7 +28,7 @@ const lang = createI18n({
     ja: {
         blockTitle: "動的レイアウトコンテナ",
         description:
-            "角丸と内側の余白を持つカードコンテナ。幅は親コンテナに対する割合で指定します。",
+            "複数のブロックをまとめるカードコンテナ。幅・角丸・余白を調整できます。",
         settingPanel: "コンテナ設定",
         widthLabel: "幅（%）",
         radiusLabel: "角丸",
@@ -39,7 +39,7 @@ const lang = createI18n({
     en: {
         blockTitle: "Dynamic Layout Container",
         description:
-            "A card container with its own corner radius and padding; the width is a percentage of its parent.",
+            "A card container that groups blocks; width, corner radius and padding are adjustable.",
         settingPanel: "Container settings",
         widthLabel: "Width (%)",
         radiusLabel: "Corner radius",

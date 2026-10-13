@@ -7,7 +7,7 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "打字机",
-        description: "typed.js 打字机；配置写在块上则内联到前台，留空则用主题的全局配置。",
+        description: "typed.js 打字机，配置留空则使用主题后台相关配置",
         settingPanel: "打字机设置",
         configLabel: "typed.js 配置",
         configHelp: "JSON 格式，字段参考 typed.js；留空则用「封面 → 封面打字机配置」。",
@@ -17,7 +17,7 @@ const lang = createI18n({
     },
     "zh-TW": {
         blockTitle: "打字機",
-        description: "typed.js 打字機；設定寫在區塊上會內聯到前台，留空則用主題的全域設定。",
+        description: "typed.js 打字機，設定留空則使用主題後台相關設定。",
         settingPanel: "打字機設定",
         configLabel: "typed.js 設定",
         configHelp: "JSON 格式，欄位參考 typed.js；留空則用「封面 → 封面打字機設定」。",
@@ -28,7 +28,7 @@ const lang = createI18n({
     ja: {
         blockTitle: "タイプライター",
         description:
-            "typed.js のタイプライター。ブロックに設定を書くとフロント側に埋め込み、空ならテーマの全体設定を使います。",
+            "typed.js のタイプライター。設定を空にするとテーマ管理画面の関連設定を使います。",
         settingPanel: "タイプライター設定",
         configLabel: "typed.js 設定",
         configHelp: "JSON 形式。項目は typed.js を参照。空なら「カバー → タイプライター設定」を使います。",
@@ -39,7 +39,7 @@ const lang = createI18n({
     en: {
         blockTitle: "Typewriter",
         description:
-            "typed.js typewriter; a config set on the block is inlined on the front end, otherwise the theme-wide config is used.",
+            "typed.js typewriter; when the config is left empty the theme settings are used.",
         settingPanel: "Typewriter settings",
         configLabel: "typed.js config",
         configHelp:

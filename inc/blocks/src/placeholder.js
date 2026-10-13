@@ -3,16 +3,16 @@ import createI18n from "./i18n";
 
 const lang = createI18n({
     "zh-CN": {
-        hint: "动态区块，外观由前台 PHP 渲染",
+        hint: "动态区块，内容自动生成",
     },
     "zh-TW": {
-        hint: "動態區塊，外觀由前台 PHP 渲染",
+        hint: "動態區塊，內容自動生成",
     },
     ja: {
-        hint: "動的ブロックです。表示はフロント側の PHP が生成します",
+        hint: "動的ブロックです。内容は自動で生成されます",
     },
     en: {
-        hint: "Dynamic block, rendered by PHP on the front end",
+        hint: "Dynamic block; the content is generated automatically",
     },
 });
 
