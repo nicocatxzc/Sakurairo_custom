@@ -1,4 +1,4 @@
-f<?php
+<?php
     switch (iro_opt("footer_style_select", "sakura")) {
         case 'island':
             require_once get_theme_file_path('/frontend/components/site/footer/island.php');
