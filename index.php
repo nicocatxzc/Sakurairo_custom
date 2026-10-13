@@ -65,8 +65,15 @@ global $iro_only_template;
                 // 固定导航栏会盖住页面上沿，侧栏吸顶位置要在它下方
                 $layout_nav_height       = iro_opt('nav_style_select', 'sakura') === 'island' ? '70px' : '3.75rem';
                 ?>
-                <div class="layout-grid cols-<?= $layout_columns ?> first-<?= $layout_first_position ?>"
-                    style="--layout-sticky-top: calc(<?= $layout_nav_height ?> + 0.75rem);">
+                <div class="layout-grid" style="--layout-sticky-top: calc(<?= $layout_nav_height ?> + 0.75rem);">
+                    <?php // 左右由 DOM 顺序决定：写在 #pjax-main 之前的在左，之后的在右 
+                    ?>
+                    <?php if ($layout_columns >= 2 && $layout_first_position === 'left'): ?>
+                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_first.php'); ?>
+                    <?php endif; ?>
+                    <?php if ($layout_columns >= 3 && $layout_first_position === 'right'): ?>
+                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_second.php'); ?>
+                    <?php endif; ?>
                     <!-- pjax start -->
                     <div id="pjax-main" class="pjax-main">
                         <?php
@@ -88,11 +95,11 @@ global $iro_only_template;
                         ?>
                     </div>
                     <!-- pjax end -->
-                    <?php if ($layout_columns >= 2): ?>
-                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_first.php'); ?>
-                    <?php endif; ?>
-                    <?php if ($layout_columns >= 3): ?>
+                    <?php if ($layout_columns >= 3 && $layout_first_position === 'left'): ?>
                         <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_second.php'); ?>
+                    <?php endif; ?>
+                    <?php if ($layout_columns >= 2 && $layout_first_position === 'right'): ?>
+                        <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_first.php'); ?>
                     <?php endif; ?>
                 </div>
                 <?php

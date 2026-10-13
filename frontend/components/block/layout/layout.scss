@@ -1,0 +1,5 @@
+// 主布局容器：栅格、收缩规则与断点都在 frontend/layout.scss
+// 这里只补一条——一栏都没放时，前台不留一个空盒子
+.layout-grid:empty {
+    display: none;
+}

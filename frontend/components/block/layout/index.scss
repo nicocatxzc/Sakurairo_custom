@@ -1,0 +1,6 @@
+// 主布局容器
+@use "./layout.scss" as layout;
+// 侧边栏容器
+@use "./site-side-bar.scss" as side-bar;
+// 主内容容器
+@use "./pjax-main.scss" as main-content;

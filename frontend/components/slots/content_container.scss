@@ -8,7 +8,8 @@
         align-items: flex-start;
         .container {
             position: relative;
-            max-width: 860px;
+            // 与布局轨道的正文宽度同一个变量，改设置项时文字宽度跟着变
+            max-width: var(--layout-content-max, 860px);
             width: 100%;
         }
         @media (max-width: 860px) {

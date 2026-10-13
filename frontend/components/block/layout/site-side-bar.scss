@@ -1,0 +1,5 @@
+// 侧边栏容器：宽度、收缩与靠哪一侧由 frontend/layout.scss 按 DOM 顺序决定
+// 这里只兜住空容器，避免模板里放了一条空侧栏就占掉一格宽度
+.site-side-bar:empty {
+    display: none;
+}

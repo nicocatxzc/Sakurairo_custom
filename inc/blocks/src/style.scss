@@ -21,7 +21,10 @@
         text-indent: 0 !important;
 
         // 只过渡视觉属性：切换类型时颜色立刻反馈，悬停也不会牵动布局
-        transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        transition:
+            background 0.3s ease,
+            box-shadow 0.3s ease,
+            transform 0.3s ease;
 
         &:hover {
             box-shadow: 0 0.1rem 1.8rem 0.7rem rgb(232, 232, 232);
@@ -96,8 +99,10 @@
             box-shadow: 0 1px 30px -4px #e8e8e8;
             opacity: 1;
             overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95),
-                box-shadow 0.4s, opacity 0.4s;
+            transition:
+                transform 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95),
+                box-shadow 0.4s,
+                opacity 0.4s;
 
             &:hover {
                 box-shadow: 0 1px 20px 10px #e8e8e8;
@@ -247,7 +252,8 @@
         width: var(--iro-widgets-width, 65%);
         margin-right: auto;
         margin-left: auto;
-        padding: var(--iro-widgets-padding-y, 1rem) var(--iro-widgets-padding-x, 1rem);
+        padding: var(--iro-widgets-padding-y, 1rem)
+            var(--iro-widgets-padding-x, 1rem);
         border-radius: var(--iro-widgets-radius, 1rem);
         background: rgba(255, 255, 255, 0.5);
         border: 0.1rem solid #ffffff;
@@ -282,8 +288,13 @@
 
 // 容器在编辑器里的边界提示必须留在 @layer 外：核心区块样式与编辑器里加载的主题样式都是无层的，
 // 层里的声明一律排在它们后面。用核心才加的编辑器类限定，前台不会拿到这些虚线框与内边距。
-.block-editor-block-list__block.iro-widgets-container,
-.block-editor-block-list__block.iro-widget-tools-column {
+.block-editor-block-list__block:is(
+    .iro-widgets-container,
+    .iro-widget-tools-column,
+    .layout-grid,
+    .site-side-bar,
+    .pjax-main
+) {
     position: relative;
     border: 0.1rem dashed #d0d0d0;
 }
@@ -295,10 +306,49 @@
     border-radius: var(--iro-column-radius, 0.6rem);
 }
 
+// 布局容器：编辑器里只画骨架，虚线边界加内边距就够，圆角留给侧栏与装饰容器
+.block-editor-block-list__block:is(.layout-grid, .site-side-bar, .pjax-main) {
+    padding: 1rem;
+}
+
+// 栏目横排：前台的真实排布在 frontend/layout.scss，这里让画布和 wp:columns 一样把栏目摆成一行。
+// 栏目外面还裹着核心的 block-editor-inner-blocks 与 block-editor-block-list__layout 两层，
+// 所以单给 .layout-grid 加 flex 没有用，样式必须落在内层那个列表上
+.block-editor-block-list__block.layout-grid
+    > .block-editor-inner-blocks
+    > .block-editor-block-list__layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 1rem;
+
+    > .block-editor-block-list__block {
+        min-width: 0;
+    }
+
+    // 正文占满剩下的一整行，侧栏收窄成配角（三条栏目时正文居中，和前台一致）
+    > .block-editor-block-list__block.pjax-main {
+        flex: 1 1 0;
+    }
+
+    > .block-editor-block-list__block.site-side-bar {
+        flex: 0 1 20%;
+        max-width: 280px;
+    }
+}
+
 // 核心把「添加区块」按钮绝对定位在容器右下角，会浮在内容上；
 // 拉回文档流，让它和普通容器一样在底部占一整行
-.block-editor-block-list__block.iro-widgets-container > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender,
-.block-editor-block-list__block.iro-widget-tools-column > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender {
+.block-editor-block-list__block:is(
+        .iro-widgets-container,
+        .iro-widget-tools-column,
+        .layout-grid,
+        .site-side-bar,
+        .pjax-main
+    )
+    > .block-editor-inner-blocks
+    > .block-editor-block-list__layout
+    > .block-list-appender {
     position: static;
     width: 100%;
     margin: 0.5rem 0 0;

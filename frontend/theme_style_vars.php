@@ -31,6 +31,11 @@
         --iro-widget-tools-border: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--border-sketch)" : "none" ?>;
         --iro-widget-tools-radius: <?= iro_opt("layout_side_bar_item_radius", 0.6) ?>rem;
 
+        <?php
+        // 布局层尺寸，由 frontend/layout.scss 消费
+        ?>--iro-content-width: <?= (int) iro_opt("layout_main_content_width", 860) ?>px;
+        --iro-side-width: <?= (int) iro_opt("layout_side_width", 280) ?>px;
+
         --page-background-color: rgba(255, 255, 255, var(--background-transparency));
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;
     }

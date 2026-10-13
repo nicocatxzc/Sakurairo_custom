@@ -23,6 +23,11 @@ import focusTitleBlock from "./decorate/focus-title";
 import typedBlock from "./decorate/typed";
 import socialLinksBlock from "./decorate/social-links";
 import widgetsContainerBlock from "./decorate/widgets-container";
+// 布局容器
+import layoutBlock from "./layout/layout";
+import siteSideBarBlock from "./layout/site-side-bar";
+import pjaxMainBlock from "./layout/pjax-main";
+
 import "./style.scss";
 
 domReady(() => {
@@ -43,6 +48,10 @@ domReady(() => {
         {
             slug: "sakurairo-decorate",
             title: "Sakurairo Decorate",
+        },
+        {
+            slug: "sakurairo-layout",
+            title: "Sakurairo Layout",
         },
         {
             slug: "sakurairo-pages",
@@ -80,6 +89,10 @@ export default function initBlocks() {
         typedBlock();
         socialLinksBlock();
         widgetsContainerBlock();
+        // 布局容器
+        layoutBlock();
+        siteSideBarBlock();
+        pjaxMainBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);
