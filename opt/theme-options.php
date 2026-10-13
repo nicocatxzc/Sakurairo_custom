@@ -346,6 +346,30 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'         => 'layout_main_content_width',
+                'type'       => 'slider',
+                'title'      => __('正文宽度', 'sakurairo_csf'),
+                'desc'       => __('正文内容的最大宽度，屏幕放不下时先压缩正文', 'sakurairo'),
+                'min'        => '860',
+                'max'        => '1280',
+                'step'       => '1',
+                'unit'       => 'px',
+                'default'    => '860',
+            ],
+
+            [
+                'id'         => 'layout_side_width',
+                'type'       => 'slider',
+                'title'      => __('侧栏宽度', 'sakurairo_csf'),
+                'desc'       => __('侧栏的最大宽度，空间不足时可收缩到 180px', 'sakurairo'),
+                'min'        => '180',
+                'max'        => '280',
+                'step'       => '1',
+                'unit'       => 'px',
+                'default'    => '280',
+            ],
+
+            [
                 'id'    => 'layout_side_bar_items_background',
                 'type'  => 'switcher',
                 'title' => __('侧边栏组件背景', 'sakurairo'),

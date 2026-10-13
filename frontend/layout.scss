@@ -1,139 +1,93 @@
 :root.dark {
-    img:not(.logo,.avatar),
+    img:not(.logo, .avatar),
     video {
         filter: brightness(var(--image-bright));
     }
 }
 
-// 布局骨架：页头独占第一行，正文与侧栏并列在第二行。
-// 侧栏是 #pjax-main 的兄弟节点，PJAX 只替换 #pjax-main，永不触碰侧栏。
-// 断点取各模式最小宽度之和再加上左右安全区：双栏 280+20+600+32=932，三栏 150+20+860+20+150+32=1232。
+// 布局骨架：主布局容器里的东西全部按 DOM 顺序排——页头独占一行，正文与侧栏依次跟在后面。
+// 侧栏有几条、在左边还是右边，都由用户在编辑器里拖拽决定（#pjax-main 是 display:contents，
+// 它的子项直接参与这个排列），主题不再替它们定轨道，所以编辑器里看到的排列就是前台的样子。
 .layout-grid {
-    --layout-content-max: 860px;
-    --layout-content-min: 600px;
-    --layout-side-width: 280px;
-    --layout-side-min: 150px;
+    // 设置项给出的尺寸；正文宽度同时决定 .container 里文字的宽度
+    // 夹到选项允许的区间，手输越界的值不会把版面撑坏
+    --layout-content-max: clamp(600px, var(--iro-content-width, 860px), 1280px);
+    --layout-side-width: clamp(180px, var(--iro-side-width, 280px), 280px);
+    // 正文最小宽度：视口再窄就收掉侧栏（见文件末尾断点）
+    --layout-content-min: 680px;
+    // 侧栏最窄到这个宽度就不再缩
+    --layout-side-min: 180px;
     --layout-gap: 1.25rem;
     // 轨道与视口左右边缘之间的最小距离（一个文字宽）
     --layout-safe-area: 1rem;
 
-    display: grid;
-    // 轨道总宽小于容器时整体居中
+    display: flex;
+    // 页头撑满一行后换行，其余项目排在第二行
+    flex-wrap: wrap;
+    // 一行排不满时整体居中；只有一侧栏时正文会偏出中线，这是 DOM 顺序决定的结果
     justify-content: center;
-    // 侧栏撑到正文高度，给栏内「栏目容器」留出行程
+    // 侧栏撑到与正文等高，栏内的吸顶块才有行程
     align-items: stretch;
-    column-gap: var(--layout-gap);
+    gap: var(--layout-gap);
     padding-inline: var(--layout-safe-area);
 }
 
+// 主容器不生成盒子，让里面的页头与正文提升为布局容器的直接子项
 .pjax-main {
-    // 不生成盒子，让页头与正文提升为 .layout-grid 的网格项
     display: contents;
-
-    > .page-header {
-        grid-area: head;
-    }
-    > :not(.page-header) {
-        grid-area: main;
-        min-height: 85dvh;
-    }
 }
 
-// 通栏页头（文章封面图）：轨道组由 justify-content:center 居中，
-// 50% 是网格区宽度的一半，配 100dvw 宽度就把盒子钉回视口两边
+// FSE：布局容器搬进主容器里时（#pjax-main > .layout-grid），主容器自己占满一整行，
+// 栏目交给内层的布局容器去排——否则整层布局会被当成一条正文列压到正文宽度里
+.layout-grid > .pjax-main:has(> .layout-grid) {
+    display: block;
+    flex: 1 0 100%;
+    min-width: 0;
+}
+
+// 页头独占一行，横跨整宽；内层 .container 自己与正文列对齐
+.layout-grid > .pjax-main > .page-header {
+    flex: 0 0 100%;
+}
+
+// 正文：可以长到设置的上限，也可以一路压到最小宽度
+// （经典路径与区块路径的页面组件都是主容器的直接子项，这里一律覆盖；内层布局容器不算正文列）
+.layout-grid > .pjax-main > :not(.page-header):not(.site-side-bar):not(.layout-grid) {
+    flex: 1 1 0;
+    max-width: var(--layout-content-max);
+    min-width: min(var(--layout-content-min), 100%);
+    min-height: 85dvh;
+}
+
+// 栏目内容直接放在布局容器里时（FSE 的拆件写法），正文列同样吃宽度规则
+.layout-grid > :not(.site-side-bar):not(.page-header):not(.pjax-main):not(.layout-grid) {
+    flex: 1 1 0;
+    max-width: var(--layout-content-max);
+    min-width: min(var(--layout-content-min), 100%);
+    min-height: 85dvh;
+}
+
+// 通栏页头（文章封面图）：页头宽度等于布局容器的内容宽、中心就是视口中线，
+// 50% 是它自身宽度的一半，配 100dvw 就把盒子钉回视口两边
 .page-header.bleed {
-    grid-area: 1 / 1 / 2 / -1;
     width: 100dvw;
     margin-left: calc(50% - 50dvw);
 }
 
-// 侧栏是一条全高轨道，自身不吸附：没被「栏目容器」包住的块随正文滚走
-.site-side-bar {
+// 侧栏：宽度在设置区间里伸缩，高度撑满整行
+.layout-grid > .site-side-bar {
+    flex: 1 1 0;
+    max-width: var(--layout-side-width);
+    min-width: min(var(--layout-side-min), 100%);
     margin-top: 1rem;
 }
-.side-bar-first {
-    grid-area: first;
-}
-.side-bar-second {
-    grid-area: second;
-}
 
-.layout-grid.cols-1 {
-    grid-template-columns: minmax(0, var(--layout-content-max));
-    grid-template-areas: "head" "main";
-}
-
-// 双栏
-.layout-grid.cols-2.first-left {
-    grid-template-columns:
-        var(--layout-side-width)
-        minmax(var(--layout-content-min), var(--layout-content-max));
-    grid-template-areas:
-        ". head"
-        "first main";
-}
-.layout-grid.cols-2.first-right {
-    grid-template-columns:
-        minmax(var(--layout-content-min), var(--layout-content-max))
-        var(--layout-side-width);
-    grid-template-areas:
-        "head ."
-        "main first";
-}
-
-// 三栏：正文锁死 860，两侧先收缩
-.layout-grid.cols-3.first-left,
-.layout-grid.cols-3.first-right {
-    grid-template-columns:
-        minmax(var(--layout-side-min), var(--layout-side-width))
-        var(--layout-content-max)
-        minmax(var(--layout-side-min), var(--layout-side-width));
-}
-.layout-grid.cols-3.first-left {
-    grid-template-areas:
-        ". head ."
-        "first main second";
-}
-.layout-grid.cols-3.first-right {
-    grid-template-areas:
-        ". head ."
-        "second main first";
-}
-
-// 低于 1200px + 左右安全区：让出右侧那一栏，正文回到 860
-@media (max-width: 1231.98px) {
-    .layout-grid.cols-3.first-left {
-        grid-template-columns:
-            var(--layout-side-width)
-            minmax(var(--layout-content-min), var(--layout-content-max));
-        grid-template-areas:
-            ". head"
-            "first main";
-    }
-    .layout-grid.cols-3.first-right {
-        grid-template-columns:
-            var(--layout-side-width)
-            minmax(var(--layout-content-min), var(--layout-content-max));
-        grid-template-areas:
-            ". head"
-            "second main";
-    }
-    .layout-grid.cols-3.first-left .side-bar-second,
-    .layout-grid.cols-3.first-right .side-bar-first {
-        display: none;
-    }
-}
-
-// 低于 900px + 左右安全区：让出剩下的那一栏，正文回到 860
-@media (max-width: 931.98px) {
-    .layout-grid.cols-2.first-left,
-    .layout-grid.cols-2.first-right,
-    .layout-grid.cols-3.first-left,
-    .layout-grid.cols-3.first-right {
-        grid-template-columns: minmax(0, var(--layout-content-max));
-        grid-template-areas: "head" "main";
-    }
-    .site-side-bar {
+// 视口不足 1112px：正文会被压到 680px 以下，收掉侧栏把宽度还给正文
+// （正文最小 680px + 两条侧栏各自的 180px + 两个行距 + 两侧留白 ≈ 1112px。
+// 侧栏归哪一侧由 DOM 顺序决定，主题不再知道哪一条可以留，所以整体收掉）
+// 选择器带上 .layout-grid：侧栏自己的样式里也有 .site-side-bar，优先级不能输
+@media (max-width: 1111.98px) {
+    .layout-grid > .site-side-bar {
         display: none;
     }
 }

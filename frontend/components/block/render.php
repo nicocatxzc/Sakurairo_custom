@@ -242,6 +242,25 @@ add_action('init', function () {
             },
         ]);
     }
+
+    /*
+     * 布局容器：只输出栏目容器本身，栏目是内容里的内部块，顺序即 DOM 顺序
+     */
+    foreach (
+        [
+            'layout'        => 'layout.php',
+            'site-side-bar' => 'site-side-bar.php',
+            'pjax-main'     => 'pjax-main.php',
+        ] as $layout_block => $layout_template
+    ) {
+        register_block_type('sakurairo/' . $layout_block, [
+            'render_callback' => function ($attributes, $content = '') use ($layout_template) {
+                ob_start();
+                require get_theme_file_path('/frontend/components/block/layout/' . $layout_template);
+                return ob_get_clean();
+            },
+        ]);
+    }
 }, 999);
 
 // 装饰块：页脚等模板与区块共用同一份渲染

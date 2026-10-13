@@ -1,0 +1,5 @@
+// 主内容容器：不生成盒子（display:contents，见 frontend/layout.scss），
+// 它的子项直接参与布局容器的排列，所以这里只兜住空容器
+.pjax-main:empty {
+    display: none;
+}

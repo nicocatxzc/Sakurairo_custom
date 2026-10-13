@@ -3,11 +3,11 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(
-                to top,
-                rgba(0, 0, 0, 0.6) 0%,
-                rgba(0, 0, 0, 0.3) 70%,
-                transparent 100%
-            );
+        to top,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.3) 70%,
+        transparent 100%
+    );
     &::before {
         content: "";
         position: absolute;
@@ -32,7 +32,8 @@
         left: 0;
         right: 0;
         bottom: 1.9rem;
-        max-width: 860px;
+        // 与正文同宽，封面图上的标题不会比正文更宽
+        max-width: var(--layout-content-max, 860px);
         display: flex;
         flex-direction: column;
         align-items: center;

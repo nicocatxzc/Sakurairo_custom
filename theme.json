@@ -11,6 +11,11 @@
             "name": "site-cover",
             "title": "封面",
             "area": "uncategorized"
+        },
+        {
+            "name": "site-homepage",
+            "title": "首页",
+            "area": "uncategorized"
         }
     ]
 }

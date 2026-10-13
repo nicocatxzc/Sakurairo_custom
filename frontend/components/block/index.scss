@@ -6,3 +6,5 @@
 @use "./pages/index.scss" as pages;
 // 装饰块
 @use "./decorate/index.scss" as decorate;
+// 布局容器
+@use "./layout/index.scss" as layout;
