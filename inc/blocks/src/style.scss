@@ -292,8 +292,7 @@
     .iro-widgets-container,
     .iro-widget-tools-column,
     .layout-grid,
-    .site-side-bar,
-    .pjax-main
+    .site-side-bar
 ) {
     position: relative;
     border: 0.1rem dashed #d0d0d0;
@@ -307,8 +306,16 @@
 }
 
 // 布局容器：编辑器里只画骨架，虚线边界加内边距就够，圆角留给侧栏与装饰容器
-.block-editor-block-list__block:is(.layout-grid, .site-side-bar, .pjax-main) {
+.block-editor-block-list__block:is(.layout-grid, .site-side-bar) {
     padding: 1rem;
+}
+
+// 正文容器就是 PJAX 的交换区边界，用金色边框把"换页时会被替换"的范围圈出来：
+// 外面的常驻侧栏与页脚不随导航刷新，里面的每次导航都会重建。这条认知负担由边框承担。
+.block-editor-block-list__block.pjax-main {
+    position: relative;
+    padding: 1rem;
+    border: 0.15rem dashed #d4af37;
 }
 
 // 栏目横排：前台的真实排布在 frontend/layout.scss，这里让画布和 wp:columns 一样把栏目摆成一行。

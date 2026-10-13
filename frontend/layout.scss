@@ -37,14 +37,30 @@
     display: contents;
 }
 
+// FSE：布局容器搬进主容器里时（#pjax-main > .layout-grid），主容器自己占满一整行，
+// 栏目交给内层的布局容器去排——否则整层布局会被当成一条正文列压到正文宽度里
+.layout-grid > .pjax-main:has(> .layout-grid) {
+    display: block;
+    flex: 1 0 100%;
+    min-width: 0;
+}
+
 // 页头独占一行，横跨整宽；内层 .container 自己与正文列对齐
 .layout-grid > .pjax-main > .page-header {
     flex: 0 0 100%;
 }
 
 // 正文：可以长到设置的上限，也可以一路压到最小宽度
-// （经典路径与区块路径的页面组件都是主容器的直接子项，这里一律覆盖）
-.layout-grid > .pjax-main > :not(.page-header):not(.site-side-bar) {
+// （经典路径与区块路径的页面组件都是主容器的直接子项，这里一律覆盖；内层布局容器不算正文列）
+.layout-grid > .pjax-main > :not(.page-header):not(.site-side-bar):not(.layout-grid) {
+    flex: 1 1 0;
+    max-width: var(--layout-content-max);
+    min-width: min(var(--layout-content-min), 100%);
+    min-height: 85dvh;
+}
+
+// 栏目内容直接放在布局容器里时（FSE 的拆件写法），正文列同样吃宽度规则
+.layout-grid > :not(.site-side-bar):not(.page-header):not(.pjax-main):not(.layout-grid) {
     flex: 1 1 0;
     max-width: var(--layout-content-max);
     min-width: min(var(--layout-content-min), 100%);

@@ -5,14 +5,10 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_action('admin_enqueue_scripts', 'iro_editor_vars');
-function iro_editor_vars($hook)
+// 挂在区块编辑器通用钩子上：文章编辑页、站点编辑器（模板组件）、小工具编辑器都需要这份配置
+add_action('enqueue_block_editor_assets', 'iro_editor_vars');
+function iro_editor_vars()
 {
-    // 仅在编辑页注入
-    if ($hook !== 'post.php' && $hook !== 'post-new.php') {
-        return;
-    }
-
     // 准备信息
     $data = [
         'siteTitle' => get_bloginfo('name'),
