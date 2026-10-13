@@ -6,10 +6,10 @@
     gap: 1rem;
 }
 
-// 整栏背景与圆角只在侧栏里给，分别对应「侧边栏整体背景」「侧边栏圆角」
-.site-side-bar.with-background .iro-widget-tools-column {
+// 整栏背景与圆角由每个栏目容器自己的开关决定（默认开、0.6rem），不再是站点级设置
+.iro-widget-tools-column.with-background {
     padding: 1rem;
-    border-radius: var(--iro-column-radius);
+    border-radius: var(--iro-column-radius, 0.6rem);
     background-color: var(--widget-background-color);
 }
 

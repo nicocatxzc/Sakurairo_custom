@@ -329,27 +329,10 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
-                'id'    => 'layout_side_bar_background',
-                'type'  => 'switcher',
-                'title' => __('侧边栏整体背景', 'sakurairo'),
-                'default' => true
-            ],
-
-            [
                 'id'    => 'layout_side_bar_items_background',
                 'type'  => 'switcher',
                 'title' => __('侧边栏组件背景', 'sakurairo'),
                 'default' => false
-            ],
-
-            [
-                'id' => 'layout_side_bar_radius',
-                'type' => 'slider',
-                'title' => __('侧边栏圆角', 'sakurairo'),
-                'step' => '0.01',
-                'unit' => 'rem',
-                'max' => '2',
-                'default' => '0.6'
             ],
 
             [

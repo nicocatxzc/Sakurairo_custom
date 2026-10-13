@@ -30,7 +30,6 @@
         ?>--iro-widget-tools-background: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--widget-background-color)" : "transparent" ?>;
         --iro-widget-tools-border: <?= iro_opt("layout_side_bar_items_background", false) ? "var(--border-sketch)" : "none" ?>;
         --iro-widget-tools-radius: <?= iro_opt("layout_side_bar_item_radius", 0.6) ?>rem;
-        --iro-column-radius: <?= iro_opt("layout_side_bar_radius", 0.6) ?>rem;
 
         --page-background-color: rgba(255, 255, 255, var(--background-transparency));
         --code-background: <?= iro_opt('code_block_background_color', '#e1e4e8') ?>;

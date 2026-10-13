@@ -242,13 +242,6 @@
         }
     }
 
-    // 栏目容器：用 outline 标出边界，不吃布局，空的时候也能看见往哪拖
-    .iro-widget-tools-column {
-        min-height: 2.5rem;
-        outline: 0.1rem dashed #d0d0d0;
-        outline-offset: 0.25rem;
-    }
-
     // 动态布局容器
     .iro-widgets-container {
         width: var(--iro-widgets-width, 65%);
@@ -286,5 +279,33 @@
         text-indent: 0 !important;
         // 编辑器画布是浅色背景，白色标题字会看不见，用黑色阴影兜底
         text-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.65);
+    }
+}
+
+// 容器在编辑器里的边界提示必须留在 @layer 外：核心区块样式与编辑器里加载的主题样式都是无层的，
+// 层里的声明一律排在它们后面。用核心才加的编辑器类限定，前台不会拿到这些虚线框与内边距。
+.block-editor-block-list__block.iro-widgets-container,
+.block-editor-block-list__block.iro-widget-tools-column {
+    position: relative;
+    border: 0.1rem dashed #d0d0d0;
+}
+
+// 栏目容器：内边距与圆角跟实例自己的设置走，空的时候也能看见往哪拖
+.block-editor-block-list__block.iro-widget-tools-column {
+    min-height: 2.5rem;
+    padding: 1rem;
+    border-radius: var(--iro-column-radius, 0.6rem);
+}
+
+// 核心把「添加区块」按钮绝对定位在容器右下角，会浮在内容上；
+// 拉回文档流，让它和普通容器一样在底部占一整行
+.block-editor-block-list__block.iro-widgets-container > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender,
+.block-editor-block-list__block.iro-widget-tools-column > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender {
+    position: static;
+    width: 100%;
+    margin: 0.5rem 0 0;
+
+    .block-editor-button-block-appender {
+        width: 100%;
     }
 }
