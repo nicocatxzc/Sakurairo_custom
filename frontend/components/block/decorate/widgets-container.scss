@@ -1,6 +1,9 @@
-// 布局无关的容器：只给外观，尺寸与排列由外层布局或内部块决定
+// 卡片容器：外观与宽度在这里，排列仍由外层布局决定
 .iro-widgets-container {
-    padding: var(--iro-widgets-padding, 1rem);
+    width: var(--iro-widgets-width, 65%);
+    margin-right: auto;
+    margin-left: auto;
+    padding: var(--iro-widgets-padding-y, 1rem) var(--iro-widgets-padding-x, 1rem);
     border-radius: var(--iro-widgets-radius, 1rem);
 
     color: var(--word-color-first);

@@ -13,30 +13,34 @@
         <?= iro_opt('cover_video', false) ? 'transparent' : '' ?>
         ">
             <div class="cover-filter <?= esc_attr(iro_opt('cover_pic_filter', 'filter-nothing')) ?>"></div>
-            <div class="cover-info">
-                <div class="center">
-                    <?php if (iro_opt("cover_focus_style") != "off") : ?>
-                        <?php if (iro_opt("cover_focus_style", "text") == "avatar"): ?>
-                            <picture class="nuxtpic">
-                                <?= iro_media_optimize_image_formats(
-                                    iro_opt('cover_avatar'),
-                                    ['width' => '7.5rem', 'height' => '7.5rem'],
-                                    ['class' => 'cover-avatar']
-                                ) ?>
-                            </picture>
-                        <?php else: ?>
-                            <?= iro_render_decorate('focus-title', [
-                                'text' => iro__((string) (iro_opt("cover_title", [])["text"] ?? "")),
-                                'effect' => iro_opt("cover_focus_style", "text") == "mashiro_text",
-                                'font' => iro_opt("cover_title", [])["font"] ?? "",
-                                'size' => iro_opt("cover_title", [])["size"] ?? 5,
-                                'color' => iro_opt("cover_title", [])["color"] ?? "#FFF",
-                            ]) ?>
-                        <?php endif; ?>
-                    <?php endif; ?>
 
-                    <?php if (iro_opt("cover_infor_bar_switch", true)): ?>
-                        <?php ob_start(); ?>
+            <div class="cover-info">
+                <?php if (iro_opt("cover_style_select") == "custom"): ?>
+                    <?php block_template_part('site-cover'); ?>
+                <?php else: ?>
+                    <div class="center">
+                        <?php if (iro_opt("cover_focus_style") != "off") : ?>
+                            <?php if (iro_opt("cover_focus_style", "text") == "avatar"): ?>
+                                <picture class="nuxtpic">
+                                    <?= iro_media_optimize_image_formats(
+                                        iro_opt('cover_avatar'),
+                                        ['width' => '7.5rem', 'height' => '7.5rem'],
+                                        ['class' => 'cover-avatar']
+                                    ) ?>
+                                </picture>
+                            <?php else: ?>
+                                <?= iro_render_decorate('focus-title', [
+                                    'text' => iro__((string) (iro_opt("cover_title", [])["text"] ?? "")),
+                                    'effect' => iro_opt("cover_focus_style", "text") == "mashiro_text",
+                                    'font' => iro_opt("cover_title", [])["font"] ?? "",
+                                    'size' => iro_opt("cover_title", [])["size"] ?? 5,
+                                    'color' => iro_opt("cover_title", [])["color"] ?? "#FFF",
+                                ]) ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if (iro_opt("cover_infor_bar_switch", true)): ?>
+                            <?php ob_start(); ?>
                             <?php if (iro_opt("cover_typedjs")): ?>
                                 <?= iro_render_decorate('typed', [
                                     'mark' => (bool) iro_opt("cover_typedjs_mark"),
@@ -55,16 +59,19 @@
                                 </div>
                             <?php endif; ?>
                             <?= iro_render_decorate('social-links') ?>
-                        <?php
-                        // 常规渲染即把预设参数当区块参数填进去
-                        echo iro_render_decorate('widgets-container', [
-                            'radius' => iro_opt("cover_infor_bar_radius", 1),
-                            'padding' => 1,
-                            'preset' => true,
-                        ], ob_get_clean());
-                        ?>
-                    <?php endif; ?>
-                </div>
+                            <?php
+                            // 常规渲染即把预设参数当区块参数填进去
+                            echo iro_render_decorate('widgets-container', [
+                                'radius' => iro_opt("cover_infor_bar_radius", 1),
+                                'width' => 65,
+                                'paddingY' => 1,
+                                'paddingX' => 1,
+                                'preset' => true,
+                            ], ob_get_clean());
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </figure>
         <?php require_once get_theme_file_path('/frontend/components/homepage/wave.php'); ?>

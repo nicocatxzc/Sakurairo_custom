@@ -1133,6 +1133,21 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'cover_style_select',
+                'type' => 'select',
+                'title' => __('封面样式', 'sakurairo'),
+                'desc'   => __('选择自定义后内置封面信息栏会失效，请前往后台的“外观——设计”中编辑自定义版面', 'sakurairo'),
+                'options' => [
+                    'sakura' => __('Sakura', 'sakurairo'),
+                    'custom' => __('自定义', 'sakurairo'),
+                ],
+                'dependency' => [
+                    ['cover_switch', '==', 'true', '', 'true'],
+                ],
+                'default' => 'sakura'
+            ],
+
+            [
                 'id' => 'cover_height',
                 'type' => 'slider',
                 'title' => __('封面高度', 'sakurairo'),

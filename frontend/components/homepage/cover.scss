@@ -69,6 +69,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        &>* {
+            width: 100%;
+        }
 
         .center {
             display: flex;
@@ -92,9 +95,8 @@
             }
         }
 
-        // 封面信息栏沿用原有布局：宽度与排列留在页面里，卡片外观由 .iro-widgets-container 提供
+        // 封面信息栏沿用原有布局：排列留在页面里，宽度与卡片外观由 .iro-widgets-container 提供
         .iro-widgets-container-cover {
-            width: 65%;
             margin-top: 1.5rem;
             line-height: 2rem;
 

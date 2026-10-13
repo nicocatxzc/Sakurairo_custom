@@ -251,7 +251,10 @@
 
     // 动态布局容器
     .iro-widgets-container {
-        padding: var(--iro-widgets-padding, 1rem);
+        width: var(--iro-widgets-width, 65%);
+        margin-right: auto;
+        margin-left: auto;
+        padding: var(--iro-widgets-padding-y, 1rem) var(--iro-widgets-padding-x, 1rem);
         border-radius: var(--iro-widgets-radius, 1rem);
         background: rgba(255, 255, 255, 0.5);
         border: 0.1rem solid #ffffff;
@@ -281,5 +284,7 @@
         margin: 0;
         text-align: center;
         text-indent: 0 !important;
+        // 编辑器画布是浅色背景，白色标题字会看不见，用黑色阴影兜底
+        text-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.65);
     }
 }

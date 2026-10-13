@@ -7,47 +7,57 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "动态布局容器",
-        description: "自带圆角与内边距的卡片容器，宽度和排列交给外层布局。",
+        description: "自带圆角与内边距的卡片容器，宽度按父容器的百分比。",
         settingPanel: "容器设置",
+        widthLabel: "宽度（%）",
         radiusLabel: "圆角",
-        paddingLabel: "内边距",
+        paddingYLabel: "上下内边距",
+        paddingXLabel: "左右内边距",
         appender: "把要放进容器的块拖到这里",
     },
     "zh-TW": {
         blockTitle: "動態佈局容器",
-        description: "自帶圓角與內邊距的卡片容器，寬度與排列交給外層佈局。",
+        description: "自帶圓角與內邊距的卡片容器，寬度依父容器的百分比。",
         settingPanel: "容器設定",
+        widthLabel: "寬度（%）",
         radiusLabel: "圓角",
-        paddingLabel: "內邊距",
+        paddingYLabel: "上下內邊距",
+        paddingXLabel: "左右內邊距",
         appender: "把要放進容器的區塊拖到這裡",
     },
     ja: {
         blockTitle: "動的レイアウトコンテナ",
         description:
-            "角丸と内側の余白を持つカードコンテナ。幅や並び順は外側のレイアウトに任せます。",
+            "角丸と内側の余白を持つカードコンテナ。幅は親コンテナに対する割合で指定します。",
         settingPanel: "コンテナ設定",
+        widthLabel: "幅（%）",
         radiusLabel: "角丸",
-        paddingLabel: "内側の余白",
+        paddingYLabel: "上下の余白",
+        paddingXLabel: "左右の余白",
         appender: "このコンテナに入れるブロックを置いてください",
     },
     en: {
         blockTitle: "Dynamic Layout Container",
         description:
-            "A card container with its own corner radius and padding; width and arrangement come from the outer layout.",
+            "A card container with its own corner radius and padding; the width is a percentage of its parent.",
         settingPanel: "Container settings",
+        widthLabel: "Width (%)",
         radiusLabel: "Corner radius",
-        paddingLabel: "Padding",
+        paddingYLabel: "Vertical padding",
+        paddingXLabel: "Horizontal padding",
         appender: "Drop the blocks for this container here",
     },
 });
 
 function edit({ attributes, setAttributes }) {
-    const { radius, padding } = attributes;
+    const { radius, width, paddingY, paddingX } = attributes;
     const blockProps = useBlockProps({
         className: "iro-widgets-container",
         style: {
             "--iro-widgets-radius": `${radius}rem`,
-            "--iro-widgets-padding": `${padding}rem`,
+            "--iro-widgets-width": `${width}%`,
+            "--iro-widgets-padding-y": `${paddingY}rem`,
+            "--iro-widgets-padding-x": `${paddingX}rem`,
         },
     });
 
@@ -55,6 +65,14 @@ function edit({ attributes, setAttributes }) {
         <Fragment>
             <InspectorControls>
                 <PanelBody title={lang.settingPanel} initialOpen={true}>
+                    <RangeControl
+                        label={lang.widthLabel}
+                        value={width}
+                        min={0}
+                        max={100}
+                        step={1}
+                        onChange={(val) => setAttributes({ width: val })}
+                    />
                     <RangeControl
                         label={lang.radiusLabel}
                         value={radius}
@@ -64,12 +82,20 @@ function edit({ attributes, setAttributes }) {
                         onChange={(val) => setAttributes({ radius: val })}
                     />
                     <RangeControl
-                        label={lang.paddingLabel}
-                        value={padding}
+                        label={lang.paddingYLabel}
+                        value={paddingY}
                         min={0}
                         max={5}
                         step={0.01}
-                        onChange={(val) => setAttributes({ padding: val })}
+                        onChange={(val) => setAttributes({ paddingY: val })}
+                    />
+                    <RangeControl
+                        label={lang.paddingXLabel}
+                        value={paddingX}
+                        min={0}
+                        max={5}
+                        step={0.01}
+                        onChange={(val) => setAttributes({ paddingX: val })}
                     />
                 </PanelBody>
             </InspectorControls>
@@ -84,7 +110,7 @@ function edit({ attributes, setAttributes }) {
     );
 }
 
-// 内容里只留内部块，所以改圆角/内边距不需要重存文章
+// 内容里只留内部块，所以改宽度/圆角/内边距不需要重存文章
 function save() {
     return <InnerBlocks.Content />;
 }
@@ -98,7 +124,9 @@ export default function widgetsContainerBlock() {
         category: "sakurairo-decorate",
         attributes: {
             radius: { type: "number", default: 1 },
-            padding: { type: "number", default: 1 },
+            width: { type: "number", default: 65 },
+            paddingY: { type: "number", default: 1 },
+            paddingX: { type: "number", default: 1 },
         },
         supports: {
             html: false,
