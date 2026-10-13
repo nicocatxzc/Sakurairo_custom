@@ -13,6 +13,10 @@ if (!defined('ABSPATH')) {
 
 function iro_github_oa_ajax_redirect(string $url, bool $external = false): void
 {
+    if ($url === '') {
+        $url = home_url('/');
+    }
+
     if ($external) {
         // Github 授权地址是站外地址，wp_safe_redirect 会把它拦下来
         wp_redirect($url);
