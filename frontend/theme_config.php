@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 注入给前台的界面语言
  *
@@ -62,7 +63,8 @@ function iro_front_theme_config()
         'turnstile_site_key' => iro_opt("turnstile_site_key"),
         'hitokoto_apis' => json_decode((string) iro_opt("footer_hitokoto_api"), true) ?: ['https://v1.hitokoto.cn/'],
         'player' => footer_player_frontend_config(),
-        'slow_net_optimize' => iro_opt("iro_slow_net_optimize", false)
+        'slow_net_optimize' => iro_opt("iro_slow_net_optimize", false),
+        'nav_menu_keep_active' => iro_opt("nav_menu_keep_active", true)
     ]);
 ?>
 

@@ -86,6 +86,7 @@ interface IroThemeConfig {
     cover_random_pic_url_pc?: string;
     cover_random_pic_url_mb?: string;
     player?: IroPlayerConfig | null;
+    nav_menu_keep_active?: boolean;
     [key: string]: unknown;
 }
 

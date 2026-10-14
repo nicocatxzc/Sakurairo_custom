@@ -1,4 +1,5 @@
 import bus from "../../app/bus";
+import markActiveMenu from "../../app/utils/markActiveMenu";
 
 const header = document.querySelector(".site-header.island");
 
@@ -89,6 +90,7 @@ if (header) {
         wrapper.classList.remove("is-swapping");
         wrapper.removeAttribute("data-scrollswap");
         header.classList.toggle("is-home", !!_iro?.page?.is_home);
+        markActiveMenu(menu);
 
         // 等本页的正文标题就位再量宽度，字体晚到会让量出来的值偏小
         requestAnimationFrame(() => {

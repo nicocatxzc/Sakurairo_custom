@@ -324,6 +324,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'         => 'layout_content_coloumns',
                 'type'       => 'select',
                 'title'      => __('内容布局', 'sakurairo_csf'),
+                'desc' => __('你可以前往<a href="/wp-admin/widgets.php"> 此处 </a>编辑侧边栏', 'sakurairo'),
                 'options'     => [
                     1  => __('单栏', 'sakurairo'),
                     2  => __('双栏', 'sakurairo'),
@@ -531,6 +532,14 @@ if (class_exists('Sakurairo_CSF')) {
                 'unit' => 'rem',
                 'max' => '2',
                 'default' => '0.3',
+            ],
+
+            [
+                'id' => 'nav_menu_keep_active',
+                'type' => 'switcher',
+                'title' => __('导航栏选项保持高亮', 'sakurairo'),
+                'desc' => __('当前页即为导航栏选项目标页面时，选项将会保持高亮状态', 'sakurairo'),
+                'default' => true
             ],
 
             [

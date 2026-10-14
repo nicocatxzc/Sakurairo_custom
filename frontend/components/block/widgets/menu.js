@@ -1,3 +1,5 @@
+import markActiveMenu from "../../../app/utils/markActiveMenu";
+
 let menu = null;
 let expandedItem = null;
 
@@ -29,20 +31,25 @@ function collapse() {
 }
 
 /**
- * 初始化：侧栏在 pjax 容器之外，服务端渲染一次，只需绑定一次
+ * 初始化：侧栏在 pjax 容器之外，服务端渲染一次，只需绑定一次；
+ * 但当前页高亮每次换页都要重算
  */
 function initSideBarMenu() {
     const el = document.querySelector(".iro-widget-tools-menu");
-    if (!el || el === menu) return;
+    if (!el) return;
 
-    menu = el;
-    expandedItem = null;
+    if (el !== menu) {
+        menu = el;
+        expandedItem = null;
 
-    menu.querySelectorAll(".menu > .item").forEach((item, index) => {
-        item.querySelector(".button")?.addEventListener("click", () =>
-            toggleSubMenu(index),
-        );
-    });
+        menu.querySelectorAll(".menu > .item").forEach((item, index) => {
+            item.querySelector(".button")?.addEventListener("click", () =>
+                toggleSubMenu(index),
+            );
+        });
+    }
+
+    markActiveMenu(menu);
 }
 
 // 跳转时收起，与移动端导航栏一致

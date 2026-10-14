@@ -39,6 +39,7 @@ declare global {
   const isShallow: typeof import('vue').isShallow
   const loadColorFromUrl: typeof import('../app/utils/themeColor.js').loadColorFromUrl
   const localsearch: typeof import('../app/utils/localsearch').default
+  const markActiveMenu: typeof import('../app/utils/markActiveMenu.js').default
   const markRaw: typeof import('vue').markRaw
   const message: typeof import('../app/utils/message.js').message
   const nextTick: typeof import('vue').nextTick

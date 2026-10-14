@@ -26,7 +26,8 @@
             transition: color 0.3s ease, padding 0.3s ease;
         }
 
-        &:hover {
+        &:hover,
+        &:has(> .link.active) {
             background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
 
             .link {
@@ -97,7 +98,8 @@
             text-decoration: none;
             transition: color 0.3s ease, background 0.3s ease;
 
-            &:hover {
+            &:hover,
+            &.active {
                 color: var(--button-bg);
                 background: color-mix(in srgb, var(--word-color-first) 6%, transparent);
             }

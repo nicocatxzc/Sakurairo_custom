@@ -81,7 +81,8 @@
         max-width: 0;
         transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    nav > ul > li > a:hover:after {
+    nav > ul > li > a:hover:after,
+    nav > ul > li > a.active:after {
         max-width: 100%;
     }
 
@@ -124,6 +125,11 @@
     li .sub-menu a {
         display: block;
         font-size: 14px;
+
+        &:hover,
+        &.active {
+            color: var(--active-color);
+        }
     }
 
     .avatar {
