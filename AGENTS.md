@@ -46,7 +46,7 @@ Sakurairo/
 │   │   ├── build/           # 构建产物（不入库，PHP 引用）
 │   │   └── iro_blocks.php   # 编辑器资源入队与配置注入
 │   ├── ai/                  # ★ AI 后台面板工程（Vite + Vue，workspace 成员）：src/ 源码 + dist/ 产物（不入库）
-│   ├── functions/           # 后端功能模块：tools/ip/seo/nav_bar/operator/cust_wp/wp_cn/sitemap/smtp/player/enqueue_assets
+│   ├── functions/           # 后端功能模块：tools/ip/seo/headers/nav_bar/operator/cust_wp/wp_cn/sitemap/smtp/player/enqueue_assets
 │   │   ├── ai/              # AI Provider、生成工具、自检、后台页面
 │   │   ├── comment/ content/ custom/ optimize/   # 分区子模块（optimize = 内置图片服务与压缩）
 │   ├── libs/                # vendored 第三方 PHP 类

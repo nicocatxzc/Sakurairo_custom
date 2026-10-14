@@ -47,7 +47,7 @@ if (is_customize_preview()) { // 模版中加载，解决其他位置获取不�
 
     <meta http-equiv="x-dns-prefetch-control" content="on">
 
-    <link rel="shortcut icon" href="<?= esc_url(iro_opt('favicon_link', '')); ?>" />
+    <link rel="shortcut icon" href="<?= esc_url(iro_get_favicon_url()); ?>" />
 
     <?php wp_head(); ?>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />

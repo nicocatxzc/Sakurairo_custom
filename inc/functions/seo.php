@@ -14,6 +14,8 @@ if (iro_opt('iro_seo', 'on') != 'off') {
             $has_keywords    = preg_match('/<meta\s+name=["\']keywords["\']/i', $head_content);
             $has_og          = preg_match('/<meta\s+(?:property|name)=["\'](?:og:|twitter:)/i', $head_content);
             $has_schema      = preg_match('/application\/ld\+json/i', $head_content);
+            $has_canonical   = preg_match('/<link\s[^>]*rel=["\']canonical["\']/i', $head_content);
+            $has_pagination  = preg_match('/<link\s[^>]*rel=["\'](?:prev|next)["\']/i', $head_content);
 
             echo $head_content;
 
@@ -25,6 +27,14 @@ if (iro_opt('iro_seo', 'on') != 'off') {
             // if (!$has_keywords) {
             //     echo iro_get_keywords();
             // }
+
+            if (!$has_canonical) {
+                echo iro_get_canonical();
+            }
+
+            if (!$has_pagination) {
+                echo iro_get_rel_pagination();
+            }
 
             if (!$has_og) {
                 echo iro_get_opengraph();
@@ -38,6 +48,8 @@ if (iro_opt('iro_seo', 'on') != 'off') {
         // 始终输出
         add_action('wp_head', function () {
             echo iro_get_description();
+            echo iro_get_canonical();
+            echo iro_get_rel_pagination();
             echo iro_get_opengraph();
             echo iro_get_json_ld();
         }, 99);
@@ -61,10 +73,17 @@ function iro_clean_text(string $text): string
 }
 
 /**
- * 当前页面的 canonical 风格 URL（不输出，仅供 og:url / JSON-LD 使用）
+ * 当前页面的 canonical 风格 URL（供 canonical / og:url / JSON-LD 使用）
  */
 function iro_get_canonical_url(): string
 {
+    $paged = (int) get_query_var('paged');
+
+    // 分页页必须自指：指回第一页会让第 2 页起的内容被判定为与第一页重复
+    if ($paged > 1 && !is_singular()) {
+        return (string) get_pagenum_link($paged);
+    }
+
     if (is_singular()) {
         $url = get_permalink();
         return $url ? (string) $url : home_url('/');
@@ -84,11 +103,92 @@ function iro_get_canonical_url(): string
     if (is_search()) {
         return (string) get_search_link();
     }
-    if (is_front_page() || is_home()) {
+    if (is_home()) {
+        // 首页设为静态页面时，文章列表页是另一个地址，指回站点根会被判成与首页重复
+        $posts_page = (int) get_option('page_for_posts');
+        return $posts_page ? (string) get_permalink($posts_page) : home_url('/');
+    }
+    if (is_front_page()) {
         return home_url('/');
     }
     global $wp;
     return home_url('/' . ltrim((string) ($wp->request ?? ''), '/'));
+}
+
+/**
+ * canonical 链接
+ *
+ * 内核的 rel_canonical() 只认 is_singular()，列表页与归档页一直没人输出，
+ * 这里把这些页面补上；分页页靠 iro_get_canonical_url() 自指。
+ */
+function iro_get_canonical(): string
+{
+    if (is_singular()) {
+        return '';
+    }
+
+    $url = iro_get_canonical_url();
+
+    return $url === '' ? '' : '<link rel="canonical" href="' . esc_url($url) . '">' . "\n";
+}
+
+/**
+ * 分页的关联链接
+ *
+ * 内核 4.4 起不再输出；Google 已不使用，但 Bing 与多数 SEO 检查器仍会读它。
+ * 只在主查询真的分页时输出，避免给单页文章留下自相矛盾的关系。
+ */
+function iro_get_rel_pagination(): string
+{
+    $paged = max(1, (int) get_query_var('paged'));
+    $total = (int) ($GLOBALS['wp_query']->max_num_pages ?? 0);
+
+    if ($total < 2) {
+        return '';
+    }
+
+    $links = '';
+
+    if ($paged > 1) {
+        $links .= '<link rel="prev" href="' . esc_url(get_pagenum_link($paged - 1)) . '">' . "\n";
+    }
+
+    if ($paged < $total) {
+        $links .= '<link rel="next" href="' . esc_url(get_pagenum_link($paged + 1)) . '">' . "\n";
+    }
+
+    return $links;
+}
+
+/**
+ * 站点默认图像：站长自定义 logo 优先，其次 WordPress 站点图标
+ *
+ * 分享图与结构化数据都要一张「站点自己的图」，只认 custom_logo 的话，
+ * 只设了站点图标的站会在 og:image 与 Organization.logo 上一起缺图。
+ */
+function iro_get_site_image_url(): string
+{
+    $logo_id = get_theme_mod('custom_logo');
+
+    if ($logo_id) {
+        $logo = wp_get_attachment_image_url($logo_id, 'full');
+        if ($logo) {
+            return (string) $logo;
+        }
+    }
+
+    return (string) get_site_icon_url();
+}
+
+/**
+ * 站点图标链接
+ *
+ * 站长清空「站点图标」后不能留空 href：部分浏览器会把空 href 解析成当前地址再请求一次。
+ * 兜底用站点根下约定俗成的 /favicon.ico。
+ */
+function iro_get_favicon_url(): string
+{
+    return (string) (iro_opt('favicon_link') ?: home_url('/favicon.ico'));
 }
 
 // function iro_get_keywords()
@@ -224,13 +324,7 @@ function iro_get_og_image(): string
     }
 
     if ($image === '') {
-        $custom_logo_id = get_theme_mod('custom_logo');
-        if ($custom_logo_id) {
-            $logo = wp_get_attachment_image_url($custom_logo_id, 'full');
-            if ($logo) {
-                $image = (string) $logo;
-            }
-        }
+        $image = iro_get_site_image_url();
     }
 
     return iro_media_optimize_image_url($image, [
@@ -346,6 +440,128 @@ function iro_build_breadcrumb_jsonld($post): ?array
     ];
 }
 
+/**
+ * 当前列表页要输出的文章清单
+ *
+ * 只用主查询已经取到的文章，不额外查库；列表页的 ItemList 是给搜索引擎与 AI
+ * 抓取看的「这一页列出了什么」，缺了它归档页只剩一个没有内容的 WebPage。
+ */
+function iro_build_item_list_jsonld(string $url): ?array
+{
+    $items    = [];
+    $position = 1;
+
+    foreach ((array) ($GLOBALS['wp_query']->posts ?? []) as $post) {
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        $items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position++,
+            'name'     => (string) get_the_title($post),
+            'url'      => (string) get_permalink($post),
+        ];
+    }
+
+    if ($items === []) {
+        return null;
+    }
+
+    return [
+        '@type'           => 'ItemList',
+        '@id'             => $url . '#itemlist',
+        'numberOfItems'   => count($items),
+        'itemListOrder'   => 'https://schema.org/ItemListOrderDescending',
+        'itemListElement' => $items,
+    ];
+}
+
+/**
+ * 分类/标签页的面包屑：首页 > 祖先分类… > 当前分类
+ *
+ * @return array<string,mixed>
+ */
+function iro_build_term_breadcrumb_jsonld(WP_Term $term, string $url): array
+{
+    $items = [[
+        '@type'    => 'ListItem',
+        'position' => 1,
+        'name'     => iro__('首页'),
+        'item'     => home_url('/'),
+    ]];
+
+    $position = 2;
+
+    foreach (array_reverse(get_ancestors($term->term_id, $term->taxonomy)) as $ancestor_id) {
+        $ancestor = get_term($ancestor_id, $term->taxonomy);
+        if ($ancestor && !is_wp_error($ancestor)) {
+            $items[] = [
+                '@type'    => 'ListItem',
+                'position' => $position++,
+                'name'     => (string) $ancestor->name,
+                'item'     => (string) get_term_link($ancestor),
+            ];
+        }
+    }
+
+    $items[] = [
+        '@type'    => 'ListItem',
+        'position' => $position,
+        'name'     => (string) $term->name,
+        'item'     => $url,
+    ];
+
+    return [
+        '@type'           => 'BreadcrumbList',
+        '@id'             => $url . '#breadcrumb',
+        'itemListElement' => $items,
+    ];
+}
+
+/**
+ * 列表页（首页、分类、标签、自定义分类）的页面实体
+ *
+ * @param array<string,mixed>|null $breadcrumb 已经建好的面包屑节点
+ * @return array<int,array<string,mixed>> 直接并入 @graph 的节点列表
+ */
+function iro_build_list_jsonld(string $url, string $name, string $description, string $type, ?array $breadcrumb = null): array
+{
+    $site_url = home_url('/');
+    $list     = iro_build_item_list_jsonld($url);
+
+    $page = [
+        '@type'       => $type,
+        '@id'         => $url . '#webpage',
+        'url'         => $url,
+        'name'        => $name,
+        'description' => $description,
+        'inLanguage'  => (string) get_bloginfo('language'),
+        'isPartOf'    => ['@id' => $site_url . '#website'],
+        'publisher'   => ['@id' => $site_url . '#organization'],
+    ];
+
+    if ($list !== null) {
+        $page['mainEntity'] = ['@id' => $list['@id']];
+    }
+
+    if ($breadcrumb !== null) {
+        $page['breadcrumb'] = ['@id' => $breadcrumb['@id']];
+    }
+
+    $nodes = [$page];
+
+    if ($list !== null) {
+        $nodes[] = $list;
+    }
+
+    if ($breadcrumb !== null) {
+        $nodes[] = $breadcrumb;
+    }
+
+    return $nodes;
+}
+
 function iro_get_json_ld(): string
 {
     $site_url  = home_url('/');
@@ -378,15 +594,12 @@ function iro_get_json_ld(): string
         'name'  => $site_name,
         'url'   => $site_url,
     ];
-    $custom_logo_id = get_theme_mod('custom_logo');
-    if ($custom_logo_id) {
-        $logo_url = wp_get_attachment_image_url($custom_logo_id, 'full');
-        if ($logo_url) {
-            $org['logo'] = [
-                '@type' => 'ImageObject',
-                'url'   => (string) $logo_url,
-            ];
-        }
+    $logo_url = iro_get_site_image_url();
+    if ($logo_url !== '') {
+        $org['logo'] = [
+            '@type' => 'ImageObject',
+            'url'   => $logo_url,
+        ];
     }
     $graph[] = $org;
 
@@ -442,23 +655,30 @@ function iro_get_json_ld(): string
                 $graph[] = $breadcrumb;
             }
         }
+    } elseif (is_home()) {
+        // ---- 博客列表页 ----
+        $blog_url = iro_get_canonical_url();
+        $graph = array_merge($graph, iro_build_list_jsonld(
+            $blog_url,
+            $site_name,
+            iro_get_description_text(200),
+            'Blog'
+        ));
     } elseif (is_category() || is_tag() || is_tax()) {
         // ---- 归档页 ----
         $term = get_queried_object();
-        if ($term && !is_wp_error($term)) {
+        if ($term instanceof WP_Term) {
             $link = get_term_link($term);
             if (!is_wp_error($link)) {
-                $graph[] = [
-                    '@type'       => 'CollectionPage',
-                    '@id'         => $link . '#webpage',
-                    'url'         => (string) $link,
-                    'name'        => (string) single_term_title('', false),
-                    'description' => iro_get_description_text(200),
-                    'inLanguage'  => $lang,
-                    'isPartOf'    => [
-                        '@id' => $site_url . '#website',
-                    ],
-                ];
+                $link = (string) $link;
+                // 页面实体用当前页地址（分页页自指），面包屑末项仍指向分类本身
+                $graph = array_merge($graph, iro_build_list_jsonld(
+                    iro_get_canonical_url(),
+                    (string) single_term_title('', false),
+                    iro_get_description_text(200),
+                    'CollectionPage',
+                    iro_build_term_breadcrumb_jsonld($term, $link)
+                ));
             }
         }
     }

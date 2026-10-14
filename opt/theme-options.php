@@ -139,6 +139,22 @@ if (class_exists('Sakurairo_CSF')) {
                 'desc' => __('提供一些关于网站内容的描述，控制在300字以内', 'sakurairo'),
             ],
 
+            [
+                'id'      => 'iro_header_no_iframe',
+                'type'    => 'switcher',
+                'title'   => __('禁止页面被外站嵌入', 'sakurairo'),
+                'desc'    => __('开启后将禁止外站嵌入本站页面', 'sakurairo'),
+                'default' => false,
+            ],
+
+            [
+                'id'      => 'iro_header_no_referrer',
+                'type'    => 'switcher',
+                'title'   => __('禁止被跳转提及', 'sakurairo'),
+                'desc'    => __('开启后用户跳转外部链接时浏览器将不会提及本站', 'sakurairo'),
+                'default' => false,
+            ],
+
         ]
     ]);
 

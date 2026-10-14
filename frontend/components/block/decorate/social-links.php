@@ -19,6 +19,27 @@ $icons_map = [
     "youtube" => "youtube",
     "zhihu" => "zhihu",
     "custom" => "custom",
+];
+// 预设平台的默认 alt，文案与后台「显示的图标」选项保持一致
+$social_labels = [
+    "bilibili" => __("哔哩哔哩", 'sakurairo'),
+    "discord" => __("Discord", 'sakurairo'),
+    "tiktok" => __("抖音", 'sakurairo'),
+    "facebook" => __("Facebook", 'sakurairo'),
+    "github" => __("Github", 'sakurairo'),
+    "instgram" => __("Instagram", 'sakurairo'),
+    "linkedin" => __("领英", 'sakurairo'),
+    "email" => __("邮箱", 'sakurairo'),
+    "netease_music" => __("网易云音乐", 'sakurairo'),
+    "qq" => __("QQ", 'sakurairo'),
+    "steam" => __("Steam", 'sakurairo'),
+    "telegram" => __("Telegram", 'sakurairo'),
+    "twitter" => __("推特/X", 'sakurairo'),
+    "wechat" => __("微信", 'sakurairo'),
+    "sina" => __("新浪", 'sakurairo'),
+    "xiaohongshu" => __("小红书", 'sakurairo'),
+    "youtube" => __("Youtube", 'sakurairo'),
+    "zhihu" => __("知乎", 'sakurairo'),
 ]
 ?>
 <div class="social-links">
@@ -70,7 +91,7 @@ $icons_map = [
                                 iro_opt('vision_resource_basepath', BASIC_VISION_RESOURCE_PATH) . 'display_icon/' . iro_opt('cover_social_icon') . '/' . $icons_map[$item['select']] . '.webp',
                                 ['height' => '2.2rem'],
                                 [
-                                    'alt' => iro__((string) ($item['title'] ?? '')),
+                                    'alt' => iro__((string) ($item['title'] ?? '')) ?: ($social_labels[$item['select'] ?? ''] ?? (string) get_bloginfo('name')),
                                     'loading' => 'lazy',
                                 ]
                             ) ?>
