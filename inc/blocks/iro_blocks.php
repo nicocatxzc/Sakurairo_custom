@@ -77,6 +77,28 @@ function sakurairo_iframe_editor_styles()
     wp_enqueue_style('iro-codes');
 }
 
+/**
+ * theme.json会导致wp-editor-classic-layout-styles不再加载
+ * 而那张表（edit-post/classic.css）正是编辑器画布默认内容宽度的唯一来源
+ * 所以在文章与页面的编辑页把这张表补回来。
+ * 仅在文章和页面编辑时补充默认样式
+ */
+add_action('enqueue_block_assets', 'iro_restore_classic_editor_layout');
+function iro_restore_classic_editor_layout()
+{
+    if (! is_admin() || wp_style_is('wp-editor-classic-layout-styles', 'enqueued')) {
+        return;
+    }
+
+    $screen = get_current_screen();
+
+    if (! $screen || $screen->base !== 'post' || ! in_array($screen->post_type, ['post', 'page'], true)) {
+        return;
+    }
+
+    wp_enqueue_style('wp-editor-classic-layout-styles');
+}
+
 // 注册编辑器样式句柄，供编辑器外层文档与编辑器 iframe 两处复用
 function iro_register_editor_styles()
 {
