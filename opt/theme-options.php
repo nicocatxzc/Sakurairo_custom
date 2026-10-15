@@ -1063,7 +1063,19 @@ if (class_exists('Sakurairo_CSF')) {
                 'type' => 'textarea',
                 'title' => __('开启 PJAX 后仍需在页脚刷新的资源', 'sakurairo'),
                 'dependency' => ['pjax', '==', 'true', '', 'true'],
-                'desc' => __('开启 PJAX 后，页脚中的自定义内容在页面跳转时不会刷新。可以在这里指定每次跳转都需要重新加载的 JavaScript 与样式表资源路径，一行一个。PJAX 完成内容加载后，这些资源会被重新加载一次。', 'sakurairo'),
+                'desc' => __('开启 PJAX 后，页脚中的自定义内容在页面导航后不会重载。可以在这里指定每次导航都需要重新加载的 JavaScript 与样式表资源路径，一行一个。页面加载成功后，这些资源会被重新加载一次。', 'sakurairo'),
+            ],
+
+            [
+                'type'    => 'content',
+                'content' => __(
+                    '<p><b>注意：</b></p>'
+                        . '<p>使用该选项重载资源并不是一个好办法，它会导致内存泄露和状态混乱！</p></br>'
+                        . '<p>你应当优先考虑让你的脚本监听pjax:complete，而不是让资源强制重载。</p>',
+                    'sakurairo'
+                ),
+                'dependency' => ['theme_darkmode_auto', '==', 'true', '', 'true'],
+
             ],
 
             [
