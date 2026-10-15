@@ -366,7 +366,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'max'        => '280',
                 'step'       => '1',
                 'unit'       => 'px',
-                'default'    => '280',
+                'default'    => '200',
             ],
 
             [
@@ -384,6 +384,40 @@ if (class_exists('Sakurairo_CSF')) {
                 'unit' => 'rem',
                 'max' => '2',
                 'default' => '0.6'
+            ],
+
+            [
+                'type'    => 'subheading',
+                'content' => __('区块化页面模板', 'sakurairo'),
+                'desc' => __('启用后相关页面外观样式与功能可能不再受主题设置项控制，其排版请自行前往外观——设计自行编辑', 'sakurairo'),
+            ],
+
+            [
+                'id'    => 'layout_block_homepage',
+                'type'  => 'switcher',
+                'title' => __('首页区块化', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id'    => 'layout_block_archive',
+                'type'  => 'switcher',
+                'title' => __('分类页区块化', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id'    => 'layout_block_post',
+                'type'  => 'switcher',
+                'title' => __('文章页区块化', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id'    => 'layout_block_not_found',
+                'type'  => 'switcher',
+                'title' => __('404页区块化', 'sakurairo'),
+                'default' => false
             ],
 
             [

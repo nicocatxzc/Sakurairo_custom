@@ -6,7 +6,10 @@ $home_page_style_vars = /* css */ "
 iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-home"]);
 ?>
 
-<?php foreach (iro_opt("homepage_components", ["post_list"]) as $component) : ?>
+<?php if (iro_opt("layout_block_homepage", false) && ($iro_home_block = iro_render_block_part('site-homepage')) !== '') : ?>
+    <?= $iro_home_block ?>
+<?php else : ?>
+    <?php foreach (iro_opt("homepage_components", ["post_list"]) as $component) : ?>
     <?php
     switch ($component):
         case 'show':
@@ -36,6 +39,7 @@ iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-
             break;
     endswitch;
     ?>
-<?php endforeach; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <?php iro_content_container_end(); ?>

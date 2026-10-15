@@ -12,58 +12,56 @@ import createI18n from "../i18n";
 
 const lang = createI18n({
     "zh-CN": {
-        blockTitle: "主布局容器",
-        description: "控制全站的主要栏目布局样式。",
-        appender: "放入栏目容器",
+        blockTitle: "页面布局",
+        description: "页面正文与侧栏横向排布，最多三栏。",
+        appender: "放入侧栏容器",
         settingPanel: "布局设置",
         columnsLabel: "栏目数",
-        columnsHelp: "整页最多三栏，正文与侧栏合计。",
+        columnsHelp: "页面正文算一栏，最多三栏。",
     },
     "zh-TW": {
-        blockTitle: "主佈局容器",
-        description: "控制全站的主要欄目佈局樣式。",
-        appender: "放入欄目容器",
+        blockTitle: "頁面佈局",
+        description: "頁面正文與側欄橫向排列，最多三欄。",
+        appender: "放入側欄容器",
         settingPanel: "佈局設定",
         columnsLabel: "欄目數",
-        columnsHelp: "整頁最多三欄，正文與側欄合計。",
+        columnsHelp: "頁面正文算一欄，最多三欄。",
     },
     ja: {
-        blockTitle: "レイアウトコンテナ",
-        description: "サイト全体のカラム構成を決めます。",
-        appender: "カラムコンテナを配置",
+        blockTitle: "ページレイアウト",
+        description: "ページ本文とサイドバーを横に並べます。最大 3 カラム。",
+        appender: "サイドバーコンテナを配置",
         settingPanel: "レイアウト設定",
         columnsLabel: "カラム数",
-        columnsHelp: "1 ページにつき最大 3 カラム（本文とサイドバーの合計）です。",
+        columnsHelp: "ページ本文を 1 カラムとして数え、最大 3 カラムです。",
     },
     en: {
-        blockTitle: "Layout Container",
-        description: "Controls the main column layout of the whole site.",
-        appender: "Drop a column container here",
+        blockTitle: "Page layout",
+        description: "Lays the page content and sidebars out in a row, three columns at most.",
+        appender: "Drop a sidebar container here",
         settingPanel: "Layout settings",
         columnsLabel: "Columns",
-        columnsHelp: "Three columns per page at most, content and sidebars together.",
+        columnsHelp: "The page content counts as one column; three at most.",
     },
 });
 
 const SIDE_BAR = "sakurairo/site-side-bar";
-const MAIN = "sakurairo/pjax-main";
+const CONTENT = "sakurairo/route-content";
 
-// 栏目容器：主内容容器与侧边栏容器。布局容器只排它们的先后，不再替它们定轨道
-const ALLOWED_BLOCKS = [SIDE_BAR, MAIN];
+// 栏目容器：页面正文（固定）与侧边栏容器。布局只排它们的先后，正文永远是其中一栏
+const ALLOWED_BLOCKS = [SIDE_BAR, CONTENT];
 
-// 单栏到三栏：跟核心的栏目块一样用一条滑杆切换，而不是在插入器里占三个条目。
-// 栏数只由编辑器里放了几栏决定——FSE 下传统的布局设置（layout_content_coloumns）不再管这一层
 const MIN_COLUMNS = 1;
 const MAX_COLUMNS = 3;
 
 function edit({ clientId }) {
     const blockProps = useBlockProps({ className: "layout-grid" });
-    const { columnCount, hasMain } = useSelect(
+    const { columnCount, hasContent } = useSelect(
         (selectStore) => {
             const inner = selectStore(blockEditorStore).getBlocks(clientId);
             return {
                 columnCount: inner.length,
-                hasMain: inner.some((block) => block.name === MAIN),
+                hasContent: inner.some((block) => block.name === CONTENT),
             };
         },
         [clientId],
@@ -71,63 +69,49 @@ function edit({ clientId }) {
     const { insertBlock, insertBlocks, removeBlock } =
         useDispatch(blockEditorStore);
 
-    // 滑块改栏目数：主内容容器不动，多出来的侧栏从末尾收掉、少的先补左侧再补右侧，
-    // 所以正文永远落在栏目中间
+    // 滑块改栏目数：页面正文不动，多出来的侧栏从末尾收掉、少的先补左侧再补右侧，
+    // 所以正文永远落在栏目中间。所有插入都不改选区，焦点留在布局容器上
     const setColumnCount = (next) => {
         const inner = select(blockEditorStore).getBlocks(clientId);
         const sideBars = inner.filter((block) => block.name === SIDE_BAR);
-        const hasMainNow = inner.some((block) => block.name === MAIN);
+        const hasContentNow = inner.some((block) => block.name === CONTENT);
         const wantedSideBars = next - 1;
 
         sideBars
             .slice(wantedSideBars)
-            .forEach((block) => removeBlock(block.clientId));
+            .forEach((block) => removeBlock(block.clientId, false));
 
         if (sideBars.length < 1 && wantedSideBars >= 1) {
-            insertBlock(createBlock(SIDE_BAR), 0, clientId);
+            insertBlock(createBlock(SIDE_BAR), 0, clientId, false);
         }
         if (sideBars.length < 2 && wantedSideBars >= 2) {
-            insertBlock(createBlock(SIDE_BAR), undefined, clientId);
+            insertBlock(createBlock(SIDE_BAR), undefined, clientId, false);
         }
-        if (!hasMainNow) {
+        if (!hasContentNow) {
             insertBlock(
-                createBlock(MAIN),
+                createBlock(CONTENT),
                 wantedSideBars >= 1 ? 1 : 0,
                 clientId,
+                false,
             );
         }
     };
 
-    // 空白的布局容器按上限一次铺好（正文居中、侧栏左右分），主内容容器不允许消失
-    // （前台靠 #pjax-main 换页），被删掉就补回来。新建的块要等编辑器把插入这件事收尾之后再写，
+    // 页面正文不允许消失：被删掉就补回来。新建的块要等编辑器把插入这件事收尾之后再写，
     // 否则这一次插入会被丢掉
     useEffect(() => {
-        if (columnCount > 0 && hasMain) {
+        if (columnCount > 0 && hasContent) {
             return undefined;
         }
         const timer = setTimeout(() => {
             if (columnCount === 0) {
-                const sideBars = MAX_COLUMNS - 1;
-                const left = sideBars >= 2 ? 1 : sideBars;
-                insertBlocks(
-                    [
-                        ...Array.from({ length: left }, () =>
-                            createBlock(SIDE_BAR),
-                        ),
-                        createBlock(MAIN),
-                        ...Array.from({ length: sideBars - left }, () =>
-                            createBlock(SIDE_BAR),
-                        ),
-                    ],
-                    0,
-                    clientId,
-                );
+                insertBlocks([createBlock(CONTENT)], 0, clientId, false);
                 return;
             }
-            insertBlock(createBlock(MAIN), Math.min(1, columnCount), clientId);
+            insertBlock(createBlock(CONTENT), Math.min(1, columnCount), clientId, false);
         }, 0);
         return () => clearTimeout(timer);
-    }, [clientId, columnCount, hasMain, insertBlock, insertBlocks]);
+    }, [clientId, columnCount, hasContent, insertBlock, insertBlocks]);
 
     return (
         <Fragment>

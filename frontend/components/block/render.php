@@ -249,6 +249,7 @@ add_action('init', function () {
     foreach (
         [
             'layout'        => 'layout.php',
+            'route-content' => 'route-content.php',
             'site-side-bar' => 'site-side-bar.php',
             'pjax-main'     => 'pjax-main.php',
         ] as $layout_block => $layout_template
@@ -269,6 +270,15 @@ function iro_render_decorate(string $template, array $attributes = [], string $c
     ob_start();
     require get_theme_file_path('/frontend/components/block/decorate/' . $template . '.php');
     return ob_get_clean();
+}
+
+// 区块化页面模板：把页面模板组件渲染成字符串。组件不存在或还是空的就返回空串，
+// 调用方据此回退到预设布局（block_template_part 在组件缺失时什么都不输出）
+function iro_render_block_part(string $slug): string
+{
+    ob_start();
+    block_template_part($slug);
+    return trim((string) ob_get_clean());
 }
 
 // ghcard

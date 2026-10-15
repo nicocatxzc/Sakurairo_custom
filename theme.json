@@ -16,6 +16,21 @@
             "name": "site-homepage",
             "title": "首页",
             "area": "uncategorized"
+        },
+        {
+            "name": "page-archive",
+            "title": "分类页",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-post",
+            "title": "文章页",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-404",
+            "title": "404页",
+            "area": "uncategorized"
         }
     ]
 }

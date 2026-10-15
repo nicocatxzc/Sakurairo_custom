@@ -27,6 +27,9 @@ import widgetsContainerBlock from "./decorate/widgets-container";
 import layoutBlock from "./layout/layout";
 import siteSideBarBlock from "./layout/site-side-bar";
 import pjaxMainBlock from "./layout/pjax-main";
+// 路由层：页头只在编辑器里占位，页面正文由主题按路由替换
+import routeHeaderBlock from "./layout/route-header";
+import routeContentBlock from "./layout/route-content";
 
 import "./style.scss";
 
@@ -93,6 +96,8 @@ export default function initBlocks() {
         layoutBlock();
         siteSideBarBlock();
         pjaxMainBlock();
+        routeHeaderBlock();
+        routeContentBlock();
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

@@ -6,6 +6,9 @@
             require get_theme_file_path('/frontend/components/post/header.php');
         }
         ?>
+        <?php if (iro_opt("layout_block_post", false) && ($iro_post_block = iro_render_block_part('site-post')) !== '') : ?>
+            <?= $iro_post_block ?>
+        <?php else : ?>
         <div class="page-post">
             <article class="post">
                 <?php iro_content_container_start() ?>
@@ -35,5 +38,6 @@
                 iro_content_container_end();
             endif; ?>
         </div>
+        <?php endif; ?>
 <?php endwhile;
 endif; ?>

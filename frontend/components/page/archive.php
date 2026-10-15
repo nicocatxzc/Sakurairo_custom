@@ -18,6 +18,10 @@ if ($term && ! is_wp_error($term)) {
     <?php iro_content_container_end() ?>
 </header>
 
-<?php iro_content_container_start(['class' => 'page-taxonomy']) ?>
-<?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
-<?php iro_content_container_end() ?>
+<?php if (iro_opt("layout_block_archive", false) && ($iro_archive_block = iro_render_block_part('site-archive')) !== '') : ?>
+    <?= $iro_archive_block ?>
+<?php else : ?>
+    <?php iro_content_container_start(['class' => 'page-taxonomy']) ?>
+    <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
+    <?php iro_content_container_end() ?>
+<?php endif; ?>
