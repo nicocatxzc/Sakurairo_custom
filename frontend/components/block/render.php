@@ -262,26 +262,15 @@ add_action('init', function () {
     }
 
     /*
-     * 布局容器：只输出栏目容器本身，栏目是内容里的内部块，顺序即 DOM 顺序
+     * 布局容器：只有侧栏容器正常解析，其余布局块由 frontend/route.php 的流水线接管
      */
-    foreach (
-        [
-            'layout'         => 'layout.php',
-            'content-layout' => 'content-layout.php',
-            'route-header'   => 'route-header.php',
-            'route-content'  => 'route-content.php',
-            'site-side-bar'  => 'site-side-bar.php',
-            'pjax-main'      => 'pjax-main.php',
-        ] as $layout_block => $layout_template
-    ) {
-        register_block_type('sakurairo/' . $layout_block, [
-            'render_callback' => function ($attributes, $content = '') use ($layout_template) {
-                ob_start();
-                require get_theme_file_path('/frontend/components/block/layout/' . $layout_template);
-                return ob_get_clean();
-            },
-        ]);
-    }
+    register_block_type('sakurairo/site-side-bar', [
+        'render_callback' => function ($attributes, $content = '') {
+            ob_start();
+            require get_theme_file_path('/frontend/components/block/layout/site-side-bar.php');
+            return ob_get_clean();
+        },
+    ]);
 }, 999);
 
 // 装饰块：页脚等模板与区块共用同一份渲染
@@ -290,15 +279,6 @@ function iro_render_decorate(string $template, array $attributes = [], string $c
     ob_start();
     require get_theme_file_path('/frontend/components/block/decorate/' . $template . '.php');
     return ob_get_clean();
-}
-
-// 区块化页面模板：把页面模板组件渲染成字符串。组件不存在或还是空的就返回空串，
-// 调用方据此回退到预设布局（block_template_part 在组件缺失时什么都不输出）
-function iro_render_block_part(string $slug): string
-{
-    ob_start();
-    block_template_part($slug);
-    return trim((string) ob_get_clean());
 }
 
 // ghcard

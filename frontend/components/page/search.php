@@ -1,6 +1,5 @@
 <?php
-global $wp_query;
-
+// 搜索结果：页头是搜索框，正文是筛选器与结果列表，外壳是 .page-search 容器
 function iro_get_search_type_filters(): array
 {
     // 支持的类型
@@ -68,44 +67,56 @@ function iro_get_search_type_filters(): array
         'keyword'   => $keyword,
     ];
 }
-$search_filters = iro_get_search_type_filters();
-?>
-<header class="page-header search-header flex-center">
-    <div class="search-box flex-center">
-        <i class="fa-icon-solid fa-search search-icon"></i>
 
-        <input
-            type="text"
-            class="search-input"
-            placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
-            @keyup.enter="gotoSearch" />
+function iro_render_page_header(): void
+{
+    ?>
+    <header class="page-header search-header flex-center">
+        <div class="search-box flex-center">
+            <i class="fa-icon-solid fa-search search-icon"></i>
 
-        <button
-            class="search-button widget-button filled">
-            <?= __("搜索",'sakurairo') ?>
-        </button>
-    </div>
-</header>
+            <input
+                type="text"
+                class="search-input"
+                placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
+                @keyup.enter="gotoSearch" />
 
-<?php iro_content_container_start(['class' => 'page-search']) ?>
-<?php if (iro_opt('search_filter') && count($search_filters['filters']) > 1) : ?>
-    <!-- 筛选器部分 -->
-    <div id="filter-container">
-        <div class="filter-count">
-            <?= $wp_query->found_posts ?> <?= __('个结果', 'sakurairo'); ?>
+            <button
+                class="search-button widget-button filled">
+                <?= __("搜索",'sakurairo') ?>
+            </button>
         </div>
+    </header>
+    <?php
+}
 
-        <div id="search-filter-form" action="" method="GET">
-            <?php foreach ($search_filters['filters'] as $type => $filter): ?>
-                <a
-                    href="<?= esc_url($filter['url']) ?>"
-                    class="type-filter widget-button <?= $filter['active'] ? 'active' : '' ?>">
-                    <?= esc_html($filter['label']) ?>
-                </a>
-            <?php endforeach; ?>
+function iro_render_page_content(): void
+{
+    global $wp_query;
+
+    $search_filters = iro_get_search_type_filters();
+    iro_content_container_start(['class' => 'page-search']);
+    ?>
+    <?php if (iro_opt('search_filter') && count($search_filters['filters']) > 1) : ?>
+        <!-- 筛选器部分 -->
+        <div id="filter-container">
+            <div class="filter-count">
+                <?= $wp_query->found_posts ?> <?= __('个结果', 'sakurairo'); ?>
+            </div>
+
+            <div id="search-filter-form" action="" method="GET">
+                <?php foreach ($search_filters['filters'] as $type => $filter): ?>
+                    <a
+                        href="<?= esc_url($filter['url']) ?>"
+                        class="type-filter widget-button <?= $filter['active'] ? 'active' : '' ?>">
+                        <?= esc_html($filter['label']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
-<?php endif; ?>
+    <?php endif; ?>
 
-<?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
-<?php iro_content_container_end() ?>
+    <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
+    <?php
+    iro_content_container_end();
+}
