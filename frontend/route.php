@@ -48,9 +48,10 @@ function iro_render_page(): void
 
     $columns        = min(3, max(1, (int) iro_opt('layout_content_coloumns', 1)));
     $first_position = iro_opt('layout_first_coloumn_position', 'left') === 'right' ? 'right' : 'left';
-    ?>
+?>
     <div class="layout-grid" style="<?= iro_layout_style() ?>">
-        <?php // 左右由 DOM 顺序决定：写在 #pjax-main 之前的在左，之后的在右 ?>
+        <?php // 左右由 DOM 顺序决定：写在 #pjax-main 之前的在左，之后的在右 
+        ?>
         <?php if ($columns >= 2 && $first_position === 'left') : ?>
             <?php require_once get_theme_file_path('/frontend/components/site/widget/side_bar_first.php'); ?>
         <?php endif; ?>
@@ -79,11 +80,11 @@ function iro_render_blocks(array $blocks): void
     foreach ($blocks as $block) {
         switch ($block['blockName']) {
             case 'sakurairo/layout':
-                ?>
+    ?>
                 <div class="layout-grid" style="<?= iro_layout_style() ?>">
                     <?php iro_render_blocks($block['innerBlocks']) ?>
                 </div>
-                <?php
+            <?php
                 break;
             case 'sakurairo/pjax-main':
                 iro_render_page_blocks(iro_page_layout_blocks());
@@ -103,11 +104,11 @@ function iro_render_page_blocks(array $blocks): void
     foreach ($blocks as $block) {
         switch ($block['blockName']) {
             case 'sakurairo/pjax-main':
-                ?>
+            ?>
                 <div id="pjax-main" class="pjax-main">
                     <?php iro_render_page_blocks($block['innerBlocks']) ?>
                 </div>
-                <?php
+<?php
                 break;
             case 'sakurairo/content-layout':
                 iro_render_page_blocks($block['innerBlocks']);
@@ -134,7 +135,7 @@ function iro_page_layout_blocks(): array
         'post'    => 'layout_block_post',
         'archive' => 'layout_block_archive',
     ];
-    $content = isset($switches[IRO_PAGE_ROUTE]) && iro_opt($switches[IRO_PAGE_ROUTE], false)
+    $content = isset($switches[IRO_PAGE_ROUTE]) && (iro_opt($switches[IRO_PAGE_ROUTE], ["layout" => false])["layout"])
         ? iro_get_part_content('page-' . IRO_PAGE_ROUTE . '-layout')
         : '';
     $blocks = $content !== '' ? parse_blocks($content) : [];

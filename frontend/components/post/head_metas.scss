@@ -1,0 +1,41 @@
+// 文章头信息条目：两份页头模板与「文章头信息」装饰块共用同一份排布。
+// 居中、条目间距与分隔点都在这里定；限定在页头里，文章卡片的同名类不受影响，配色差异也留给各自的上下文
+.page-header {
+    .post-metas {
+        gap: 0.13rem 0.3rem;
+        font-size: 0.82rem;
+        font-weight: var(--global-font-weight);
+        padding: 0.75rem 0 0;
+        line-height: 2rem;
+        width: 100%;
+        max-height: 2.5rem;
+        max-width: 98%;
+        display: inline-flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        overflow: hidden;
+
+        > :where(a, span) {
+            display: flex;
+        }
+
+        > :where(a, span):not(:last-child)::after {
+            content: "·";
+            margin-left: 0.3rem;
+        }
+    }
+
+    .meta-author {
+        display: flex;
+        gap: 0.3rem;
+        align-items: center;
+
+        .avatar {
+            border-radius: 50%;
+        }
+
+        &:hover {
+            color: var(--active-color);
+        }
+    }
+}

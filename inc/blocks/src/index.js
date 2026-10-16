@@ -23,6 +23,7 @@ import focusTitleBlock from "./decorate/focus-title";
 import typedBlock from "./decorate/typed";
 import socialLinksBlock from "./decorate/social-links";
 import widgetsContainerBlock from "./decorate/widgets-container";
+import headMetasBlock from "./decorate/head-metas";
 // 布局容器
 import layoutBlock from "./layout/layout";
 import contentLayoutBlock from "./layout/content-layout";
@@ -93,6 +94,7 @@ export default function initBlocks() {
         typedBlock();
         socialLinksBlock();
         widgetsContainerBlock();
+        headMetasBlock();
         // 布局容器
         layoutBlock();
         contentLayoutBlock();

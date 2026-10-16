@@ -9,21 +9,30 @@ function iro_render_page_header(): void
         $term_name        = $term->name;
         $term_description = $term->description;
     }
-    ?>
+?>
     <header class="page-header taxonomy-header">
-        <?php iro_content_container_start() ?>
-        <h1><?= $term_name ?></h1>
-        <?php if (term_description()): ?>
-            <p><?= $term_description ?></p>
+        <?php if (iro_opt("layout_block_archive")["header"]):
+            block_template_part('page-archive-header');
+        else:
+        ?>
+            <?php iro_content_container_start() ?>
+            <h1><?= $term_name ?></h1>
+            <?php if (term_description()): ?>
+                <p><?= $term_description ?></p>
+            <?php endif; ?>
+            <?php iro_content_container_end() ?>
         <?php endif; ?>
-        <?php iro_content_container_end() ?>
     </header>
-    <?php
+<?php
 }
 
 function iro_render_page_content(): void
 {
     iro_content_container_start(['class' => 'page-taxonomy']);
-    require_once get_theme_file_path('/frontend/components/post/list.php');
+    if (iro_opt("layout_block_archive")["content"]):
+        block_template_part('page-archive-content');
+    else:
+        require_once get_theme_file_path('/frontend/components/post/list.php');
+    endif;
     iro_content_container_end();
 }

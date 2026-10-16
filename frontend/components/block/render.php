@@ -253,7 +253,7 @@ add_action('init', function () {
     /*
      * 装饰块
      */
-    foreach (['hitokoto', 'sakura-icon', 'focus-title', 'typed', 'social-links', 'widgets-container'] as $decorate_block) {
+    foreach (['hitokoto', 'sakura-icon', 'focus-title', 'typed', 'social-links', 'widgets-container', 'head-metas'] as $decorate_block) {
         register_block_type('sakurairo/' . $decorate_block, [
             'render_callback' => function ($attributes, $content = '') use ($decorate_block) {
                 return iro_render_decorate($decorate_block, $attributes, $content);

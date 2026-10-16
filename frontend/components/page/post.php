@@ -6,11 +6,21 @@ if (have_posts()) {
 
 function iro_render_page_header(): void
 {
-    require get_theme_file_path(
-        has_post_thumbnail()
-            ? '/frontend/components/post/header_with_image.php'
-            : '/frontend/components/post/header.php'
-    );
+    if (iro_opt("layout_block_post", ["header" => false])["header"]):
+?>
+        <div class="page-header bleed">
+            <?php
+            has_post_thumbnail() ? block_template_part('page-post-header-with-image') : block_template_part('page-post-header-simple');
+            ?>
+        </div>
+    <?php
+    else:
+        require get_theme_file_path(
+            has_post_thumbnail()
+                ? '/frontend/components/post/header_with_image.php'
+                : '/frontend/components/post/header.php'
+        );
+    endif;
 }
 
 function iro_render_page_content(): void
@@ -45,5 +55,5 @@ function iro_render_page_content(): void
             iro_content_container_end();
         endif; ?>
     </div>
-    <?php
+<?php
 }

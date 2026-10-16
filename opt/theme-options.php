@@ -401,23 +401,74 @@ if (class_exists('Sakurairo_CSF')) {
 
             [
                 'id'    => 'layout_block_homepage',
-                'type'  => 'switcher',
+                'type'  => 'fieldset',
                 'title' => __('首页区块化', 'sakurairo'),
-                'default' => false
+                'fields'    => [
+                    [
+                        'id'    => 'layout',
+                        'type'  => 'switcher',
+                        'title' => '布局',
+                    ],
+                    [
+                        'id'    => 'content',
+                        'type'  => 'switcher',
+                        'title' => '内容',
+                    ]
+                ],
+                'default' => [
+                    'layout' => false,
+                    'content' => false
+                ]
             ],
 
             [
                 'id'    => 'layout_block_archive',
-                'type'  => 'switcher',
+                'type'  => 'fieldset',
                 'title' => __('分类页区块化', 'sakurairo'),
-                'default' => false
+                'fields'    => [
+                    [
+                        'id'    => 'layout',
+                        'type'  => 'switcher',
+                        'title' => '布局',
+                    ],
+                    [
+                        'id'    => 'header',
+                        'type'  => 'switcher',
+                        'title' => '页头',
+                    ],
+                    [
+                        'id'    => 'content',
+                        'type'  => 'switcher',
+                        'title' => '内容',
+                    ]
+                ],
+                'default' => [
+                    'layout' => false,
+                    'header' => false,
+                    'content' => false
+                ]
             ],
 
             [
                 'id'    => 'layout_block_post',
-                'type'  => 'switcher',
+                'type'  => 'fieldset',
                 'title' => __('文章页区块化', 'sakurairo'),
-                'default' => false
+                'fields'    => [
+                    [
+                        'id'    => 'layout',
+                        'type'  => 'switcher',
+                        'title' => '布局',
+                    ],
+                    [
+                        'id'    => 'header',
+                        'type'  => 'switcher',
+                        'title' => '页头',
+                    ]
+                ],
+                'default' => [
+                    'layout' => false,
+                    'header' => false
+                ]
             ],
 
             [

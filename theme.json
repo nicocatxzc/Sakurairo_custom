@@ -43,11 +43,6 @@
             "area": "uncategorized"
         },
         {
-            "name": "page-post-content",
-            "title": "文章页内容",
-            "area": "uncategorized"
-        },
-        {
             "name": "page-archive-header",
             "title": "分类页页头",
             "area": "uncategorized"
