@@ -272,7 +272,7 @@ $not-template: ":not(:where(.page-template *))";
     }
 
     // .wp-block-image 是 display:table 的收缩盒，内层 a 是 inline-block，图片的 max-width 百分比
-    // 在这两级上都算不出可用宽度，窄屏会按原始尺寸（如 1024px）把整页顶宽
+    // 在这两级上都算不出可用宽度，窄屏会按原始尺寸把整页顶宽
     .wp-block-image#{$not-template} {
         display: block;
 

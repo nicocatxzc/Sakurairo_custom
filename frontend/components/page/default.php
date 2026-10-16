@@ -1,5 +1,5 @@
 <?php
-// 兜底页面：没有专属模板的请求（含 404），页头与正文给一份与经典形态相近的占位
+// 兜底页面
 function iro_render_page_header(): void
 {
     ?>

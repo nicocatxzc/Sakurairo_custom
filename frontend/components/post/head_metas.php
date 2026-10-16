@@ -1,10 +1,4 @@
 <?php
-/**
- * 文章头信息条目
- *
- * 与上游 tpl/entry-census.php 对应：显示哪些条目、以什么顺序显示，都由设置项 post_head_metas 决定。
- * header.php 与 header_with_image.php 共用同一份渲染，配色等差异由各自 .post-metas 上下文决定。
- */
 function iro_render_post_head_metas(): void
 {
     $metas = iro_opt('post_head_metas', ['update_time', 'author', 'views']);
@@ -20,8 +14,8 @@ function iro_render_post_head_metas(): void
                         <?= esc_html(get_the_author()) ?>
                     </span>
                 </a>
-            <?php break; ?>
-            <?php
+                <?php break; ?>
+                <?php
             case 'category':
                 $categories = get_the_category();
                 if ($categories) : ?>
@@ -42,14 +36,14 @@ function iro_render_post_head_metas(): void
             case 'views': ?>
                 <span><?= esc_html(iro_get_post_views(get_the_ID())) . ' ' . esc_html__('次阅读', 'sakurairo') ?></span>
                 <?php break; ?>
-            <?php
+                <?php
             case 'words_count':
                 $words_count = iro_get_post_words(get_the_ID());
                 if ($words_count) : ?>
                     <span><?= esc_html($words_count) . ' ' . esc_html__('字', 'sakurairo') ?></span>
                 <?php endif; ?>
                 <?php break; ?>
-            <?php
+                <?php
             case 'reading_time':
                 $reading_time = iro_get_reading_time(get_the_ID());
                 if ($reading_time) : ?>
@@ -64,7 +58,7 @@ function iro_render_post_head_metas(): void
             case 'update_time': ?>
                 <span><?= esc_html__('最后更新于', 'sakurairo') . ' ' . get_the_modified_time('Y-m-d') ?></span>
                 <?php break; ?>
-            <?php
+                <?php
             case 'editor_link':
                 // get_edit_post_link() 默认按 display 上下文返回，URL 已转义，不能再套一次 esc_url
                 $edit_url = get_edit_post_link();
@@ -73,5 +67,5 @@ function iro_render_post_head_metas(): void
                 <?php endif; ?>
                 <?php break; ?>
         <?php endswitch; ?>
-    <?php endforeach;
+<?php endforeach;
 }

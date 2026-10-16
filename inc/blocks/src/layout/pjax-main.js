@@ -11,21 +11,21 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "页面路由容器",
-        description: "页头与页面内容的位置，整块随路由替换，结构锁死。",
+        description: "页头与页面内容的位置，整块随路由替换。",
     },
     "zh-TW": {
         blockTitle: "頁面路由容器",
-        description: "頁首與頁面內容的位置，整塊隨路由替換，結構鎖死。",
+        description: "頁首與頁面內容的位置，整塊隨路由替換。",
     },
     ja: {
         blockTitle: "ページルートコンテナ",
         description:
-            "ヘッダーとページ内容の位置。ルートごとに丸ごと差し替わり、構造は固定です。",
+            "ヘッダーとページ内容の位置。ルートごとに丸ごと差し替わり。",
     },
     en: {
         blockTitle: "Route container",
         description:
-            "Holds the page header and the page content; swapped per route with a locked structure.",
+            "Holds the page header and the page content.",
     },
 });
 

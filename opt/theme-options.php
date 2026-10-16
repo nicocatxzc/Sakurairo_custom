@@ -453,6 +453,7 @@ if (class_exists('Sakurairo_CSF')) {
                 'id'    => 'layout_block_post',
                 'type'  => 'fieldset',
                 'title' => __('文章页区块化', 'sakurairo'),
+                'desc' => __('如果你需要使用主题经典的sakura样式目录，请在上方将内容布局设置为单栏，且不要在文章页设置右侧边栏（这不影响你设计多栏布局）', 'sakurairo'),
                 'fields'    => [
                     [
                         'id'    => 'layout',

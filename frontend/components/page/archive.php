@@ -1,5 +1,4 @@
 <?php
-// 分类等归档：页头是分类名与描述，正文是文章列表，外壳是 .page-taxonomy 容器
 function iro_render_page_header(): void
 {
     $term             = get_queried_object();

@@ -1,5 +1,4 @@
 <?php
-// 首页：没有页头，正文是首页组件，外壳是 .page-home 容器
 function iro_render_page_header(): void {}
 
 function iro_render_page_content(): void

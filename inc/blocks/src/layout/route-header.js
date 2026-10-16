@@ -5,22 +5,22 @@ import createI18n from "../i18n";
 const lang = createI18n({
     "zh-CN": {
         blockTitle: "页头容器",
-        description: "由主题按路由输出的页头，位置锁死、不可编辑。",
+        description: "由主题按路由输出的页头，不可编辑。",
         hint: "页头 · 由主题按路由输出",
     },
     "zh-TW": {
         blockTitle: "頁首容器",
-        description: "由主題依路由輸出的頁首，位置鎖死、不可編輯。",
+        description: "由主題依路由輸出的頁首，不可編輯。",
         hint: "頁首 · 由主題依路由輸出",
     },
     ja: {
         blockTitle: "ページヘッダー",
-        description: "テーマがルートごとに出力するヘッダー。位置は固定で編集できません。",
+        description: "テーマがルートごとに出力するヘッダー。編集できません。",
         hint: "ヘッダー · テーマがルートごとに出力",
     },
     en: {
         blockTitle: "Page header",
-        description: "The header the theme prints per route; locked in place and not editable.",
+        description: "The header the theme prints per route, not editable.",
         hint: "Header · printed by the theme per route",
     },
 });

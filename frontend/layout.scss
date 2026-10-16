@@ -52,7 +52,9 @@
 
 // 正文：可以长到设置的上限，也可以一路压到最小宽度
 // （经典路径与区块路径的页面组件都是主容器的直接子项，这里一律覆盖；内层布局容器不算正文列）
-.layout-grid > .pjax-main > :not(.page-header):not(.site-side-bar):not(.layout-grid) {
+.layout-grid
+    > .pjax-main
+    > :not(.page-header):not(.site-side-bar):not(.layout-grid) {
     flex: 1 1 0;
     max-width: var(--layout-content-max);
     min-width: min(var(--layout-content-min), 100%);
@@ -60,7 +62,8 @@
 }
 
 // 栏目内容直接放在布局容器里时（FSE 的拆件写法），正文列同样吃宽度规则
-.layout-grid > :not(.site-side-bar):not(.page-header):not(.pjax-main):not(.layout-grid) {
+.layout-grid
+    > :not(.site-side-bar):not(.page-header):not(.pjax-main):not(.layout-grid) {
     flex: 1 1 0;
     max-width: var(--layout-content-max);
     min-width: min(var(--layout-content-min), 100%);

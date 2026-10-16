@@ -1,9 +1,9 @@
 <?php
 // 页面路由：站级布局从 layout-grid 开始解析，遇到 #pjax-main 就转到页面部分。
 // 页面模板统一声明 iro_render_page_header() 与 iro_render_page_content()，
-// 这里只做两件事：按请求载入页面模板，把两个槽的输出塞进解析出来的结构里。
+// 路由按请求载入页面模板，把两个槽的输出塞进解析出来的结构里。
 
-/** 页面布局没铺过，或者铺的不是从 pjax-main 开始，就用这套默认布局 */
+/** 页面布局非法（不从 pjax-main 开始），则使用默认布局 */
 const IRO_DEFAULT_PAGE_LAYOUT = '<!-- wp:sakurairo/pjax-main -->
 <!-- wp:sakurairo/route-header /-->
 
@@ -12,7 +12,7 @@ const IRO_DEFAULT_PAGE_LAYOUT = '<!-- wp:sakurairo/pjax-main -->
 <!-- /wp:sakurairo/content-layout -->
 <!-- /wp:sakurairo/pjax-main -->';
 
-// 路由分发：定下这一页的路由名，页面模板与页面组件都用它取名
+// 路由分发
 switch (true) {
     case is_home() || is_front_page():
         define('IRO_PAGE_ROUTE', 'home');
@@ -72,7 +72,7 @@ function iro_render_page(): void
 }
 
 /**
- * 站级布局的块：layout 渲染成栅格，pjax-main 是路由槽——不看里面的内容，
+ * 站级布局的块：layout 渲染成栅格，pjax-main 是路由槽，不看内容，
  * 直接交到页面部分，其余块照常解析
  */
 function iro_render_blocks(array $blocks): void
@@ -126,7 +126,7 @@ function iro_render_page_blocks(array $blocks): void
 }
 
 /**
- * 页面布局：开了区块化且铺的组件从 pjax-main 开始才认，否则视为放弃布局
+ * 页面布局：开启区块化且组件从 pjax-main 开始才合法，否则视为放弃布局
  */
 function iro_page_layout_blocks(): array
 {

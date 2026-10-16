@@ -1,5 +1,4 @@
 <?php
-// 作者归档：页头是作者信息，正文是文章列表，外壳是 .page-author 容器
 function iro_render_page_header(): void
 {
     $author = get_queried_object_id();

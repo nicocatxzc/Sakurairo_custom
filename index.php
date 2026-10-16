@@ -60,7 +60,7 @@ global $iro_only_template;
 
             <div class="layout-slot">
                 <div class="background-filter"></div>
-                <?php iro_render_page(); ?>
+                <?php iro_render_page(); // 路由区域?>
                 <?php
                 get_footer();
                 require_once get_theme_file_path('/frontend/components/site/particle.php');

@@ -1,5 +1,4 @@
 <?php
-// 搜索结果：页头是搜索框，正文是筛选器与结果列表，外壳是 .page-search 容器
 function iro_get_search_type_filters(): array
 {
     // 支持的类型
@@ -70,7 +69,7 @@ function iro_get_search_type_filters(): array
 
 function iro_render_page_header(): void
 {
-    ?>
+?>
     <header class="page-header search-header flex-center">
         <div class="search-box flex-center">
             <i class="fa-icon-solid fa-search search-icon"></i>
@@ -78,16 +77,16 @@ function iro_render_page_header(): void
             <input
                 type="text"
                 class="search-input"
-                placeholder="<?= __("搜索文章/标题/摘要",'sakurairo') ?>"
+                placeholder="<?= __("搜索文章/标题/摘要", 'sakurairo') ?>"
                 @keyup.enter="gotoSearch" />
 
             <button
                 class="search-button widget-button filled">
-                <?= __("搜索",'sakurairo') ?>
+                <?= __("搜索", 'sakurairo') ?>
             </button>
         </div>
     </header>
-    <?php
+<?php
 }
 
 function iro_render_page_content(): void
@@ -96,7 +95,7 @@ function iro_render_page_content(): void
 
     $search_filters = iro_get_search_type_filters();
     iro_content_container_start(['class' => 'page-search']);
-    ?>
+?>
     <?php if (iro_opt('search_filter') && count($search_filters['filters']) > 1) : ?>
         <!-- 筛选器部分 -->
         <div id="filter-container">
@@ -117,6 +116,6 @@ function iro_render_page_content(): void
     <?php endif; ?>
 
     <?php require_once get_theme_file_path('/frontend/components/post/list.php'); ?>
-    <?php
+<?php
     iro_content_container_end();
 }

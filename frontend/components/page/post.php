@@ -1,5 +1,4 @@
 <?php
-// 文章与页面：页头按有没有特色图分两套，正文是文章本体
 if (have_posts()) {
     the_post();
 }
@@ -35,7 +34,7 @@ function iro_render_page_content(): void
                 <?php endif; ?>
                 <?php require get_theme_file_path('/frontend/components/post/render.php'); ?>
             </article>
-            <?php // 仅限单栏，多栏时目录交给侧栏的「目录容器」块
+            <?php // 目录仅限单栏
             if ((int) iro_opt("layout_content_coloumns", 1) === 1): ?>
                 <?php if ((is_single() && iro_opt("page_post_toc", true)) || (is_page() && iro_opt("page_page_toc", false))): ?>
                     <div class="toc-container toc">
