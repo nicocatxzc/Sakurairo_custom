@@ -3,6 +3,7 @@
 <?php if (!$iro_only_template): ?>
     <div
         class="post-list"
+        data-pagination="<?= esc_attr(iro_pagination_mode()) ?>"
         style="
             --post-card-border-radius: <?= iro_opt("post_card_design")["card_radius"] ?? 0.7 ?>rem;
             --post-card-meta-border-radius: <?= iro_opt("post_card_design")["meta_radius"] ?? 0.3 ?>rem;

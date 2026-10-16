@@ -13,18 +13,53 @@
             "area": "uncategorized"
         },
         {
-            "name": "site-homepage",
-            "title": "首页",
+            "name": "site-layout",
+            "title": "站级布局",
             "area": "uncategorized"
         },
         {
-            "name": "page-archive",
-            "title": "分类页",
+            "name": "page-home-layout",
+            "title": "首页布局",
             "area": "uncategorized"
         },
         {
-            "name": "page-post",
-            "title": "文章页",
+            "name": "page-archive-layout",
+            "title": "分类页布局",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-post-layout",
+            "title": "文章页布局",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-home-content",
+            "title": "首页内容",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-archive-content",
+            "title": "分类页内容",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-post-content",
+            "title": "文章页内容",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-archive-header",
+            "title": "分类页页头",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-post-header-simple",
+            "title": "文章页朴素页头",
+            "area": "uncategorized"
+        },
+        {
+            "name": "page-post-header-with-image",
+            "title": "文章页带图页头",
             "area": "uncategorized"
         },
         {

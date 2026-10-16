@@ -212,6 +212,24 @@ add_action('init', function () {
     ]);
 
     /*
+     * 首页展示区与文章列表
+     */
+    foreach (
+        [
+            'home-show' => 'home_show.php',
+            'post-list' => 'post_list.php',
+        ] as $page_block => $page_template
+    ) {
+        register_block_type('sakurairo/' . $page_block, [
+            'render_callback' => function ($attributes, $content = '') use ($page_template) {
+                ob_start();
+                require get_theme_file_path('/frontend/components/block/pages/' . $page_template);
+                return ob_get_clean();
+            },
+        ]);
+    }
+
+    /*
      * 工具块
      */
     foreach (
@@ -248,10 +266,12 @@ add_action('init', function () {
      */
     foreach (
         [
-            'layout'        => 'layout.php',
-            'route-content' => 'route-content.php',
-            'site-side-bar' => 'site-side-bar.php',
-            'pjax-main'     => 'pjax-main.php',
+            'layout'         => 'layout.php',
+            'content-layout' => 'content-layout.php',
+            'route-header'   => 'route-header.php',
+            'route-content'  => 'route-content.php',
+            'site-side-bar'  => 'site-side-bar.php',
+            'pjax-main'      => 'pjax-main.php',
         ] as $layout_block => $layout_template
     ) {
         register_block_type('sakurairo/' . $layout_block, [

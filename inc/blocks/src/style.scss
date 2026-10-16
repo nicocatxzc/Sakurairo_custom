@@ -310,12 +310,22 @@
     padding: 1rem;
 }
 
-// 正文容器就是 PJAX 的交换区边界，用金色边框把"换页时会被替换"的范围圈出来：
-// 外面的常驻侧栏与页脚不随导航刷新，里面的每次导航都会重建。这条认知负担由边框承担。
-.block-editor-block-list__block.pjax-main {
+// 路由容器与它的两个子容器是随导航整块替换的部分，用金色边框圈出「换页会被替换」的范围：
+// 外面的常驻侧栏与页脚不随导航刷新，里面的每次导航都会重建。这条认知负担由边框承担
+.block-editor-block-list__block:is(
+    .pjax-main,
+    .route-content-layout,
+    .iro-route-header,
+    .iro-route-content
+) {
     position: relative;
     padding: 1rem;
     border: 0.15rem dashed #d4af37;
+}
+
+// 正文容器的画布高度给足，看得出它是内容区而不是一条占位提示
+.block-editor-block-list__block.iro-route-content {
+    min-height: 6rem;
 }
 
 // 栏目横排：前台的真实排布在 frontend/layout.scss，这里让画布和 wp:columns 一样把栏目摆成一行。
@@ -326,6 +336,7 @@
     > .block-editor-block-list__layout {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     align-items: stretch;
     gap: 1rem;
 
@@ -333,14 +344,41 @@
         min-width: 0;
     }
 
-    // 正文占满剩下的一整行，侧栏收窄成配角（三条栏目时正文居中，和前台一致）
-    > .block-editor-block-list__block.pjax-main {
+    // 主列占满剩下的一整行（顶层是路由容器，页面内容容器里是页面正文列），
+    // 侧栏收窄成配角（三条栏目时主列居中，和前台一致）
+    > .block-editor-block-list__block:is(
+            .pjax-main,
+            .route-content,
+            .iro-route-content
+        ) {
         flex: 1 1 0;
     }
 
     > .block-editor-block-list__block.site-side-bar {
         flex: 0 1 20%;
         max-width: 280px;
+    }
+}
+
+// 路由容器内部纵向堆：页头与页面内容容器之间留出行距，内容容器吃掉剩下的高度。
+// 子块一律撑满整列，块间距只由这里的 gap 决定
+.block-editor-block-list__block.pjax-main
+    > .block-editor-inner-blocks
+    > .block-editor-block-list__layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+
+    > .block-editor-block-list__block {
+        // 画布里的区块盒是 content-box，光给 width: 100% 会被自身 padding 顶出父容器
+        width: 100%;
+        box-sizing: border-box;
+        margin-block: 0;
+    }
+
+    > .block-editor-block-list__block.route-content-layout {
+        flex: 1 1 auto;
     }
 }
 

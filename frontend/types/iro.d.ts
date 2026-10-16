@@ -70,7 +70,6 @@ interface IroThemeConfig {
         builtin?: IroParticleBuiltin;
         config?: unknown;
     };
-    pagination_mode?: string;
     pagination_ajax_wait?: number;
     missing_images?: string;
     missing_avatars?: string;

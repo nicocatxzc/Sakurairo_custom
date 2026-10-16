@@ -57,4 +57,16 @@ export default function registerTemplateBlocks() {
         title: "时光轴",
         icon: createElement("i", { className: "fa-solid fa-inbox" }),
     });
+
+    createTemplateBlock({
+        name: "home-show",
+        title: "首页展示区域",
+        icon: "grid-view",
+    });
+
+    createTemplateBlock({
+        name: "post-list",
+        title: "文章列表",
+        icon: "list-view",
+    });
 }

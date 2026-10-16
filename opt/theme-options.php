@@ -393,6 +393,13 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id'    => 'layout_block_global',
+                'type'  => 'switcher',
+                'title' => __('布局区块化', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
                 'id'    => 'layout_block_homepage',
                 'type'  => 'switcher',
                 'title' => __('首页区块化', 'sakurairo'),

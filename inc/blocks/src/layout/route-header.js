@@ -4,12 +4,12 @@ import createI18n from "../i18n";
 
 const lang = createI18n({
     "zh-CN": {
-        blockTitle: "页头",
+        blockTitle: "页头容器",
         description: "由主题按路由输出的页头，位置锁死、不可编辑。",
         hint: "页头 · 由主题按路由输出",
     },
     "zh-TW": {
-        blockTitle: "頁首",
+        blockTitle: "頁首容器",
         description: "由主題依路由輸出的頁首，位置鎖死、不可編輯。",
         hint: "頁首 · 由主題依路由輸出",
     },

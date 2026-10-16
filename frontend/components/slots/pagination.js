@@ -5,7 +5,8 @@ _iro.hooks.onPageLoaded(() => {
     let postList = document.querySelector(".post-list");
 
     if (postList) {
-        if (_iro.config.pagination_mode == "ajax") {
+        // 如何翻页只看列表容器自己的标志位
+        if (postList.dataset.pagination === "ajax") {
             let next_page = postList.querySelector(".ajax-pagination");
 
             let paginationObserver = null;

@@ -1,7 +1,18 @@
 <?php
-// 主内容容器：id 是 PJAX 的替换目标（frontend/app/pjax.js），一个页面只应出现一个；
-// display:contents 由 frontend/layout.scss 给出，所以里面的块直接参与布局容器的排列
+// 路由容器：id 是 PJAX 的替换目标（frontend/app/pjax.js），一个页面只应出现一个；
+// 页面布局里再铺一层 pjax-main 时这层只当透明容器，页面槽只在最外层补一次
+$iro_pjax_nested = !empty($GLOBALS['iro_pjax_main_open']);
+$GLOBALS['iro_pjax_main_open'] = true;
 ?>
-<div id="pjax-main" class="pjax-main">
+<?php if ($iro_pjax_nested) : ?>
     <?= $content ?>
-</div>
+<?php else : ?>
+    <div id="pjax-main" class="pjax-main">
+        <?= $content ?>
+        <?php
+        if (isset($GLOBALS['iro_page_slot_renderer']) && is_callable($GLOBALS['iro_page_slot_renderer'])) {
+            ($GLOBALS['iro_page_slot_renderer'])();
+        }
+        ?>
+    </div>
+<?php endif; ?>

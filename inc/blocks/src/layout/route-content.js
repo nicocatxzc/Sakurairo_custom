@@ -4,12 +4,12 @@ import createI18n from "../i18n";
 
 const lang = createI18n({
     "zh-CN": {
-        blockTitle: "页面正文",
+        blockTitle: "页面正文容器",
         description: "当前路由的正文，由主题按路由替换，不可删除。",
         hint: "页面正文 · 按路由自动替换",
     },
     "zh-TW": {
-        blockTitle: "頁面正文",
+        blockTitle: "頁面正文容器",
         description: "目前路由的正文，由主題依路由替換，不可刪除。",
         hint: "頁面正文 · 依路由自動替換",
     },
@@ -27,7 +27,7 @@ const lang = createI18n({
 
 function edit() {
     const blockProps = useBlockProps({
-        className: "iro-block-placeholder iro-route-content",
+        className: "iro-block-placeholder iro-route-content route-content",
     });
 
     return (
@@ -56,7 +56,7 @@ export default function routeContentBlock() {
             inserter: false,
         },
         attributes: {
-            lock: { type: "object", default: { remove: true } },
+            lock: { type: "object", default: { remove: true, move: true } },
         },
         edit,
         save,

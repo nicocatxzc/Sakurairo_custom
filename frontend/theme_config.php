@@ -52,7 +52,6 @@ function iro_front_theme_config()
         'post_cover_as_background' => iro_opt("post_cover_as_background", false),
         'cover_random_pic_url_pc' => iro_opt("cover_random_pic_url_pc"),
         'cover_random_pic_url_mb' => iro_opt("cover_random_pic_url_mb"),
-        'pagination_mode' => iro_opt("pagination_mode", "pagination"),
         'pagination_ajax_wait' => iro_opt("pagination_ajax_wait", 3),
         'missing_images' => iro_opt('missing_images_placeholder'),
         'missing_avatars' => iro_opt("missing_avatars_placeholder"),

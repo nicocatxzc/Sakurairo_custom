@@ -74,8 +74,10 @@
     margin-left: calc(50% - 50dvw);
 }
 
-// 侧栏：宽度在设置区间里伸缩，高度撑满整行
-.layout-grid > .site-side-bar {
+// 侧栏：宽度在设置区间里伸缩，高度撑满整行。私有侧栏跟着页面路由容器一起来，
+// 因为它同样提升到了布局容器里，所以和顶层的侧栏共用一套规则
+.layout-grid > .site-side-bar,
+.layout-grid > .pjax-main > .site-side-bar {
     flex: 1 1 0;
     max-width: var(--layout-side-width);
     min-width: min(var(--layout-side-min), 100%);
@@ -87,7 +89,8 @@
 // 侧栏归哪一侧由 DOM 顺序决定，主题不再知道哪一条可以留，所以整体收掉）
 // 选择器带上 .layout-grid：侧栏自己的样式里也有 .site-side-bar，优先级不能输
 @media (max-width: 1111.98px) {
-    .layout-grid > .site-side-bar {
+    .layout-grid > .site-side-bar,
+    .layout-grid > .pjax-main > .site-side-bar {
         display: none;
     }
 }

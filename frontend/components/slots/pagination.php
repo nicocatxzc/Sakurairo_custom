@@ -13,6 +13,12 @@ function iro_pagination_md_link(string $link): string
     return add_query_arg('md', '', $link);
 }
 
+/** 列表如何翻页：只有主题设置一个来源；前台脚本只看列表容器上的标志位，不再读注入的配置 */
+function iro_pagination_mode(): string
+{
+    return iro_opt("pagination_mode", "pagination") === "ajax" ? "ajax" : "pagination";
+}
+
 function iro_post_pagination()
 {
     global $wp_query, $iro_is_md_template;
@@ -23,7 +29,7 @@ function iro_post_pagination()
         add_filter('get_pagenum_link', 'iro_pagination_md_link');
     }
 
-    if (iro_opt("pagination_mode", "pagination") == "pagination"):
+    if (iro_pagination_mode() == "pagination"):
         the_posts_pagination([
             'class'    => 'site-pagination',
             'mid_size'  => 2,

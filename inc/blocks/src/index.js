@@ -25,6 +25,7 @@ import socialLinksBlock from "./decorate/social-links";
 import widgetsContainerBlock from "./decorate/widgets-container";
 // 布局容器
 import layoutBlock from "./layout/layout";
+import contentLayoutBlock from "./layout/content-layout";
 import siteSideBarBlock from "./layout/site-side-bar";
 import pjaxMainBlock from "./layout/pjax-main";
 // 路由层：页头只在编辑器里占位，页面正文由主题按路由替换
@@ -94,6 +95,7 @@ export default function initBlocks() {
         widgetsContainerBlock();
         // 布局容器
         layoutBlock();
+        contentLayoutBlock();
         siteSideBarBlock();
         pjaxMainBlock();
         routeHeaderBlock();
