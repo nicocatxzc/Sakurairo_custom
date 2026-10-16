@@ -179,7 +179,8 @@ if (!_iro.isBackend) {
         const language = _iro.page?.language || _iro.config.language;
 
         if (language) {
-            document.documentElement.lang = language;
+            // 替换下划线让wp语言标识变成合法的BCP 47格式
+            document.documentElement.lang = language.replace(/_/g, "-");
         }
     }
     _iro.hooks.onPageLoaded(initFrontConfig);

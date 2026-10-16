@@ -299,7 +299,8 @@ if (iro_i18n_enabled()) {
             return $output;
         }
 
-        $locale   = iro_i18n_locale(iro_i18n_current_language());
+        // BCP 47格式合法化
+        $locale   = str_replace('_', '-', iro_i18n_locale(iro_i18n_current_language()));
         $replaced = preg_replace('/\blang=(["\']).*?\1/i', 'lang="' . esc_attr($locale) . '"', $output, 1);
 
         return $replaced === null ? $output : $replaced;
