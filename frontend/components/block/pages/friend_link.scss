@@ -1,6 +1,9 @@
 .page-links {
     width: 100%;
+    display: flex;
+    justify-content: center;
     .categories {
+        width: 860px;
         display: flex;
         flex-direction: column;
     }
