@@ -95,13 +95,16 @@ export default function initBlocks() {
         socialLinksBlock();
         widgetsContainerBlock();
         headMetasBlock();
-        // 布局容器
-        layoutBlock();
-        contentLayoutBlock();
+        // 侧栏容器：前台有对应的 PHP 渲染，正文与小工具里都能用
         siteSideBarBlock();
-        pjaxMainBlock();
-        routeHeaderBlock();
-        routeContentBlock();
+        // 布局容器：只在站点编辑器注册（前台由 route.php 的流水线接管，放进正文即静默失效）
+        if (window.iroBlockEditor && window.iroBlockEditor.siteEditor) {
+            layoutBlock();
+            contentLayoutBlock();
+            pjaxMainBlock();
+            routeHeaderBlock();
+            routeContentBlock();
+        }
     } catch (error) {
         console.log(`发生错误${error}`);
         console.log(error.stack);

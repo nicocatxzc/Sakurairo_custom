@@ -10,7 +10,7 @@ function iro_render_page_content(): void
     // 开始容器
     iro_content_container_start(['style' => $home_page_style_vars, "class" => "page-home"]);
 ?>
-    <?php if (iro_opt("layout_block_homepage")["content"]):
+    <?php if (iro_opt("layout_block_homepage", ["layout" => false, "content" => false])["content"]):
         block_template_part('page-home-content');
     else:
     ?>

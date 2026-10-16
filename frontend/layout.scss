@@ -12,7 +12,7 @@
     // 设置项给出的尺寸；正文宽度同时决定 .container 里文字的宽度
     // 夹到选项允许的区间，手输越界的值不会把版面撑坏
     --layout-content-max: clamp(600px, var(--iro-content-width, 860px), 1280px);
-    --layout-side-width: clamp(180px, var(--iro-side-width, 280px), 280px);
+    --layout-side-width: clamp(180px, var(--iro-side-width, 200px), 280px);
     // 正文最小宽度：视口再窄就收掉侧栏（见文件末尾断点）
     --layout-content-min: 680px;
     // 侧栏最窄到这个宽度就不再缩

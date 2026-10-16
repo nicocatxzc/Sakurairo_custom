@@ -6,7 +6,7 @@ if (have_posts()) {
 
 function iro_render_page_header(): void
 {
-    if (iro_opt("layout_block_post", ["header" => false])["header"]):
+    if (iro_opt("layout_block_post", ["layout" => false, "header" => false])["header"]):
 ?>
         <div class="page-header bleed">
             <?php

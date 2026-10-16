@@ -38,7 +38,6 @@ function edit() {
     );
 }
 
-// 动态块：前台外壳与正文都由 PHP 输出（frontend/components/block/layout/route-content.php）
 function save() {
     return null;
 }

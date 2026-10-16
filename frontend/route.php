@@ -130,13 +130,17 @@ function iro_render_page_blocks(array $blocks): void
  */
 function iro_page_layout_blocks(): array
 {
-    $switches = [
-        'home'    => 'layout_block_homepage',
-        'post'    => 'layout_block_post',
-        'archive' => 'layout_block_archive',
+    $routes = [
+        'home'    => ['layout_block_homepage', 'page-home-layout'],
+        'post'    => ['layout_block_post', 'page-post-layout'],
+        'archive' => ['layout_block_archive', 'page-archive-layout'],
+        'default' => ['layout_block_not_found', 'page-404'],
     ];
-    $content = isset($switches[IRO_PAGE_ROUTE]) && (iro_opt($switches[IRO_PAGE_ROUTE], ["layout" => false])["layout"])
-        ? iro_get_part_content('page-' . IRO_PAGE_ROUTE . '-layout')
+    [$switch, $part] = $routes[IRO_PAGE_ROUTE] ?? ['', ''];
+    // 前三个开关是 fieldset（看 layout 子项），404 是单个 switcher（本身即结论）
+    $setting = $switch === '' ? [] : iro_opt($switch, []);
+    $content = (is_array($setting) ? ($setting['layout'] ?? false) : (bool) $setting)
+        ? iro_get_part_content($part)
         : '';
     $blocks = $content !== '' ? parse_blocks($content) : [];
 

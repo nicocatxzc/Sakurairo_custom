@@ -7,6 +7,17 @@
  * @package Sakurairo
  */
 
+// 开了 404 页区块化就交回主题外壳与页面路由，由 page-404 组件接管
+if (iro_opt('layout_block_not_found', false)) {
+    require_once get_theme_file_path('/frontend/route.php');
+    get_header();
+    iro_render_page();
+    get_footer();
+
+    return;
+}
+
+// 下面这张独立卡片不要区块样式，免得盖住卡片自己的排版
 add_action('wp_head', function() {
     wp_dequeue_style('wp-block-library');
     wp_dequeue_style('wp-block-library-theme');

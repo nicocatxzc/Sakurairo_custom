@@ -10,10 +10,13 @@ add_action('enqueue_block_editor_assets', 'iro_editor_vars');
 function iro_editor_vars()
 {
     // 准备信息
+    $screen = get_current_screen();
     $data = [
         'siteTitle' => get_bloginfo('name'),
         'language' => get_locale(),
         'user' => wp_get_current_user()->user_login,
+        // 布局容器只在站点编辑器注册：它们由前台路由流水线渲染，放进正文会静默失效
+        'siteEditor' => (bool) ($screen && 'site-editor' === $screen->base),
     ];
 
     // 传递变量

@@ -94,7 +94,6 @@ function edit({ clientId }) {
     );
 }
 
-// 动态块：栅格元素由前台 PHP 输出（frontend/components/block/layout/content-layout.php）
 function save() {
     return <InnerBlocks.Content />;
 }
@@ -106,6 +105,7 @@ export default function contentLayoutBlock() {
         description: lang.description,
         icon: "align-wide",
         category: "sakurairo-layout",
+        parent: ["sakurairo/pjax-main"],
         supports: {
             html: false,
             reusable: false,

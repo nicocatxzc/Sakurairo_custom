@@ -92,7 +92,6 @@ function edit({ clientId }) {
     );
 }
 
-// 动态块：外壳由前台 PHP 输出（frontend/components/block/layout/pjax-main.php），
 // 页头与内容按路由替换
 function save() {
     return <InnerBlocks.Content />;

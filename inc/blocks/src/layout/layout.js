@@ -173,7 +173,6 @@ function edit({ clientId }) {
     );
 }
 
-// 动态块：栅格元素由前台 PHP 输出（frontend/components/block/layout/layout.php），
 // 内容里只留内部块，所以改栏目顺序这类版式调整不需要重存页面
 function save() {
     return <InnerBlocks.Content />;

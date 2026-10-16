@@ -11,7 +11,7 @@ function iro_render_page_header(): void
     }
 ?>
     <header class="page-header taxonomy-header">
-        <?php if (iro_opt("layout_block_archive")["header"]):
+        <?php if (iro_opt("layout_block_archive", ["layout" => false, "header" => false, "content" => false])["header"]):
             block_template_part('page-archive-header');
         else:
         ?>
@@ -29,7 +29,7 @@ function iro_render_page_header(): void
 function iro_render_page_content(): void
 {
     iro_content_container_start(['class' => 'page-taxonomy']);
-    if (iro_opt("layout_block_archive")["content"]):
+    if (iro_opt("layout_block_archive", ["layout" => false, "header" => false, "content" => false])["content"]):
         block_template_part('page-archive-content');
     else:
         require_once get_theme_file_path('/frontend/components/post/list.php');
