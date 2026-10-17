@@ -1,5 +1,5 @@
 <?php
-function iro_comment_render($comment, $args=[], $depth=[])
+function iro_comment_render($comment, $args = [], $depth = [])
 {
     $GLOBALS['comment'] = $comment;
     $comment_id = get_comment_ID();
@@ -11,7 +11,7 @@ function iro_comment_render($comment, $args=[], $depth=[])
                 class="reply-button widget-button filled"
                 data-commentid="<?= $comment_id; ?>"
                 data-commentauthor="<?= esc_attr(get_comment_author()); ?>">
-                <?= __("回复",'sakurairo') ?>
+                <?= __("回复", 'sakurairo') ?>
             </button>
 
             <section class="comment-infos">
@@ -22,9 +22,10 @@ function iro_comment_render($comment, $args=[], $depth=[])
                     <span class="author-name"><?php comment_author(); ?></span>
                     <div class="comment-meta-list">
                         <time datetime="<?php comment_date('c'); ?>">
-                            <?= __("发布于",'sakurairo') ?> <?php comment_date(); ?>
+                            <?= __("发布于", 'sakurairo') ?> <?php comment_date(); ?>
                         </time>
-                    </div>
+                        |
+                        <?php require get_theme_file_path("/frontend/components/comment/ua.php"); ?>
                 </div>
             </section>
 
