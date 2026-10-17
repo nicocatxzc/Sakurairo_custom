@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 获取 POST 字段
  */
@@ -254,4 +255,95 @@ function iro_is_frontend(): bool
      * `$pagenow` 由 `wp-includes/vars.php` 在插件加载前设好。
      */
     return !in_array((string) ($GLOBALS['pagenow'] ?? ''), ['wp-login.php', 'xmlrpc.php'], true);
+}
+
+class IroGlobalState
+{
+    const CACHE_PREFIX = 'iro_global_state_';
+
+    const DEFAULT_EXPIRE = 600; // 过期时间
+
+    const CACHE_GROUP = 'iro_global_state'; // 缓存组
+
+    private string $key; // 缓存键
+
+    public function __construct(string $key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * 获取完整的缓存键名
+     *
+     * @return string
+     */
+    private function getCacheKey()
+    {
+        return self::CACHE_PREFIX . $this->key;
+    }
+
+    /**
+     * 获取当前活跃实例总数
+     *
+     * @return int
+     */
+    public function current()
+    {
+        $value = wp_cache_get($this->getCacheKey(), self::CACHE_GROUP);
+
+        if (false === $value) {
+            return 0;
+        }
+
+        return (int) $value;
+    }
+
+    /**
+     * 增加活跃实例数量
+     *
+     * @param int $num 增加的数量
+     * @return int 增加后的总数
+     */
+    public function add($num = 1)
+    {
+        $num = (int) $num;
+        $cacheKey = $this->getCacheKey();
+
+        $current = wp_cache_get($cacheKey, self::CACHE_GROUP);
+        if (false === $current) {
+            $current = 0;
+        }
+
+        $newValue = (int) $current + $num;
+        wp_cache_set($cacheKey, $newValue, self::CACHE_GROUP, self::DEFAULT_EXPIRE);
+
+        return $newValue;
+    }
+
+    /**
+     * 减少活跃实例数量
+     *
+     * @param int $num 减少的数量
+     * @return int 减少后的总数
+     */
+    public function remove($num = 1)
+    {
+        $num = (int) $num;
+        $cacheKey = $this->getCacheKey();
+
+        $current = wp_cache_get($cacheKey, self::CACHE_GROUP);
+        if (false === $current) {
+            $current = 0;
+        }
+
+        $newValue = max(0, (int) $current - $num);
+        wp_cache_set($cacheKey, $newValue, self::CACHE_GROUP, self::DEFAULT_EXPIRE);
+
+        return $newValue;
+    }
+}
+
+function iroGlobalState($key)
+{
+    return new IroGlobalState($key);
 }

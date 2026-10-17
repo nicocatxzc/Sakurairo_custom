@@ -24,8 +24,10 @@ function iro_comment_render($comment, $args = [], $depth = [])
                         <time datetime="<?php comment_date('c'); ?>">
                             <?= __("发布于", 'sakurairo') ?> <?php comment_date(); ?>
                         </time>
-                        |
-                        <?php require get_theme_file_path("/frontend/components/comment/ua.php"); ?>
+                        <?php if (iro_opt('comment_useragent', false) || iro_opt('comment_ip_address', false)): ?>
+                            |
+                            <?php require get_theme_file_path("/frontend/components/comment/ua.php"); ?>
+                        <?php endif; ?>
                 </div>
             </section>
 

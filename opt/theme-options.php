@@ -2324,6 +2324,55 @@ if (class_exists('Sakurairo_CSF')) {
             ],
 
             [
+                'id' => 'comment_ip_address',
+                'type' => 'switcher',
+                'title' => __('评论区评论IP地址', 'sakurairo'),
+                'label' => __('开启之后页面评论区域将显示用户的IP对应地区地址', 'sakurairo'),
+                'default' => false
+            ],
+
+            [
+                'id'    => 'ip_api_select',
+                'type'  => 'fieldset',
+                'title' => __('可用IP查询API', 'sakurairo'),
+                'desc' => __('确认你的服务器能连接到以上API接口', 'sakurairo'),
+                'fields'    => [
+                    [
+                        'id'    => 'ip_api',
+                        'type'  => 'switcher',
+                        'title' => 'ip-api.com',
+                    ],
+                    [
+                        'id'    => 'ip_data',
+                        'type'  => 'switcher',
+                        'title' => 'ipdata.info',
+                    ],
+                    [
+                        'id'    => 'ip_whois',
+                        'type'  => 'switcher',
+                        'title' => 'ipwhois.app',
+                    ],
+                    [
+                        'id'    => 'ip_sb',
+                        'type'  => 'switcher',
+                        'title' => 'api.ip.sb',
+                    ],
+                    [
+                        'id'    => 'pconline',
+                        'type'  => 'switcher',
+                        'title' => 'whois.pconline.com.cn',
+                    ]
+                ],
+                'default' => [
+                    'ip_api' => true,
+                    'ip_data' => true,
+                    'ip_whois' => true,
+                    'ip_sb' => true,
+                    'pconline' => true,
+                ]
+            ],
+
+            [
                 'id' => 'comment_captcha',
                 'type' => 'select',
                 'title' => __('评论区验证码', 'sakurairo'),
