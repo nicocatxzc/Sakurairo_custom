@@ -1,38 +1,24 @@
-**简体中文** | [繁體中文](README_tw.md) | [English](README_en.md) | [日本語](README_ja.md)
+# 一款多彩、友好、功能全面、体验完善的 WordPress 主题
 
-[![image](https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/banner-cn.webp)](https://github.com/mirai-mamori/Sakurairo)
-
-<h1 align="left">Theme Sakurairo </h1>
-
-> 一款多彩、友好、功能全面、体验完善的 WordPress 主题，。
-
-[![GitHub release](https://img.shields.io/github/v/release/mirai-mamori/Sakurairo.svg?style=for-the-badge&logo=appveyor)](https://github.com/mirai-mamori/Sakurairo/releases/latest)[![GitHub Release Date](https://img.shields.io/github/release-date/mirai-mamori/Sakurairo?style=for-the-badge&logo=appveyor)](https://github.com/mirai-mamori/Sakurairo/releases)![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mirai-mamori/Sakurairo?style=for-the-badge&logo=appveyor)[![jsDelivr hits (GitHub)](https://img.shields.io/jsdelivr/gh/hm/Fuukei/Public_Repository?color=red&logo=jsdelivr&logoColor=red&style=for-the-badge)](https://www.jsdelivr.com/package/gh/mirai-mamori/sakurairo)
-
-![Alt](https://repobeats.axiom.co/api/embed/292776675b642d6dc86f264f4b71ed411ee9be91.svg "Repobeats analytics image")
+> [!WARNING]
+> 这是一个重制版的分支，与原版不完全兼容，且有大量功能/样式/行为出入.
 
 ## 功能简介
 
 - **界面**：多彩、友好、响应式布局，支持浅色 / 暗色模式与自定义主题色。
 - **性能**：使用高效的代码分割，且内置大量优化，首屏与浏览速度极佳。
-- **AI 辅助阅读**：文章内提供 AI SEO优化，兼容 WordPress 官方 AI 插件。
+- **AI预备**：主题兼容wordpress官方AI插件，且还有AI SEO等其他功能。
+- **区块化**：支持自定义多栏布局，全站布局与页面部分结构的区块化排版。
 - **首页与封面**：支持图片 / 视频封面、特色图背景与背景填充模式。
 - **文章**：目录、代码高亮、图片灯箱、阅读量统计、SEO 优化与站点地图。
-- **评论区**：Markdown 渲染、评论表情、邮件通知与 SMTP 集成。
+- **评论区**：Markdown 渲染、评论表情、邮件通知等。
+- **功能集成** 主题集成了Github OAuth/SMTP/Cloudflare Turnstile等第三方功能。
 - **后台设置**：CodeStar Framework 设置面板与 Kirki 可视化编辑器。
-- **国际化**：内置简体中文、繁體中文、English、日本語。
+- **国际化**：内置简体中文、繁體中文、English、日本語翻译，并有完整的内容国际化支持。
 
 ## 下载及使用相关
 
-- 你可以在仓库release自行下载或拉取源码仓库使用构建脚本打包（需要nodejs24+debian环境）
-
-- 使用本主题的博客：<https://docs.fuukei.org/demo/>
-
-- 主题交流：[QQ群:784229925](https://jq.qq.com/?_wv=1027&k=U5UJjRik)  ＆  [Telegram群:fksakurairo](https://t.me/fksakurairo)
-
-- 如果在使用过程中遇到了任何问题，请**访问**本主题的 [支持文档](https://docs.fuukei.org)
-
-- 在确认你遇到的现象确实是一个 Bug 后，请在 [Issues](https://github.com/mirai-mamori/Sakurairo/issues/new/choose) 提交问题，并为该问题尽可能的描述清楚，
-按照提供的 issue 模板进行填写，谢谢配合。
+- 在确认你遇到的现象确实是一个 Bug 后，请在本仓库的issue页提交问题，并为该问题尽可能的描述清楚。
 
 ## 项目结构
 
@@ -65,25 +51,11 @@ Sakurairo/
 
 前台资源由 Vite 构建，产物 `frontend/dist/`、`inc/blocks/build/`、`inc/ai/dist/` 均不入库；从 Git 克隆后需在主题根执行 `pnpm install` 与 `pnpm build` 后再使用。
 
-## 赞助商
-
-<a href="https://waf.pro/"><img src="https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/wafpro.webp" alt="warpro" width="200"></a>  
-
-## 感谢每一位支持我们的你
-
-<a href="https://afdian.com/a/mamori"><img alt="afdian" height="50" src="https://s.nmxc.ltd/sakurairo_vision/@3.0/readme/afdian.webp"></a>
-
-[![image](https://fuukei-api.nyat.icu/api/sponsors)](https://afdian.com/a/mamori)
-
-## 主题贡献
-
-<a href="https://github.com/mirai-mamori/Sakurairo/graphs/contributors"><img src="https://fuukei-api.nyat.icu/api/contributors" alt="contributors" height="100%" width="100%"></a>
-
 ## 主题说明
 
 ### 开源相关
 
-- 本主题**基于 [Sakura V3 Series](https://github.com/mashirozx/sakura/tree/3.x) 主题进行重构开发**，使用 [GPL V2.0](https://github.com/mirai-mamori/Sakurairo/blob/master/LICENSE) 协议开源。
+- 本主题**基于 [Sakura V3 Series](https://github.com/mashirozx/sakura/tree/3.x) 主题进行重构开发**，使用 GPLV3 协议开源。
 
 - 本主题使用了部分来自互联网的特效。由于版权及开源协议不明，无法具体说明相关信息。如果本主题使用到您制作的特效，烦请您通过邮件（me#hareru.org）来取得联系。
 
@@ -101,8 +73,4 @@ Sakurairo/
 
 - 本主题使用 Themeum [Kirki](https://github.com/themeum/kirki) 以提供可视化编辑器相关功能
 
-## 希望你喜欢
-
-- Star 趋势  [![GitHub stars](https://img.shields.io/github/stars/mirai-mamori/Sakurairo?logo=github&style=social)](https://github.com/mirai-mamori/Sakurairo/stargazers)
-
-[![Stargazers over time](https://starchart.cc/mirai-mamori/Sakurairo.svg)](https://github.com/mirai-mamori/Sakurairo/stargazers)
+- 本主题使用 [Fontawesome](https://github.com/FortAwesome/Font-Awesome?tab=License-1-ov-file) 以提供部分组件图标
