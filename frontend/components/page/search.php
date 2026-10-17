@@ -77,8 +77,7 @@ function iro_render_page_header(): void
             <input
                 type="text"
                 class="search-input"
-                placeholder="<?= __("搜索文章/标题/摘要", 'sakurairo') ?>"
-                @keyup.enter="gotoSearch" />
+                placeholder="<?= __("搜索文章/标题/摘要", 'sakurairo') ?>"/>
 
             <button
                 class="search-button widget-button filled">

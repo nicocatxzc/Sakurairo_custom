@@ -203,5 +203,7 @@ if (!_iro.isBackend) {
     import("./utils/message");
 
     import("./plugins/postViews");
+
+    import("./plugins/webMCP")
 }
 export default _iro;

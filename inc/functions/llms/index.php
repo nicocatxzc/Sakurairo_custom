@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 const IRO_LLMS_ROUTE_VAR = 'iro_llms';
+const IRO_AI_CATALOG_ROUTE_VAR = 'iro_ai_catalog';
 const IRO_LLMS_CACHE_KEY = 'iro_llms_cache';
 
 require_once __DIR__ . '/llms-txt.php';
@@ -40,7 +41,6 @@ if (iro_opt('iro_llms_txt', false)) {
             unset($attr['srcset'], $attr['sizes']);
             return $attr;
         }, 10, 3);
-        
     }, 0);
 
     add_action('init', 'iro_llms_register_routes', 10);
@@ -49,6 +49,7 @@ if (iro_opt('iro_llms_txt', false)) {
 
     add_filter('query_vars', static function (array $vars): array {
         $vars[] = IRO_LLMS_ROUTE_VAR;
+        $vars[] = IRO_AI_CATALOG_ROUTE_VAR;
 
         return $vars;
     });
@@ -56,11 +57,24 @@ if (iro_opt('iro_llms_txt', false)) {
     foreach (['deleted_post', 'edited_term', 'delete_term'] as $hook) {
         add_action($hook, 'iro_llms_flush_cache', 10, 0);
     }
+
+    require __DIR__ . '/ai-catalog.php';
 }
 
 function iro_llms_register_routes(): void
 {
     add_rewrite_rule('^llms\.txt$', 'index.php?' . IRO_LLMS_ROUTE_VAR . '=txt', 'top');
+    // 与 llms.txt 同一条开关，两条规则一起注册才能在保存设置时一起进规则表
+    add_rewrite_rule(
+        '^\.well-known/ai-catalog\.json$',
+        'index.php?' . IRO_AI_CATALOG_ROUTE_VAR . '=1',
+        'top'
+    );
+    add_rewrite_rule(
+        '^ai-catalog\.json$',
+        'index.php?' . IRO_AI_CATALOG_ROUTE_VAR . '=1',
+        'top'
+    );
 }
 
 function iro_llms_flush_cache(): void
@@ -104,8 +118,8 @@ function iro_llms_dispatch(): void
         exit;
     }
 
-    // 首页/分类和标签
-    if (is_home() || is_front_page() || is_category() || is_tag()) {
+    // 首页/分类/标签/搜索
+    if (is_home() || is_front_page() || is_category() || is_tag() || is_search()) {
         iro_llms_render_list();
         exit;
     }
