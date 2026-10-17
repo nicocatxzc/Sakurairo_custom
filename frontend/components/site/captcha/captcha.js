@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import Builtin from "./builtin.vue";
 import Turnstile from "./turnstile.vue";
+import Geetest from "./geetest.vue";
 import i18n from "../../../i18n";
 
 window._iro = window._iro || {};
@@ -11,6 +12,7 @@ _iro.i18n = _iro.i18n || i18n;
 const CAPTCHAS = [
     [".captcha.builtin", Builtin],
     [".captcha.turnstile", Turnstile],
+    [".captcha.geetest", Geetest],
 ];
 
 const apps = [];

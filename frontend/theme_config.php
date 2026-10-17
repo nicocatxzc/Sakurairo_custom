@@ -24,6 +24,11 @@ function iro_get_basic_theme_config(): array
         'ajaxurl'  => admin_url('admin-ajax.php'),
         'iro_api'  => esc_url_raw(rest_url('sakura/v1')),
         'nonce' => wp_create_nonce('wp_rest'),
+        // 登录页与后台只注入这份基础配置，验证码组件的公钥必须放在这里，评论区的页面也能读到
+        'captcha' => [
+            'turnstile_site_key' => iro_opt("turnstile_site_key"),
+            'geetest_captcha_id' => iro_opt("geetest_captcha_id"),
+        ],
     ];
 }
 
@@ -59,7 +64,6 @@ function iro_front_theme_config()
         'lightbox' => iro_opt("lightbox", "medium_zoom"),
         'code_highlight' => iro_opt("code_highlight_method", "hljs"),
         'code_katex' => iro_opt('code_katex', true),
-        'turnstile_site_key' => iro_opt("turnstile_site_key"),
         'hitokoto_apis' => json_decode((string) iro_opt("footer_hitokoto_api"), true) ?: ['https://v1.hitokoto.cn/'],
         'player' => footer_player_frontend_config(),
         'slow_net_optimize' => iro_opt("iro_slow_net_optimize", false),

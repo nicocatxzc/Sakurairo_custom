@@ -77,7 +77,11 @@ interface IroThemeConfig {
     lightbox?: string;
     code_highlight?: string;
     code_katex?: boolean;
-    turnstile_site_key?: string;
+    /** 验证码组件的公钥；登录页与后台只有这份基础配置，所以它在这里而不在页面配置里 */
+    captcha?: {
+        turnstile_site_key?: string;
+        geetest_captcha_id?: string;
+    };
     hitokoto_apis?:Array[string];
     extract_theme_skin_from_cover?: boolean;
     extract_article_highlight_from_feature?: boolean;

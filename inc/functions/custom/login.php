@@ -200,6 +200,28 @@ function iro_login_captcha_validate()
         return true;
     }
 
+    // 极验行为验证
+    if ($captchaType === 'geetest') {
+        $params = [
+            'lot_number'     => iro_get_post_key('lot_number'),
+            'captcha_output' => iro_get_post_key('captcha_output'),
+            'pass_token'     => iro_get_post_key('pass_token'),
+            'gen_time'       => iro_get_post_key('gen_time'),
+        ];
+
+        if (in_array('', $params, true)) {
+            return iro_login_captcha_error(
+                __('请完成验证。', 'sakurairo')
+            );
+        }
+
+        if (!iro_verify_geetest($params)) {
+            return iro_login_captcha_error();
+        }
+
+        return true;
+    }
+
     // 未知验证码类型，默认拒绝
     return iro_login_captcha_error(
         __('验证码配置错误，请联系管理员。', 'sakurairo')

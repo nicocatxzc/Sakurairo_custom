@@ -12,6 +12,7 @@ add_action('admin_notices', 'permalink_tip');
 // 载入通用验证码方法
 require_once get_template_directory() . '/inc/api/captcha.php';
 require_once get_template_directory() . '/inc/api/turnstile.php';
+require_once get_template_directory() . '/inc/api/geetest.php';
 
 /**
  * REST nonce 校验

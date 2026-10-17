@@ -2233,6 +2233,7 @@ $sections = [
                     'off'       => esc_html__('关闭', 'sakurairo'),
                     'builtin'   => esc_html__('主题内建验证码', 'sakurairo'),
                     'turnstile' => 'Cloudflare Turnstile',
+                    'geetest'   => 'Geetest',
                 ],
             ],
             [

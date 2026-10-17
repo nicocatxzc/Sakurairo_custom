@@ -2331,7 +2331,8 @@ if (class_exists('Sakurairo_CSF')) {
                 'options' => [
                     'off' => __('关闭', 'sakurairo'),
                     'builtin' => __('主题内建验证码', 'sakurairo'),
-                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
+                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf"),
+                    'geetest' => __('Geetest', "sakurairo_csf")
                 ],
                 'default' => 'builtin',
             ],
@@ -2636,7 +2637,8 @@ if (class_exists('Sakurairo_CSF')) {
                 'options' => [
                     'off' => __('关闭', 'sakurairo'),
                     'builtin' => __('主题内建验证码', 'sakurairo'),
-                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf")
+                    'turnstile' => __('Cloudflare Turnstile', "sakurairo_csf"),
+                    'geetest' => __('Geetest', "sakurairo_csf")
                 ],
                 'default' => 'off',
             ],
@@ -2760,6 +2762,20 @@ if (class_exists('Sakurairo_CSF')) {
                 'id' => 'turnstile_secret_key',
                 'type' => 'text',
                 'title' => __('Turnstile Secret Key', "sakurairo_csf"),
+            ],
+
+            [
+                'id' => 'geetest_captcha_id',
+                'type' => 'text',
+                'title' => __('极验 Captcha ID', 'sakurairo'),
+                'desc' => __('极验后台的验证 ID，会随页面下发到前端', 'sakurairo'),
+            ],
+
+            [
+                'id' => 'geetest_captcha_key',
+                'type' => 'text',
+                'title' => __('极验 Captcha Key', 'sakurairo'),
+                'desc' => __('仅用于服务端生成签名，不会下发到前端', 'sakurairo'),
             ],
         ]
     ]);

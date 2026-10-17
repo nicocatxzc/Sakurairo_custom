@@ -107,6 +107,32 @@ function iro_rest_comment_captcha_check(
             );
         }
     }
+
+    if (iro_opt("comment_captcha") == "geetest") {
+        $passed = iro_verify_geetest([
+            'lot_number'     => $request->get_param('lot_number'),
+            'captcha_output' => $request->get_param('captcha_output'),
+            'pass_token'     => $request->get_param('pass_token'),
+            'gen_time'       => $request->get_param('gen_time'),
+        ]);
+
+        if ($passed) {
+            return $prepared_comment;
+        }
+
+        // lot_number 是一次性的，失败后必须让前端重新拉起验证，refresh 会触发验证码重挂载
+        return new WP_Error(
+            'captcha_failed',
+            __('验证码校验失败', 'sakurairo'),
+            [
+                'status'  => 400,
+                'stat'    => false,
+                'refresh' => true,
+                'data'    => '',
+                'msg'     => __('验证码校验失败', 'sakurairo'),
+            ]
+        );
+    }
 }
 
 // 登录态下先摘掉客户端提交的作者字段

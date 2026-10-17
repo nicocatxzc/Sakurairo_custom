@@ -1,7 +1,7 @@
 <script setup>
 import { VueTurnstile } from "vue-cloudflare-turnstile";
 
-const siteKey = _iro.config.turnstile_site_key;
+const siteKey = _iro.config.captcha?.turnstile_site_key;
 
 const turnstileToken = ref("");
 
