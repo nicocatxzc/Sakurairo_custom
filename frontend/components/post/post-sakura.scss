@@ -280,6 +280,12 @@ $not-template: ":not(:where(.page-template *))";
             display: block;
             width: 100%;
         }
+
+        // figure 不再是 table 后，core 给的 table-caption 会为自己生成按 min-content
+        // 收缩的匿名表，说明文字被压成一条竖线
+        > figcaption#{$not-template} {
+            display: block;
+        }
     }
 
     embed#{$not-template},
