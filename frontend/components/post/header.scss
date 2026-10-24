@@ -8,6 +8,9 @@
         margin: auto;
         display: flex;
         flex-direction: column;
+        .post-metas {
+            justify-content: center;
+        }
     }
 
     .post-title {
