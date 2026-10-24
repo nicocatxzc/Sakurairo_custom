@@ -73,6 +73,7 @@ $not-template: ":not(:where(.page-template *))";
     // ---------- 段落与行内元素 ----------
     p#{$not-template} {
         margin-bottom: 1.5em;
+        line-height: 30px;
         color: var(--word-color-first);
     }
 
@@ -137,6 +138,18 @@ $not-template: ":not(:where(.page-template *))";
         font-family: monospace, monospace;
         font-size: 0.9375rem;
         font-weight: var(--global-font-weight);
+    }
+
+    // 行内代码沿用旧版「浅底 + 主题色字」，代码块由 pre 规则单独接管
+    code:not(pre code)#{$not-template} {
+        padding: 0 0.1875rem;
+        color: var(--active-color);
+        background-color: color-mix(
+            in srgb,
+            var(--word-color-first) 6%,
+            transparent
+        );
+        border-radius: 0.3125rem;
     }
 
     // ---------- 分割线 ----------
@@ -258,6 +271,20 @@ $not-template: ":not(:where(.page-template *))";
 
     tr#{$not-template} {
         border-bottom: var(--border-sketch);
+    }
+
+    // 斑马纹用字色混出，避免在深色模式里硬编码浅灰
+    tr:nth-child(even)#{$not-template} {
+        background-color: color-mix(
+            in srgb,
+            var(--word-color-first) 4%,
+            transparent
+        );
+    }
+
+    // 代码块自带行号表格，不能被正文斑马纹染到
+    pre tr:nth-child(even)#{$not-template} {
+        background-color: transparent;
     }
 
     // ---------- 媒体 ----------

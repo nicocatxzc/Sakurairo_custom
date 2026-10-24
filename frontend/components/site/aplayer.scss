@@ -1,11 +1,39 @@
 // 页脚悬浮播放器：APlayer 自带样式之上补足旧主题的定位与外观覆盖
 #aplayer-float.aplayer.aplayer-fixed {
     margin: 0;
-    background: rgba(255, 255, 255, 1);
+    background: var(--widget-background-color);
+    color: var(--word-color-first);
     z-index: 1001;
+
+    .aplayer-body,
+    .aplayer-pic,
+    .aplayer-miniswitcher,
+    .aplayer-list {
+        background-color: var(--widget-background-color);
+        color: var(--word-color-first);
+    }
 
     .aplayer-list {
         max-height: 40vh;
+    }
+
+    .aplayer-list ol li {
+        color: var(--word-color-first);
+        border-top: none;
+    }
+
+    .aplayer-time,
+    .aplayer-title,
+    .aplayer-author {
+        color: inherit;
+    }
+
+    .aplayer-list ol li.aplayer-list-light {
+        background-color: rgba(var(--widget-background), 0.9);
+    }
+
+    .aplayer-info {
+        border-top-color: transparent;
     }
 
     // 迷你态贴左隐藏，hover 时滑入预览
@@ -57,7 +85,7 @@
     }
 
     .aplayer-lrc-current {
-        color: var(--theme-skin-matching);
+        color: var(--active-color);
         font-size: 15px;
         font-weight: bold;
     }

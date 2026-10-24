@@ -114,13 +114,40 @@
         max-height: 34%;
         width: fit-content;
         height: fit-content;
-        padding: 0.63rem 1rem;
+        padding: 0.625rem 0.9375rem;
         font-size: var(--post-card-title-font-size, 1.1rem);
         color: var(--word-color-first);
-        background-color: rgba(var(--widget-background), 0.7);
-        border: 0.01rem solid var(--border-shine);
+        background-color: rgba(var(--widget-background), 0.74);
+        border: var(--border-shine);
         border-radius: var(--post-card-title-border-radius, 0.4rem);
-        backdrop-filter: saturate(180%) blur(0.75px);
+        box-shadow: var(--widget-shadow-shine);
+        backdrop-filter: saturate(180%) blur(10px);
+        transition:
+            background-color 0.3s,
+            box-shadow 0.3s;
+
+        &:hover {
+            background-color: rgba(var(--widget-background), 0.85);
+            box-shadow: var(--widget-shadow-shining);
+        }
+
+        h3 {
+            margin: 0;
+            font-size: var(--post-card-title-font-size, 1.2rem);
+            font-weight: 700;
+            line-height: 1.5;
+            letter-spacing: 0.125rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition:
+                color 0.3s,
+                letter-spacing 0.3s;
+        }
+
+        a:hover h3 {
+            color: var(--active-color);
+            letter-spacing: 0.19rem;
+        }
     }
 
     .post-excerpt {

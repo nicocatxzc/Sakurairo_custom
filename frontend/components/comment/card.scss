@@ -1,6 +1,6 @@
 .comment-card {
     position: relative;
-    width: 100%;
+    width: 97.5%;
     margin: 0 auto 1.5rem;
     padding: 1.6rem;
 
@@ -9,6 +9,12 @@
     box-shadow: var(--widget-shadow-shine);
     border: var(--border-shine);
     transition: all 0.5s ease-in-out;
+
+    &:hover {
+        background-color: rgba(var(--widget-background), 0.8);
+        box-shadow: var(--widget-shadow-shining);
+    }
+
     .comment-infos {
         display: flex;
         gap: 0.5rem;
@@ -16,9 +22,35 @@
     .comment-metas {
         align-items: start;
         flex-direction: column;
+        gap: 0.125rem;
     }
-    .comment-content .reply {
-        color: var(--active-color);
+    .author-name {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--word-color-first);
+    }
+    .comment-meta-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        color: var(--word-color-second);
+    }
+    .comment-content {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.875rem;
+        color: var(--word-color-second);
+
+        p {
+            margin: 0.5rem 0;
+        }
+        a {
+            color: var(--active-color);
+        }
+        .reply {
+            color: var(--active-color);
+        }
     }
     .reply-button {
         font-size: 0.8rem;
@@ -36,8 +68,17 @@
         will-change: opacity;
     }
     .author-avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        flex-shrink: 0;
         border-radius: 50%;
         overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
     *:not(.comment-content) {
         list-style: none;
@@ -45,4 +86,10 @@
 }
 .comment-card:hover .reply-button {
     opacity: 1;
+}
+
+@media (max-width: 880px) {
+    .comment-card .reply-button {
+        opacity: 1;
+    }
 }

@@ -109,16 +109,24 @@
         width: fit-content;
         height: fit-content;
         margin: 0.31rem;
-        padding: 0.63rem 1rem;
+        padding: 0.625rem 0.9375rem;
         color: var(--word-color-first);
         background-color: rgba(var(--widget-background), 0.74);
         border: var(--border-shine);
         border-radius: var(--post-card-title-border-radius, 0.4rem);
-        // box-shadow: var(--widget-shadow-shine);
+        box-shadow: var(--widget-shadow-shine);
         backdrop-filter: saturate(180%) blur(10px);
         overflow: hidden;
+        transition:
+            background-color 0.3s,
+            box-shadow 0.3s;
 
         display: flex;
+
+        &:hover {
+            background-color: rgba(var(--widget-background), 0.85);
+            box-shadow: var(--widget-shadow-shining);
+        }
 
         h3 {
             margin: 0;

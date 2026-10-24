@@ -6,10 +6,17 @@
 
 .comment-count {
     font-size: 0.8rem;
-    color: #707070;
+    color: var(--word-color-second);
     margin-left: 0.65rem;
 }
 
 .comment-list {
+    padding-inline-start: 0;
+    list-style: none;
+}
+
+.comment-list .children {
+    margin: 0;
+    padding-inline-start: 2.5rem;
     list-style: none;
 }

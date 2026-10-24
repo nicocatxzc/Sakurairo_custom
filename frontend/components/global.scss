@@ -39,10 +39,14 @@ html {
         width: 6px;
     }
     ::-webkit-scrollbar-track {
-        background-color: #eee;
+        background-color: color-mix(
+            in srgb,
+            var(--word-color-first) 8%,
+            transparent
+        );
     }
     ::-webkit-scrollbar-thumb {
-        background-color: var(--word-color-first);
+        background-color: var(--button-bg);
         border-radius: 25px;
     }
 
