@@ -111,4 +111,22 @@
             }
         }
     }
+
+    // 窄屏一行两张卡片：宽度按两栏均分，不再受 clamp 的最小宽度限制
+    @media (max-width: 40rem) {
+        .steam-list {
+            gap: 1rem;
+        }
+        .steam-card {
+            width: calc((100% - 1rem) / 2);
+
+            // 两栏之后卡片只剩一百多像素，时长与时间横排会挤成两行，改成竖排
+            .steam-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.15rem;
+                padding: 0.6rem 0.75rem;
+            }
+        }
+    }
 }

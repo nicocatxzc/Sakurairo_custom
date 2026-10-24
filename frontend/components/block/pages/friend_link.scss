@@ -19,6 +19,13 @@
             background-color: rgba(var(--widget-background), 0.5);
             transition: all 0.5s ease-in-out;
         }
+
+        // 窄屏一行两张：固定 10rem 在 360 宽度下只能排一张
+        @media (max-width: 40rem) {
+            .link {
+                width: calc((100% - 1rem) / 2);
+            }
+        }
     }
     .link-content {
         flex-direction: column;

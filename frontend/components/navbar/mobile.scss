@@ -169,7 +169,8 @@
         flex: 1;
         .nuxtpic {
             max-width: 20vw;
-            max-height: 3.2rem;
+            // 3.2rem 是按桌面 3.75rem 栏高定的；移动端栏只有 3rem，logo 会顶出上下边缘
+            max-height: 2.4rem;
             height: 90%;
             width: auto;
         }
@@ -177,6 +178,10 @@
 
     .site-title {
         display: flex;
+        // 继承来的 4.7rem 行高（桌面栏 3.75rem 用的）会把标题撑成 85px 高的盒子，
+        // 上下都探出 3rem 的栏外，点栏外那一圈也会跳到首页
+        line-height: 1.5;
+        align-items: center;
         white-space: nowrap;
         width: auto;
         color: var(--word-color-first);

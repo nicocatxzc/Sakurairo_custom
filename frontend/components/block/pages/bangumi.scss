@@ -28,6 +28,14 @@
                 display: block;
             }
         }
+
+        // 窄屏一行两张封面：均分两栏，左右外边距收窄到卡片之间的间距
+        @media (max-width: 40rem) {
+            .anime-item {
+                width: calc((100% - 1rem) / 2);
+                margin: 0.25rem;
+            }
+        }
     }
     .anime-content {
         position: relative;

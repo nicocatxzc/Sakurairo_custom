@@ -16,6 +16,10 @@
             .container {
                 padding: 0 4%;
             }
+            // 页头铺满视口后，安全距离由页头内容自己留出来，左边缘才和正文对齐
+            .page-header & {
+                padding-inline: var(--layout-safe-area, 1rem);
+            }
         }
     }
 }

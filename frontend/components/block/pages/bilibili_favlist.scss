@@ -32,9 +32,13 @@
     .fav-content {
         margin: 0 2rem;
         display: grid;
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         justify-content: space-evenly;
         gap: 1.5rem;
+        // 窄屏去掉两侧留白，一行仍然保证两张卡片
+        @media (max-width: 40rem) {
+            margin-inline: 0;
+        }
         @media (min-width: 40rem) {
             grid-template-columns: repeat(2, 1fr);
         }

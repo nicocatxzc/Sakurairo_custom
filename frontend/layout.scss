@@ -45,9 +45,15 @@
     min-width: 0;
 }
 
-// 页头独占一行，横跨整宽；内层 .container 自己与正文列对齐
-.layout-grid > .pjax-main > .page-header {
-    flex: 0 0 100%;
+// 页头独占一行，横跨整宽；左右各抵消一份布局容器的留白，页头的背景/封面图铺到视口两边，
+// 内容再由内层容器与安全距离框回正文列（见 content_container.scss）。
+// 不用 100dvw：它把滚动条那道宽度也算进去会撑出横向滚动，而且百分比 margin 会和栅格的居中互相打架
+.layout-grid > .pjax-main > .page-header,
+.layout-grid > .page-header {
+    flex-basis: calc(100% + 2 * var(--layout-safe-area, 1rem));
+    width: calc(100% + 2 * var(--layout-safe-area, 1rem));
+    margin-left: calc(-1 * var(--layout-safe-area, 1rem));
+    margin-right: calc(-1 * var(--layout-safe-area, 1rem));
 }
 
 // 正文：可以长到设置的上限，也可以一路压到最小宽度
@@ -68,16 +74,6 @@
     max-width: var(--layout-content-max);
     min-width: min(var(--layout-content-min), 100%);
     min-height: 85dvh;
-}
-
-// 通栏页头（文章封面图）：左右各抵消一份布局容器的留白，宽度再补回这两份留白，
-// 盒子就正好压住布局容器的外框（也就是视口两边）。
-// 不用 100dvw：它把滚动条那道宽度也算进去会撑出横向滚动，而且百分比 margin 会和栅格的居中互相打架
-.layout-grid .page-header.bleed {
-    flex-basis: calc(100% + 2 * var(--layout-safe-area, 1rem));
-    width: calc(100% + 2 * var(--layout-safe-area, 1rem));
-    margin-left: calc(-1 * var(--layout-safe-area, 1rem));
-    margin-right: calc(-1 * var(--layout-safe-area, 1rem));
 }
 
 // 侧栏：宽度在设置区间里伸缩，高度撑满整行。私有侧栏跟着页面路由容器一起来，

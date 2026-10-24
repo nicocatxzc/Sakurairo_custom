@@ -38,15 +38,14 @@
 
     .post-metas {
         font-size: 0.9rem;
-        gap: 1rem;
+        gap: 0.15rem 1rem;
         margin-top: 0.2rem;
 
         display: flex;
+        // 卡片窄到装不下一行时换行；直接裁掉会把分类、标签整个吃掉
+        flex-wrap: wrap;
 
         color: var(--word-color-first);
-
-        overflow: hidden;
-        text-overflow: ellipsis;
 
         > div,
         > span {

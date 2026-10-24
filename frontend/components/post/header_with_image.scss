@@ -50,4 +50,11 @@
     .post-metas span a:not(:hover) {
         color: #ffffff;
     }
+
+    // 页头铺满视口后，标题与元信息要自己留出布局层的安全距离，左边缘才和正文对齐
+    @media (max-width: 860px) {
+        .post-header {
+            padding-inline: calc(var(--layout-safe-area, 1rem) + 4%);
+        }
+    }
 }
