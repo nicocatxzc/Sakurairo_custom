@@ -4,9 +4,15 @@
 @use "./author.scss" as page-author;
 @use "./search.scss" as page-search;
 
-.layout-grid:has(.page-template) {
+// 模板页面是一整页的应用式排版，正文列固定铺到 80rem。
+.layout-grid:has(.page-template:not(.page-links)) {
     --layout-content-max: 80rem;
-    .post .container:not(:has(.page-links)) {
-        max-width: 80rem;
+}
+
+// 模板页面同样无视侧栏设置：侧栏留着会把上面加宽的正文重新挤回窄列
+.layout-grid:has(.page-template) {
+    > .site-side-bar,
+    > .pjax-main > .site-side-bar {
+        display: none;
     }
 }
