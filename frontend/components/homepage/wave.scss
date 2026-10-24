@@ -79,6 +79,9 @@
     // 波浪只做装饰：整块放行鼠标事件，只有挂件自己把那一小块收回可交互
     pointer-events: none;
 
+    // 图像默认比底边高了1px
+    transform: translateY(1px);
+
     // 定位到窗口时脱离封面贴住视口底边
     &.iro-wave--window {
         position: fixed;
