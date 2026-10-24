@@ -12,7 +12,7 @@
         overflow: hidden;
         background-color: var(--widget-background-color);
         box-shadow: var(--widget-shadow-shine);
-        border-radius: var(--post-card-border-radius, 0.62rem);
+        border-radius: var(--post-card-border-radius, 0.7rem);
         transition: all 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95);
 
         &:hover {
@@ -129,7 +129,8 @@
 
         &:hover {
             background-color: rgba(var(--widget-background), 0.85);
-            box-shadow: var(--widget-shadow-shining);
+            // 这个不美观
+            // box-shadow: var(--widget-shadow-shining);
         }
 
         // 标题标签由模板决定，这里只清掉标题默认外边距，排版全部继承容器
@@ -168,10 +169,10 @@
         overflow: hidden;
 
         span {
-            display: inline-block;
-            max-height: 3rem;
+            display: -webkit-box;
             overflow: hidden;
-            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
         }
     }
 
@@ -192,11 +193,11 @@
             letter-spacing: 0.0625rem;
 
             span {
-                display: flex;
-                max-height: 100%;
+                display: -webkit-box;
                 overflow: hidden;
-                line-clamp: 11;
-                box-orient: vertical;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 11;
+                max-height: 100%;
             }
         }
 

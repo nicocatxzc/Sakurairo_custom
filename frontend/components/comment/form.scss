@@ -4,9 +4,9 @@
 }
 
 .comment-form {
-    width: 97.5%;
+    width: 91%;
     margin: 0 auto;
-    padding: 1.5rem 1.6rem;
+    padding: 2rem 1.6rem;
     margin-bottom: 4rem;
 
     border: var(--border-shine);
@@ -17,8 +17,7 @@
     will-change: box-shadow;
 
     &:hover {
-        background-color: rgba(var(--widget-background), 0.8);
-        box-shadow: var(--widget-shadow-shining);
+        box-shadow: 0 0.1rem 0.6rem -0.2rem var(--active-color);
     }
 
     #commentform {
@@ -32,7 +31,7 @@
     }
 
     .comment-form-comment {
-        height: 11.25rem;
+        height: 10rem;
         margin-bottom: 1rem;
         position: relative;
 
@@ -56,7 +55,7 @@
             transition: none;
 
             &:focus {
-                border: var(--border-active);
+                border: var(--border-sketch);
             }
         }
 
@@ -69,10 +68,10 @@
 
         textarea:not(:placeholder-shown) ~ .placeholder,
         textarea:focus ~ .placeholder {
-            color: var(--button-text);
-            background-color: var(--active-color);
+            color: #fff;
+            background-color: var(--word-color-second);
             transform: scale(0.75) translate(-1rem, -2.2rem);
-            border-radius: 0.2rem;
+            border-radius: 3px;
         }
     }
 
@@ -103,33 +102,7 @@
             border: var(--border-shine);
 
             &:focus {
-                border: var(--border-active);
-            }
-        }
-    }
-
-    .comment-notify {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.8rem;
-        color: var(--word-color-second);
-
-        input[type="checkbox"] {
-            appearance: none;
-            width: 1.125rem;
-            height: 1.125rem;
-            margin: 0;
-            border: var(--border-sketch);
-            border-radius: 50%;
-            background-color: transparent;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-
-            &:checked {
-                border-color: var(--active-color);
-                background-color: var(--active-color);
-                box-shadow: inset 0 0 0 0.2rem var(--widget-background-color);
+                border: var(--border-sketch);
             }
         }
     }

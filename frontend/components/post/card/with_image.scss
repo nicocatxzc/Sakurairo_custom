@@ -11,7 +11,7 @@
         overflow: hidden;
         background-color: var(--widget-background-color);
         box-shadow: var(--widget-shadow-shine);
-        border-radius: var(--post-card-border-radius, 0.62rem);
+        border-radius: var(--post-card-border-radius, 0.7rem);
         transition: all 0.4s cubic-bezier(0.07, 0.53, 0.65, 0.95);
     }
 
@@ -169,10 +169,10 @@
         overflow: hidden;
 
         span {
-            display: inline-block;
-            max-height: 3rem;
+            display: -webkit-box;
             overflow: hidden;
-            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
         }
     }
 

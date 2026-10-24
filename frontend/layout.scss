@@ -99,14 +99,14 @@
 
 .background {
     #progress-bars {
-        z-index: 11;
+        z-index: 101;
     }
     .site-header {
-        z-index: 10;
+        z-index: 100;
     }
     .site-header.mobile {
         display: none;
-        z-index: 10;
+        z-index: 100;
     }
     @media screen and (max-width: 860px) {
         .site-header {
@@ -140,7 +140,7 @@
         }
     }
     .site-widget {
-        z-index: 10;
+        z-index: 90;
     }
 }
 
@@ -151,11 +151,11 @@
     height: 100dvh;
     width: 100dvw;
     pointer-events: none;
-    z-index: 13;
+    z-index: 200;
     * {
         pointer-events: auto;
     }
 }
 .site-model {
-    z-index: 13;
+    z-index: 200;
 }

@@ -2,3 +2,7 @@
 @use "./mobile.scss";
 @use "./island.scss";
 @use "./lang_switcher.scss";
+
+.site-header {
+    z-index: 100;
+}

@@ -2,7 +2,7 @@
     width: 100vw;
     height: 0.2rem;
     position: fixed;
-    z-index: 999;
+    z-index: 101;
 }
 
 #scroll-progress,
@@ -15,12 +15,30 @@
 
 #scroll-progress {
     background-color: var(--active-color);
-    box-shadow: 0 0 10px var(--active-color);
 }
 
 #load-progress {
     background-color: var(--active-color-reverse);
-    box-shadow: 0 0 10px var(--active-color-reverse);
+}
+
+// 只在进度条尖端做辉光，避免整条光晕染到导航栏
+#scroll-progress::after,
+#load-progress::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.2rem;
+    height: 100%;
+    background-color: inherit;
+}
+
+#scroll-progress::after {
+    box-shadow: 0 0 0.6rem var(--active-color);
+}
+
+#load-progress::after {
+    box-shadow: 0 0 0.6rem var(--active-color-reverse);
 }
 
 #load-progress[data-stat=start] {

@@ -12,7 +12,7 @@
 
     &:hover {
         background-color: rgba(var(--widget-background), 0.8);
-        box-shadow: var(--widget-shadow-shining);
+        box-shadow: 0 0.1rem 1rem -0.3rem var(--widget-shadow-shine-color);
     }
 
     .comment-infos {

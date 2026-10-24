@@ -37,8 +37,6 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--island-footer-divider);
 
         &.just-center {
             flex-direction: column;
@@ -61,6 +59,8 @@
 
     .theme-info {
         margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--island-footer-divider);
 
         a {
             color: var(--word-color-third);
