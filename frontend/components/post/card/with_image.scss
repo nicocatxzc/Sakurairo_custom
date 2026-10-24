@@ -115,7 +115,10 @@
         width: fit-content;
         height: fit-content;
         padding: 0.625rem 0.9375rem;
-        font-size: var(--post-card-title-font-size, 1.1rem);
+        font-size: var(--post-card-title-font-size, 1.2rem);
+        font-weight: 700;
+        line-height: 1.5;
+        letter-spacing: 0.125rem;
         color: var(--word-color-first);
         background-color: rgba(var(--widget-background), 0.74);
         border: var(--border-shine);
@@ -131,22 +134,27 @@
             box-shadow: var(--widget-shadow-shining);
         }
 
-        h3 {
+        // 标题标签由模板决定，这里只清掉标题默认外边距，排版全部继承容器
+        :is(h1, h2, h3, h4, h5, h6) {
             margin: 0;
-            font-size: var(--post-card-title-font-size, 1.2rem);
-            font-weight: 700;
-            line-height: 1.5;
-            letter-spacing: 0.125rem;
+            font: inherit;
+            letter-spacing: inherit;
+        }
+
+        a {
+            display: -webkit-box;
             overflow: hidden;
-            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            color: inherit;
             transition:
                 color 0.3s,
                 letter-spacing 0.3s;
-        }
 
-        a:hover h3 {
-            color: var(--active-color);
-            letter-spacing: 0.19rem;
+            &:hover {
+                color: var(--active-color);
+                letter-spacing: 0.19rem;
+            }
         }
     }
 
