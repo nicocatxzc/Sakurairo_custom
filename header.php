@@ -52,6 +52,24 @@ if (is_customize_preview()) { // 模版中加载，解决其他位置获取不�
     <?php wp_head(); ?>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?>｜<?php bloginfo('description'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
 
+    <?php // 正文图片的 404 兜底入口：只有 onerror 触发时才动 src，渲染阶段不预置占位图，免得引入骨架与 CLS ?>
+    <script>
+        window.iroImgError = function (el) {
+            const utils = window._iro && window._iro.utils;
+            if (utils && utils.missImg) {
+                utils.missImg(el);
+                return;
+            }
+            // 运行时还没就绪（极早期加载失败）：等它就绪后再补一次，仍然只替换 src
+            document.addEventListener('DOMContentLoaded', function () {
+                const ready = window._iro && window._iro.utils;
+                if (ready && ready.missImg) {
+                    ready.missImg(el);
+                }
+            }, { once: true });
+        };
+    </script>
+
     <?php if (iro_opt("fontawesome_source_add_to_frontend")): ?>
         <link rel="preconnect" href="https://s4.zstatic.net" crossorigin>
         <link rel="preload" href="<?php echo (iro_opt('fontawesome_source', 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?? 'https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css') ?>" as="style">
