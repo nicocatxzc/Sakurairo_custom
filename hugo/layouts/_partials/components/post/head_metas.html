@@ -1,0 +1,25 @@
+{{- /*
+  文章头元信息：对应 frontend/components/post/head_metas.php。
+  views / comment_count / editor_link 在 Hugo 里没有对应物，直接不输出。
+*/ -}}
+{{- $page := . -}}
+{{- $p := site.Params -}}
+{{- range (default (slice "update_time") $p.post_head_metas) }}
+    {{- if eq . "category" }}
+    <span>
+        {{- with $page.GetTerms "categories" }}
+        <a href="{{ (index . 0).RelPermalink }}">{{ (index . 0).LinkTitle }}</a>
+        {{- else }}
+        未分类
+        {{- end }}
+    </span>
+    {{- else if eq . "words_count" }}
+    <span>{{ $page.WordCount }} 字</span>
+    {{- else if eq . "reading_time" }}
+    <span>预计阅读时间: {{ $page.ReadingTime }} 分钟</span>
+    {{- else if eq . "publish_time" }}
+    <span>发布于 {{ $page.Date.Format "2006-01-02" }}</span>
+    {{- else if eq . "update_time" }}
+    <span>最后更新于 {{ $page.Lastmod.Format "2006-01-02" }}</span>
+    {{- end }}
+{{- end }}

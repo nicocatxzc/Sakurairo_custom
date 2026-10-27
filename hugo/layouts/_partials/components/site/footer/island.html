@@ -1,0 +1,15 @@
+{{- /* 页脚（island 样式）：对应 frontend/components/site/footer/island.php */ -}}
+{{- $p := site.Params -}}
+<footer class="site-footer island" style="font-family: {{ default "" $p.footer_font }}">
+    <div class="site-info">
+        <div class="footer-content {{ if eq (default "center" $p.footer_island_style) "center" }}just-center{{ end }}">
+            {{- partial "components/site/footer/hitokoto.html" . }}
+            {{ default "" $p.footer_html_content | safeHTML }}
+            {{ default "" $p.footer_html | safeHTML }}
+        </div>
+        {{- if $p.footer_sakura }}
+        {{- partial "components/site/footer/sakura_icon.html" . }}
+        {{- end }}
+        {{- partial "components/site/footer/theme_info.html" . }}
+    </div>
+</footer>

@@ -1,0 +1,4 @@
+{{- /* 链接渲染钩子：外链补 target/rel，站内链接保持原样 */ -}}
+{{- $dest := .Destination -}}
+{{- $external := or (hasPrefix $dest "http://") (hasPrefix $dest "https://") (hasPrefix $dest "//") -}}
+<a href="{{ $dest | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text | safeHTML }}</a>

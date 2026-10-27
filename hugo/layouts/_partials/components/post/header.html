@@ -1,0 +1,11 @@
+{{- /* 文章头（无特色图）：对应 frontend/components/post/header.php */ -}}
+<div class="page-header only-word">
+    {{ template "slots/content_container_start" (dict) }}
+    <header class="post-header">
+        <h1 class="post-title" style="{{ default "" .Params.title_style }}">{{ .Title }}</h1>
+        <div class="post-metas">
+            {{- partial "components/post/head_metas.html" . }}
+        </div>
+    </header>
+    {{ template "slots/content_container_end" (dict) }}
+</div>

@@ -1,0 +1,13 @@
+{{- /* 页脚（sakura 样式）：对应 frontend/components/site/footer/sakura.php */ -}}
+{{- $p := site.Params -}}
+<footer class="site-footer-sakura flex-center" style="font-family: {{ default "" $p.footer_font }}">
+    {{- if $p.footer_sakura }}
+    {{- partial "components/site/footer/sakura_icon.html" . }}
+    {{- end }}
+    {{- partial "components/site/footer/hitokoto.html" . }}
+    <div class="site-info">
+        {{ default "" $p.footer_html_content | safeHTML }}
+        {{ default "" $p.footer_html | safeHTML }}
+    </div>
+    {{- partial "components/site/footer/theme_info.html" . }}
+</footer>

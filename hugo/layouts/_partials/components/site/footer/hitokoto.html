@@ -1,0 +1,14 @@
+{{- /*
+  一言：配合前台的 decorate/hitokoto.js（按 .hitokoto 节点回填），
+  api 模式留空由脚本拉取，custom/both 模式直接输出本地句子。
+*/ -}}
+{{- $p := site.Params -}}
+{{- $select := default "off" $p.footer_hitokoto_select -}}
+{{- if ne $select "off" }}
+{{- $lines := split (string (default "" $p.footer_hitokoto_custom)) "\n" -}}
+{{- $custom := "" -}}
+{{- if gt (len $lines) 0 -}}
+{{- $custom = index $lines (mod now.Unix (len $lines)) -}}
+{{- end }}
+<p class="hitokoto">{{ if eq $select "api" }}{{ else if eq $select "custom" }}{{ $custom }}{{ else }}{{ if eq (mod now.Unix 2) 0 }}{{ $custom }}{{ end }}{{ end }}</p>
+{{- end }}

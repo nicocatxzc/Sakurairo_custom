@@ -1,0 +1,100 @@
+# Hugo 版站点配置。
+# 主题设置项（与 WordPress 侧 CSF 字段一一对应）在 params.toml；
+# 本文件只放站点级配置与 Hugo 专属开关（[params.hugo]）。
+
+baseURL = "./"
+title = "Sakurairo"
+locale = "zh-CN"
+defaultContentLanguage = "zh"
+hasCJKLanguage = true
+enableRobotsTXT = true
+summaryLength = 120
+timeZone = "Asia/Shanghai"
+
+[pagination]
+pagerSize = 10
+
+[permalinks]
+posts = "/:year/:month/:contentbasename/"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[outputs]
+  # SearchIndex = 搜索索引，写到 /wp-json/sakura/v1/search_index（WP REST 的同名路径）
+  home = ["html", "rss", "SearchIndex"]
+  section = ["html", "rss"]
+  term = ["html", "rss"]
+  taxonomy = ["html"]
+
+[mediaTypes."application/json-nosuffix"]
+  # 空后缀：输出文件名不带 .json，前端请求的路径才能与 WP 的 /search_index 逐字一致
+  suffixes = [""]
+
+[outputFormats.SearchIndex]
+  mediaType = "application/json-nosuffix"
+  baseName = "search_index"
+  isPlainText = true
+  # 与 WordPress 的 rest_url('sakura/v1') + '/search_index' 对齐
+  path = "wp-json/sakura/v1"
+
+[markup]
+  [markup.goldmark.renderer]
+    # 正文允许内联 HTML：从 WordPress 迁过来的文章大量依赖它
+    unsafe = true
+  [markup.highlight]
+    # 关掉 Chroma，代码块输出裸 <pre><code class="language-x">，交给前端 highlight.js
+    codeFences = false
+  [markup.goldmark.extensions.passthrough]
+    enable = true
+    [markup.goldmark.extensions.passthrough.delimiters]
+      block = [["$$", "$$"], ["\\[", "\\]"]]
+      inline = [["$", "$"], ["\\(", "\\)"]]
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
+[module]
+  # 一旦显式声明 mounts，Hugo 的默认挂载就全部失效，必须逐个列回来
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "data"
+    target = "data"
+  [[module.mounts]]
+    source = "i18n"
+    target = "i18n"
+  # 复用 WordPress 侧的构建产物：模板按 frontend/dist/<name> 取资源
+  [[module.mounts]]
+    source = "../frontend"
+    target = "assets/frontend"
+  # 同一份产物再挂一次 static：整目录原样发布到 /frontend/dist/，
+  # style.css 里 url() 引用的字体/图片才不会因为「只发布被引用的文件」而缺失
+  [[module.mounts]]
+    source = "../frontend/dist"
+    target = "static/frontend/dist"
+
+[params.hugo]
+  # 是否加载 WordPress 侧构建出的前台运行时（app.js）。关掉后只剩模板与样式，
+  # 灯箱/TOC/代码高亮/深浅色切换这些交互会全部失效。
+  reuse_frontend_runtime = true
+  # 文章没有封面时卡片用的图（WP 侧是内置随机图，Hugo 版不内置）
+  default_feature_image = ""
+  # 站点作者：单租户，没有作者归档页；卡片与文章页尾的作者署名取这一份
+  [params.hugo.author]
+    name = "Sakurairo"
+    url = "/"
+    avatar = ""
+    description = ""

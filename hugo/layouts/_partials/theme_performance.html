@@ -1,0 +1,99 @@
+{{- /*
+    首屏性能阶段：FCP 之后解锁移动端背景图，LCP 稳定后解锁外链字体。
+    WordPress 侧是 frontend/theme_performance.php，靠 PHP 分支输出同一段脚本；
+    阶段结果挂在 window.iroPerformance 上，_iro.hooks 在主页面上按它补发事件，
+    因此这段必须留在 <head>、且排在 theme_style_vars 之后（要按 id 找到那些 style 节点）。
+*/ -}}
+<script>
+    (function () {
+        let iroPerformance = (window.iroPerformance = window.iroPerformance || {
+            fcp: false,
+            lcp: false
+        });
+
+        function mark(stage) {
+            if (iroPerformance[stage]) {
+                return;
+            }
+
+            iroPerformance[stage] = true;
+            document.dispatchEvent(new CustomEvent("performance:" + stage));
+        }
+
+        function openStyle(id) {
+            let style = document.getElementById(id);
+            if (style && style.media !== "all") {
+                style.media = "all";
+            }
+        }
+
+        let connection = navigator.connection;
+        let skipFonts =
+            (connection && connection.saveData) ||
+            matchMedia("(prefers-reduced-data: reduce)").matches;
+
+        try {
+            try {
+                let paintObserver = new PerformanceObserver(function (list) {
+                    for (let entry of list.getEntries()) {
+                        if (entry.name === "first-contentful-paint") {
+                            paintObserver.disconnect();
+                            mark("fcp");
+                            requestAnimationFrame(function () {
+                                openStyle("iro_deferred_bg");
+                            });
+                            break;
+                        }
+                    }
+                });
+                paintObserver.observe({
+                    type: "paint",
+                    buffered: true
+                });
+            } catch (e) {
+                window.addEventListener(
+                    "load",
+                    function () {
+                        mark("fcp");
+                        requestAnimationFrame(function () {
+                            openStyle("iro_deferred_bg");
+                        });
+                    },
+                    { once: true }
+                );
+            }
+
+            let settleTimer = 0;
+
+            function settleLargestPaint() {
+                clearTimeout(settleTimer);
+                settleTimer = setTimeout(function () {
+                    mark("lcp");
+                    if (!skipFonts) {
+                        openStyle("iro_extra_fonts");
+                    }
+                }, 600);
+            }
+
+            try {
+                new PerformanceObserver(settleLargestPaint).observe({
+                    type: "largest-contentful-paint",
+                    buffered: true
+                });
+            } catch (e) {
+                window.addEventListener("load", settleLargestPaint);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
+        setTimeout(function () {
+            mark("fcp");
+            mark("lcp");
+            openStyle("iro_deferred_bg");
+            if (!skipFonts) {
+                openStyle("iro_extra_fonts");
+            }
+        }, 10000);
+    })();
+</script>

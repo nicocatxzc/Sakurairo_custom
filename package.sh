@@ -86,6 +86,9 @@ rm -f "$TARGET/.gitignore" "$TARGET/AGENTS.md" "$TARGET/package.sh" \
 find "$TARGET/frontend" -type f -not -path "$TARGET/frontend/dist/*" ! -name '*.php' -delete
 find "$TARGET/frontend" -mindepth 1 -type d -empty -not -path "$TARGET/frontend/dist*" -delete
 
+# hugo/ 不属于 WordPress 主题
+rm -rf "$TARGET/hugo"
+
 # inc/blocks/ 只保留 PHP 与编译产物 build/
 rm -rf "$TARGET/inc/blocks/src"
 rm -f "$TARGET/inc/blocks/package.json" "$TARGET/inc/blocks/pnpm-lock.yaml" "$TARGET/inc/blocks/pnpm-workspace.yaml"

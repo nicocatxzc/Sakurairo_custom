@@ -1,0 +1,3 @@
+# 预览用：站点基本信息。只在 `-e site` 时覆盖 _default。
+# 真正的站点名/域名按需改这里，不要动 _default/hugo.toml。
+title = "哈基米德的小窝"

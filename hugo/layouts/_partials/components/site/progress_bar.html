@@ -1,0 +1,10 @@
+{{- /* 进度条：对应 frontend/components/site/progress_bar.php */ -}}
+{{- $p := site.Params -}}
+<div id="progress-bars" class="progress-bars">
+    {{- if $p.top_scroll_progress }}
+    <div id="scroll-progress" class="scroll-progress progress"></div>
+    {{- end }}
+    {{- if $p.top_loading_progress }}
+    <div id="load-progress" class="load-progress progress"></div>
+    {{- end }}
+</div>

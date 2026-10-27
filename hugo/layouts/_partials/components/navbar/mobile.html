@@ -1,0 +1,51 @@
+{{- /* 移动端导航：对应 frontend/components/navbar/mobile.php（用户面板在静态站里没有对应物，已去掉） */ -}}
+{{- $p := site.Params -}}
+<header class="site-header mobile flex-center">
+    <button type="button" class="menu-toggle flex-center" data-panel-toggle="menu" aria-expanded="false" aria-label="打开菜单">
+        <i class="fa-icon-solid fa-bars icon"></i>
+    </button>
+
+    <div class="site-branding flex-center">
+        <picture>
+            {{- partial "components/media/image.html" (dict "src" (default "" $p.nav_logo) "class" "nuxtpic logo" "alt" "site logo" "height" 96) }}
+        </picture>
+        <a href="{{ "/" | relLangURL }}">
+            <span class="site-title" style="font-family: {{ default "" $p.nav_title_font }}">{{ default "" $p.nav_title }}</span>
+        </a>
+    </div>
+
+    {{- if $p.nav_menu_cover_switch }}
+    <button type="button" class="cover-toggle flex-center {{ if .IsHome }}show{{ end }}" title="切换封面">
+        <i class="fa-icon-solid fa-dice icon"></i>
+    </button>
+    {{- end }}
+
+    <nav class="menu-wrapper" data-panel="menu">
+        {{- if $p.nav_menu_search_switch }}
+        <div class="search-form flex-center">
+            <i class="fa-icon-solid fa-search icon"></i>
+            <input class="search-input" type="text" inputmode="search" autocomplete="off" placeholder="想找点什么呢？">
+        </div>
+        {{- end }}
+        <ul class="menu" style="font-family: {{ default "" $p.nav_option_font }}">
+            {{- range site.Menus.main }}
+            {{- $hasChildren := .HasChildren }}
+            <li class="item">
+                <div class="item-head">
+                    <a class="link" href="{{ .URL }}">{{ .Name }}</a>
+                    {{- if $hasChildren }}
+                    <i class="fa-icon-solid fa-angle-right button" aria-hidden="true"></i>
+                    {{- end }}
+                </div>
+                {{- if $hasChildren }}
+                <ul class="sub-menu">
+                    {{- range .Children }}
+                    <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                    {{- end }}
+                </ul>
+                {{- end }}
+            </li>
+            {{- end }}
+        </ul>
+    </nav>
+</header>

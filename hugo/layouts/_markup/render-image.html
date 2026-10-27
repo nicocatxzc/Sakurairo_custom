@@ -1,0 +1,2 @@
+{{- /* 图片渲染钩子：保留正文图片原样，交给前台的灯箱（medium-zoom）接管 */ -}}
+<img src="{{ .Destination | safeURL }}" alt="{{ with .PlainText }}{{ . }}{{ else }}{{ .Text | plainify }}{{ end }}" loading="lazy" decoding="async" onerror="iroImgError(this)"{{ with .Title }} title="{{ . }}"{{ end }}>

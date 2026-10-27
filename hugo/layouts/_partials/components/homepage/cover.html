@@ -1,0 +1,63 @@
+{{- /* 首页封面：对应 frontend/components/homepage/cover.php */ -}}
+{{- /*
+  cover_style_select 的 custom 分支走的是 FSE 的 site-cover 区块样板，Hugo 版没有对应物，
+  这里退回内置 sakura 版式（其余字段照旧生效），不静默少一块。
+*/ -}}
+{{- $p := site.Params -}}
+{{- if and (ne ($p.cover_switch) false) (ne (default 100 $p.cover_height) 0) }}
+{{- $title := default (dict) $p.cover_title -}}
+{{- $signature := default (dict) $p.cover_signature -}}
+<div class="homepage-cover{{ if not .IsHome }} hide{{ end }}"
+    style="
+    --cover-height: {{ default 100 $p.cover_height }}dvh;
+    --cover-filter-grid: url({{ default "https://s.nmxc.ltd/sakurairo_vision/@3.0/" $p.vision_resource_basepath }}basic/grid.png);
+    --cover-filter-dot: url({{ default "https://s.nmxc.ltd/sakurairo_vision/@3.0/" $p.vision_resource_basepath }}basic/dot.gif);">
+    {{- if $p.cover_video }}
+    <video class="cover-video" src="{{ default "" $p.cover_video_source }}"{{ if $p.cover_video_loop }} loop{{ end }} muted autoplay></video>
+    {{- end }}
+    <figure class="cover{{ if $p.cover_as_background }} transparent{{ end }}{{ if $p.cover_video }} transparent{{ end }}">
+        <div class="cover-filter {{ default "filter-nothing" $p.cover_pic_filter }}"></div>
+
+        <div class="cover-info">
+            <div class="center">
+                {{- if ne (default "text" $p.cover_focus_style) "off" }}
+                {{- if eq (default "text" $p.cover_focus_style) "avatar" }}
+                <picture class="nuxtpic">
+                    {{- partial "components/media/image.html" (dict "src" (default "" $p.cover_avatar) "class" "cover-avatar" "width" "7.5rem" "height" "7.5rem") }}
+                </picture>
+                {{- else }}
+                {{- /* mashiro_text 靠 .glitch + data-text 生效，class 与 data 属性都要照原样输出 */}}
+                <h1 class="cover-title{{ if eq (default "text" $p.cover_focus_style) "mashiro_text" }} glitch{{ end }}"
+                    data-text="{{ default "" $title.text }}"
+                    style="font-family: {{ default "" $title.font }}; font-size: {{ default 5 $title.size }}rem; color: {{ default "#FFF" $title.color }};">{{ default "" $title.text }}</h1>
+                {{- end }}
+                {{- end }}
+
+                {{- if $p.cover_infor_bar_switch }}
+                {{- /* 对应 iro_render_decorate('widgets-container')：宽度与卡片外观由 CSS 变量决定 */}}
+                <div class="iro-widgets-container iro-widgets-container-cover"
+                    style="--iro-widgets-radius: {{ default 1 $p.cover_infor_bar_radius }}rem; --iro-widgets-width: 65%; --iro-widgets-padding-y: 1rem; --iro-widgets-padding-x: 1rem;">
+                    {{- if $p.cover_typedjs }}
+                    <div class="typed-container">
+                        {{- if $p.cover_typedjs_mark }}<i class="fa-icon-solid fa-quote-left"></i>{{ end }}
+                        <span class="typed">{{ default "" $p.cover_typedjs_placeholder }}</span>
+                        {{- if $p.cover_typedjs_mark }}<i class="fa-icon-solid fa-quote-right"></i>{{ end }}
+                    </div>
+                    {{- end }}
+                    {{- with $signature.text }}
+                    <div class="signature">
+                        <p style="font-family: {{ default "" $signature.font }}; font-size: {{ default 1 $signature.size }}rem;">{{ . }}</p>
+                    </div>
+                    {{- end }}
+                    {{- partial "components/homepage/social-links.html" . }}
+                </div>
+                {{- end }}
+            </div>
+        </div>
+    </figure>
+    {{- partial "components/homepage/wave.html" . }}
+</div>
+{{- end }}
+{{- if eq (default "cover" $p.homepage_wave_position) "window" }}
+{{- partial "components/homepage/wave.html" . }}
+{{- end }}

@@ -1,0 +1,96 @@
+{{- $p := site.Params -}}
+{{- $hugo := $p.hugo -}}
+{{- $postStyle := and (eq (default "sakura" $p.page_style) "sakura") .IsPage -}}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+    {{- /* 前端运行时会据此判断「这是静态站」，跳过只有 WordPress 才有的接口（阅读量上报等） */}}
+    <meta name="generator" content="Hugo {{ hugo.Version }}">
+
+    {{- /* 深浅色首帧：服务端读不到 localStorage，用同步脚本在样式生效前定好 class，避免闪白 */}}
+    <script>
+        (function () {
+            var cookie = document.cookie.match(/(?:^|;\s*)darkmode=([^;]*)/);
+            var stored = null;
+            try { stored = localStorage.getItem("darkmode"); } catch (e) {}
+            var dark = cookie ? decodeURIComponent(cookie[1]) === "true" : stored === "true";
+            if (dark) document.documentElement.classList.add("dark");
+        })();
+    </script>
+
+    {{- /* 正文图片的 404 兜底入口：与 WordPress 侧 header.php 里的同名函数保持一致。
+           只在 onerror 触发时替换 src，渲染阶段不预置占位图，避免骨架与 CLS。 */}}
+    <script>
+        window.iroImgError = function (el) {
+            const utils = window._iro && window._iro.utils;
+            if (utils && utils.missImg) {
+                utils.missImg(el);
+                return;
+            }
+            document.addEventListener('DOMContentLoaded', function () {
+                const ready = window._iro && window._iro.utils;
+                if (ready && ready.missImg) {
+                    ready.missImg(el);
+                }
+            }, { once: true });
+        };
+    </script>
+
+    <link rel="shortcut icon" href="{{ $p.favicon_link }}">
+
+    <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
+    {{- if ne (default "on" $p.iro_seo) "off" }}
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Summary }}{{ . | plainify | truncate 120 "" }}{{ else }}{{ $p.iro_meta_description }}{{ end }}{{ end }}">
+    {{- with $p.iro_meta_keywords }}
+    <meta name="keywords" content="{{ . }}">
+    {{- end }}
+    <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{- end }}
+    <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "index.xml" | relURL }}">
+
+    {{- if $p.fontawesome_source_add_to_frontend }}
+    <link rel="preconnect" href="https://s4.zstatic.net" crossorigin>
+    <link rel="preload" href="{{ default "https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css" $p.fontawesome_source }}" as="style">
+    <link rel="stylesheet" href="{{ default "https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css" $p.fontawesome_source }}" type="text/css" media="all">
+    {{- end }}
+
+    {{- partial "asset-css.html" "style.css" }}
+
+    {{- /* Swup 的容器清单里有这个 id（WordPress 侧装古腾堡区块样式），Hugo 没有区块样式，
+           但节点必须每页都在：缺一个容器 Swup 就判定 Container mismatch 并回退整页刷新。 */}}
+    <style id="iro_block_styles"></style>
+
+    {{- partial "theme_style_vars.html" . }}
+
+    {{- /* 字体与移动端背景图默认 media="not all" 不下载，由这段脚本按首屏阶段解锁 */}}
+    {{- partial "theme_performance.html" . }}
+
+    {{- /* 文章排版样式只在需要的页面上加载，不进首屏入口 */}}
+    {{- if $postStyle }}
+    {{- partial "asset-css.html" "post-sakura.css" }}
+    {{- end }}
+
+    {{- with $p.custom_site_header }}{{ . | safeHTML }}{{ end }}
+
+    {{- partial "theme_config.html" . }}
+
+    {{- if $hugo.reuse_frontend_runtime }}
+    {{- range first 1 (resources.Match "frontend/dist/iro-core.*.js") }}
+    <link rel="modulepreload" href="{{ .RelPermalink }}">
+    {{- end }}
+    {{- range first 1 (resources.Match "frontend/dist/rolldown-runtime.*.js") }}
+    <link rel="modulepreload" href="{{ .RelPermalink }}">
+    {{- end }}
+    {{- if resources.Get "frontend/dist/app.js" }}
+    <script type="module" src="{{ "frontend/dist/app.js" | relURL }}"></script>
+    {{- end }}
+    {{- end }}
+
+    {{- /* 模态框搜索：脚本与窄屏补丁常驻，靠 hook 在每次换页后重新绑定 */}}
+    <link rel="stylesheet" href="{{ "css/hugo-search.css" | relURL }}">
+    <script src="{{ "js/hugo-search.js" | relURL }}" defer></script>
+</head>

@@ -8,3 +8,8 @@ inc/ai/dist
 temp
 /languages/
 /opt/languages/
+
+# Hugo 构建产物（hugo/ 是另一层渲染，产物不入库）
+hugo/public/
+hugo/resources/
+.hugo_build.lock

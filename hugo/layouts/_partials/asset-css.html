@@ -1,0 +1,8 @@
+{{- /*
+  dist 里的样式统一由 static 挂载发布（整目录原样拷贝，CSS 里引用的字体/图片才找得到）。
+  这里只用 resources.Get 做一次「产物是否存在」的探测，取不到就静默跳过，避免未构建时报错。
+*/ -}}
+{{- $path := printf "frontend/dist/%s" . -}}
+{{- with resources.Get $path -}}
+<link rel="stylesheet" href="{{ $path | relURL }}">
+{{- end -}}

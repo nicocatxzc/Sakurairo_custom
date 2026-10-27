@@ -1,0 +1,31 @@
+{{- /* 波浪：对应 frontend/components/homepage/wave.php */ -}}
+{{- $p := site.Params -}}
+{{- if $p.homepage_wave_switch }}
+{{- $modes := slice "white" "water" "star" -}}
+{{- $light := default "water" $p.homepage_wave_light -}}
+{{- $dark := default "star" $p.homepage_wave_dark -}}
+{{- if not (in $modes $light) }}{{ $light = "water" }}{{ end -}}
+{{- if not (in $modes $dark) }}{{ $dark = "star" }}{{ end -}}
+{{- $basic := printf "%sbasic/" (default "https://s.nmxc.ltd/sakurairo_vision/@3.0/" $p.vision_resource_basepath) -}}
+<div class="iro-wave iro-wave--{{ if eq (default "cover" $p.homepage_wave_position) "window" }}window{{ else }}cover{{ end }}"
+    data-wave-light="{{ $light }}"
+    data-wave-dark="{{ $dark }}"
+    style="
+        --iro-wave-asset-white-front: url({{ $basic }}wave1.png);
+        --iro-wave-asset-white-back: url({{ $basic }}wave2.png);
+        --iro-wave-asset-water: url({{ $basic }}wave_water.png);
+    ">
+    <div class="iro-wave__surface">
+        <div class="iro-wave__layer iro-wave__layer--back"></div>
+        <div class="iro-wave__layer iro-wave__layer--front"></div>
+    </div>
+    <div class="iro-wave__stars"></div>
+    {{- range (default (slice) $p.homepage_wave_floating) }}
+    {{- with .url }}
+    <div class="iro-wave__floating">
+        <img src="{{ . }}" alt="" draggable="false">
+    </div>
+    {{- end }}
+    {{- end }}
+</div>
+{{- end }}

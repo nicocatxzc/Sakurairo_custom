@@ -1,0 +1,2 @@
+{{- /* 列表页（章节/分类/标签/作者）：路由名由 route-name.html 判定 */ -}}
+{{ define "main" }}{{ partial "route.html" (dict "page" . "route" (partial "route-name.html" .)) }}{{ end }}

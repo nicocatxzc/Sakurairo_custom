@@ -1,0 +1,24 @@
+{{- /* 上一篇/下一篇：对应 frontend/components/post/navigator.php */ -}}
+{{- $p := site.Params -}}
+{{- if and ($p.article_nextpre) .IsPage }}
+{{- $prev := .Prev }}
+{{- $next := .Next }}
+{{- if or $prev $next }}
+{{ template "slots/content_container_start" (dict) }}
+<nav class="post-nav">
+    {{- with $prev }}
+    <a href="{{ .RelPermalink }}" class="nav-prev">
+        <span class="nav-label">← 上一篇</span>
+        <span class="nav-title">{{ .Title }}</span>
+    </a>
+    {{- end }}
+    {{- with $next }}
+    <a href="{{ .RelPermalink }}" class="nav-next">
+        <span class="nav-label">下一篇 →</span>
+        <span class="nav-title">{{ .Title }}</span>
+    </a>
+    {{- end }}
+</nav>
+{{ template "slots/content_container_end" (dict) }}
+{{- end }}
+{{- end }}

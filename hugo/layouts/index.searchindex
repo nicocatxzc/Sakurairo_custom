@@ -1,0 +1,23 @@
+{{- /*
+  搜索索引，输出到 /wp-json/sakura/v1/search_index。
+  路径与字段形状都照 inc/api/search_index.php：前端只要把 iro_api 指到这里，
+  就能用同一份「WP REST 契约」取到索引，不必另造一套接口。
+*/ -}}
+{{- $items := slice -}}
+{{- range site.RegularPages -}}
+{{- $cats := slice -}}
+{{- range .GetTerms "categories" }}{{ $cats = $cats | append (dict "name" .LinkTitle "uri" .RelPermalink) }}{{ end -}}
+{{- $tags := slice -}}
+{{- range .GetTerms "tags" }}{{ $tags = $tags | append (dict "name" .LinkTitle "uri" .RelPermalink) }}{{ end -}}
+{{- $items = $items | append (dict
+    "uri" .RelPermalink
+    "title" .Title
+    "date" (.Date.Format "2006-01-02T15:04:05Z07:00")
+    "modifiedGmt" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+    "excerpt" (.Summary | plainify | htmlUnescape)
+    "content" (.Plain | htmlUnescape)
+    "categories" $cats
+    "tags" $tags
+) -}}
+{{- end -}}
+{{- $items | jsonify -}}

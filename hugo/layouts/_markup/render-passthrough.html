@@ -1,0 +1,15 @@
+{{- /*
+  数学公式：passthrough 扩展把 $...$ / $$...$$ 原样交给这里，构建期用 KaTeX 渲染。
+  只输出 MathML：浏览器原生排版，不必额外加载 KaTeX 的 HTML 版面 CSS（dist 里那份是
+  markdown-it 的惰性分组样式，首屏不下载），也就没有「MathML + HTML 两份同时显示」的问题。
+*/ -}}
+{{- $opts := dict "output" "mathml" "displayMode" (eq .Type "block") -}}
+{{- with try (transform.ToMath .Inner $opts) -}}
+{{- with .Err -}}
+{{- errorf "公式渲染失败：%s" . -}}
+{{- else -}}
+{{- .Value -}}
+{{- end -}}
+{{- else -}}
+{{- transform.ToMath .Inner $opts -}}
+{{- end -}}

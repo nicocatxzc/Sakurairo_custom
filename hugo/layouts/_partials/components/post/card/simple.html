@@ -1,0 +1,45 @@
+{{- /* 无图卡片：对应 frontend/components/post/card/simple.php */ -}}
+{{- $post := . -}}
+{{- $p := site.Params -}}
+<article class="post-card post-card-simple">
+    <a href="{{ .RelPermalink }}">
+        <h3 class="post-title">
+            {{- if .Params.sticky }}
+            <span class="sticky">&#x2B06;&#xFE0E;</span>
+            {{- end }}
+            <span>{{ .Title }}</span>
+        </h3>
+    </a>
+    <a href="{{ .RelPermalink }}">
+        <span class="post-excerpt">{{ .Summary | plainify | truncate 120 "" }}</span>
+    </a>
+    <div class="post-metas">
+        <div class="post-meta-date">
+            <i class="fa-icon-solid fa-calendar icon"></i>
+            <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05" }}">更新于：{{ .Lastmod.Format "2006-01-02" }}</time>
+        </div>
+        <div class="post-meta-categories">
+            <i class="fa-icon-solid fa-folder-open"></i>
+            {{- range .GetTerms "categories" }}
+            <a href="{{ .RelPermalink }}" class="category">{{ .LinkTitle }}</a>
+            {{- end }}
+        </div>
+        <div class="post-meta-tags">
+            <i class="fa-icon-solid fa-tags icon"></i>
+            {{- with .GetTerms "tags" }}
+            {{- range . }}
+            <a href="{{ .RelPermalink }}" class="tag">#{{ .LinkTitle }}</a>
+            {{- end }}
+            {{- else }}
+            <span class="no-tags">无标签</span>
+            {{- end }}
+        </div>
+        {{- range (default (slice "category") $p.post_card_metas) }}
+            {{- if eq . "words_count" }}
+        <span class="flex-center"><i class="fa-icon-solid fa-pen-to-square"></i>{{ $post.WordCount }}字</span>
+            {{- else if eq . "reading_time" }}
+        <span class="flex-center"><i class="fa-icon-solid fa-hourglass"></i>{{ $post.ReadingTime }} 分钟</span>
+            {{- end }}
+        {{- end }}
+    </div>
+</article>

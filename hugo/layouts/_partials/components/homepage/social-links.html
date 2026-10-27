@@ -1,0 +1,45 @@
+{{- /* 封面社交图标：对应 frontend/components/block/decorate/social-links.php（图标分页由前台运行时接管） */ -}}
+{{- $p := site.Params -}}
+{{- $items := $p.cover_social_displays -}}
+{{- if and $p.cover_social_switch $items }}
+{{- $icons := dict
+    "bilibili" "bilibili" "discord" "discord" "tiktok" "dy" "facebook" "fb" "github" "github"
+    "instgram" "ig" "linkedin" "lk" "email" "mail" "netease_music" "ncm" "qq" "qq"
+    "steam" "st" "telegram" "tg" "twitter" "tw" "wechat" "wechat" "sina" "weibo"
+    "xiaohongshu" "xiaohongshu" "youtube" "youtube" "zhihu" "zhihu" "custom" "custom" -}}
+{{- $base := default "https://s.nmxc.ltd/sakurairo_vision/@3.0/" $p.vision_resource_basepath -}}
+<div class="social-links">
+    <button class="pagination prev flex-center hide" type="button">
+        <i class="fa-icon-solid fa-angle-left icon"></i>
+    </button>
+    <div class="page-container">
+        {{- range $items }}
+        {{- $label := default "" .title }}
+        {{- $href := default "#" .link }}
+        {{- if and (eq .select "email") (ne $href "#") }}
+        {{- $href = printf "mailto:%s" $href }}
+        {{- end }}
+        <div class="social-item">
+            <a href="{{ $href }}" target="_blank" rel="noopener noreferrer"
+                aria-label="点击访问{{ $label }}" title="点击访问{{ $label }}">
+                <picture class="nuxtpic social-img">
+                    {{- partial "components/media/image.html" (dict
+                        "src" (printf "%sdisplay_icon/%s/%s.webp" $base (default "fluent_design" $p.cover_social_icon) (default "custom" (index $icons .select)))
+                        "height" "2.2rem"
+                        "alt" (default $label .select)
+                        "loading" "lazy") }}
+                </picture>
+            </a>
+            {{- with .qrcode }}
+            <div class="qrcode">
+                <img src="{{ . }}" alt="qrcode">
+            </div>
+            {{- end }}
+        </div>
+        {{- end }}
+    </div>
+    <button class="pagination next flex-center hide" type="button">
+        <i class="fa-icon-solid fa-angle-right icon"></i>
+    </button>
+</div>
+{{- end }}

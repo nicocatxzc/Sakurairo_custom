@@ -1,0 +1,14 @@
+{{- /*
+  块级公式的兜底写法：$$...$$ 走 passthrough，但 Goldmark 会把块内「整行只有一个 = 或 -」
+  当成 setext 标题下划线，从而提前结束公式块（矩阵、多行推导里很常见）。
+  {{< math >}} 的内层内容是原样文本，不经 Markdown，这类公式放进来即可原样渲染。
+*/ -}}
+{{- with try (transform.ToMath .Inner (dict "output" "mathml" "displayMode" true)) -}}
+{{- with .Err -}}
+{{- errorf "公式渲染失败：%s" . -}}
+{{- else -}}
+{{- .Value -}}
+{{- end -}}
+{{- else -}}
+{{- transform.ToMath .Inner (dict "output" "mathml" "displayMode" true) -}}
+{{- end -}}

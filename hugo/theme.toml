@@ -1,0 +1,17 @@
+name = "Sakurairo for Hugo"
+license = "GPLv3 or later"
+licenselink = "https://github.com/nicocatxzc/Sakurairo_custom?tab=GPL-3.0-1-ov-file"
+description = "Sakurairo主题的Hugo版本"
+homepage = "https://github.com/nicocatxzc"
+tags = ["blog", "responsive", "dark", "colorful"]
+features = ["blog", "syntax highlighting", "dark mode"]
+min_version = "0.128.0"
+
+[author]
+name = "nicocat"
+homepage = "https://nicocat.cc"
+
+[original]
+author = "Fuukei"
+homepage = "https://github.com/Fuukei"
+repo = "https://github.com/mirai-mamori/Sakurairo"

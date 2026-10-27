@@ -1,0 +1,93 @@
+{{- /* 文章页脚：对应 frontend/components/post/footer.php */ -}}
+{{- $p := site.Params -}}
+{{- $author := $p.hugo.author -}}
+{{- if and ($p.article_function) .IsPage }}
+{{- $license := default $p.article_licenses .Params.license -}}
+{{- $reward := default (dict) $p.article_author_reward -}}
+{{ template "slots/content_container_start" (dict) }}
+<footer class="post-footer">
+    {{- if and $license (ne (printf "%v" $license) "0") }}
+    {{- $variant := cond (eq $license "cc0") "zero" (substr $license 3) }}
+    {{- $name := cond (eq $license "cc0") "CC0 1.0" (printf "CC %s 4.0" (upper $variant)) }}
+    <a class="post-license"
+        href="https://creativecommons.org/{{ if eq $license "cc0" }}publicdomain/zero/1.0{{ else }}licenses/{{ $variant }}/4.0{{ end }}/deed.zh-hans"
+        target="_blank"
+        rel="nofollow"
+        title="本文采用 {{ $name }} 协议授权">
+        <i class="fa-brands fa-creative-commons"></i>
+        {{- range split $variant "-" }}
+        <i class="fa-brands fa-creative-commons-{{ . }}"></i>
+        {{- end }}
+    </a>
+    {{- end }}
+
+    {{- if or $reward.link $reward.image1 $reward.image2 }}
+    <div class="reward-open">
+        {{- if $reward.link }}
+        <a class="reward-button" href="{{ $reward.link }}" target="_blank" rel="noopener noreferrer">
+            <i class="fa-icon-solid fa-piggy-bank fa-sm"></i>
+        </a>
+        {{- else }}
+        <i class="fa-icon-solid fa-piggy-bank fa-sm"></i>
+        {{- end }}
+        {{- if or $reward.image1 $reward.image2 }}
+        <div class="reward-main">
+            <ul class="reward-row">
+                {{- range $k := slice "image1" "image2" }}
+                {{- with index $reward $k }}
+                {{- $link := index $reward (printf "link%s" (substr $k 5)) }}
+                <li class="reward-{{ $k }}">
+                    {{- if $link }}
+                    <a href="{{ $link }}" target="_blank" rel="noopener noreferrer">
+                        <picture>{{ partial "components/media/image.html" (dict "src" . "width" "9.38rem" "alt" (printf "reward_%s" $k)) }}</picture>
+                    </a>
+                    {{- else }}
+                    <picture>{{ partial "components/media/image.html" (dict "src" . "width" "9.38rem" "alt" (printf "reward_%s" $k)) }}</picture>
+                    {{- end }}
+                </li>
+                {{- end }}
+                {{- end }}
+            </ul>
+        </div>
+        {{- end }}
+    </div>
+    {{- end }}
+
+    {{- /* 没配头像就没有可显示的东西，不留空节点（WordPress 侧 get_avatar_url 总会有默认图，Hugo 没有） */}}
+    {{- if and $p.article_author_avatar $author.avatar }}
+    <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <a class="profile gravatar" href="{{ default "/" $author.url }}">
+            <img class="fa-spin" style="--fa-animation-duration: 15s;" src="{{ $author.avatar }}" itemprop="image" alt="{{ $author.name }}" height="30" width="30">
+        </a>
+    </div>
+    {{- end }}
+
+    {{- if $p.article_author_name }}
+    <div class="meta">
+        <a href="{{ default "/" $author.url }}" itemprop="url" rel="author">{{ $author.name }}</a>
+    </div>
+    {{- end }}
+
+    {{- if $p.article_author_quote }}
+    <div class="desc flex-center">
+        <i class="fa-icon-solid fa-feather" aria-hidden="true"></i>{{ default "这个作者没有留下自述。" $author.description }}
+    </div>
+    {{- end }}
+
+    {{- if $p.article_modified_time }}
+    <div class="post-modified-time flex-center">
+        <i class="fa-icon-solid fa-calendar-day" aria-hidden="true"></i>最后更新于{{ .Lastmod.Format "2006-01-02" }}
+    </div>
+    {{- end }}
+
+    {{- if and ($p.article_tag) (.GetTerms "tags") }}
+    <div class="post-tags flex-center">
+        <i class="fa-icon-solid fa-tag" aria-hidden="true"></i>
+        {{- range .GetTerms "tags" }}
+        <a href="{{ .RelPermalink }}" rel="tag">{{ .LinkTitle }}</a>
+        {{- end }}
+    </div>
+    {{- end }}
+</footer>
+{{ template "slots/content_container_end" (dict) }}
+{{- end }}

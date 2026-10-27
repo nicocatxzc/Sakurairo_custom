@@ -1,0 +1,19 @@
+{{- /* 翻页：对应 frontend/components/slots/pagination.php（pagination 模式） */ -}}
+{{- $paginator := .paginator -}}
+{{- if gt $paginator.TotalPages 1 }}
+<nav class="site-pagination flex-center" aria-label="分页">
+    {{- with $paginator.Prev }}
+    <a class="page-numbers no-pjax widget-button" href="{{ .URL }}">&lt;</a>
+    {{- end }}
+    {{- range $paginator.Pagers }}
+    {{- if eq .PageNumber $paginator.PageNumber }}
+    <span class="page-numbers current widget-button">{{ .PageNumber }}</span>
+    {{- else }}
+    <a class="page-numbers no-pjax widget-button" href="{{ .URL }}">{{ .PageNumber }}</a>
+    {{- end }}
+    {{- end }}
+    {{- with $paginator.Next }}
+    <a class="page-numbers no-pjax widget-button" href="{{ .URL }}">&gt;</a>
+    {{- end }}
+</nav>
+{{- end }}

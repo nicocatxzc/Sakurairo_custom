@@ -1,0 +1,12 @@
+{{- /* 分类/标签/章节归档：对应 frontend/components/page/archive.php */ -}}
+<header class="page-header taxonomy-header">
+    {{ template "slots/content_container_start" (dict) }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.description }}
+    <p>{{ . }}</p>
+    {{- end }}
+    {{ template "slots/content_container_end" (dict) }}
+</header>
+{{ template "slots/content_container_start" (dict "class" "page-taxonomy") }}
+{{ partial "components/post/list.html" . }}
+{{ template "slots/content_container_end" (dict) }}

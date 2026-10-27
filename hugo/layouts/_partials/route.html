@@ -1,0 +1,24 @@
+{{- /* 路由：对应 frontend/route.php（FSE 布局分支已去掉，只剩主题预设栅格） */ -}}
+{{- $page := .page -}}
+{{- $route := .route -}}
+{{- $p := site.Params -}}
+{{- $columns := int (default 1 $p.layout_content_coloumns) -}}
+{{- $columns = math.Min 3 (math.Max 1 $columns) -}}
+{{- $first := cond (eq (default "left" $p.layout_first_coloumn_position) "right") "right" "left" -}}
+<div class="layout-grid" style="{{ partial "layout-style.html" $page | safeCSS }}">
+    {{- if and (ge $columns 2) (eq $first "left") }}
+    {{- partial "components/site/widget/side_bar_first.html" $page }}
+    {{- end }}
+    {{- if and (ge $columns 3) (eq $first "right") }}
+    {{- partial "components/site/widget/side_bar_second.html" $page }}
+    {{- end }}
+    <div id="pjax-main" class="pjax-main">
+        {{- partial (printf "components/page/%s.html" $route) $page }}
+    </div>
+    {{- if and (ge $columns 3) (eq $first "left") }}
+    {{- partial "components/site/widget/side_bar_second.html" $page }}
+    {{- end }}
+    {{- if and (ge $columns 2) (eq $first "right") }}
+    {{- partial "components/site/widget/side_bar_first.html" $page }}
+    {{- end }}
+</div>

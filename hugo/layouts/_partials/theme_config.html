@@ -1,0 +1,53 @@
+{{- /*
+  把主题配置注入为 JSON：节点 id 与 WordPress 侧一致，前台运行时按 id 取。
+  对应 frontend/theme_config.php。
+*/ -}}
+{{- $p := site.Params -}}
+{{- $lang := replace site.Language.Locale "-" "_" -}}
+{{- $theme := dict
+    "language" $lang
+    "api" ""
+    "ajaxurl" ""
+    "iro_api" ("wp-json/sakura/v1" | relURL)
+    "nonce" ""
+    "captcha" (dict "turnstile_site_key" "" "geetest_captcha_id" "")
+    "typed_config" (default "" $p.cover_typedjs_config)
+    "particle" (dict
+        "select" (default "off" $p.frontend_particle)
+        "builtin" (default "" $p.frontend_particle_builtin)
+        "config" (cond (eq (default "off" $p.frontend_particle) "custom") (default (dict) $p.particle_config) (dict)))
+    "extract_theme_skin_from_cover" ($p.extract_theme_skin_from_cover)
+    "extract_article_highlight_from_feature" ($p.extract_article_highlight_from_feature)
+    "post_cover_as_background" ($p.post_cover_as_background)
+    "cover_random_pic_url_pc" (default "" $p.cover_random_pic_url_pc)
+    "cover_random_pic_url_mb" (default "" $p.cover_random_pic_url_mb)
+    "pagination_ajax_wait" (default 3 $p.pagination_ajax_wait)
+    "missing_images" (default "" $p.missing_images_placeholder)
+    "missing_avatars" (default "" $p.missing_avatars_placeholder)
+    "lightbox" (default "medium_zoom" $p.lightbox)
+    "code_highlight" (default "hljs" $p.code_highlight_method)
+    "code_katex" ($p.code_katex)
+    "hitokoto_apis" (slice "https://v1.hitokoto.cn/")
+    "slow_net_optimize" false
+    "nav_menu_keep_active" ($p.nav_menu_keep_active)
+-}}
+{{- $pageCfg := dict
+    "post_id" (cond .IsPage .RelPermalink "")
+    "post_image" (cond (and .IsPage (isset .Params "feature")) (index .Params "feature") "")
+    "is_home" .IsHome
+    "is_singular" .IsPage
+    "language" $lang
+    "langs" (slice)
+-}}
+{{- $user := dict
+    "id" 0
+    "name" ""
+    "email" ""
+    "roles" (slice)
+    "description" ""
+    "slug" ""
+    "avatar" (dict "url_96" "" "url_150" "" "url_300" "")
+-}}
+<script id="iro_theme_config" type="application/json">{{ $theme | jsonify | safeJS }}</script>
+<script id="iro_page_config" type="application/json">{{ $pageCfg | jsonify | safeJS }}</script>
+<script id="iro_user_config" type="application/json">{{ $user | jsonify | safeJS }}</script>

@@ -1,0 +1,10 @@
+{{- /* 内容容器：PHP 侧是两个函数，这里用同名模板对 */ -}}
+{{ define "slots/content_container_start" -}}
+<div class="content flex-center {{ default "" .class }}" style="{{ default "" .style }}">
+    <div class="container">
+{{- end }}
+
+{{ define "slots/content_container_end" -}}
+    </div>
+</div>
+{{- end }}

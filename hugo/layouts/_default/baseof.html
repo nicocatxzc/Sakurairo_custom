@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{{- /* 外壳：对应 index.php 的整页分支（片段渲染那套 X-Template-Part 已废弃） */}}
+<html lang="{{ site.Language.Locale }}">
+{{- partial "head.html" . }}
+<body>
+    {{- /* PJAX 换页时由 Swup 整体替换：随页面变化的样式放这里 */}}
+    <div id="iro_post_style">{{ if and (eq (default "sakura" site.Params.page_style) "sakura") .IsPage }}{{ partial "asset-css.html" "post-sakura.css" }}{{ end }}</div>
+    <div class="background">
+        {{- partial "components/site/progress_bar.html" . }}
+        {{- if eq (default "sakura" site.Params.nav_style_select) "island" }}
+        {{- partial "components/navbar/island.html" . }}
+        {{- else }}
+        {{- partial "components/navbar/sakura.html" . }}
+        {{- end }}
+        {{- partial "components/navbar/mobile.html" . }}
+        {{- partial "components/homepage/cover.html" . }}
+
+        <div class="layout-slot">
+            <div class="background-filter"></div>
+            {{- block "main" . }}{{ end }}
+            {{- partial "footer.html" . }}
+            {{- partial "components/site/particle.html" . }}
+        </div>
+
+        {{- partial "components/site/widget/toolbar.html" . }}
+        {{- if site.Params.nav_menu_search_switch }}
+        {{- partial "components/site/search_form.html" . }}
+        {{- end }}
+        <div id="site-model-slot" class="flex-center"></div>
+    </div>
+</body>
+</html>

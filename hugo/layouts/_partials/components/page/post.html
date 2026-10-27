@@ -1,0 +1,31 @@
+{{- /* 文章/独立页面：对应 frontend/components/page/post.php */ -}}
+{{- $p := site.Params -}}
+{{- $isPost := eq .Type "posts" -}}
+{{- if isset .Params "feature" }}
+{{- partial "components/post/header_with_image.html" . }}
+{{- else }}
+{{- partial "components/post/header.html" . }}
+{{- end }}
+<div class="page-post">
+    <article class="post">
+        {{ template "slots/content_container_start" (dict) }}
+        <article class="post-content">
+            {{ partial "components/post/render.html" . }}
+        </article>
+        {{- /* 内建目录只在单栏且对应开关打开时挂载 */}}
+        {{- if eq (int (default 1 $p.layout_content_coloumns)) 1 }}
+        {{- if cond $isPost ($p.page_post_toc) ($p.page_page_toc) }}
+        <div class="toc-container toc">
+            <div id="toc"></div>
+        </div>
+        {{- end }}
+        {{- end }}
+        {{ template "slots/content_container_end" (dict) }}
+        {{- partial "components/post/footer.html" . }}
+    </article>
+    {{- partial "components/post/navigator.html" . }}
+    {{- /* 评论区在 Hugo 版整块移除，只留占位 */}}
+    {{ template "slots/content_container_start" (dict) }}
+    {{ partial "components/comment/placeholder.html" . }}
+    {{ template "slots/content_container_end" (dict) }}
+</div>

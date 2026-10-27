@@ -1,0 +1,249 @@
+{{- /*
+  全局 CSS 变量。对应 frontend/theme_style_vars.php。
+  与 WP 版的差异：内置随机图与 WP 字体表都不再存在，取不到就退化为空值。
+*/ -}}
+{{- $p := site.Params -}}
+{{- $columns := int (default 1 $p.layout_content_coloumns) -}}
+<style>
+    :root {
+        --widget-transparency: {{ default 0.8 $p.widget_transparency }};
+        --background-transparency: {{ default 0.8 $p.background_transparency }};
+        --word-color-first: {{ default "#505050" $p.word_color_first }};
+        --word-color-second: {{ default "#00000080" $p.word_color_second }};
+        --word-color-third: #0000004d;
+        --word-color-first-reverse: {{ default "#CCCCCC" $p.word_color_first_dark }};
+
+        --widget-background: 255, 255, 255;
+        --widget-background-reverse: 26, 26, 26;
+        --widget-background-color: rgba(var(--widget-background), var(--widget-transparency));
+        --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
+        --widget-shadow-shine-color: rgb(232, 232, 232);
+        --widget-shadow-shining-color: rgb(232, 232, 232);
+        --widget-shadow-shadow-color: rgba(0, 0, 0, 0.1);
+        --widget-shadow-shine: 0 0.1rem 1.8rem -0.25rem var(--widget-shadow-shine-color);
+        --widget-shadow-shining: 0 0.1rem 1.8rem 0.7rem var(--widget-shadow-shining-color);
+        --widget-shadow-shadow: 0 0.3rem 1rem var(--widget-shadow-shadow-color);
+
+        --border-color-sketch: 0, 0, 0;
+        --border-color-shine: 255, 255, 255;
+        --border-sketch: 0.1rem solid rgba(var(--border-color-sketch), 0.1);
+        --border-shine: 0.1rem solid rgb(var(--border-color-shine));
+
+        --iro-widget-tools-background: {{ if $p.layout_side_bar_items_background }}var(--widget-background-color){{ else }}transparent{{ end }};
+        --iro-widget-tools-border: {{ if $p.layout_side_bar_items_background }}var(--border-sketch){{ else }}none{{ end }};
+        --iro-widget-tools-radius: {{ default 0.6 $p.layout_side_bar_item_radius }}rem;
+
+        --iro-content-width: {{ int (default 860 $p.layout_main_content_width) }}px;
+        --iro-side-width: {{ int (default 200 $p.layout_side_width) }}px;
+
+        --page-background-color: rgba(255, 255, 255, var(--background-transparency));
+        --code-background: {{ default "#e1e4e8" $p.code_block_background_color }};
+    }
+
+    :root.dark {
+        --widget-transparency: {{ default 0.8 $p.widget_transparency_dark }};
+        --background-transparency: {{ default 0.7 $p.background_transparency_dark }};
+        --word-color-first: {{ default "#CCCCCC" $p.word_color_first_dark }};
+        --word-color-second: {{ default "#999999" $p.word_color_second_dark }};
+        --word-color-third: #7d7d7d;
+        --word-color-first-reverse: {{ default "#505050" $p.word_color_first }};
+
+        --widget-background: 26, 26, 26;
+        --widget-background-reverse: 255, 255, 255;
+        --widget-background-color: color-mix(in srgb, var(--widget-dark-bg) calc(var(--widget-transparency) * 100%), transparent);
+        --widget-background-color-reverse: rgba(var(--widget-background-reverse), var(--widget-transparency));
+        --widget-shadow-shine-color: rgba(26, 26, 26, 0.8);
+        --widget-shadow-shining-color: var(--widget-dark-shining);
+        --widget-shadow-shadow-color: rgba(0, 0, 0, 0.2);
+        --widget-shadow-shine: 0 0.1rem 1.2rem -0.25rem var(--widget-shadow-shine-color);
+        --widget-shadow-shining: 0 0.1rem 2rem -0.25rem var(--widget-shadow-shining-color);
+        --widget-shadow-shadow: 0 0.3rem 1rem var(--widget-shadow-shadow-color);
+
+        --border-color-sketch: rgba(255, 255, 255, 0.1);
+        --border-color-shine: #7d7d7d30;
+        --border-sketch: 0.1rem solid var(--border-color-sketch);
+        --border-shine: 0.1rem solid var(--border-color-shine);
+
+        --page-background-color: rgba(51, 51, 51, var(--background-transparency));
+        --code-background: {{ default "#24292e" $p.code_block_background_color_dark }};
+        --image-bright: {{ default 0.7 $p.image_bright_dark }};
+    }
+
+    :root {
+        --border-active: 0.1rem solid var(--active-color);
+        --background-blur: {{ default 0.7 $p.background_blur }};
+    }
+
+    {{- /* 纪念模式：只按「月-日」匹配，与 WP 侧同源 */}}
+    {{- $isCommemorate := false -}}
+    {{- with $p.theme_commemorate_mode_date -}}
+        {{- $today := now.Format "1-2" -}}
+        {{- $td := split $today "-" -}}
+        {{- $tm := int (index $td 0) -}}
+        {{- $tday := int (index $td 1) -}}
+        {{- range split (string .) "\n" -}}
+            {{- $line := trim . " \t\r" -}}
+            {{- if findRE `^\d{1,2}-\d{1,2}$` $line -}}
+                {{- $parts := split $line "-" -}}
+                {{- if and (eq (int (index $parts 0)) $tm) (eq (int (index $parts 1)) $tday) -}}
+                    {{- $isCommemorate = true -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end }}
+    {{- if $isCommemorate }}
+    html {
+        filter: grayscale(100%) !important;
+    }
+    {{- end }}
+</style>
+
+{{- /* 颜色计算区：全部由 --theme-base-color 派生 */}}
+<style>
+    :root {
+        --theme-base-color-light: var(--theme-base-color, {{ default "#00b0f0" $p.active_color }});
+        --theme-base-color-dark: var(--theme-base-color, {{ default "#FCCD00" $p.active_color_dark }});
+
+        --lt-active-color: var(--theme-base-color-light);
+        --lt-button-bg-color: var(--theme-base-color-light);
+        --lt-button-text-color: #000;
+        --lt-button-border-color: var(--lt-button-bg-color);
+        --dk-active-color: var(--theme-base-color-dark);
+        --dk-button-bg-color: var(--theme-base-color-dark);
+        --dk-button-text-color: #000;
+        --dk-button-border-color: var(--dk-button-bg-color);
+
+        --lt-button-bg: var(--lt-button-bg-color);
+        --lt-button-text: var(--lt-button-text-color);
+        --lt-button-border: var(--lt-button-border-color);
+        --lt-button-hover-bg: color-mix(in srgb, var(--lt-button-bg-color) 86%, #fff);
+        --lt-button-hover-text: var(--lt-button-text-color);
+        --lt-button-hover-border: var(--lt-button-hover-bg);
+        --lt-button-active-bg: color-mix(in srgb, var(--lt-button-bg-color) 74%, #fff);
+        --lt-button-active-text: var(--lt-button-text-color);
+        --lt-button-active-border: var(--lt-button-active-bg);
+
+        --dk-button-bg: var(--dk-button-bg-color);
+        --dk-button-text: var(--dk-button-text-color);
+        --dk-button-border: var(--dk-button-border-color);
+        --dk-button-hover-bg: color-mix(in srgb, var(--dk-button-bg-color) 86%, #fff);
+        --dk-button-hover-text: var(--dk-button-text-color);
+        --dk-button-hover-border: var(--dk-button-hover-bg);
+        --dk-button-active-bg: color-mix(in srgb, var(--dk-button-bg-color) 74%, #fff);
+        --dk-button-active-text: var(--dk-button-text-color);
+        --dk-button-active-border: var(--dk-button-active-bg);
+
+        --widget-dark-bg: color-mix(in srgb, var(--theme-base-color-dark) 5%, #1a1a1a);
+        --widget-dark-shining: var(--theme-base-color-dark);
+
+        {{- $tokens := slice "active-color" "button-bg" "button-text" "button-border" "button-hover-bg" "button-hover-text" "button-hover-border" "button-active-bg" "button-active-text" "button-active-border" -}}
+        {{- range $tokens }}
+        --{{ . }}: var(--lt-{{ . }});
+        --{{ . }}-reverse: var(--dk-{{ . }});
+        {{- end }}
+    }
+
+    @supports (color: oklch(from red l c h)) {
+        :root {
+            --lt-button-bg-color: oklch(from var(--theme-base-color-light) clamp(0.70, l, 0.87) min(c, 0.2) h / 1);
+            --lt-button-text-color: oklch(from var(--theme-base-color-light) min(l, 0.31) min(c, 0.12) h / 1);
+            --lt-button-hover-bg: oklch(from var(--lt-button-bg-color) calc(l + 0.055) c h / 1);
+            --lt-button-active-bg: oklch(from var(--lt-button-bg-color) calc(l + 0.11) c h / 1);
+
+            --dk-button-bg-color: oklch(from var(--theme-base-color-dark) clamp(0.70, l, 0.87) min(c, 0.2) h / 1);
+            --dk-button-text-color: oklch(from var(--theme-base-color-dark) min(l, 0.31) min(c, 0.12) h / 1);
+            --dk-button-hover-bg: oklch(from var(--dk-button-bg-color) calc(l + 0.055) c h / 1);
+            --dk-button-active-bg: oklch(from var(--dk-button-bg-color) calc(l + 0.11) c h / 1);
+        }
+    }
+
+    :root.dark {
+        {{- range $tokens }}
+        --{{ . }}: var(--dk-{{ . }});
+        --{{ . }}-reverse: var(--lt-{{ . }});
+        {{- end }}
+    }
+</style>
+
+<style>
+    :root {
+        --global-font-size: {{ default 16 $p.global_font_size }};
+        --global-font-weight: {{ default 300 $p.global_font_weight }};
+        {{- with $p.global_default_font }}
+        font-family: var(--global-font-family, {{ . }});
+        {{- end }}
+    }
+</style>
+
+{{- /* 字体延迟解锁 */}}
+{{- with $p.extra_fonts }}
+<style id="iro_extra_fonts" media="not all">
+    {{- range . }}
+    @font-face {
+        font-family: '{{ .name }}';
+        src: url('{{ .link }}');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+    {{- end }}
+</style>
+{{- end }}
+
+{{- /* 背景按需解锁 */}}
+<style>
+    @media (min-width: 861px) {
+        :root {
+            --cover-background-img-pc: url({{ default "" $p.cover_random_pic_url_pc }});
+            {{- with $p.frontend_default_background }}
+            --page-background-img: url({{ . }});
+            {{- end }}
+        }
+    }
+
+    {{- with $p.frontend_default_background }}
+    body {
+        background-image: var(--page-background-img);
+        {{- if eq (default "" $p.frontend_background_fill_mode) "texture" }}
+        background-size: auto;
+        background-position: center;
+        background-repeat: repeat;
+        {{- else }}
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        {{- end }}
+    }
+    {{- end }}
+
+    {{- if $p.cover_as_background }}
+    body {
+        background-image: var(--cover-background-img-pc, --cover-background-img-mb);
+    }
+
+    @media (max-width: 860px) {
+        body {
+            background-image: var(--cover-background-img-mb, --cover-background-img-pc);
+        }
+    }
+    {{- end }}
+</style>
+<style id="iro_deferred_bg" media="not all">
+    @media (max-width: 860px) {
+        :root {
+            --cover-background-img-mb: url({{ default "" $p.cover_random_pic_url_mb }});
+            {{- with $p.frontend_default_background }}
+            --page-background-img: url({{ . }});
+            {{- end }}
+        }
+    }
+</style>
+
+{{- /* 切换页面时要变的样式：PJAX 会整块替换这个节点 */}}
+<style id="iro_theme_style_dymanic_vars">
+    {{- if and $p.post_cover_as_background .IsPage (isset .Params "feature") }}
+    body {
+        background-image: url({{ index .Params "feature" }});
+    }
+    {{- end }}
+</style>

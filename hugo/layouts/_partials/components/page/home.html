@@ -1,0 +1,21 @@
+{{- /* 首页：对应 frontend/components/page/home.php（无 page header） */ -}}
+{{- $p := site.Params -}}
+{{ template "slots/content_container_start" (dict "class" "page-home" "style" (printf "--block-title-position:%s;" (default "center" $p.homepage_component_title_align))) }}
+{{- range (default (slice "post_list") $p.homepage_components) }}
+    {{- if eq . "show" }}
+    {{- with $p.homepage_show_title }}
+    <h2 class="block-title flex-center">
+        <i class="{{ default "" .icon }}"></i>{{ default "" .text }}
+    </h2>
+    {{- end }}
+    {{- partial "components/homepage/show.html" $ }}
+    {{- else if eq . "post_list" }}
+    {{- with $p.homepage_post_list_title }}
+    <h2 class="block-title flex-center">
+        <i class="{{ default "" .icon }}"></i>{{ default "" .text }}
+    </h2>
+    {{- end }}
+    {{- partial "components/post/list.html" $ }}
+    {{- end }}
+{{- end }}
+{{ template "slots/content_container_end" . }}

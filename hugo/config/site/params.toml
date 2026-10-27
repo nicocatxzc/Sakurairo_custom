@@ -1,0 +1,93 @@
+# 由 backup-26-10-2026.json 生成的站点快照：只写与默认值不同的项，Hugo 会与 _default 合并。
+# 用法：hugo server -e site   /   hugo -e site
+
+[params]
+# 每个键上方是中文填写说明，格式与 _default/params.toml 一致。
+# 站点图标：填图片/文件地址，如 "https://example.com/a.webp"
+"favicon_link" = ""
+# 站点关键词：填文本
+"iro_meta_keywords" = ""
+# 站点描述：填文本
+"iro_meta_description" = "哈基米德的小窝"
+# 从封面图提取主题色：填 true 或 false
+"extract_theme_skin_from_cover" = false
+# 从文章封面提取主题色：填 true 或 false
+"extract_article_highlight_from_feature" = false
+# 次要文字颜色：填颜色值，如 "#505050" 或 "#00000080"
+"word_color_second_dark" = "#7d7d7d"
+# 纪念模式日期：填文本，可多行
+"theme_commemorate_mode_date" = ""
+# 默认字体：填文本
+"global_default_font" = ""
+# 额外字体：填表数组，每项含 name（字体名称）、link（字体链接）
+# 例如 [{ "name" = "示例文本", "link" = "https://example.com/a.webp" }]
+"extra_fonts" = [{ "name" = "方正喵呜", "link" = "https://files.nicocat.cc/site/font/miaowu.woff2" }, { "name" = "小赖", "link" = "https://files.nicocat.cc/site/font/xiaolai.woff2" }]
+# 导航栏logo：填图片/文件地址，如 "https://example.com/a.webp"
+"nav_logo" = "https://nicocat.cc/wp-content/uploads/2025/11/cropped-avatar.png"
+# 导航栏标题：填文本
+"nav_title" = "哈基米德"
+# 导航栏标题字体：填文本
+"nav_title_font" = "方正喵呜"
+# 导航栏选项字体：填文本
+"nav_option_font" = "小赖"
+# 导航栏选项分布位置：选一个："left"（左） 或 "center"（中） 或 "right"（右） 或 "space-evenly"（均匀）
+"navbar_distribution" = "right"
+# 导航栏选项间距：填数字（用引号括起来，如 "0.8"）
+"navbar_option_margin" = "1"
+# 工具栏字体：填文本
+"widget_font" = ""
+# 工具栏可选字体：填表数组，每项含 name（字体名称）
+# 例如 [{ "name" = "示例文本" }]
+"widget_font_choice" = [{ "name" = "默认" }, { "name" = "方正喵呜" }, { "name" = "小赖" }]
+# 前台默认背景：填图片/文件地址，如 "https://example.com/a.webp"
+"frontend_default_background" = "https://moeapi.moecat.cc/imgs/pc/img/409.webp"
+# 自定义粒子特效实现：填代码文本，可多行
+"particle_config" = ""
+# 页尾字体：填文本
+"footer_font" = "小赖"
+# 页尾内容：填代码文本，可多行
+"footer_html_content" = ""
+# 页尾脚本与样式：填代码文本，可多行
+"footer_html" = "<span>\r\n    Copyright © 2024-2026 nicocat.cc版权所有<br />\r\n    文章部分素材源自网络，转载需注明出处\r\n</span>\r\n<script defer src=\"https://umami.nicocat.cc/script.js\" data-website-id=\"40251f97-f11c-4a6e-917f-68bb7f877f39\"></script>"
+# 一言自定义内容：填文本，可多行
+"footer_hitokoto_custom" = ""
+# 站内头像占位：填图片/文件地址，如 "https://example.com/a.webp"
+"missing_avatars_placeholder" = "https://files.moecat.cc/sakurairo/basic/friendlink.jpg"
+# 站内图片占位：填图片/文件地址，如 "https://example.com/a.webp"
+"missing_images_placeholder" = "https://files.moecat.cc/sakurairo/basic/image-404.png"
+# 个人头像：填图片/文件地址，如 "https://example.com/a.webp"
+"cover_avatar" = ""
+# 封面文字配置：填表，含 text（内容）、font（字体）、size（大小）、color（颜色）
+# 例如 { "text" = "花になって", "font" = "示例文本", "size" = "5", "color" = "#FFF" }
+"cover_title" = { "text" = "nicocat", "size" = "5", "color" = "#FFF" }
+# 封面签名：填表，含 text（内容）、font（字体）、size（大小）
+# 例如 { "text" = "季節の変わり目の服は何着りゃいいんだろ", "font" = "示例文本", "size" = "1" }
+"cover_signature" = { "text" = "我的心都碎成二维码了，可扫出来还是我好喜欢你呜呜呜", "size" = "1" }
+# 封面打字机引号：填 true 或 false
+"cover_typedjs_mark" = true
+# 封面打字机配置：填代码文本，可多行
+"cover_typedjs_config" = "{\r\n    \"strings\": [\r\n        \"安得广厦千万间，广厦一千万一间\",\r\n        \"试问岭南应不好，却道：此心安处是吾乡\",\r\n        \"三百六十行，行行干破防\",\r\n        \"明知山有虎，猛敲退堂鼓\",\r\n        \"是金子总会发光，但我是老铁。\",\r\n        \"其实惹我没有任何下场\",\r\n        \"学而不思则罔，不思不学则爽\",\r\n        \"吃得苦中苦，老板开路虎\",\r\n        \"我有超能力，但是凡事都超出我的能力\",\r\n        \"机会是留给有准备的人，没有机会别瞎准备\",\r\n        \"形而上学，不行退学。\",\r\n        \"风吹哪页读哪页，哪页不会撕哪页。\",\r\n        \"书山有路你不走，学海无涯你闯进来。\",\r\n        \"我命由我不由天，黄泉道路修真仙。\",\r\n        \"吾日三省吾身，吾帅，吾美，吾没错。\",\r\n        \"比我优秀的人都在努力，那我努力还有什么用。\",\r\n        \"失败是成功之母，但成功六亲不认。\",\r\n        \"人非草木，无需成材，能力越小，责任越小。\",\r\n        \"人生苦短，拒绝内卷。\",\r\n        \"别人笑我太疯癫，我笑别人看不穿。\",\r\n        \"天生我材必有用，我能不用就不用。\",\r\n        \"乾坤未定你我皆是黑马，闹钟一响你我都是牛马。\",\r\n        \"十窍只开了一窍，一窍不通。\",\r\n        \"但凡我有一点本事，也不会一点本事没有。\",\r\n        \"不努力一把永远不知道有多失望。\",\r\n        \"作为一个过来人，我给年轻人的建议是：不要过来。\",\r\n        \"谁说我不会乐器，我退堂鼓打的可好了。\",\r\n        \"谁说我不努力了，我只是努力的不明显而已。\",\r\n        \"是金子总会被我花光。\",\r\n        \"世上无难事，只要肯放弃。\",\r\n        \"人生不摆烂，快乐少一半。\",\r\n        \"做事一定要三思而后行。第一：能不能不做；第二：能不能明天做；第三：能不能交给别人做。\",\r\n        \"偶尔摆烂，经常偶尔。\",\r\n        \"吃得苦中苦，伺候人上人。\",\r\n        \"君子爱财取之有道，这个道叫我不知道。\",\r\n        \"一旦承认自己是废物，那么我就是无敌的。\",\r\n        \"我什么都能打住，我什么都能扛住，除了诱惑。\",\r\n        \"机会是留给有准备的人，没有机会就别瞎准备。\",\r\n        \"风雪压我俩三年，两眼一闭我长眠。\",\r\n        \"你单身，我单身，钻戒一千都嫌多。你摆烂，我摆烂，一月两千很自在。\",\r\n        \"吾日三省吾身：早饭吃什么？午饭吃什么？晚饭吃什么？\",\r\n        \"自己的失败固然可怕，但朋友的成功更令人揪心。\",\r\n        \"在哪里跌倒，就在哪里睡一觉。\",\r\n        \"男儿膝下有黄金，没钱就找男儿膝。\",\r\n        \"天无绝人之路，绝起来还真没路。\",\r\n        \"有时候不逼自己一把，我都不知道我自己有多没用。\",\r\n        \"不学习感觉自己未来要完蛋了，一学习确定自己未来要完蛋了。\"\r\n    ],\r\n    \"typeSpeed\": 140,\r\n    \"backSpeed\": 50,\r\n    \"loop\": false,\r\n    \"showCursor\": true\r\n}\r\n"
+# 桌面端封面图片地址：填文本
+"cover_random_pic_url_pc" = "https://api.moecat.cc/imgs/pc/"
+# 移动端封面图片地址：填文本
+"cover_random_pic_url_mb" = "https://api.moecat.cc/imgs/mb/"
+# 视频URL地址：填图片/文件地址，如 "https://example.com/a.webp"
+"cover_video_source" = ""
+# 波浪浮动挂件：填表数组，每项含 url（图像链接）
+# 例如 [{ "url" = "https://example.com/a.webp" }]
+"homepage_wave_floating" = ""
+# 社交区域展示内容：填表数组，每项含 select（显示的图标）、icon（自定义图标）、qrcode（二维码）、title（标题）、link（链接）
+# 例如 [{ "select" = "示例文本", "icon" = "https://example.com/a.webp", "qrcode" = "https://example.com/a.webp", "title" = "示例文本", "link" = "https://example.com/a.webp" }]
+"cover_social_displays" = [{ "select" = "github", "icon" = "", "qrcode" = "", "title" = "", "link" = "https://github.com/nicocatxzc" }, { "select" = "bilibili", "icon" = "", "qrcode" = "", "title" = "", "link" = "https://space.bilibili.com/413110087" }]
+# 展示区域内容：填表数组，每项含 img（图片链接）、title（标题）、description（描述）、link（跳转链接）
+# 例如 [{ "img" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/series/exhibition2.webp", "title" = "夏霞", "description" = "あの儚く散る花火の下で、馬鹿みたいに永遠を誓った", "link" = "" }]
+"show_area_content" = [{ "img" = "https://nicocat.cc/wp-content/uploads/2024/12/taffy_cover.png", "title" = "永雏塔菲", "description" = "🥵可爱小菲🥵", "link" = "https://space.bilibili.com/1265680561" }, { "img" = "https://nicocat.cc/wp-content/uploads/2024/10/1729667460-download.jpg", "title" = "牢大", "description" = "Man!What can i say?Mamba out!", "link" = "#" }, { "img" = "https://nicocat.cc/wp-content/uploads/2025/03/taffy_knowladge.webp", "title" = "开挂学习", "description" = "那很快了", "link" = "/share/ocs_guide/" }]
+# 打赏：填表，含 link（按钮链接）、image1（图片）、link1（链接）、image2（图片）、link2（链接）
+# 例如 { "link" = "https://example.com/a.webp", "image1" = "https://example.com/a.webp", "link1" = "https://example.com/a.webp", "image2" = "https://example.com/a.webp", "link2" = "https://example.com/a.webp" }
+"article_author_reward" = { "link" = "", "image1" = "", "link1" = "", "image2" = "", "link2" = "" }
+# 自定义插入 Header 代码：填代码文本，可多行
+"custom_site_header" = ""
+# 灯箱效果：选一个："off"（关闭） 或 "medium_zoom"（Medium Zoom）
+"lightbox" = "medium_zoom"
+# 静态资源基础路径：填文本
+"vision_resource_basepath" = "https://files.nicocat.cc/sakurairo/"

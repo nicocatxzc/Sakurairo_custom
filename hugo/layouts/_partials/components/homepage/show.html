@@ -1,0 +1,32 @@
+{{- /* 首页卡片区：对应 frontend/components/homepage/show.php */ -}}
+{{- $p := site.Params -}}
+<ul class="showcard-list">
+    {{- range (default (slice) $p.show_area_content) }}
+    {{- $target := default "" .link }}
+    {{- $isExternal := findRE "http" $target 1 }}
+    <li class="showcard">
+        <div class="title">
+            <h3>{{ default "" .title }}</h3>
+        </div>
+        <a href="{{ $target }}"
+            target="{{ if $isExternal }}_blank{{ else }}_self{{ end }}"
+            rel="{{ if $isExternal }}external nofollow noreferrer{{ end }}"
+            class="card-link">
+            <div class="card-image">
+                <picture class="nuxtpic">
+                    {{- partial "components/media/image.html" (dict
+                        "src" (default "" .img)
+                        "width" 276
+                        "height" "14rem"
+                        "sizes" "(max-width: 800px) 92vw, (max-width: 1120px) 47vw, 276px"
+                        "alt" "showcard-image"
+                        "loading" "lazy") }}
+                </picture>
+            </div>
+            <div class="card-info">
+                <p class="card-desc">{{ default "" .description }}</p>
+            </div>
+        </a>
+    </li>
+    {{- end }}
+</ul>

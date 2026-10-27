@@ -1,0 +1,20 @@
+/*
+ * 模态框搜索的窄屏补丁：主题原样式是 37.5rem 定宽 + 负 margin 居中，
+ * WordPress 那边手机端靠 ?s= 结果页兜底，静态站没有结果页，只能让弹层自己收窄。
+ */
+.search-model {
+    z-index: 1000;
+}
+
+@media (max-width: 40rem) {
+    .search-model {
+        left: 0.75rem;
+        top: 4rem;
+        width: calc(100vw - 1.5rem);
+        margin-left: 0;
+    }
+
+    .search-model .search-list .post-list {
+        max-height: 60dvh;
+    }
+}

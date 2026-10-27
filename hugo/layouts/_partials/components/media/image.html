@@ -1,0 +1,9 @@
+{{- /*
+  图片输出。WP 侧是 iro_media_optimize_image_formats（生成 srcset/格式协商），
+  Hugo 版没有图片处理管线，只保留同一套 <img> 属性，让样式命中的类名不变。
+  参数：src / alt / class / width / height / loading / decoding / fetchpriority / sizes / style
+*/ -}}
+{{- $src := .src -}}
+{{- with $src -}}
+<img src="{{ . }}" alt="{{ default "" $.alt }}" onerror="iroImgError(this)"{{ with $.class }} class="{{ . }}"{{ end }}{{ with $.width }} width="{{ . }}"{{ end }}{{ with $.height }} height="{{ . }}"{{ end }}{{ with $.style }} style="{{ . }}"{{ end }}{{ with $.sizes }} sizes="{{ . }}"{{ end }} loading="{{ default "lazy" $.loading }}" decoding="{{ default "async" $.decoding }}"{{ with $.fetchpriority }} fetchpriority="{{ . }}"{{ end }}>
+{{- end -}}

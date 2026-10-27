@@ -1,0 +1,2 @@
+{{- /* 首页：请求类型分发在 route.html，这里只声明它是 home 路由 */ -}}
+{{ define "main" }}{{ partial "route.html" (dict "page" . "route" "home") }}{{ end }}

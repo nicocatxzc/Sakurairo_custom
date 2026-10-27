@@ -1,0 +1,47 @@
+{{- /* 导航栏（sakura 样式）：对应 frontend/components/navbar/sakura.php */ -}}
+{{- $p := site.Params -}}
+<header class="site-header sakura flex-center">
+    <div class="site-branding flex-center">
+        <picture>
+            {{- partial "components/media/image.html" (dict "src" (default "" $p.nav_logo) "class" "nuxtpic logo" "alt" "site logo" "height" 96) }}
+        </picture>
+        <a href="{{ "/" | relLangURL }}">
+            <span class="site-title" style="font-family: {{ default "" $p.nav_title_font }}">{{ default "" $p.nav_title }}</span>
+        </a>
+    </div>
+
+    <div class="menu-wrapper">
+        <nav>
+            <ul class="menu" style="justify-content: {{ default "right" $p.navbar_distribution }}; font-family: {{ default "" $p.nav_option_font }};">
+                {{- range site.Menus.main }}
+                {{- if .HasChildren }}
+                <li style="margin: 0 {{ default 0.3 $p.navbar_option_margin }}rem;">
+                    <a href="{{ .URL }}">{{ .Name }}</a>
+                    <ul class="sub-menu" style="border-radius: {{ default 0.6 $p.nav_menu_cover_radius }};">
+                        {{- range .Children }}
+                        <li class="flex-center">
+                            <a href="{{ .URL }}">{{ .Name }}</a>
+                        </li>
+                        {{- end }}
+                    </ul>
+                </li>
+                {{- else }}
+                <li>
+                    <a href="{{ .URL }}">{{ .Name }}</a>
+                </li>
+                {{- end }}
+                {{- end }}
+            </ul>
+        </nav>
+    </div>
+    {{- if $p.nav_menu_search_switch }}
+    <div class="button search flex-center">
+        <i class="fa-icon-solid fa-search icon"></i>
+    </div>
+    {{- end }}
+    {{- if $p.nav_menu_cover_switch }}
+    <div class="button cover-toggle flex-center {{ if .IsHome }}show{{ end }}" title="切换封面">
+        <i class="fa-icon-solid fa-dice icon"></i>
+    </div>
+    {{- end }}
+</header>

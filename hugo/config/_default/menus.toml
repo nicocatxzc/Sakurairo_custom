@@ -1,0 +1,24 @@
+# 导航菜单。WordPress 侧来自后台「外观 → 菜单」（iro_get_navigation），
+# Hugo 用 site.Menus.main；子菜单用 parent 表示。
+
+[[main]]
+  name = "首页"
+  url = "/"
+  weight = 10
+
+[[main]]
+  name = "内容"
+  url = "/posts/"
+  weight = 20
+
+[[main]]
+  name = "文章"
+  url = "/posts/"
+  parent = "内容"
+  weight = 21
+
+[[main]]
+  name = "分类"
+  url = "/categories/"
+  parent = "内容"
+  weight = 22

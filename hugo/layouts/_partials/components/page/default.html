@@ -1,0 +1,9 @@
+{{- /* 兜底页面：对应 frontend/components/page/default.php */ -}}
+<header class="page-header only-word">
+    {{ template "slots/content_container_start" (dict) }}
+    <h1>页面不存在</h1>
+    {{ template "slots/content_container_end" (dict) }}
+</header>
+{{ template "slots/content_container_start" (dict "class" "page-default") }}
+<p>你访问的页面可能已被删除，或者链接有误。</p>
+{{ template "slots/content_container_end" (dict) }}

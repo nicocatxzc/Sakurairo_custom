@@ -1,0 +1,55 @@
+{{- /* 票券式卡片：对应 frontend/components/post/card/ticket.php */ -}}
+{{- $post := . -}}
+{{- $p := site.Params -}}
+{{- $img := partial "components/post/feature.html" . -}}
+<article class="post-card post-card-ticket">
+    <div class="post-thumb">
+        <a href="{{ .RelPermalink }}">
+            <picture class="nuxtpic">
+                {{- partial "components/media/image.html" (dict
+                    "src" $img
+                    "alt" (printf "featured image for post %s" $post.Title)
+                    "width" 688
+                    "height" "18.75rem"
+                    "sizes" "(max-width: 767px) 92vw, (max-width: 934px) 74vw, 688px"
+                    "loading" "lazy") }}
+            </picture>
+        </a>
+    </div>
+
+    <div class="post-date">
+        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05" }}">更新于：{{ .Lastmod.Format "2006-01-02" }}</time>
+        {{- if .Params.sticky }}
+        <div class="sticky">&#x2605;&#xFE0E;置顶</div>
+        {{- end }}
+    </div>
+
+    <div class="post-meta">
+        {{- $terms := .GetTerms "categories" }}
+        {{- range (default (slice "category") $p.post_card_metas) }}
+            {{- if eq . "category" }}
+        <span>
+            <i class="fa-icon-solid fa-folder-open"></i>
+            {{- with $terms }}
+            <a href="{{ (index . 0).RelPermalink }}">{{ (index . 0).LinkTitle }}</a>
+            {{- else }}
+            未分类
+            {{- end }}
+        </span>
+            {{- else if eq . "words_count" }}
+        <span><i class="fa-icon-solid fa-pen-to-square"></i>{{ $post.WordCount }}字</span>
+            {{- else if eq . "reading_time" }}
+        <span><i class="fa-icon-solid fa-hourglass"></i>{{ $post.ReadingTime }} 分钟</span>
+            {{- end }}
+        {{- end }}
+    </div>
+
+    <div class="post-title">
+        <a href="{{ .RelPermalink }}" aria-label="link to post {{ .Title }}">
+            <h3>{{ .Title }}</h3>
+        </a>
+    </div>
+    <div class="post-excerpt">
+        <span>{{ .Summary | plainify | truncate 120 "" }}</span>
+    </div>
+</article>

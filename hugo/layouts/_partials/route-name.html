@@ -1,0 +1,10 @@
+{{- /* 请求类型 → 页面模板名，对应 route.php 的 switch：home / post / search / archive / default（单租户站点，作者归档已去掉） */ -}}
+{{- $route := "default" -}}
+{{- if .IsHome -}}
+    {{- $route = "home" -}}
+{{- else if .IsPage -}}
+    {{- $route = "post" -}}
+{{- else if .IsBranch -}}
+    {{- $route = "archive" -}}
+{{- end -}}
+{{- return $route -}}

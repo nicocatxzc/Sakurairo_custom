@@ -1,0 +1,5 @@
+{{- /* 卡片缩略图：特色图片优先，没有就用站点默认图 */ -}}
+{{- $img := "" -}}
+{{- with .Params.feature }}{{ $img = . }}{{ end -}}
+{{- if not $img }}{{ $img = default "" site.Params.hugo.default_feature_image }}{{ end -}}
+{{- return $img -}}

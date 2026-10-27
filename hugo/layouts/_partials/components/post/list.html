@@ -1,0 +1,28 @@
+{{- /* 文章列表：对应 frontend/components/post/list.php */ -}}
+{{- $p := site.Params -}}
+{{- $design := default (dict) $p.post_card_design -}}
+<div class="post-list"
+    data-pagination="{{ if eq (default "pagination" $p.pagination_mode) "ajax" }}ajax{{ else }}pagination{{ end }}"
+    style="
+        --post-card-border-radius: {{ default 0.7 $design.card_radius }}rem;
+        --post-card-meta-border-radius: {{ default 0.3 $design.meta_radius }}rem;
+        --post-card-title-border-radius: {{ default 0.3 $design.title_radius }}rem;
+        --post-card-title-font-size: {{ default 1.2 $design.title_font_size }}rem;
+    ">
+    {{- $paginator := .Paginator }}
+    {{- range $paginator.Pages }}
+        {{- if and (not (isset .Params "feature")) (eq (default "" $p.post_card_image) "only_feather_image") }}
+        {{- partial "components/post/card/simple.html" . }}
+        {{- else if eq (default "" $p.post_card_with_image_design) "ticket" }}
+        {{- partial "components/post/card/ticket.html" . }}
+        {{- else }}
+        {{- partial "components/post/card/with_image.html" . }}
+        {{- end }}
+    {{- else }}
+    <div class="empty-state">
+        <i class="fa-icon-solid fa-inbox"></i>
+        <p>暂时还没有内容哦。</p>
+    </div>
+    {{- end }}
+    {{- partial "components/slots/pagination.html" (dict "paginator" $paginator) }}
+</div>

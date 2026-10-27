@@ -1,0 +1,3 @@
+{{- /* 侧栏吸顶位置要跟着导航高度走 */ -}}
+{{- $nav := cond (eq (default "sakura" site.Params.nav_style_select) "island") "70px" "3.75rem" -}}
+{{- return (printf "--layout-sticky-top: calc(%s + 0.75rem);" $nav) -}}

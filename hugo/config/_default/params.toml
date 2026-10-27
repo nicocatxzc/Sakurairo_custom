@@ -1,0 +1,294 @@
+# Hugo 版配置 —— 结构和 opt/theme-options.php 的 CSF 章节一一对应。
+# 只保留 Hugo 版模板真正读取的键；CSF 里那些 WordPress 侧独有的能力（后台面板、AI、评论、播放器、
+# SMTP、安全头、FSE 区块布局、llms、统计、i18n、登录页、图片服务等）连同它们的键一起删掉了。
+# 键名与 iro_opt() 的键名一致；默认值来自设置定义。
+#
+# 值一律按 TOML 写：字符串 "x"、布尔 true/false、整数或小数 1、数组 ["a", "b"]、表用内联表 { "k" = v }。
+# 每个键上方用中文注释说明该填什么：枚举型列出全部可选项及含义，结构型（fieldset / repeater）
+# 另起一行给出「例如 …」的结构示例。
+#
+[params]
+
+# ── 基本设置 (preliminary) ──
+# 站点图标：填图片/文件地址，如 "https://example.com/a.webp"
+"favicon_link" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/basic/favicon.ico"
+# 自动SEO：选一个："off"（不使用主题SEO） 或 "auto"（自动完善SEO） 或 "on"（总是加上所有SEO）
+"iro_seo" = "on"
+# 站点关键词：填文本
+"iro_meta_keywords" = ""
+# 站点描述：填文本
+"iro_meta_description" = ""
+
+# ── global / 外观设置 (global) ──
+# 从封面图提取主题色：填 true 或 false
+"extract_theme_skin_from_cover" = true
+# 从文章封面提取主题色：填 true 或 false
+"extract_article_highlight_from_feature" = true
+# 主要文字颜色：填颜色值，如 "#505050" 或 "#00000080"
+"word_color_first" = "#505050"
+# 次要文字颜色：填颜色值，如 "#505050" 或 "#00000080"
+"word_color_second" = "#00000080"
+# 激活组件颜色：填颜色值，如 "#505050" 或 "#00000080"
+"active_color" = "#00b0f0"
+# 代码块背景色：填颜色值，如 "#505050" 或 "#00000080"
+"code_block_background_color" = "#e1e4e8"
+# 组件透明度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"widget_transparency" = "0.8"
+# 背景透明度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"background_transparency" = "0.8"
+# 背景模糊度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"background_blur" = "0.7"
+# 主要文字颜色：填颜色值，如 "#505050" 或 "#00000080"
+"word_color_first_dark" = "#CCCCCC"
+# 次要文字颜色：填颜色值，如 "#505050" 或 "#00000080"
+"word_color_second_dark" = "#999999"
+# 激活组件颜色：填颜色值，如 "#505050" 或 "#00000080"
+"active_color_dark" = "#FCCD00"
+# 代码块背景色：填颜色值，如 "#505050" 或 "#00000080"
+"code_block_background_color_dark" = "#24292e"
+# 组件透明度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"widget_transparency_dark" = "0.8"
+# 背景透明度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"background_transparency_dark" = "0.7"
+# 深色模式图像亮度：填数字（用引号括起来，如 "0.8"），范围 0–1
+"image_bright_dark" = "0.7"
+# 内容布局：选一个："1"（单栏） 或 "2"（双栏） 或 "3"（三栏）
+"layout_content_coloumns" = 1
+# 第一栏内容位置：选一个："left"（左侧） 或 "right"（右侧）
+"layout_first_coloumn_position" = "left"
+# 正文宽度：填数字（用引号括起来，如 "0.8"），范围 860–1280
+"layout_main_content_width" = "860"
+# 侧栏宽度：填数字（用引号括起来，如 "0.8"），范围 180–280
+"layout_side_width" = "200"
+# 侧边栏组件背景：填 true 或 false
+"layout_side_bar_items_background" = false
+# 侧边栏项目圆角：填数字（用引号括起来，如 "0.8"）
+"layout_side_bar_item_radius" = "0.6"
+# 纪念模式日期：填文本，可多行
+"theme_commemorate_mode_date" = ""
+# · 字体设置
+# 字体大小：填数字（用引号括起来，如 "0.8"），范围 1–64
+"global_font_size" = "16"
+# 非强调文本字重：填数字（用引号括起来，如 "0.8"），范围 100–1000
+"global_font_weight" = "300"
+# 默认字体：填文本
+"global_default_font" = ""
+# 额外字体：填表数组，每项含 name（字体名称）、link（字体链接）
+# 例如 [{ "name" = "示例文本", "link" = "https://example.com/a.webp" }]
+"extra_fonts" = ""
+# · 导航栏
+# Nav Menu Style：选一个："island" 或 "sakura"
+"nav_style_select" = "sakura"
+# 导航栏logo：填图片/文件地址，如 "https://example.com/a.webp"
+"nav_logo" = ""
+# 导航栏标题：填文本
+"nav_title" = ""
+# 导航栏标题字体：填文本
+"nav_title_font" = ""
+# 导航栏选项字体：填文本
+"nav_option_font" = ""
+# 导航栏选项分布位置：选一个："left"（左） 或 "center"（中） 或 "right"（右） 或 "space-evenly"（均匀）
+"navbar_distribution" = "off"
+# 导航栏选项间距：填数字（用引号括起来，如 "0.8"）
+"navbar_option_margin" = "0.3"
+# 导航栏菜单圆角：填数字（用引号括起来，如 "0.8"）
+"nav_menu_cover_radius" = "0.3"
+# 导航栏选项保持高亮：填 true 或 false
+"nav_menu_keep_active" = true
+# 导航栏封面切换按钮：填 true 或 false
+"nav_menu_cover_switch" = true
+# · 前台设置
+# 工具栏按钮圆角：填数字（用引号括起来，如 "0.8"）
+"widget_button_radius" = "0.6"
+# 工具栏面板圆角：填数字（用引号括起来，如 "0.8"）
+"widget_panel_radius" = "0.6"
+# 工具栏字体：填文本
+"widget_font" = ""
+# 工具栏字体切换按钮：填 true 或 false
+"widget_font_switch" = true
+# 工具栏可选字体：填表数组，每项含 name（字体名称）
+# 例如 [{ "name" = "示例文本" }]
+"widget_font_choice" = ""
+# 前台默认背景：填图片/文件地址，如 "https://example.com/a.webp"
+"frontend_default_background" = ""
+# 前台背景填充模式：选一个："pattern"（插画） 或 "texture"（纹理）
+"frontend_background_fill_mode" = "pattern"
+# 前台背景粒子特效：选一个："off"（关闭） 或 "sakura"（樱花） 或 "snow"（雪） 或 "custom"（自定义）
+"frontend_particle" = "off"
+# 内建粒子特效选项：填表，含 amount（粒子数量）、minsize（粒子最小大小）、maxsize（粒子最大大小）、speed（粒子速度）
+# 例如 { "amount" = "10", "minsize" = "10", "maxsize" = "30", "speed" = "30" }
+"frontend_particle_builtin" = { "amount" = "10", "minsize" = "10", "maxsize" = "30", "speed" = "30" }
+# 自定义粒子特效实现：填代码文本，可多行
+"particle_config" = ""
+# · 页尾设置
+# 页尾样式：选一个："sakura"（sakura经典样式） 或 "island"（iro浮动样式） 或 "custom"（自定义）
+"footer_style_select" = "sakura"
+# 页尾内容布局：选一个："center"（居中） 或 "columns"（两列）
+"footer_island_style" = "center"
+# 页尾樱花：填 true 或 false
+"footer_sakura" = true
+# 页尾字体：填文本
+"footer_font" = ""
+# 页尾内容：填代码文本，可多行
+"footer_html_content" = ""
+# 页尾脚本与样式：填代码文本，可多行
+"footer_html" = ""
+# 页脚一言：选一个："off"（关闭） 或 "api"（总是使用API） 或 "custom"（总是自定义） 或 "both"（各一半）
+"footer_hitokoto_select" = "off"
+# 一言自定义内容：填文本，可多行
+"footer_hitokoto_custom" = ""
+# · 搜索设置
+# 导航栏搜索按钮：填 true 或 false
+"nav_menu_search_switch" = true
+# · 其他设置
+# 顶部阅读进度条：填 true 或 false
+"top_scroll_progress" = true
+# 顶部加载进度条：填 true 或 false
+"top_loading_progress" = true
+# 文章列表分页导航方式：选一个："ajax"（滚动加载） 或 "pagination"（传统分页）
+"pagination_mode" = "pagination"
+# ajax自动加载等待时间：填数字（用引号括起来，如 "0.8"）
+"pagination_ajax_wait" = "3"
+# 站内头像占位：填图片/文件地址，如 "https://example.com/a.webp"
+"missing_avatars_placeholder" = ""
+# 站内图片占位：填图片/文件地址，如 "https://example.com/a.webp"
+"missing_images_placeholder" = ""
+
+# ── homepage / 封面设置 (homepage) ──
+# 封面开关：填 true 或 false
+"cover_switch" = true
+# 封面高度：填数字（用引号括起来，如 "0.8"）
+"cover_height" = "100"
+# 首页聚焦显示内容：选一个："off"（无） 或 "avatar"（头像） 或 "text"（文字） 或 "mashiro_text"（Mashiro特效文字）
+"cover_focus_style" = "text"
+# 个人头像：填图片/文件地址，如 "https://example.com/a.webp"
+"cover_avatar" = ""
+# 封面文字配置：填表，含 text（内容）、font（字体）、size（大小）、color（颜色）
+# 例如 { "text" = "花になって", "font" = "示例文本", "size" = "5", "color" = "#FFF" }
+"cover_title" = { "text" = "花になって", "size" = "5", "color" = "#FFF" }
+# 封面信息栏开关：填 true 或 false
+"cover_infor_bar_switch" = true
+# 封面信息栏圆角：填数字（用引号括起来，如 "0.8"）
+"cover_infor_bar_radius" = "1"
+# 封面签名：填表，含 text（内容）、font（字体）、size（大小）
+# 例如 { "text" = "季節の変わり目の服は何着りゃいいんだろ", "font" = "示例文本", "size" = "1" }
+"cover_signature" = { "text" = "季節の変わり目の服は何着りゃいいんだろ", "size" = "1" }
+# 封面打字机效果：填 true 或 false
+"cover_typedjs" = true
+# 封面打字机引号：填 true 或 false
+"cover_typedjs_mark" = false
+# 封面打字机占位符：填文本
+"cover_typedjs_placeholder" = "疯狂造句中......"
+# 封面打字机配置：填代码文本，可多行
+"cover_typedjs_config" = "{\"strings\":[\"愿你保持不变 保持己见 充满热血\"],\"typeSpeed\":140,\"backSpeed\":50,\"loop\":false,\"showCursor\":true}"
+# 桌面端封面图片地址：填文本
+"cover_random_pic_url_pc" = "https://api.fuukei.org/random-img/default/pc.php"
+# 移动端封面图片地址：填文本
+"cover_random_pic_url_mb" = "https://api.fuukei.org/random-img/default/mobile.php"
+# 前台背景一体化：填 true 或 false
+"cover_as_background" = false
+# 使用特色图片作为背景：填 true 或 false
+"post_cover_as_background" = false
+# 封面图片滤镜：选一个："filter-nothing"（无） 或 "filter-undertint"（浅色滤镜） 或 "filter-dim"（深色滤镜） 或 "filter-grid"（网格滤镜） 或 "filter-dot"（点状滤镜）
+"cover_pic_filter" = "filter-nothing"
+# 封面视频：填 true 或 false
+"cover_video" = false
+# 封面视频循环：填 true 或 false
+"cover_video_loop" = false
+# 视频URL地址：填图片/文件地址，如 "https://example.com/a.webp"
+"cover_video_source" = ""
+# 波浪开关：填 true 或 false
+"homepage_wave_switch" = false
+# 波浪定位目标：选一个："cover"（封面） 或 "window"（窗口）
+"homepage_wave_position" = "cover"
+# 浅色模式波浪：选一个："white"（白色） 或 "water"（水） 或 "star"（星光）
+"homepage_wave_light" = "water"
+# 深色模式波浪：选一个："white"（白色） 或 "water"（水） 或 "star"（星光）
+"homepage_wave_dark" = "star"
+# 波浪浮动挂件：填表数组，每项含 url（图像链接）
+# 例如 [{ "url" = "https://example.com/a.webp" }]
+"homepage_wave_floating" = ""
+# · 社交区域
+# 封面社交栏开关：填 true 或 false
+"cover_social_switch" = true
+# 社交栏图标包：填文本
+"cover_social_icon" = "fluent_design"
+# 社交区域展示内容：填表数组，每项含 select（显示的图标）、icon（自定义图标）、qrcode（二维码）、title（标题）、link（链接）
+# 例如 [{ "select" = "示例文本", "icon" = "https://example.com/a.webp", "qrcode" = "https://example.com/a.webp", "title" = "示例文本", "link" = "https://example.com/a.webp" }]
+"cover_social_displays" = ""
+# · 首页布局
+# 首页布局：填数组，可多选："show"（展示区域） 或 "post_list"（最新文章） 或 "static_page"（自定义页面），例如 ["show", "post_list"]
+"homepage_components" = ["show", "post_list"]
+# 展示区域标题配置：填表，含 icon（图标）、text（内容）
+# 例如 { "icon" = "fa-icon-solid fa-laptop", "text" = "Display" }
+"homepage_show_title" = { "icon" = "fa-icon-solid fa-laptop", "text" = "Display" }
+# 文章区域标题配置：填表，含 icon（图标）、text（内容）
+# 例如 { "icon" = "fa-icon-regular fa-bookmark", "text" = "Article" }
+"homepage_post_list_title" = { "icon" = "fa-icon-regular fa-bookmark", "text" = "Article" }
+# 首页区域标题位置：选一个："left" 或 "right" 或 "center"
+"homepage_component_title_align" = "left"
+# · 展示区域
+# 展示区域内容：填表数组，每项含 img（图片链接）、title（标题）、description（描述）、link（跳转链接）
+# 例如 [{ "img" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/series/exhibition2.webp", "title" = "夏霞", "description" = "あの儚く散る花火の下で、馬鹿みたいに永遠を誓った", "link" = "" }]
+"show_area_content" = [
+    { "img" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/series/exhibition2.webp", "title" = "夏霞", "description" = "あの儚く散る花火の下で、馬鹿みたいに永遠を誓った", "link" = "" },
+    { "img" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/series/exhibition3.webp", "title" = "雪冴ゆる", "description" = "独りぽっちの冴えない僕を暗闇から連れ出してくれた", "link" = "" },
+]
+# · 文章区域
+# 文章区域卡片设计：选一个："letter" 或 "ticket"
+"post_card_with_image_design" = "letter"
+# 文章卡片显示信息：填数组，可多选："author"（作者） 或 "category"（分类） 或 "comment_count"（评论数量） 或 "views"（浏览量） 或 "words_count"（字数） 或 "reading_time"（阅读时间），例如 ["author", "category"]
+"post_card_metas" = ["category", "comment_count", "views"]
+# 文章区域装饰特色图片选项：选一个："always_with_cover"（始终且使用封面API） 或 "always_builtin"（始终且使用内建API） 或 "always_alone"（始终且使用独立API） 或 "only_feather_image"（仅特色图片）
+"post_card_image" = "only_feather_image"
+# 文章卡片设计：填表，含 card_radius（文章卡片圆角）、meta_radius（文章卡片元信息圆角）、title_radius（文章卡片标题圆角）、title_font_size（文章卡片标题大小）
+# 例如 { "card_radius" = "0.7", "meta_radius" = "0.3", "title_radius" = "0.3", "title_font_size" = "1.2" }
+"post_card_design" = { "card_radius" = "0.7", "meta_radius" = "0.3", "title_radius" = "0.3", "title_font_size" = "1.2" }
+
+# ── page / 通用 (page) ──
+# 文章头部显示信息：填数组，可多选："author"（作者） 或 "category"（分类） 或 "comment_count"（评论数量） 或 "views"（浏览量） 或 "words_count"（字数） 或 "reading_time"（阅读时间） 或 "publish_time"（发布时间） 或 "update_time"（最后更新时间） 或 "editor_link"（编辑链接（仅管理员显示）），例如 ["author", "category"]
+"post_head_metas" = ["update_time", "author", "views"]
+# 文章目录：填 true 或 false
+"page_post_toc" = true
+# 页面目录：填 true 或 false
+"page_page_toc" = false
+# 文章排版样式：选一个："wordpress"（WordPress） 或 "sakura"（Sakura）
+"page_style" = "sakura"
+# · 文章页面
+# 文章功能栏：填 true 或 false
+"article_function" = true
+# 文章版权协议：选一个："false"（不显示） 或 "cc0"（CC0 1.0） 或 "cc-by"（CC BY 4.0） 或 "cc-by-nc"（CC BY-NC 4.0） 或 "cc-by-nc-nd"（CC BY-NC-ND 4.0） 或 "cc-by-nc-sa"（CC BY-NC-SA 4.0） 或 "cc-by-nd"（CC BY-ND 4.0） 或 "cc-by-sa"（CC BY-SA 4.0）
+"article_licenses" = "cc-by-nc-sa"
+# 打赏：填表，含 link（按钮链接）、image1（图片）、link1（链接）、image2（图片）、link2（链接）
+# 例如 { "link" = "https://example.com/a.webp", "image1" = "https://example.com/a.webp", "link1" = "https://example.com/a.webp", "image2" = "https://example.com/a.webp", "link2" = "https://example.com/a.webp" }
+"article_author_reward" = ""
+# 文章作者头像：填 true 或 false
+"article_author_avatar" = true
+# 文章作者名称：填 true 或 false
+"article_author_name" = false
+# 文章作者签名：填 true 或 false
+"article_author_quote" = true
+# 文章最后更新时间：填 true 或 false
+"article_modified_time" = false
+# 文章标签：填 true 或 false
+"article_tag" = true
+# 文章上一篇/下一篇导航：填 true 或 false
+"article_nextpre" = true
+
+# ── others / 低使用选项 (others) ──
+# 自定义插入 Header 代码：填代码文本，可多行
+"custom_site_header" = ""
+# 灯箱效果：选一个："off"（关闭） 或 "medium_zoom"（Medium Zoom）
+"lightbox" = "off"
+# 代码高亮方式：选一个："off"（关闭） 或 "hljs"（highlight.js）
+"code_highlight_method" = "hljs"
+# 启用公式支持：填 true 或 false
+"code_katex" = true
+# Fontawesome源：填文本
+"fontawesome_source" = "https://s4.zstatic.net/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+# 将fontawesome源载入到前台：填 true 或 false
+"fontawesome_source_add_to_frontend" = false
+
+# ── 关于主题 (other) ──
+# 静态资源基础路径：填文本
+"vision_resource_basepath" = "https://s.nmxc.ltd/sakurairo_vision/@3.0/"

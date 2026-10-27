@@ -1,0 +1,6 @@
+{{- /* 对应 footer.php：按 footer_style_select 分发；custom（FSE 自定义页脚）分支已去掉 */ -}}
+{{- if eq (default "sakura" site.Params.footer_style_select) "island" }}
+{{- partial "components/site/footer/island.html" . }}
+{{- else }}
+{{- partial "components/site/footer/sakura.html" . }}
+{{- end }}

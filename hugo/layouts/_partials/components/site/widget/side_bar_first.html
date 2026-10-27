@@ -1,0 +1,12 @@
+{{- /* 侧栏一：WP 侧是 dynamic_sidebar('iro_side_bar_first')，Hugo 没有小工具，改成站点配置里的静态块 */ -}}
+{{- $widgets := site.Params.hugo.side_bar_first -}}
+{{- with $widgets }}
+<aside class="site-side-bar side-bar-first">
+    {{- range . }}
+    <section class="iro-widget wp-widget">
+        {{- with .title }}<h3 class="widget-title">{{ . }}</h3>{{ end }}
+        {{- with .content }}<div class="widget-content">{{ . | safeHTML }}</div>{{ end }}
+    </section>
+    {{- end }}
+</aside>
+{{- end }}
