@@ -112,7 +112,9 @@ function iro_cover_schedule_refresh(string $key, string $url): void
 }
 
 if (iro_opt("iro_slow_net_optimize", true)) {
-    header('Accept-CH: RTT, Save-Data, ECT, Downlink');
+    if (!wp_doing_cron() && !headers_sent()) {
+        header('Accept-CH: RTT, Save-Data, ECT, Downlink');
+    }
     $iro_is_slow_net = (function () {
         $rtt      = $_SERVER['HTTP_RTT'] ?? null;          // 延迟
         $saveData = $_SERVER['HTTP_SAVE_DATA'] ?? null;    // 节流模式
